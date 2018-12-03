@@ -44,7 +44,7 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   fulldata.df$Replicate = NULL
   
   #Find the cell correlates
-  id_to_well.df = read.csv("r/ID_to_Well.csv", as.is = TRUE)
+  id_to_well.df = readRDS("r/id_to_well.rds")
   fulldata.df$ID = as.integer(fulldata.df$ID)
   
   #Correlate the generated cell lookup table to ECIS's internal well id's
