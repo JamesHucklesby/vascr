@@ -16,3 +16,22 @@
 hello <- function() {
   print("Hello, world!")
 }
+
+#' A test function
+#'
+#' 
+#' @return
+#' Return stuff
+#' 
+#' @export
+#' Export stuff
+#'
+#' @examples
+#' Here is an example
+#' 
+test <- function()
+{
+  
+  
+ print("TESTING 123") 
+}
