@@ -1,7 +1,5 @@
 library(ECISR)
 
-ecis_import_raw_long("dat/Growth1/Resample.abp", "dat/Growth1/Samples.csv")
-
 #Generate a test dataset
 masterdata1.df = ecis_import_long("tests/Growth1/Resample.abp", "tests/Growth1/Model.csv", "tests/Growth1/Samples.csv")
 masterdata2.df = ecis_import_long("tests/Growth2/Resample.abp", "tests/Growth2/Modeled.csv", "tests/Growth2/Samples.csv")
@@ -17,6 +15,8 @@ alldata.df = subset(alldata.df, Time<6)
 
 normalised.df = ecis_normalise(child1.df, 5, divide = TRUE)
 ecis_plotvariable(normalised.df, "Rb" , 0)
+
+ecis_plotvariable(child1.df, "Rb" , 0)
 
 ecis_plotvariable(alldata.df, "Rb" , 0)
 ecis_plotspectra(alldata.df, "C")
