@@ -8,3 +8,11 @@ Description: Allows for the analyasis of ECIS code using the R enviroment
 License: All Rights Reserved (2018)
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 6.1.1
+
+Imports:
+    dplyr,
+    ggplot2,
+    tidyr,
+    gganimate,
+    transformr
