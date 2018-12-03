@@ -15,7 +15,7 @@
 ecis_import_raw_long = function(rawdata, sampledefine)
 {
   
-  
+  library(tidyr)
   
   #rawdata = "Growth1/Resample.abp"
   #sampledefine = "Growth1/Samples.csv"
