@@ -39,12 +39,11 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   names(fulldata.df) = as.character(unlist(titles.df[1,]))
   
   # Clean out the row data from each well's ID
-  library(tidyr)
   fulldata.df = fulldata.df %>% separate(Index, c("Replicate", "ID"), "W")
   fulldata.df$Replicate = NULL
   
   #Find the cell correlates
-  id_to_well.df = readRDS("r/id_to_well.rds")
+  id_to_well.df = readRDS("data/id_to_well.rds")
   fulldata.df$ID = as.integer(fulldata.df$ID)
   
   #Correlate the generated cell lookup table to ECIS's internal well id's
