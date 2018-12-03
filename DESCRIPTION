@@ -1,11 +1,10 @@
-Package: Test1
+Package: ECISR
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: ECIS data handlers for R
+Version: 0.1.1001
+Author: James Hucklesby
+Maintainer: James Hucklesby <jhuc964@aucklanduni.ac.nz>
+Description: Allows for the analyasis of ECIS code using the R enviroment
+License: All Rights Reserved (2018)
 Encoding: UTF-8
 LazyData: true
