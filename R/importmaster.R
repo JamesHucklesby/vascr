@@ -2,19 +2,22 @@
 
 # Import Raw Data ---------------------------------------------------------
 
-#' Title
+#' Raw data importer
 #'
-#' @param rawdata 
-#' @param sampledefine 
+#' @param rawdata A resampled ABP file containing the un-modeled data
+#' @param sampledefine A CSV file containing well numbers and their corresponding sample names
 #'
-#' @return
+#' @return Data frame containing all the raw data readings from the ECIS Z0 instrument
+#' 
 #' @export
 #'
 #' @examples
 #' 
+#' ecis_import_raw_long(resampled.abp, sampledefinitions.csv)
+#' 
 ecis_import_raw_long = function(rawdata, sampledefine)
 {
-  
+  library(dplyr)
   library(tidyr)
   
   #rawdata = "Growth1/Resample.abp"
@@ -43,7 +46,7 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   fulldata.df$Replicate = NULL
   
   #Find the cell correlates
-  id_to_well.df = readRDS("data/id_to_well.rds")
+  id_to_well.df = read.csv("data/id_to_well.csv")
   fulldata.df$ID = as.integer(fulldata.df$ID)
   
   #Correlate the generated cell lookup table to ECIS's internal well id's
@@ -68,7 +71,7 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   # Strip the ID variable as it no longer has any use
   combined.df$ID = NULL
   
-  ############################### Generate the other internal values
+  ############################### Generate the other physical quantaties
   
   # Wrangle data so it is in columns
   child1.df = combined.df
@@ -88,7 +91,7 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   longdata.df$Unit = factor(longdata.df$Unit)
   longdata.df$Well = factor(longdata.df$Well)
   
-  ############################# End new section
+  ############################# End re-generation of phyisical measurements
   
   
   # Explicitly return
@@ -98,6 +101,17 @@ ecis_import_raw_long = function(rawdata, sampledefine)
 
 # Import modeled data -----------------------------------------------------
 
+
+#' Title
+#'
+#' @param rawdata Raw modeled data in APB format
+#' @param samples CSV file containing which wells correspond to which values
+#'
+#' @return Data frame containing modeled data
+#' @export
+#'
+#' @examples
+#' 
 ecis_import_model_long = function(rawdata,samples)
 {
   
@@ -210,6 +224,18 @@ ecis_import_model_long = function(rawdata,samples)
 # Merge the two import sources together -----------------------------------
 
 
+#' Import all ECIS values
+#'
+#' @param resample A resampled APB file for import
+#' @param modeled  A modeled APB file for import
+#' @param key A CSV file containing each well and it's corresponding sample
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+#' 
 ecis_import_long = function ( resample, modeled, key)
 {
 
