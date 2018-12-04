@@ -29,7 +29,7 @@ ecis_summarise <- function(data.df){
 # 3 will go all the way across the bottom.
 #
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  library(grid)
+  requireNamespace(grid)
   
   # Make a list from the ... arguments and plotlist
   plots <- c(list(...), plotlist)

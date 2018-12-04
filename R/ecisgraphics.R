@@ -3,6 +3,8 @@
 ecis_plotvariable <- function (data.df, unit, frequency)
 {
   
+  requireNamespace(ggplot2)
+  
   toplot.df = data.df
   toplot.df = subset(data.df, Unit == unit)
   toplot.df = subset(toplot.df, Frequency == frequency)
@@ -19,11 +21,11 @@ ecis_plotvariable <- function (data.df, unit, frequency)
 
 # Multiplot with common key -------------------------------------------------------
 
-library(ggplot2)
-library(gridExtra)
-library(grid)
-
 grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, position = c("bottom", "right")) {
+  
+  requireNamespace(ggplot2)
+  requireNamespace(gridExtra)
+  requireNamespace(grid)
   
   plots <- list(...)
   position <- match.arg(position)

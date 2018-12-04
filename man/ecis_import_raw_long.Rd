@@ -19,6 +19,6 @@ Raw data importer
 }
 \examples{
 
-ecis_import_raw_long(resampled.abp, sampledefinitions.csv)
+#ecis_import_raw_long(resampled.abp, sampledefinitions.csv)
 
 }

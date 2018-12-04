@@ -13,12 +13,12 @@
 #'
 #' @examples
 #' 
-#' ecis_import_raw_long(resampled.abp, sampledefinitions.csv)
+#' #ecis_import_raw_long(resampled.abp, sampledefinitions.csv)
 #' 
 ecis_import_raw_long = function(rawdata, sampledefine)
 {
-  library(dplyr)
-  library(tidyr)
+  requireNamespace(dplyr)
+  requireNamespace(tidyr)
   
   #rawdata = "Growth1/Resample.abp"
   #sampledefine = "Growth1/Samples.csv"
@@ -185,8 +185,8 @@ ecis_import_model_long = function(rawdata,samples)
   Rb.df$Unit = "Rb"
   RMSE.df$Unit = "RMSE"
   
-  library(tidyr)
-  library(dplyr)
+  requireNamespace(tidyr)
+  requireNamespace(dplyr)
   
   
   #Split each well into it's own line of a long format dataset
