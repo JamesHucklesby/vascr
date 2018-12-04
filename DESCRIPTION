@@ -12,7 +12,8 @@ RoxygenNote: 6.1.1
 Imports: plyr,
     dplyr,
     ggplot2,
-    tidyr,
+    tidyr
+Suggests:
     gganimate,
     transformr,
     gridExtra
