@@ -13,9 +13,6 @@ Imports: plyr,
     dplyr,
     ggplot2,
     tidyr
-#Suggests:
-#    gganimate,
-#    transformr,
-#    gridExtra
+#Suggests: gganimate, transformr, gridExtra
 
 
