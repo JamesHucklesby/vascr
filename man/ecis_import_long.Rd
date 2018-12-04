@@ -2,7 +2,7 @@
 % Please edit documentation in R/importmaster.R
 \name{ecis_import_long}
 \alias{ecis_import_long}
-\title{Import all ECIS values}
+\title{Import all ECIS values, a child of ecis_import_raw and ecis_import_model}
 \usage{
 ecis_import_long(resample, modeled, key)
 }
@@ -13,8 +13,11 @@ ecis_import_long(resample, modeled, key)
 
 \item{key}{A CSV file containing each well and it's corresponding sample}
 }
+\value{
+A dataframe containing all the data APB generated from an experiment
+}
 \description{
-Import all ECIS values
+Import all ECIS values, a child of ecis_import_raw and ecis_import_model
 }
 \examples{
 

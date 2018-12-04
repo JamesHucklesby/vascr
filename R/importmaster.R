@@ -1,5 +1,3 @@
-
-
 # Import Raw Data ---------------------------------------------------------
 
 #' Raw data importer
@@ -17,8 +15,8 @@
 #' 
 ecis_import_raw_long = function(rawdata, sampledefine)
 {
-  requireNamespace(dplyr)
-  requireNamespace(tidyr)
+  requireNamespace("dplyr")
+  requireNamespace("tidyr")
   
   #rawdata = "Growth1/Resample.abp"
   #sampledefine = "Growth1/Samples.csv"
@@ -185,17 +183,13 @@ ecis_import_model_long = function(rawdata,samples)
   Rb.df$Unit = "Rb"
   RMSE.df$Unit = "RMSE"
   
-  requireNamespace(tidyr)
-  requireNamespace(dplyr)
-  
-  
   #Split each well into it's own line of a long format dataset
   
-  Alpha.df = Alpha.df %>% gather(Well, Value, -Time, -Unit)
-  Cm.df = Cm.df %>% gather(Well, Value, -Time, -Unit)
-  Drift.df = Drift.df %>% gather(Well, Value, -Time, -Unit)
-  Rb.df = Rb.df %>% gather(Well, Value, -Time, -Unit)
-  RMSE.df = RMSE.df %>% gather(Well, Value, -Time, -Unit)
+  Alpha.df = Alpha.df %>% tidyr::gather(Well, Value, -Time, -Unit)
+  Cm.df = Cm.df %>% tidyr::gather(Well, Value, -Time, -Unit)
+  Drift.df = Drift.df %>% tidyr::gather(Well, Value, -Time, -Unit)
+  Rb.df = Rb.df %>% tidyr::gather(Well, Value, -Time, -Unit)
+  RMSE.df = RMSE.df %>% tidyr::gather(Well, Value, -Time, -Unit)
   
   
   #Connect the datasets together end to end
@@ -224,13 +218,13 @@ ecis_import_model_long = function(rawdata,samples)
 # Merge the two import sources together -----------------------------------
 
 
-#' Import all ECIS values
+#' Import all ECIS values, a child of ecis_import_raw and ecis_import_model
 #'
 #' @param resample A resampled APB file for import
 #' @param modeled  A modeled APB file for import
 #' @param key A CSV file containing each well and it's corresponding sample
 #'
-#' @return
+#' @return A dataframe containing all the data APB generated from an experiment 
 #' @export
 #'
 #' @examples
@@ -261,7 +255,14 @@ return(masterdata.df)
 
 }
 
-
+#' Title
+#'
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ecis_combine_mean = function (...)
 {
   
@@ -281,6 +282,16 @@ ecis_combine_mean = function (...)
   
 }
 
+#' Title
+#'
+#' @param prism.df 
+#' @param unit 
+#' @param frequency 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ecis_prism = function(prism.df, unit, frequency){
   
   #Cut the data frame down to what can reasonably be represented on one prism table

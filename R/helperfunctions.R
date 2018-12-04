@@ -1,3 +1,11 @@
+#' Title
+#'
+#' @param df 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 retitle = function(df){
   
   names(df) = as.character(unlist(df[1,]))
@@ -8,9 +16,17 @@ retitle = function(df){
 
 # Summary function --------------------------------------------------------
 
+#' Title
+#'
+#' @param data.df 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ecis_summarise <- function(data.df){
   
-  average.df = summarise(group_by(data.df, Sample, Time, Unit, Frequency, TimeID),                     
+  average.df = summarise(group_by(data.df, Sample, Time, Unit, Frequency),                     
                          sd=sd(Value), n=n(), sem = sd/sqrt(n),Value=mean(Value))
 
   return (average.df)
@@ -18,18 +34,21 @@ ecis_summarise <- function(data.df){
 }
 
 
-# Multiple plot function
-#
-# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
-# - cols:   Number of columns in layout
-# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
-#
-# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
-# then plot 1 will go in the upper left, 2 will go in the upper right, and
-# 3 will go all the way across the bottom.
-#
+
+#' Title
+#'
+#' @param ... 
+#' @param plotlist 
+#' @param file 
+#' @param cols 
+#' @param layout 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
-  requireNamespace(grid)
+  requireNamespace("grid")
   
   # Make a list from the ... arguments and plotlist
   plots <- c(list(...), plotlist)
@@ -67,6 +86,16 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
 # Normalisation function --------------------------------------------------
 
+#' Title
+#'
+#' @param data 
+#' @param normtime 
+#' @param divide 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ecis_normalise = function(data, normtime, divide = FALSE)
 {
   
@@ -96,4 +125,11 @@ ecis_normalise = function(data, normtime, divide = FALSE)
   #Now reverse the process back to a long data set
   norm3.df = gather(norm3.df, DataCompress, Value, -Time)
   norm4.df = separate(norm3.df, DataCompress, c("Unit", "Well", "Frequency", "Sample"), sep = "_")
-}
+
+  if(isFALSE(all(is.finite(norm4.df$Value)))){
+    warning("NaN values or infinities generated in normalisation. Proceed with caution")
+  }
+  
+  return(norm4.df)
+  
+  }
