@@ -13,15 +13,9 @@ Imports: plyr,
     dplyr,
     ggplot2,
     tidyr
-<<<<<<< HEAD
 #Suggests:
 #    gganimate,
 #    transformr,
 #    gridExtra
-=======
-Suggests:
-    gganimate,
-    transformr,
-    gridExtra
->>>>>>> 1d43c76c98cbbf6c9be5b2a5d6f95ecbbc3a602e
+
 
