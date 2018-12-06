@@ -91,6 +91,8 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   
   ############################# End re-generation of phyisical measurements
   
+  #Add that the experiment number is not applicable in this context
+  longdata.df$Experiment = "NA"
   
   # Explicitly return
   return(longdata.df)
@@ -209,6 +211,9 @@ ecis_import_model_long = function(rawdata,samples)
   
   combined.df$Frequency = 0;
   
+  # State that the experiment is not applicable at this point
+  combined.df$Experiment = "NA"
+  
   return(combined.df)
 }
 
@@ -319,4 +324,40 @@ ecis_prism = function(prism.df, unit, frequency){
   colnames(prism.df) = gsub("\\s*\\([^\\)]+\\)","",as.character(colnames(prism.df)))
   
   return (prism.df)
+}
+
+
+
+#' Title
+#'
+#' @param ... 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+ecis_combine = function (...)
+{
+  
+  dataframes = list(...)
+  
+  #Test filler variables
+  #dataframes = list(child1.df, child2.df, child3.df)
+  #i = 1
+  
+  #Generate an empty data frame with the correct columns to fill later
+  alldata = dataframes[[1]][0,]
+  loops = 1
+  
+  for(i in dataframes){
+    indata = i
+    indata$Experiment = loops
+    loops = loops + 1
+    alldata = rbind(alldata, indata)
+  }
+  
+  alldata$Experiment = as.factor(alldata$Experiment)
+  
+  return (alldata)
+  
 }

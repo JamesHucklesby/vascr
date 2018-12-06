@@ -10,8 +10,11 @@
 #' @export
 #'
 #' @examples
+#' 
 ecis_plotvariable <- function (data.df, unit, frequency)
 {
+  
+  warning("THIS FUNCTION IS DEPRECIATED, USE ECIS_PLOT_XXX IN THE FUTURE")
   
   requireNamespace('ggplot2')
   
@@ -19,15 +22,107 @@ ecis_plotvariable <- function (data.df, unit, frequency)
   toplot.df = subset(data.df, Unit == unit)
   toplot.df = subset(toplot.df, Frequency == frequency)
   toplot2.df = summarise(group_by(toplot.df, Sample, Time),
-                        sd=sd(Value), n=n(), se = sd/sqrt(n), Value=mean(Value))
+                       sd=sd(Value), n=n(), se = sd/sqrt(n), Value=mean(Value))
   
   plot = ggplot(data=toplot2.df, aes(x=Time, y=Value, colour=Sample)) +
     geom_errorbar(aes(ymin=Value-se, ymax=Value+se)) +
     labs(title = unit)+
     geom_line()
   
+  meann = mean(toplot2.df$n)
+  print(toplot2.df$n)
+  
   return(plot)
 }
+
+#' Title
+#'
+#' @param data.df 
+#' @param unit 
+#' @param frequency 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+ecis_plot_all = function(toplot.df, unit, frequency)
+{
+  
+  requireNamespace('ggplot2')
+  
+  toplot.df = subset(toplot.df, Unit == unit)
+  toplot.df = subset(toplot.df, Frequency == frequency)
+  
+  plot = ggplot(data=toplot.df, aes(x=Time, y=Value, group = interaction(Well, Experiment), colour = Sample)) +
+    labs(title = unit)+
+    geom_line()
+  
+  return (plot)
+}
+
+#' Title
+#'
+#' @param data.df 
+#' @param unit 
+#' @param frequency 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+ecis_plot_experiments = function(toplot.df, unit, frequency)
+{
+  
+  requireNamespace('ggplot2')
+  
+  toplot.df = subset(toplot.df, Unit == unit)
+  toplot.df = subset(toplot.df, Frequency == frequency)
+  toplot2.df = summarise(group_by(toplot.df, Sample, Time, Experiment),
+                         sd=sd(Value), n=n(), se = sd/sqrt(n), Value=mean(Value))
+  
+  plot = ggplot(data=toplot2.df, aes(x=Time, y=Value, colour=Sample, linetype =  Experiment)) +
+    # geom_errorbar(aes(ymin=Value-se, ymax=Value+se)) +
+    labs(title = unit)+
+    geom_line()
+  
+  plot
+  
+  return (plot)
+}
+
+#' Title
+#'
+#' @param toplot.df 
+#' @param unit 
+#' @param frequency 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+ecis_plot_summary <- function (toplot.df, unit, frequency)
+{
+  
+  # Delete any un-needed data for this graph
+  toplot.df = subset(toplot.df, Unit == unit)
+  toplot.df = subset(toplot.df, Frequency == frequency)
+  
+  # Average each experiment, working out the average alone
+  toplot2.df = dplyr::summarise(group_by(toplot.df, Sample, Time, Experiment),
+                                Value=mean(Value))
+  
+  # Now repeat the calculation, but work out the intra-experimental error and statistics
+  toplot2.df = summarise(group_by(toplot2.df, Sample, Time),
+                         sd=sd(Value), n=n(), se = sd/sqrt(n), Value=mean(Value))
+  
+  plot = ggplot2::ggplot(data=toplot2.df, aes(x=Time, y=Value, colour=Sample)) +
+    geom_errorbar(aes(ymin=Value-se, ymax=Value+se)) +
+    labs(title = unit)+
+    geom_line()
+  
+  return(plot)
+}
+
 
 # Multiplot with common key -------------------------------------------------------
 
@@ -86,15 +181,15 @@ grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, 
 #' @examples
 ecis_plotspectra = function(data, variable){
   
-  p1 = ecis_plotvariable(data, variable , 250)
-  p2 = ecis_plotvariable(data, variable, 500)
-  p3 = ecis_plotvariable(data, variable , 1000)
-  p4 = ecis_plotvariable(data, variable , 2000)
-  p5 = ecis_plotvariable(data, variable , 4000)
-  p6 = ecis_plotvariable(data, variable , 8000)
-  p7 = ecis_plotvariable(data, variable , 16000)
-  p8 = ecis_plotvariable(data, variable , 32000)
-  p9 = ecis_plotvariable(data, variable , 64000)
+  p1 = ecis_plot_summary(data, variable , 250)
+  p2 = ecis_plot_summary(data, variable, 500)
+  p3 = ecis_plot_summary(data, variable , 1000)
+  p4 = ecis_plot_summary(data, variable , 2000)
+  p5 = ecis_plot_summary(data, variable , 4000)
+  p6 = ecis_plot_summary(data, variable , 8000)
+  p7 = ecis_plot_summary(data, variable , 16000)
+  p8 = ecis_plot_summary(data, variable , 32000)
+  p9 = ecis_plot_summary(data, variable , 64000)
   
   grid_arrange_shared_legend(p1, p2, p3, p4, p5, p6, p7, p8, p9, ncol = 3, nrow = 3)
   
@@ -110,12 +205,12 @@ ecis_plotspectra = function(data, variable){
 #' @examples
 ecis_plotmodel <- function (alldata.df){
   
-  m1 = ecis_plotvariable(alldata.df, "R" , 4000)
-  m2 = ecis_plotvariable(alldata.df, "Rb", 0)
-  m3 = ecis_plotvariable(alldata.df, "Cm" , 0)
-  m4 = ecis_plotvariable(alldata.df, "Alpha" , 0)
-  m5 = ecis_plotvariable(alldata.df, "RMSE" , 0)
-  m6 = ecis_plotvariable(alldata.df, "Drift" , 0)
+  m1 = ecis_plot_summary(alldata.df, "R" , 4000)
+  m2 = ecis_plot_summary(alldata.df, "Rb", 0)
+  m3 = ecis_plot_summary(alldata.df, "Cm" , 0)
+  m4 = ecis_plot_summary(alldata.df, "Alpha" , 0)
+  m5 = ecis_plot_summary(alldata.df, "RMSE" , 0)
+  m6 = ecis_plot_summary(alldata.df, "Drift" , 0)
   
   grid_arrange_shared_legend(m1, m2, m3, m4, m5, m6, ncol = 2, nrow = 3)
   

@@ -1,4 +1,10 @@
 
+#' Title
+#'
+#' @return
+#' @export
+#'
+#' @examples
 install_git_requirements = function()
 {
 # Install two pre-cran packages
