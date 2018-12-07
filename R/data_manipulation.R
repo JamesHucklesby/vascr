@@ -1,9 +1,10 @@
-#' Title
+#' Align maximum points in an ECIS trace
 #'
 #' @param data.df 
 #' @param includemaxima 
 #'
 #' @return
+#' 
 #' @export
 #'
 #' @examples
@@ -38,5 +39,7 @@ ecis_align_max = function(data.df, includemaxima = FALSE)
     mergeddata.df$Max_Value = NULL
     mergeddata.df$Original_Time = NULL
   }
+  
+  return(mergeddata.df)
   
 }

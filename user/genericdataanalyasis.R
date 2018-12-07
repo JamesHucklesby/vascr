@@ -42,44 +42,16 @@ write.csv(prism.df, file = "prismtest.csv", row.names = FALSE)
 
 data.df = ecis_combine(child1.df, child2.df)
 
-ecis_align_max = function(data.df, includemaxima = FALSE)
-{
-# Generate a summary table containing only the max values we need to triangulate
-result.df <- data.df %>% 
-  dplyr::group_by(Sample, Unit, Frequency, Experiment, Well) %>%
-  dplyr::filter(Value == max(Value))
-
-# Rename two of the summary variables so they don't clash
-result.df = dplyr::rename(result.df, Max_Value =  Value)
-result.df = dplyr::rename(result.df, Max_Time =  Time)
-result.df$TimeID = NULL
-
-#Reassemble time
-
-mergeddata.df = dplyr::left_join(data.df, result.df, by = c("Sample", "Experiment", "Frequency", "Unit", "Well"))
-
-mergeddata.df$Original_Time = mergeddata.df$Time
-mergeddata.df$Time = mergeddata.df$Time  - mergeddata.df$Max_Time
-
-#Deal to any rounding errors in the time subtraction (EG 5.00001 = 5.00000)
-mergeddata.df$Time = round(mergeddata.df$Time,5)
-
-if (includemaxima)
-{
-mergeddata.df$Max_Time = NULL
-mergeddata.df$Max_Value = NULL
-mergeddata.df$Original_Time = NULL
-}
-
-}
-
-ecis_align_max(data.df)
+mergeddata.df = ecis_align_max(data.df)
 
 mergeddatacut.df = subset(mergeddata.df, Time>-50)
 mergeddatacut.df = subset(mergeddatacut.df, Time<100)
 
 ecis_plot_all(mergeddatacut.df, "R" , 4000)
-ecis_plot_summary(mergeddatacut.df, "Rb", 0)
+ecis_plot_summary(mergeddatacut.df, "R", 4000)
+
+normaldata.df = ecis_normalise(mergeddatacut.df,0)
+ecis_plot_summary(normaldata.df, "R", 4000)
 
 
 # Generate combined object ------------------------------------------------
