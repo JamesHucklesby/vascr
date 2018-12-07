@@ -105,8 +105,8 @@ ecis_normalise = function(data, normtime, divide = FALSE)
   
   #Compress the other data points you wish to keep into a chain
   data$TimeID = NULL
-  data = unite(data, DataCompress, Unit, Well, Frequency, Sample, Experiment)
-  norm2.df = spread(data, DataCompress, Value)
+  data = tidyr::unite(data, DataCompress, Unit, Well, Frequency, Sample, Experiment)
+  norm2.df = tidyr::spread(data, DataCompress, Value)
   
   # Generate a reference data frame, with all rows equal to the reference value (inefficent but easy)
   reference  = norm2.df[row,]
@@ -124,8 +124,8 @@ ecis_normalise = function(data, normtime, divide = FALSE)
   }
   
   #Now reverse the process back to a long data set
-  norm3.df = gather(norm3.df, DataCompress, Value, -Time)
-  norm4.df = separate(norm3.df, DataCompress, c("Unit", "Well", "Frequency", "Sample", "Experiment"), sep = "_")
+  norm3.df = tidyr::gather(norm3.df, DataCompress, Value, -Time)
+  norm4.df = tidyr::separate(norm3.df, DataCompress, c("Unit", "Well", "Frequency", "Sample", "Experiment"), sep = "_")
 
   if(isFALSE(all(is.finite(norm4.df$Value)))){
     warning("NaN values or infinities generated in normalisation. Proceed with caution")

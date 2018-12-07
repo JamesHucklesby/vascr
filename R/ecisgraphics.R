@@ -16,21 +16,16 @@ ecis_plotvariable <- function (data.df, unit, frequency)
   
   warning("THIS FUNCTION IS DEPRECIATED, USE ECIS_PLOT_XXX IN THE FUTURE")
   
-  requireNamespace('ggplot2')
-  
   toplot.df = data.df
   toplot.df = subset(data.df, Unit == unit)
   toplot.df = subset(toplot.df, Frequency == frequency)
   toplot2.df = summarise(group_by(toplot.df, Sample, Time),
                        sd=sd(Value), n=n(), se = sd/sqrt(n), Value=mean(Value))
   
-  plot = ggplot(data=toplot2.df, aes(x=Time, y=Value, colour=Sample)) +
-    geom_errorbar(aes(ymin=Value-se, ymax=Value+se)) +
-    labs(title = unit)+
-    geom_line()
-  
-  meann = mean(toplot2.df$n)
-  print(toplot2.df$n)
+  plot = ggplot2::ggplot(data=toplot2.df, ggplot2::aes(x=Time, y=Value, colour=Sample)) +
+    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-se, ymax=Value+se)) +
+    ggplot2::labs(title = unit)+
+    ggplot2::geom_line()
   
   return(plot)
 }
@@ -48,14 +43,12 @@ ecis_plotvariable <- function (data.df, unit, frequency)
 ecis_plot_all = function(toplot.df, unit, frequency)
 {
   
-  requireNamespace('ggplot2')
-  
   toplot.df = subset(toplot.df, Unit == unit)
   toplot.df = subset(toplot.df, Frequency == frequency)
   
-  plot = ggplot(data=toplot.df, aes(x=Time, y=Value, group = interaction(Well, Experiment), colour = Sample)) +
-    labs(title = unit)+
-    geom_line()
+  plot = ggplot2::ggplot(data=toplot.df, ggplot2::aes(x=Time, y=Value, group = interaction(Well, Experiment), colour = Sample)) +
+    ggplot2::labs(title = unit)+
+    ggplot2::geom_line()
   
   return (plot)
 }
@@ -73,17 +66,15 @@ ecis_plot_all = function(toplot.df, unit, frequency)
 ecis_plot_experiments = function(toplot.df, unit, frequency)
 {
   
-  requireNamespace('ggplot2')
-  
   toplot.df = subset(toplot.df, Unit == unit)
   toplot.df = subset(toplot.df, Frequency == frequency)
   toplot2.df = summarise(group_by(toplot.df, Sample, Time, Experiment),
                          sd=sd(Value), n=n(), se = sd/sqrt(n), Value=mean(Value))
   
-  plot = ggplot(data=toplot2.df, aes(x=Time, y=Value, colour=Sample, linetype =  Experiment)) +
-    # geom_errorbar(aes(ymin=Value-se, ymax=Value+se)) +
-    labs(title = unit)+
-    geom_line()
+  plot = ggplot2::ggplot(data=toplot2.df, ggplot2::aes(x=Time, y=Value, colour=Sample, linetype =  Experiment)) +
+    # geom_errorbar(ggplot2::aes(ymin=Value-se, ymax=Value+se)) +
+    ggplot2::labs(title = unit)+
+    ggplot2::geom_line()
   
   plot
   
@@ -115,10 +106,10 @@ ecis_plot_summary <- function (toplot.df, unit, frequency)
   toplot2.df = summarise(group_by(toplot2.df, Sample, Time),
                          sd=sd(Value), n=n(), se = sd/sqrt(n), Value=mean(Value))
   
-  plot = ggplot2::ggplot(data=toplot2.df, aes(x=Time, y=Value, colour=Sample)) +
-    geom_errorbar(aes(ymin=Value-se, ymax=Value+se)) +
-    labs(title = unit)+
-    geom_line()
+  plot = ggplot2::ggplot(data=toplot2.df, ggplot2::aes(x=Time, y=Value, colour=Sample)) +
+    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-se, ymax=Value+se)) +
+    ggplot2::labs(title = unit)+
+    ggplot2::geom_line()
   
   return(plot)
 }
@@ -138,32 +129,31 @@ ecis_plot_summary <- function (toplot.df, unit, frequency)
 #'
 #' @examples
 grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, position = c("bottom", "right")) {
-  
-  requireNamespace('ggplot2')
+
   requireNamespace('gridExtra')
   requireNamespace('grid')
   
   plots <- list(...)
   position <- match.arg(position)
-  g <- ggplotGrob(plots[[1]] + theme(legend.position = position))$grobs
+  g <- ggplot2::ggplotGrob(plots[[1]] + ggplot2::theme(legend.position = position))$grobs
   legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
   lheight <- sum(legend$height)
   lwidth <- sum(legend$width)
-  gl <- lapply(plots, function(x) x + theme(legend.position="none"))
+  gl <- lapply(plots, function(x) x + ggplot2::theme(legend.position="none"))
   gl <- c(gl, ncol = ncol, nrow = nrow)
   
   combined <- switch(position,
-                     "bottom" = arrangeGrob(do.call(arrangeGrob, gl),
+                     "bottom" = gridExtra::arrangeGrob(do.call(gridExtra::arrangeGrob, gl),
                                             legend,
                                             ncol = 1,
-                                            heights = unit.c(unit(1, "npc") - lheight, lheight)),
-                     "right" = arrangeGrob(do.call(arrangeGrob, gl),
+                                            heights = grid::unit.c(grid::unit(1, "npc") - lheight, lheight)),
+                     "right" = gridExtra::arrangeGrob(do.call(gridExtra::arrangeGrob, gl),
                                            legend,
                                            ncol = 2,
-                                           widths = unit.c(unit(1, "npc") - lwidth, lwidth)))
+                                           widths = grid::unit.c(grid::unit(1, "npc") - lwidth, lwidth)))
   
   #grid.newpage()
-  grid.draw(combined)
+  grid::grid.draw(combined)
   
   # return gtable invisibly
   invisible(combined)
@@ -180,6 +170,8 @@ grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, 
 #'
 #' @examples
 ecis_plotspectra = function(data, variable){
+  
+  data = subset(data, Unit == variable)
   
   p1 = ecis_plot_summary(data, variable , 250)
   p2 = ecis_plot_summary(data, variable, 500)
@@ -240,13 +232,13 @@ ecis_animatefrequency = function (alldata.df, unittoplot, frames){
   
   toplot2.df = toplot.df
   
-  p = ggplot(toplot2.df, aes(Frequency, Value, colour = Sample)) +
-    geom_line( show.legend = TRUE) +
-    labs(title = 'Days: {round(frame_time,1)}', x = 'Frequency (Hz)', y = 'Value (ohms)') +
-    scale_x_log10() +
-    scale_y_log10() +
-    geom_errorbar(aes(ymin=Value-se, ymax=Value+se), width=.1) +  
-    transition_time(Time)
+  p = ggplot2::ggplot(toplot2.df, ggplot2::aes(Frequency, Value, colour = Sample)) +
+    ggplot2:: geom_line( show.legend = TRUE) +
+    ggplot2::labs(title = 'Days: {round(frame_time,1)}', x = 'Frequency (Hz)', y = 'Value (ohms)') +
+    ggplot2::scale_x_log10() +
+    ggplot2::scale_y_log10() +
+    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-se, ymax=Value+se), width=.1) +  
+    gganimate::transition_time(Time)
   
-  animate(p, nframes = frames)
+  gganimate::animate(p, nframes = frames)
 }

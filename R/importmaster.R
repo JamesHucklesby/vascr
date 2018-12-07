@@ -15,8 +15,6 @@
 #' 
 ecis_import_raw_long = function(rawdata, sampledefine)
 {
-  requireNamespace("dplyr")
-  requireNamespace("tidyr")
   
   #rawdata = "Growth1/Resample.abp"
   #sampledefine = "Growth1/Samples.csv"
@@ -35,12 +33,12 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   
   # Import the meaty part of the data and clean up the dat types
   fulldata.df = read.table(rawdata, as.is = TRUE, skip = 21, sep = ",", strip.white = TRUE)
-  fulldata.df = fulldata.df %>% separate(V1, c("T1", "T2"), " = ")
+  fulldata.df = fulldata.df %>% tidyr::separate(V1, c("T1", "T2"), " = ")
   fulldata.df$T2 = as.numeric(fulldata.df$T2)
   names(fulldata.df) = as.character(unlist(titles.df[1,]))
   
   # Clean out the row data from each well's ID
-  fulldata.df = fulldata.df %>% separate(Index, c("Replicate", "ID"), "W")
+  fulldata.df = fulldata.df %>% tidyr::separate(Index, c("Replicate", "ID"), "W")
   fulldata.df$Replicate = NULL
   
   #Find the cell correlates
@@ -51,19 +49,19 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   fulldata.df = left_join(fulldata.df, id_to_well.df, by = "ID")
   
   #Make the wide dataset long
-  fulldata_long.df = fulldata.df %>% gather(Type, Value, -Well, -Time, -ID)
+  fulldata_long.df = fulldata.df %>% tidyr::gather(Type, Value, -Well, -Time, -ID)
   fulldata_long.df$Value = as.numeric(fulldata_long.df$Value)
   
   # Split out frequency and R/C as needed
-  fulldata_long.df = fulldata_long.df %>% separate(Type, c("Unit", "Frequency"), " ")
+  fulldata_long.df = fulldata_long.df %>% tidyr::separate(Type, c("Unit", "Frequency"), " ")
   
   # Change well A01 to well A1 so it lines up with sample definition file (could be earlier)
   fulldata_long.df$Well = sub('(?<![0-9])0*(?=[0-9])', '', fulldata_long.df$Well, perl=TRUE)
   
   # Read in sample names and merge them with the long dataset
   names.df = read.csv(sampledefine, as.is = TRUE)
-  fulldata_long.df$Well = as.character(fulldata_long.df$Well)
-  names.df$Well = as.character(names.df$Well)
+  ####fulldata_long.df$Well = as.character(fulldata_long.df$Well)
+  ####names.df$Well = as.character(names.df$Well)
   combined.df = left_join(fulldata_long.df, names.df, by = "Well")
   
   # Strip the ID variable as it no longer has any use
@@ -74,7 +72,7 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   # Wrangle data so it is in columns
   child1.df = combined.df
   child1.df$Value = abs(child1.df$Value)
-  widedata.df = spread(child1.df, Unit, Value)
+  widedata.df = tidyr::spread(child1.df, Unit, Value)
   widedata.df$Frequency = as.numeric(widedata.df$Frequency)
   
   # Calculate the new derrivative values
@@ -83,11 +81,11 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   widedata.df$P = 90- (atan(widedata.df$X/widedata.df$R)/(2*pi)*360)
   
   #Change format back
-  longdata.df = gather(widedata.df, Unit, Value, -Well, -Time, -Frequency, -Sample)
+  longdata.df = tidyr::gather(widedata.df, Unit, Value, -Well, -Time, -Frequency, -Sample)
   
   #Fix data types
   longdata.df$Unit = factor(longdata.df$Unit)
-  longdata.df$Well = factor(longdata.df$Well)
+  longdata.df$Well = as.character(longdata.df$Well)
   
   ############################# End re-generation of phyisical measurements
   
@@ -207,6 +205,8 @@ ecis_import_model_long = function(rawdata,samples)
   
   #import the naming tags
   names.df = read.csv(samples)
+  names.df$Well  = as.character(names.df$Well)
+  combined.df$Well = as.character(combined.df$Well)
   combined.df = left_join(combined.df, names.df, by = "Well")
   
   combined.df$Frequency = 0;
@@ -253,7 +253,6 @@ alltimepoints = masterdata.df$Time
 Time = unique(alltimepoints)
 TimeID = c(0:(length(Time)-1)) #Generate a vector containing all the ID;s
 time_integer.df = data.frame(TimeID, Time) #Convert both lists into a dataframe
-
 masterdata.df = left_join(masterdata.df, time_integer.df, by = 'Time')
 
 return(masterdata.df)
@@ -303,6 +302,9 @@ ecis_prism = function(prism.df, unit, frequency){
   prism.df = subset(prism.df, Frequency == frequency)
   prism.df = subset(prism.df, Unit == unit)
   
+  prism.df = dplyr::summarise(group_by(prism.df, Sample, Time, Experiment),
+                                Value=mean(Value))
+  
   #Get rid of all the variables that are not required in prism
   prism.df$n = NULL
   prism.df$sd = NULL
@@ -318,7 +320,7 @@ ecis_prism = function(prism.df, unit, frequency){
   
   #Do the magic bit
   prism.df = tbl_df(prism.df) #This row just makes tidyR work nicley
-  prism.df = spread(prism.df, ExpSam, Value)
+  prism.df = tidyr::spread(prism.df, ExpSam, Value)
   
   #Now delete all the bracketed bits
   colnames(prism.df) = gsub("\\s*\\([^\\)]+\\)","",as.character(colnames(prism.df)))
@@ -330,12 +332,15 @@ ecis_prism = function(prism.df, unit, frequency){
 
 #' Title
 #'
-#' @param ... 
+#' @param ... List of data frames to be combined
 #'
-#' @return
+#' @return A single data frame containing all the data imported, automaticaly incremented by experiment
+#' 
 #' @export
 #'
 #' @examples
+#' 
+#' 
 ecis_combine = function (...)
 {
   
