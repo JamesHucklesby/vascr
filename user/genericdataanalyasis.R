@@ -36,38 +36,50 @@ write.csv(prism.df, file = "prismtest.csv", row.names = FALSE)
 
 
 
-
-
 # Maximal alignment function ----------------------------------------------
 
-data.df = fulldata.df
+### This still throws out some strange crap, but it's mostly there
 
-#Find the maximal values for each unit
-average.df = dplyr::summarise(dplyr::group_by(data.df, Sample, Unit, Frequency, Experiment),                     
-                       max = dplyr::max(Value))
-#Push these back down every stack, so that each value now has a maximum value next to it
-average2.df = dplyr::left_join(x = average.df, y = data.df, by = c("max" = "Value", "Sample", "Unit", "Frequency", "Experiment"))
+data.df = ecis_combine(child1.df, child2.df)
 
-#Clean up
-average3.df = average2.df
+ecis_align_max = function(data.df, includemaxima = FALSE)
+{
+# Generate a summary table containing only the max values we need to triangulate
+result.df <- data.df %>% 
+  dplyr::group_by(Sample, Unit, Frequency, Experiment, Well) %>%
+  dplyr::filter(Value == max(Value))
 
-average3.df$sd = NULL
-average3.df$n = NULL
-average3.df$sem = NULL
-average3.df = rename(average3.df, Max_Time = Time)
+# Rename two of the summary variables so they don't clash
+result.df = dplyr::rename(result.df, Max_Value =  Value)
+result.df = dplyr::rename(result.df, Max_Time =  Time)
+result.df$TimeID = NULL
 
 #Reassemble time
 
-mergeddata.df = left_join(data.df, average3.df, by = c("Sample", "Experiment", "Frequency", "Unit"))
+mergeddata.df = dplyr::left_join(data.df, result.df, by = c("Sample", "Experiment", "Frequency", "Unit", "Well"))
 
-
+mergeddata.df$Original_Time = mergeddata.df$Time
 mergeddata.df$Time = mergeddata.df$Time  - mergeddata.df$Max_Time
 
+#Deal to any rounding errors in the time subtraction (EG 5.00001 = 5.00000)
+mergeddata.df$Time = round(mergeddata.df$Time,5)
 
-mergeddatacut.df = subset(mergeddata.df, Time<100)
-mergeddatacut.df = subset(mergeddatacut.df, Time>-50)
+if (includemaxima)
+{
+mergeddata.df$Max_Time = NULL
+mergeddata.df$Max_Value = NULL
+mergeddata.df$Original_Time = NULL
+}
 
-ecis_plot_experiments(mergeddatacut.df, "Rb" , 0)
+}
+
+ecis_align_max(data.df)
+
+mergeddatacut.df = subset(mergeddata.df, Time>-50)
+mergeddatacut.df = subset(mergeddatacut.df, Time<100)
+
+ecis_plot_all(mergeddatacut.df, "R" , 4000)
+ecis_plot_summary(mergeddatacut.df, "Rb", 0)
 
 
 # Generate combined object ------------------------------------------------
@@ -76,8 +88,11 @@ ecis_plot_experiments(mergeddatacut.df, "Rb" , 0)
 fulldata.df = ecis_combine(child1.df, child2.df, child3.df)
 fulldata.df = subset(fulldata.df, Time<200)
 
+summarydata.df = ecis_summarise(fulldata.df)
 
 ecis_plot_all(fulldata.df, "Rb", 0)
 ecis_plot_experiments(fulldata.df, "R", 4000)
 ecis_plot_summary(fulldata.df, "Rb", 0)
 
+normaldata.df = ecis_normalise(fulldata.df, 100, divide = FALSE)
+ecis_plot_experiments(normaldata.df, "Rb", 0)

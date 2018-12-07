@@ -7,7 +7,7 @@
 #' @examples
 install_git_requirements = function()
 {
-# Install two pre-cran packages
+# Install two pre-cran packages that run the animation stuff
 devtools::install_github('thomasp85/gganimate')
 devtools::install_github("thomasp85/transformr")
 

@@ -16,3 +16,6 @@ ecis_plotvariable(data.df, unit, frequency)
 \description{
 Title
 }
+\examples{
+
+}

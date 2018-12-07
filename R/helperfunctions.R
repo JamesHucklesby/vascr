@@ -29,6 +29,7 @@ ecis_summarise <- function(data.df){
   average.df = summarise(group_by(data.df, Sample, Time, Unit, Frequency),                     
                          sd=sd(Value), n=n(), sem = sd/sqrt(n),Value=mean(Value))
 
+  average.df$Experiment = "Derrivative";
   return (average.df)
   
 }
@@ -104,7 +105,7 @@ ecis_normalise = function(data, normtime, divide = FALSE)
   
   #Compress the other data points you wish to keep into a chain
   data$TimeID = NULL
-  data = unite(data, DataCompress, Unit, Well, Frequency, Sample)
+  data = unite(data, DataCompress, Unit, Well, Frequency, Sample, Experiment)
   norm2.df = spread(data, DataCompress, Value)
   
   # Generate a reference data frame, with all rows equal to the reference value (inefficent but easy)
@@ -124,7 +125,7 @@ ecis_normalise = function(data, normtime, divide = FALSE)
   
   #Now reverse the process back to a long data set
   norm3.df = gather(norm3.df, DataCompress, Value, -Time)
-  norm4.df = separate(norm3.df, DataCompress, c("Unit", "Well", "Frequency", "Sample"), sep = "_")
+  norm4.df = separate(norm3.df, DataCompress, c("Unit", "Well", "Frequency", "Sample", "Experiment"), sep = "_")
 
   if(isFALSE(all(is.finite(norm4.df$Value)))){
     warning("NaN values or infinities generated in normalisation. Proceed with caution")
