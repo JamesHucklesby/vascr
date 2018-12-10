@@ -7,8 +7,15 @@
 ecis_combine(...)
 }
 \arguments{
-\item{...}{}
+\item{...}{List of data frames to be combined}
+}
+\value{
+A single data frame containing all the data imported, automaticaly incremented by experiment
 }
 \description{
 Title
+}
+\examples{
+
+
 }
