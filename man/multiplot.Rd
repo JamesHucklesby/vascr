@@ -2,21 +2,24 @@
 % Please edit documentation in R/helperfunctions.R
 \name{multiplot}
 \alias{multiplot}
-\title{Title}
+\title{Generate matrix containing multiple plots}
 \usage{
 multiplot(..., plotlist = NULL, file, cols = 1, layout = NULL)
 }
 \arguments{
-\item{...}{}
+\item{...}{A list of ggplot2 objects to plot}
 
 \item{plotlist}{}
 
 \item{file}{}
 
-\item{cols}{}
+\item{cols}{The number of columns to plot graphs in}
 
 \item{layout}{}
 }
 \description{
-Title
+ECIS often lends itself to generating multi-faceted graphs. This function allows for the tiling of multiple ggplot2 graphs into a single figure. Used extensivley by internal graphics operations.
+}
+\details{
+Imported as a whole from StackOverflow response
 }

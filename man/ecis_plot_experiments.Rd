@@ -2,17 +2,20 @@
 % Please edit documentation in R/ecisgraphics.R
 \name{ecis_plot_experiments}
 \alias{ecis_plot_experiments}
-\title{Title}
+\title{Plot individual experiments}
 \usage{
 ecis_plot_experiments(toplot.df, unit, frequency)
 }
 \arguments{
-\item{unit}{}
+\item{unit}{Unit of interest}
 
-\item{frequency}{}
+\item{frequency}{Frequency of unit. All derrived units have a frequency of 0.}
 
-\item{data.df}{}
+\item{data.df}{An ECIS dataset}
+}
+\value{
+A ggplot2 object
 }
 \description{
-Title
+This funciton plots individual experiments as separate lines on an ECIS data plot. Each experiment has a different line style. No error bars are included to keep the plot nice and clean.
 }

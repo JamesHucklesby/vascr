@@ -2,17 +2,20 @@
 % Please edit documentation in R/importmaster.R
 \name{ecis_prism}
 \alias{ecis_prism}
-\title{Title}
+\title{Export a prism-compatable data set}
 \usage{
-ecis_prism(prism.df, unit, frequency)
+ecis_prism(data.df, unit, frequency)
 }
 \arguments{
-\item{prism.df}{}
+\item{data.df}{ECIS dataframe}
 
-\item{unit}{}
+\item{unit}{Unit of data to export}
 
-\item{frequency}{}
+\item{frequency}{Frequency of data requored, modeled data defaults to 0}
+}
+\value{
+A data frame that can be copied and pasted into prism
 }
 \description{
-Title
+Export a prism-compatable data set
 }

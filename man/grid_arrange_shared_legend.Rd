@@ -2,20 +2,23 @@
 % Please edit documentation in R/ecisgraphics.R
 \name{grid_arrange_shared_legend}
 \alias{grid_arrange_shared_legend}
-\title{Title}
+\title{Internal funciton for aligning grids}
 \usage{
 grid_arrange_shared_legend(..., ncol = length(list(...)), nrow = 1,
   position = c("bottom", "right"))
 }
 \arguments{
-\item{...}{}
+\item{...}{GGPlot objects to combine}
 
-\item{ncol}{}
+\item{ncol}{Number of columns}
 
-\item{nrow}{}
+\item{nrow}{Number of rows}
 
-\item{position}{}
+\item{position}{Where to place each graph. Unsure about this one.}
+}
+\value{
+A multi-plot graph object
 }
 \description{
-Title
+Internal funciton for aligning grids
 }

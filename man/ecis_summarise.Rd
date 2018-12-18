@@ -2,13 +2,19 @@
 % Please edit documentation in R/helperfunctions.R
 \name{ecis_summarise}
 \alias{ecis_summarise}
-\title{Title}
+\title{Summarise ECIS datasets from a single experiment}
 \usage{
 ecis_summarise(data.df)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{An ECIS dataset in standard format}
+}
+\value{
+An ECIS dataset supplimented with summary statistics
 }
 \description{
-Title
+Creates and ECIS dataset that has had all samples of the same type averaged together. Assumes that each sample is independent, IE that this function has already been run on individual experiments
+}
+\examples{
+
 }

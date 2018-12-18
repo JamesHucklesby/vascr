@@ -2,13 +2,16 @@
 % Please edit documentation in R/helperfunctions.R
 \name{retitle}
 \alias{retitle}
-\title{Title}
+\title{Retitle}
 \usage{
 retitle(df)
 }
 \arguments{
-\item{df}{}
+\item{df}{A data frame containing the desired values in the top row}
+}
+\value{
+A dataframe where the top row has been converted to titles.
 }
 \description{
-Title
+Recapitulation of the funciton in tidyR, allows the re-titling of a data frame from the top row of a dataset. Used in import funcitons to set titles from the content of ABP files.
 }

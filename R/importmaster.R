@@ -248,13 +248,6 @@ combined.df = ecis_import_model_long(modeled, key)
 masterdata.df = rbind(combined.df, raw.df)
 rm(combined.df, raw.df)
 
-alltimepoints = masterdata.df$Time
-
-Time = unique(alltimepoints)
-TimeID = c(0:(length(Time)-1)) #Generate a vector containing all the ID;s
-time_integer.df = data.frame(TimeID, Time) #Convert both lists into a dataframe
-masterdata.df = left_join(masterdata.df, time_integer.df, by = 'Time')
-
 return(masterdata.df)
 
 }
@@ -286,51 +279,52 @@ ecis_combine_mean = function (...)
   
 }
 
-#' Title
+#' Export a prism-compatable data set
 #'
-#' @param prism.df 
-#' @param unit 
-#' @param frequency 
+#' @param data.df ECIS dataframe
+#' @param unit Unit of data to export
+#' @param frequency Frequency of data requored, modeled data defaults to 0
 #'
-#' @return
+#' @return A data frame that can be copied and pasted into prism
 #' @export
 #'
 #' @examples
-ecis_prism = function(prism.df, unit, frequency){
+ecis_prism = function(data.df, unit, frequency){
   
   #Cut the data frame down to what can reasonably be represented on one prism table
-  prism.df = subset(prism.df, Frequency == frequency)
-  prism.df = subset(prism.df, Unit == unit)
   
-  prism.df = dplyr::summarise(group_by(prism.df, Sample, Time, Experiment),
+  data.df = subset(data.df, Frequency == frequency)
+  data.df = subset(data.df, Unit == unit)
+  
+  data.df = dplyr::summarise(group_by(data.df, Sample, Time, Experiment),
                                 Value=mean(Value))
   
   #Get rid of all the variables that are not required in prism
-  prism.df$n = NULL
-  prism.df$sd = NULL
-  prism.df$sem = NULL
-  prism.df$Unit = NULL
-  prism.df$Frequency = NULL
-  prism.df$TimeID = NULL
+  data.df$n = NULL
+  data.df$sd = NULL
+  data.df$sem = NULL
+  data.df$Unit = NULL
+  data.df$Frequency = NULL
+  data.df$TimeID = NULL
   
   #Generate a row title
-  prism.df$ExpSam = paste(prism.df$Sample, "(",prism.df$Experiment,")")
-  prism.df$Experiment = NULL
-  prism.df$Sample = NULL
+  data.df$ExpSam = paste(data.df$Sample, "(",data.df$Experiment,")")
+  data.df$Experiment = NULL
+  data.df$Sample = NULL
   
   #Do the magic bit
-  prism.df = tbl_df(prism.df) #This row just makes tidyR work nicley
-  prism.df = tidyr::spread(prism.df, ExpSam, Value)
+  data.df = tbl_df(data.df) #This row just makes tidyR work nicley
+  data.df = tidyr::spread(data.df, ExpSam, Value)
   
   #Now delete all the bracketed bits
-  colnames(prism.df) = gsub("\\s*\\([^\\)]+\\)","",as.character(colnames(prism.df)))
+  base::colnames(data.df) = gsub("\\s*\\([^\\)]+\\)","",as.character(colnames(data.df)))
   
-  return (prism.df)
+  return (data.df)
 }
 
 
 
-#' Title
+#' Combine data frames end to end
 #'
 #' @param ... List of data frames to be combined
 #'
@@ -364,5 +358,33 @@ ecis_combine = function (...)
   alldata$Experiment = as.factor(alldata$Experiment)
   
   return (alldata)
+  
+}
+
+#' Downsample data
+#' 
+#' Returns a subset of the original data set that has only every nth value. Greatly increases computational preformance for a minimal loss in resolution during time course experiments.
+#'
+#' @param data.df An ECIS dataset
+#' @param nth  An integer. Every nth value will be preserved in the subsetting
+#'
+#' @return
+#' @export
+#'
+#' @examples
+ecis_subset = function(data.df, nth)
+{
+  
+  Time = unique(data.df$Time)
+  TimeID = c(1:length(Time))
+  time.df = data.frame(TimeID, Time)
+  
+  withid.df = dplyr::left_join(alldata.df, time.df, by="Time")
+  subset.df = subset(withid.df, (TimeID %% nth) == 1)
+  
+  data.df = subset.df
+  subset.df$TimeID = NULL
+  
+  return(data.df)
   
 }

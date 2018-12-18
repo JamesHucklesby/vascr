@@ -1,8 +1,11 @@
-#' Title
+#' Retitle
+#' 
+#' Recapitulation of the funciton in tidyR, allows the re-titling of a data frame from the top row of a dataset. Used in import funcitons to set titles from the content of ABP files.
 #'
-#' @param df 
+#' @param df A data frame containing the desired values in the top row
 #'
-#' @return
+#' @return A dataframe where the top row has been converted to titles.
+#' 
 #' @export
 #'
 #' @examples
@@ -16,14 +19,18 @@ retitle = function(df){
 
 # Summary function --------------------------------------------------------
 
-#' Title
+#' Summarise ECIS datasets from a single experiment
+#' 
+#' Creates and ECIS dataset that has had all samples of the same type averaged together. Assumes that each sample is independent, IE that this function has already been run on individual experiments
 #'
-#' @param data.df 
+#' @param data.df An ECIS dataset in standard format
 #'
-#' @return
+#' @return An ECIS dataset supplimented with summary statistics
+#' 
 #' @export
 #'
 #' @examples
+#' 
 ecis_summarise <- function(data.df){
   
   average.df = summarise(group_by(data.df, Sample, Time, Unit, Frequency),                     
@@ -36,12 +43,16 @@ ecis_summarise <- function(data.df){
 
 
 
-#' Title
+#' Generate matrix containing multiple plots
+#' 
+#' ECIS often lends itself to generating multi-faceted graphs. This function allows for the tiling of multiple ggplot2 graphs into a single figure. Used extensivley by internal graphics operations.
+#' 
+#' Imported as a whole from StackOverflow response
 #'
-#' @param ... 
+#' @param ... A list of ggplot2 objects to plot
 #' @param plotlist 
 #' @param file 
-#' @param cols 
+#' @param cols The number of columns to plot graphs in
 #' @param layout 
 #'
 #' @return
@@ -87,16 +98,21 @@ multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
 
 # Normalisation function --------------------------------------------------
 
-#' Title
+#' Normalise ECIS data to a single time point
+#' 
+#' This function normalises each unique experiment/well combination to it's value at the specified time. Contains options to do this either by division or normalisation. Can be run twice if both operations are desired.
 #'
-#' @param data 
-#' @param normtime 
-#' @param divide 
+#' @param data Standard ECIS Dataframe
+#' @param normtime Time to normalise the data to
+#' @param divide  If set to true, data will be normalsed via a division. If set to false (default) data will be normalsed by subtraction.
 #'
-#' @return
+#' @return A standard ECIS dataset with each value normalised
+#' 
 #' @export
 #'
 #' @examples
+#' 
+#' 
 ecis_normalise = function(data, normtime, divide = FALSE)
 {
   

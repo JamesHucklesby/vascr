@@ -2,17 +2,20 @@
 % Please edit documentation in R/ecisgraphics.R
 \name{ecis_plot_summary}
 \alias{ecis_plot_summary}
-\title{Title}
+\title{Plot summary statistics from replicate experiments}
 \usage{
 ecis_plot_summary(toplot.df, unit, frequency)
 }
 \arguments{
-\item{toplot.df}{}
+\item{toplot.df}{An ECIS data file to plot}
 
-\item{unit}{}
+\item{unit}{The unit of interest}
 
-\item{frequency}{}
+\item{frequency}{Frequency of interest}
+}
+\value{
+A ggplot2 graph
 }
 \description{
-Title
+This funciton plots averages and SEM from multiple expeiments. Each experiment is averaged and then the averages are plotted. This gives a better idea of the inter-experimetnal variaton, while minimising the effect of technical variation within experiments.
 }

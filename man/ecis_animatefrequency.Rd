@@ -2,17 +2,20 @@
 % Please edit documentation in R/ecisgraphics.R
 \name{ecis_animatefrequency}
 \alias{ecis_animatefrequency}
-\title{Title}
+\title{Animate frequency}
 \usage{
 ecis_animatefrequency(alldata.df, unittoplot, frames)
 }
 \arguments{
-\item{alldata.df}{}
+\item{alldata.df}{An ECIS dataframe}
 
-\item{unittoplot}{}
+\item{unittoplot}{Which ECIS unit is to be plotted. Can't plot modeled variables as these are derrivative from ECIS models.}
 
-\item{frames}{}
+\item{frames}{Number of frames to render. More frames gives a smoother graphic, but is more computationaly expensive to generate.}
+}
+\value{
+A gganimate gif. Future itteration may include the ability to return the un-rendered object.
 }
 \description{
-Title
+Generate a gganimate graphic of frequency vs resistance. Each frame of the video represents a different time point
 }

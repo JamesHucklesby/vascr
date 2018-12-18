@@ -2,7 +2,7 @@
 % Please edit documentation in R/importmaster.R
 \name{ecis_combine}
 \alias{ecis_combine}
-\title{Title}
+\title{Combine data frames end to end}
 \usage{
 ecis_combine(...)
 }
@@ -13,7 +13,7 @@ ecis_combine(...)
 A single data frame containing all the data imported, automaticaly incremented by experiment
 }
 \description{
-Title
+Combine data frames end to end
 }
 \examples{
 
