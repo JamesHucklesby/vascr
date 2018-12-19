@@ -1,14 +1,11 @@
 #' Retitle
 #' 
-#' Recapitulation of the funciton in tidyR, allows the re-titling of a data frame from the top row of a dataset. Used in import funcitons to set titles from the content of ABP files.
+#' Recapitulation of the funciton in tidyR, allows the re-titling of a data frame from the top row of a dataset. Used in import funcitons to set titles from the content of ABP files. For internal use only.
 #'
 #' @param df A data frame containing the desired values in the top row
 #'
 #' @return A dataframe where the top row has been converted to titles.
-#' 
-#' @export
-#'
-#' @examples
+#
 retitle = function(df){
   
   names(df) = as.character(unlist(df[1,]))
@@ -30,6 +27,8 @@ retitle = function(df){
 #' @export
 #'
 #' @examples
+#' 
+#' ecis_summarise(data.df)
 #' 
 ecis_summarise <- function(data.df){
   

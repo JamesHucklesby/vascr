@@ -18,7 +18,7 @@
 ecis_plotvariable <- function (data.df, unit, frequency)
 {
   
-  warning("THIS FUNCTION IS DEPRECIATED, USE ECIS_PLOT_XXX IN THE FUTURE")
+  # warning("THIS FUNCTION IS DEPRECIATED, USE ECIS_PLOT_XXX IN THE FUTURE")
   
   toplot.df = data.df
   toplot.df = subset(data.df, Unit == unit)
@@ -34,20 +34,27 @@ ecis_plotvariable <- function (data.df, unit, frequency)
   return(plot)
 }
 
-#' Title
+#' Plot all replicates from multiple experiments individualy
+#' 
+#' This function produces a 'spaghetti plot' of all replicates accross multiple experiments. This allows for the rapid identification of any erronious replicates in the context of the experimental variation observed
 #'
-#' @param data.df 
-#' @param unit 
-#' @param frequency 
+#' @param data.df An ECIS dataframe
+#' @param unit The unit to plot
+#' @param frequency Frequency of interest, all modeled units have a frequency of 0
 #'
-#' @return
+#' @return A ggplot2 object
+#' 
 #' @export
 #'
 #' @examples
-ecis_plot_all = function(toplot.df, unit, frequency)
+#' 
+#' ecis_plot_all(data.df, "Rb", 0)
+#' 
+#' 
+ecis_plot_all = function(data.df, unit, frequency)
 {
   
-  toplot.df = subset(toplot.df, Unit == unit)
+  toplot.df = subset(data.df, Unit == unit)
   toplot.df = subset(toplot.df, Frequency == frequency)
   
   plot = ggplot2::ggplot(data=toplot.df, ggplot2::aes(x=Time, y=Value, group = interaction(Well, Experiment), colour = Sample)) +
@@ -69,6 +76,9 @@ ecis_plot_all = function(toplot.df, unit, frequency)
 #' @export
 #'
 #' @examples
+#' 
+#' ecis_plot_experiments (data.df, "Rb", 0)
+#' 
 ecis_plot_experiments = function(toplot.df, unit, frequency)
 {
   
@@ -99,6 +109,8 @@ ecis_plot_experiments = function(toplot.df, unit, frequency)
 #' @export
 #'
 #' @examples
+#' ecis_plot_summary(data.df, "Rb", 0)
+#' 
 ecis_plot_summary <- function (toplot.df, unit, frequency)
 {
   
@@ -136,6 +148,13 @@ ecis_plot_summary <- function (toplot.df, unit, frequency)
 #' @export
 #'
 #' @examples
+#' 
+#' graph1 = ecis_plot_all(data.df, "Rb", 0)
+#' graph2 = ecis_plot_experiments(data.df, "Rb", 0)
+#' graph3 = ecis_plot_summary(data.df, "Rb", 0)
+#' 
+#' grid_arrange_shared_legend (graph1, graph2, graph3, ncol = 1, nrow = 3)
+#' 
 grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, position = c("bottom", "right")) {
 
   requireNamespace('gridExtra')
@@ -168,15 +187,18 @@ grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, 
   
 }
 
-#' Title
+#' Plot graphs accross a standard ECIS spectra
 #'
-#' @param data 
-#' @param variable 
+#' @param data A standard ECIS data frame 
+#' @param variable Variable to plot. Can't be a modeled variable.
 #'
-#' @return
+#' @return A matrix of ggplot2 objects
 #' @export
 #'
 #' @examples
+#' 
+#' ecis_plotspectra(data.df, "R")
+#' 
 ecis_plotspectra = function(data, variable){
   
   data = subset(data, Unit == variable)
@@ -234,6 +256,8 @@ ecis_plotmodel <- function (alldata.df){
 #' @export
 #'
 #' @examples
+#' ecis_animatefrequency(data.df, "R", 5)
+#' 
 ecis_animatefrequency = function (alldata.df, unittoplot, frames){
   
   alldatasum.df = summarise(group_by(alldata.df, Sample, Time, Unit, Frequency),

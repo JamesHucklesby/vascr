@@ -2,17 +2,26 @@
 % Please edit documentation in R/ecisgraphics.R
 \name{ecis_plot_all}
 \alias{ecis_plot_all}
-\title{Title}
+\title{Plot all replicates from multiple experiments individualy}
 \usage{
-ecis_plot_all(toplot.df, unit, frequency)
+ecis_plot_all(data.df, unit, frequency)
 }
 \arguments{
-\item{unit}{}
+\item{data.df}{An ECIS dataframe}
 
-\item{frequency}{}
+\item{unit}{The unit to plot}
 
-\item{data.df}{}
+\item{frequency}{Frequency of interest, all modeled units have a frequency of 0}
+}
+\value{
+A ggplot2 object
 }
 \description{
-Title
+This function produces a 'spaghetti plot' of all replicates accross multiple experiments. This allows for the rapid identification of any erronious replicates in the context of the experimental variation observed
+}
+\examples{
+
+ecis_plot_all(data.df, "Rb", 0)
+
+
 }

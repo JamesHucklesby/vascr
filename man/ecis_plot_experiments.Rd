@@ -19,3 +19,8 @@ A ggplot2 object
 \description{
 This funciton plots individual experiments as separate lines on an ECIS data plot. Each experiment has a different line style. No error bars are included to keep the plot nice and clean.
 }
+\examples{
+
+ecis_plot_experiments (data.df, "Rb", 0)
+
+}

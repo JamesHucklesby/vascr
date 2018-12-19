@@ -19,3 +19,7 @@ A ggplot2 graph
 \description{
 This funciton plots averages and SEM from multiple expeiments. Each experiment is averaged and then the averages are plotted. This gives a better idea of the inter-experimetnal variaton, while minimising the effect of technical variation within experiments.
 }
+\examples{
+ecis_plot_summary(data.df, "Rb", 0)
+
+}

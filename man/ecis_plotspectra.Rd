@@ -2,15 +2,23 @@
 % Please edit documentation in R/ecisgraphics.R
 \name{ecis_plotspectra}
 \alias{ecis_plotspectra}
-\title{Title}
+\title{Plot graphs accross a standard ECIS spectra}
 \usage{
 ecis_plotspectra(data, variable)
 }
 \arguments{
-\item{data}{}
+\item{data}{A standard ECIS data frame}
 
-\item{variable}{}
+\item{variable}{Variable to plot. Can't be a modeled variable.}
+}
+\value{
+A matrix of ggplot2 objects
 }
 \description{
-Title
+Plot graphs accross a standard ECIS spectra
+}
+\examples{
+
+ecis_plotspectra(data.df, "R")
+
 }

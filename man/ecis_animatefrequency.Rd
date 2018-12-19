@@ -19,3 +19,7 @@ A gganimate gif. Future itteration may include the ability to return the un-rend
 \description{
 Generate a gganimate graphic of frequency vs resistance. Each frame of the video represents a different time point
 }
+\examples{
+ecis_animatefrequency(data.df, "R", 5)
+
+}
