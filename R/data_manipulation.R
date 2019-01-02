@@ -1,45 +1,43 @@
-#' Align maximum points in an ECIS trace
+#' Align key points in an ECIS trace
 #'
-#' @param data.df 
-#' @param includemaxima 
+#'This will either align the max or minimum points from each graph. As specified.
 #'
-#' @return
+#'Sets the time at which each replicate well is maximal to time 0. Results in variables aligned by maximum time, rather than time from seeding.
+#'
+#' @param data.df A standard ECIS data file
+#' @param point Which key point, either "max" or "min"
+#'
+#' @return An ECIS dataset where the key time points all happen at time 0
 #' 
 #' @export
 #'
 #' @examples
-ecis_align_max = function(data.df, includemaxima = FALSE)
-{
-  #Still does some strange crap but it's mostly there
+#' 
+#' ecis_align_key(data.df, "max")
+#' ecis_align_key(data.df, "min")
+
+ecis_align_key = function(data.df, point){
   
-  
-  # Generate a summary table containing only the max values we need to triangulate
-  result.df <- data.df %>% 
-    dplyr::group_by(Sample, Unit, Frequency, Experiment, Well) %>%
-    dplyr::filter(Value == max(Value))
-  
-  # Rename two of the summary variables so they don't clash
-  result.df = dplyr::rename(result.df, Max_Value =  Value)
-  result.df = dplyr::rename(result.df, Max_Time =  Time)
-  result.df$TimeID = NULL
-  
-  #Reassemble time
-  
-  mergeddata.df = dplyr::left_join(data.df, result.df, by = c("Sample", "Experiment", "Frequency", "Unit", "Well"))
-  
-  mergeddata.df$Original_Time = mergeddata.df$Time
-  mergeddata.df$Time = mergeddata.df$Time  - mergeddata.df$Max_Time
-  
-  #Deal to any rounding errors in the time subtraction (EG 5.00001 = 5.00000)
-  mergeddata.df$Time = round(mergeddata.df$Time,5)
-  
-  if (includemaxima)
+  if (point == "max")
   {
-    mergeddata.df$Max_Time = NULL
-    mergeddata.df$Max_Value = NULL
-    mergeddata.df$Original_Time = NULL
+    returndata.df = data.df %>%
+      dplyr:: group_by(Unit, Well, Sample, Frequency, Experiment) %>%
+      dplyr:: arrange(Time) %>%
+      dplyr:: mutate (Time = Time- Time[which.max(Value)])
   }
   
-  return(mergeddata.df)
+  else if (point == "min")
+  {
+    returndata.df = data.df %>%
+      dplyr:: group_by(Unit, Well, Sample, Frequency, Experiment) %>%
+      dplyr:: arrange(Time) %>%
+      dplyr:: mutate (Time = Time- Time[which.min(Value)])
+  }
+  
+  else
+  {
+    warning("No supported key point string entered. Please try again")
+  }
+  
   
 }

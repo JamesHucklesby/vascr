@@ -11,13 +11,18 @@
 #'
 #' @examples
 #' 
-#' #ecis_import_raw_long(resampled.abp, sampledefinitions.csv)
+#' #First determine the locatins of your files relative to your dataset. Here we use system.file to pull a default out of the filesystem, but you can use a path relative to the file you are working on. E.G "Experiment1/Raw.abp"
+#' 
+#' location_of_resampled_data = system.file("Resample.abp", package = "ECISR")
+#' location_of_sample_defintions = system.file("Samples.csv", package = "ECISR")
+#' 
+#' #Then run the import
+#' 
+#' ecis_import_raw_long(location_of_resampled_data, location_of_sample_defintions)
 #' 
 ecis_import_raw_long = function(rawdata, sampledefine)
 {
-  
-  #rawdata = "Growth1/Resample.abp"
-  #sampledefine = "Growth1/Samples.csv"
+
   
   #Generate a data frame containing the titles
   titles.df = read.table(rawdata, as.is = TRUE, skip = 19, nrows = 1, sep=",", strip.white = TRUE)
@@ -89,8 +94,8 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   
   ############################# End re-generation of phyisical measurements
   
-  #Add that the experiment number is not applicable in this context
-  longdata.df$Experiment = "NA"
+  #Add the file name as the experiment ID
+  longdata.df$Experiment = rawdata
   
   # Explicitly return
   return(longdata.df)
@@ -109,6 +114,15 @@ ecis_import_raw_long = function(rawdata, sampledefine)
 #' @export
 #'
 #' @examples
+#' 
+#' #' #First determine the locatins of your files relative to your dataset. Here we use system.file to pull a default out of the filesystem, but you can use a path relative to the file you are working on. E.G "Experiment1/Raw.abp"
+#' 
+#' location_of_modeled_data = system.file("Model.csv", package = "ECISR")
+#' location_of_sample_defintions = system.file("Samples.csv", package = "ECISR")
+#' 
+#' #Then run the import
+#' 
+#' ecis_import_model_long(location_of_modeled_data, location_of_sample_defintions)
 #' 
 ecis_import_model_long = function(rawdata,samples)
 {
@@ -212,7 +226,7 @@ ecis_import_model_long = function(rawdata,samples)
   combined.df$Frequency = 0;
   
   # State that the experiment is not applicable at this point
-  combined.df$Experiment = "NA"
+  combined.df$Experiment = rawdata
   
   return(combined.df)
 }
@@ -234,16 +248,19 @@ ecis_import_model_long = function(rawdata,samples)
 #'
 #' @examples
 #' 
+#' location_of_resampled_data = system.file("Resample.abp", package = "ECISR")
+#' location_of_modeled_data = system.file("Model.csv", package = "ECISR")
+#' location_of_sample_defintions = system.file("Samples.csv", package = "ECISR")
+#' 
+#' #Then run the import
+#' 
+#' ecis_import_long(location_of_resampled_data,location_of_modeled_data, location_of_sample_defintions)
 #' 
 ecis_import_long = function ( resample, modeled, key)
 {
 
 raw.df = ecis_import_raw_long(resample, key)
 combined.df = ecis_import_model_long(modeled, key)
-
-# Pre-compute statistics, but don't because it takes ages
-#combinedsummary.df = summarySE(combined.df, measurevar="Value", groupvars=c("Sample","Time", "Unit", "Frequency"))
-#rawsummary.df = summarySE(raw.df, measurevar="Value", groupvars=c("Sample","Time", "Unit", "Frequency"))
 
 masterdata.df = rbind(combined.df, raw.df)
 rm(combined.df, raw.df)
@@ -252,16 +269,25 @@ return(masterdata.df)
 
 }
 
-#' Title
+#' Generate summary data from combining experiments
 #'
-#' @param ... 
+#' @param ... A series of data frames to be combined
 #'
-#' @return
+#' @return A standard ECIS data frame with summary statistics for each row. One row per sample and time combination.
 #' @export
 #'
 #' @examples
+#' 
+#' #Generate two pretend datasets
+#' experiment1.df = data.df
+#' experiment2.df = data.df
+#' 
+#' #ecis_combine_mean(experiment1.df, experiment2.df)
+#' warning("This funciton is broken")
+#' 
 ecis_combine_mean = function (...)
 {
+  warning("This funciton is broken")
   
   dataframes = list(...)
   
@@ -289,6 +315,9 @@ ecis_combine_mean = function (...)
 #' @export
 #'
 #' @examples
+#' ecis_prism(data.df, "Rb", 0)
+#' 
+
 ecis_prism = function(data.df, unit, frequency){
   
   #Cut the data frame down to what can reasonably be represented on one prism table
@@ -334,6 +363,12 @@ ecis_prism = function(data.df, unit, frequency){
 #'
 #' @examples
 #' 
+#' #Make two fake experiments worth of data
+#' 
+#' experiment1.df = data.df
+#' experiment2.df = data.df
+#' 
+#' ecis_combine(experiment1.df, experiment2.df)
 #' 
 ecis_combine = function (...)
 {
@@ -350,7 +385,7 @@ ecis_combine = function (...)
   
   for(i in dataframes){
     indata = i
-    indata$Experiment = loops
+    indata$Experiment = paste (loops, ":", indata$Experiment)
     loops = loops + 1
     alldata = rbind(alldata, indata)
   }
@@ -368,18 +403,21 @@ ecis_combine = function (...)
 #' @param data.df An ECIS dataset
 #' @param nth  An integer. Every nth value will be preserved in the subsetting
 #'
-#' @return
+#' @return Downsampled ECIS data set
 #' @export
 #'
 #' @examples
+#' 
+#' ecis_subset(data.df, 50)
+#' 
 ecis_subset = function(data.df, nth)
 {
   
   Time = unique(data.df$Time)
   TimeID = c(1:length(Time))
-  time.df = data.frame(TimeID, Time)
+  time.df = data.frame(TimeID, Time)w
   
-  withid.df = dplyr::left_join(alldata.df, time.df, by="Time")
+  withid.df = dplyr::left_join(data.df, time.df, by="Time")
   subset.df = subset(withid.df, (TimeID %% nth) == 1)
   
   data.df = subset.df

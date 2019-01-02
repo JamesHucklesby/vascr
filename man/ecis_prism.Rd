@@ -19,3 +19,7 @@ A data frame that can be copied and pasted into prism
 \description{
 Export a prism-compatable data set
 }
+\examples{
+ecis_prism(data.df, "Rb", 0)
+
+}

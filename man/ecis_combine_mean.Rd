@@ -2,13 +2,26 @@
 % Please edit documentation in R/importmaster.R
 \name{ecis_combine_mean}
 \alias{ecis_combine_mean}
-\title{Title}
+\title{Generate summary data from combining experiments}
 \usage{
 ecis_combine_mean(...)
 }
 \arguments{
-\item{...}{}
+\item{...}{A series of data frames to be combined}
+}
+\value{
+A standard ECIS data frame with summary statistics for each row. One row per sample and time combination.
 }
 \description{
-Title
+Generate summary data from combining experiments
+}
+\examples{
+
+#Generate two pretend datasets
+experiment1.df = data.df
+experiment2.df = data.df
+
+#ecis_combine_mean(experiment1.df, experiment2.df)
+warning("This funciton is broken")
+
 }

@@ -11,6 +11,14 @@ ecis_subset(data.df, nth)
 
 \item{nth}{An integer. Every nth value will be preserved in the subsetting}
 }
+\value{
+Downsampled ECIS data set
+}
 \description{
 Returns a subset of the original data set that has only every nth value. Greatly increases computational preformance for a minimal loss in resolution during time course experiments.
+}
+\examples{
+
+ecis_subset(data.df, 50)
+
 }

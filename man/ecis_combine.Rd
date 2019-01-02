@@ -17,5 +17,11 @@ Combine data frames end to end
 }
 \examples{
 
+#Make two fake experiments worth of data
+
+experiment1.df = data.df
+experiment2.df = data.df
+
+ecis_combine(experiment1.df, experiment2.df)
 
 }
