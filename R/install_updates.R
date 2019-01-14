@@ -1,10 +1,14 @@
 
 #' Title
 #'
-#' @return
+#' @return Installs all the git requisites for the package. Not available via CRAN.
+#' 
 #' @export
 #'
 #' @examples
+#' 
+#' install_git_requirements()
+#' 
 install_git_requirements = function()
 {
 # Install two pre-cran packages that run the animation stuff

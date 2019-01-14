@@ -415,7 +415,7 @@ ecis_subset = function(data.df, nth)
   
   Time = unique(data.df$Time)
   TimeID = c(1:length(Time))
-  time.df = data.frame(TimeID, Time)w
+  time.df = data.frame(TimeID, Time)
   
   withid.df = dplyr::left_join(data.df, time.df, by="Time")
   subset.df = subset(withid.df, (TimeID %% nth) == 1)
