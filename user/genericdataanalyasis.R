@@ -16,10 +16,18 @@ data.df = ecis_subset(alldata.df,100)
 
 # Convert hours to days
 data.df$Time = data.df$Time/24
+alldata.df$Time = alldata.df$Time/24
 
 # Reduce dataset down to the region of interest
-data.df = subset(data.df, Time<6)
+data.df = subset(data.df, Time<7)
+alldata.df = subset(alldata.df, Time<7)
 
+# Start plotting out the datasets
+ecis_plot_all(alldata.df, "R", 4000)
+ecis_plot_experiments(alldata.df, "R", 4000)
+ecis_plot_experiments(alldata.df, "Rb", 0)
+
+ecis_plot_summary(data.df, "Rb", 0)
 
 # Run the mathematics to generate a normalised dataset
 normalised.df = ecis_normalise(data.df, 4, divide = FALSE)
@@ -39,10 +47,11 @@ prism.df = ecis_prism(data.df, "R", "4000")
 write.csv(prism.df, file = "prismtest.csv", row.names = FALSE)
 
 #Align maxima to have a look at max and relative maximal Rb's
-aligned.df = ecis_align_max(data.df)
+aligned.df = ecis_align_key(data.df, "max")
 
 ecis_plot_all(aligned.df, "Rb", 0)
 ecis_plot_experiments(aligned.df, "Rb", 0)
-ecis_plot_summary(aligned.df, "R", 250)
+ecis_plot_summary(returndata.df, "Rb", 0)
+
 
 saveRDS(alldata.df, file = "sampledata.rds")

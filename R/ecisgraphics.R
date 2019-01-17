@@ -237,7 +237,7 @@ ecis_plotmodel <- function (alldata.df){
   m5 = ecis_plot_summary(alldata.df, "RMSE" , 0)
   m6 = ecis_plot_summary(alldata.df, "Drift" , 0)
   
-  multiplot(m1, m2, m3, m4, m5, m6, cols = 2)
+  return (grid_arrange_shared_legend(m1, m2, m3, m4, m5, m6, ncol = 2, nrow = 3))
   
 }
 

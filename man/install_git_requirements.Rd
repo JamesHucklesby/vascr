@@ -6,6 +6,14 @@
 \usage{
 install_git_requirements()
 }
+\value{
+Installs all the git requisites for the package. Not available via CRAN.
+}
 \description{
 Title
+}
+\examples{
+
+install_git_requirements()
+
 }

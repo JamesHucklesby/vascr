@@ -6,6 +6,7 @@
 #'
 #' @param data.df A standard ECIS data file
 #' @param point Which key point, either "max" or "min"
+#' @param discrepancy A standard rounding constant to compensate for rounding errors in the subtraciton process
 #'
 #' @return An ECIS dataset where the key time points all happen at time 0
 #' 
@@ -16,7 +17,7 @@
 #' ecis_align_key(data.df, "max")
 #' ecis_align_key(data.df, "min")
 
-ecis_align_key = function(data.df, point){
+ecis_align_key = function(data.df, point, discrepancy = 5){
   
   if (point == "max")
   {
@@ -37,7 +38,11 @@ ecis_align_key = function(data.df, point){
   else
   {
     warning("No supported key point string entered. Please try again")
+    return (FALSE)
   }
   
   
+  returndata.df$Time = round(returndata.df$Time,discrepancy)
+  
+  return (returndata.df)
 }

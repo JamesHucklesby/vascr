@@ -1,0 +1,124 @@
+---
+title: "Results of seeding density trials October – December 2018"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+Aim: To determine the optimal seeding density of HCMEC/D3 cells in MCDB131 + EBM additives (Promocell) to allow for further ECIS experimentation.
+Methods: Standard ECIS protocols for cellular density. Plates were treated with Cysteine before treatment with type I collagen (rat tail, Sigma). Various densities were then plated and the experiment monitored by ECIS for one week. All samples were run in triplicate.
+
+First we use pretty standard code to consolodate all the samples down into R format
+
+```{r}
+library(ECISR)
+
+#Import three replicate experiments from ABP into data frames
+masterdata1.df = ecis_import_long("user/Growth1/Resample.abp", "user/Growth1/Model.csv", "user/Growth1/Samples.csv")
+masterdata2.df = ecis_import_long("user/Growth2/Resample.abp", "user/Growth2/Modeled.csv", "user/Growth2/Samples.csv")
+masterdata3.df = ecis_import_long("user/Growth3/Resample.abp", "user/Growth3/Modeled.csv", "user/Growth3/Samples.csv")
+
+#Combine the three experiments
+alldata.df = ecis_combine(masterdata1.df, masterdata2.df, masterdata3.df)
+
+# Convert hours to days
+alldata.df$Time = alldata.df$Time/24
+
+# Reduce dataset down to the region of interest
+alldata.df = subset(alldata.df, Time<7)
+
+# Subset the data to a sensible frequency
+data.df = ecis_subset(alldata.df,100)
+
+
+```
+
+Now we start data analyasis
+
+First we plot out the R 4000 readouts for all the samples to check them for consistency and to see any outliers.
+
+```{r}
+ecis_plot_all(alldata.df, "R", 4000)
+```
+
+All runs produced similar results, though the later ones seemed to have lower than the earlier ones. Difficult to know if this is an assay thing or some degradation of the cells from not being in the EBM2 basal media long term. Hard to know. Also not the random jumps in measurement starting from 4 days onward. Following normal issues in that, they increase over several data points in the raw data.
+
+We then plot them out by experiment, as there seems to be a large ammount of experimental variation bewtween samples
+
+```{r}
+ecis_plot_experiments(alldata.df, "R", 4000)
+```
+
+Wells in the same experiment were averaged, giving three lines per experiment. Later experiments were significantly lower and had a much stronger maximum spread per experiment than the earlier trials.  Analysis was then repeated for Rb of each sample, with the expectation that each sample will have similar values.
+
+```{r}
+ecis_plot_experiments(alldata.df, "Rb", 0)
+```
+
+Later experiments showed significantly lower Rb’s especially for the lower cell densities. Expected Rb is about 3, whereas many of these values are significantly lower, especially in experiments 2 and 3. This confirmed the earlier hunches, in a much clearer format. It also shows that much of the variation was between, rather than within experiments. I suspect this is due to prolongued culture (there were 5 weeks of culture between experiments 1 and 3), potentialy also some issues keeping the D3's in non EBM long term.
+
+Discussion point: Are D3's stable in non-EBM based media long term?
+
+Regardless of the variation, I proceeded to graph the experiments as replicates anyway
+
+```{r}
+ecis_plot_summary(data.df, "Rb", 0)
+```
+
+Above is the data represented as averages +- s.e.m across the three experiments. This seems to show a nice trend, however are we happy to display this knowing the variation being the data?
+
+Biologically, this seems to show that 35,000 is the optimal seeding density as it reaches the highest Rb. The jumps in the datset flagged earlier seem to have a minmal effect. This seems to be a combination of the jumps being relativley rare and the large inherint inter-experimental variation always present.
+
+The error bars are all over the place. This is a product of the inter-experimental variaiton and the number of data points. Despite this, if we only look at every second point we see significant differences. If we want to run statistics, we shoud consider that the number of cells is continuous. This allows relations between the measured variable and the number of cells to be established.
+
+Going forward with this analyasis I have generated this summary graph only.
+
+Disucssion point: How does this compare to the data published by the southhampton group? They had much smaller sample sizes working out of a 8 well array.
+
+Discussion point: Is it worth generating some tools to quantify dilution series effects, or are we happy just looking at graphs.
+
+Discussion point: Is this data good enough to make the point about dilutions, or do we feel that more investivaiton is needed.
+
+For completeness have also included summary charts of all the modeling
+
+```{r message=FALSE, warning=FALSE}
+  ecis_plot_summary(data.df, "R" , 4000)
+  ecis_plot_summary(data.df, "Rb", 0)
+  ecis_plot_summary(data.df, "Cm" , 0)
+  ecis_plot_summary(data.df, "Alpha" , 0)
+  ecis_plot_summary(data.df, "RMSE" , 0)
+  ecis_plot_summary(data.df, "Drift" , 0)
+```
+
+
+Next, I wanted to compare the stability of each data set. To do that I aligned the maximum points in time. This alignment has the effect that each seeding density was started at a different time, in such a way that all the experiments peaked at once. This allows for a more direct comparason of barrier strength.
+
+Technical note: Each data point is aligned by this function. This has the nucanced effect of meaning that each replicate was started at a different, and highly specific time. It significantly reduces errors, and I see it as a valid transformation as it still complies with the overarching aim of aligning maximum points.
+
+```{r}
+# Code to generate an aligned dataset
+maxaligned.df = ecis_align_key(data.df, "max")
+# Then run an cleaning step to get rid of the wierd outliers
+maxaligned.df = subset(maxaligned.df, Time>-3)
+maxaligned.df = subset(maxaligned.df, Time<4)
+
+ecis_plot_all(maxaligned.df, "Rb", 0)
+```
+
+Returning all calues gices an absolue mess, though it shows that the outliers have not stuffed things up too much. therefore I plotted experiments to show a better progression.
+
+```{r}
+ecis_plot_summary(maxaligned.df, "R", 4000)
+```
+
+
+To do: Have a dig through the powering formula and check that it works. There seems to be another rounding issue that's crept into the code.
+
+
+
+
+
+
+
+
+'
