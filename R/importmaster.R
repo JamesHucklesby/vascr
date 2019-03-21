@@ -23,31 +23,61 @@
 ecis_import_raw_long = function(rawdata, sampledefine)
 {
 
+  # Grab all the rows of the file and dump them into a data frame
+  
+  file.df = read.delim(rawdata, as.is = TRUE, sep = "\n", strip.white = TRUE)
+  base::colnames(file.df) = "Data"
   
   #Generate a data frame containing the titles
-  titles.df = read.table(rawdata, as.is = TRUE, skip = 19, nrows = 1, sep=",", strip.white = TRUE)
-  titles.df = titles.df[1,1:length(titles.df)-1] #Remove the last one that overhangs
+  titles.df = subset(file.df, str_detect(file.df$Data,"Index, Time,")) 
+  titlestring = titles.df[1,1]
+  titles = unlist(strsplit(titlestring, split = ","))
+  titles = trimws(titles)
   
   #Import the whole dataset
   
-  #Work out how long the data set is by looking for the comments line
-  #fulldata.df = read.table(rawdata, as.is = TRUE, skip = 20, sep = "\n")
-  #maxrows = which(fulldata.df == "[Comments]")
-  #nrows = maxrows-1
-  #not needed for a resampled file
-  
   # Import the meaty part of the data and clean up the dat types
-  fulldata.df = read.table(rawdata, as.is = TRUE, skip = 21, sep = ",", strip.white = TRUE)
-  fulldata.df = fulldata.df %>% tidyr::separate(V1, c("T1", "T2"), " = ")
-  fulldata.df$T2 = as.numeric(fulldata.df$T2)
-  names(fulldata.df) = as.character(unlist(titles.df[1,]))
+  fulldata.df = subset(file.df, str_detect(file.df$Data,"^T[0-9]"))
+  
+  fulldata.df = fulldata.df %>% tidyr::separate(Data, titles, ",|=")
   
   # Clean out the row data from each well's ID
-  fulldata.df = fulldata.df %>% tidyr::separate(Index, c("Replicate", "ID"), "W")
-  fulldata.df$Replicate = NULL
+  fulldata.df = fulldata.df %>% tidyr::separate(Index, c("TimeID", "ID"), "W")
+  fulldata.df$TimeID = NULL
   
   #Find the cell correlates
-  id_to_well.df = read.csv("data/id_to_well.csv")
+  format = subset(file.df, str_detect(file.df$Data,"WellNum"))
+  
+  if (format[1,1] == "WellNum = 16")
+  {
+    id_to_well.df = structure(list(ID = 1:16, Well = structure(1:16, .Label = c("A01", 
+                                                                                "A02", "A03", "A04", "A05", "A06", "A07", "A08", "B01", "B02", 
+                                                                                "B03", "B04", "B05", "B06", "B07", "B08"), class = "factor")), class = "data.frame", row.names = c(NA, -16L))
+  }
+  
+  if (format[1,1] == "WellNum = 96")
+  {
+    id_to_well.df = structure(list(ID = 1:96, Well = structure(c(1L, 13L, 25L, 37L, 
+                                                                 49L, 61L, 73L, 85L, 5L, 17L, 29L, 41L, 53L, 65L, 77L, 89L, 6L, 
+                                                                 18L, 30L, 42L, 54L, 66L, 78L, 90L, 7L, 19L, 31L, 43L, 55L, 67L, 
+                                                                 79L, 91L, 8L, 20L, 32L, 44L, 56L, 68L, 80L, 92L, 9L, 21L, 33L, 
+                                                                 45L, 57L, 69L, 81L, 93L, 10L, 22L, 34L, 46L, 58L, 70L, 82L, 94L, 
+                                                                 11L, 23L, 35L, 47L, 59L, 71L, 83L, 95L, 12L, 24L, 36L, 48L, 60L, 
+                                                                 72L, 84L, 96L, 2L, 14L, 26L, 38L, 50L, 62L, 74L, 86L, 3L, 15L, 
+                                                                 27L, 39L, 51L, 63L, 75L, 87L, 4L, 16L, 28L, 40L, 52L, 64L, 76L, 
+                                                                 88L), .Label = c("A1", "A10", "A11", "A12", "A2", "A3", "A4", 
+                                                                                  "A5", "A6", "A7", "A8", "A9", "B1", "B10", "B11", "B12", "B2", 
+                                                                                  "B3", "B4", "B5", "B6", "B7", "B8", "B9", "C1", "C10", "C11", 
+                                                                                  "C12", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "D1", 
+                                                                                  "D10", "D11", "D12", "D2", "D3", "D4", "D5", "D6", "D7", "D8", 
+                                                                                  "D9", "E1", "E10", "E11", "E12", "E2", "E3", "E4", "E5", "E6", 
+                                                                                  "E7", "E8", "E9", "F1", "F10", "F11", "F12", "F2", "F3", "F4", 
+                                                                                  "F5", "F6", "F7", "F8", "F9", "G1", "G10", "G11", "G12", "G2", 
+                                                                                  "G3", "G4", "G5", "G6", "G7", "G8", "G9", "H1", "H10", "H11", 
+                                                                                  "H12", "H2", "H3", "H4", "H5", "H6", "H7", "H8", "H9"), class = "factor")), class = "data.frame", row.names = c(NA, 
+                                                                                                                                                                                                  -96L))
+  }
+  
   fulldata.df$ID = as.integer(fulldata.df$ID)
   
   #Correlate the generated cell lookup table to ECIS's internal well id's
@@ -60,8 +90,9 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   # Split out frequency and R/C as needed
   fulldata_long.df = fulldata_long.df %>% tidyr::separate(Type, c("Unit", "Frequency"), " ")
   
-  # Change well A01 to well A1 so it lines up with sample definition file (could be earlier)
-  fulldata_long.df$Well = sub('(?<![0-9])0*(?=[0-9])', '', fulldata_long.df$Well, perl=TRUE)
+  # No longer do this as the samples were updated
+  #Change well A01 to well A1 so it lines up with sample definition file (could be earlier)
+  ##fulldata_long.df$Well = sub('(?<![0-9])0*(?=[0-9])', '', fulldata_long.df$Well, perl=TRUE)
   
   # Read in sample names and merge them with the long dataset
   names.df = read.csv(sampledefine, as.is = TRUE)
@@ -91,11 +122,13 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   #Fix data types
   longdata.df$Unit = factor(longdata.df$Unit)
   longdata.df$Well = as.character(longdata.df$Well)
+  longdata.df$Time = as.numeric(longdata.df$Time)
   
   ############################# End re-generation of phyisical measurements
   
   #Add the file name as the experiment ID
   longdata.df$Experiment = rawdata
+  
   
   # Explicitly return
   return(longdata.df)
@@ -104,8 +137,11 @@ ecis_import_raw_long = function(rawdata, sampledefine)
 
 # Import modeled data -----------------------------------------------------
 
+rawdata = "HCMVEC/ECIS_190218_MFT_1_TimeResample_RbA.csv"
+samples = "HCMVEC/by_treatment.csv"
 
-#' Title
+
+#' Import raw modeled data
 #'
 #' @param rawdata Raw modeled data in APB format
 #' @param samples CSV file containing which wells correspond to which values
@@ -127,38 +163,38 @@ ecis_import_raw_long = function(rawdata, sampledefine)
 ecis_import_model_long = function(rawdata,samples)
 {
   
+  file.df = read.delim(rawdata, as.is = TRUE, sep = "\n", strip.white = TRUE)
+  base::colnames(file.df) = "Data"
+  
   #Import the dataset in segments so that you can get rid of the ECIS crap
-  cells.df = read.table(rawdata, header = FALSE, sep = ",", skip = 20, nrows = 1, stringsAsFactors = FALSE)
-  unit.df = read.table(rawdata, header = FALSE, sep = ",", skip = 19, nrows = 1, stringsAsFactors = FALSE)
-  data.df = read.table(rawdata, header = FALSE, sep = ",", skip = 23, stringsAsFactors = FALSE)
+  cells.df = subset(file.df, str_detect(file.df$Data,"Well ID"))
+  unit.df = subset(file.df, str_detect(file.df$Data,"Time "))
+  data.df = subset(file.df, str_detect(file.df$Data,"^[0-9]"))
+  
+  cells = cells.df[1,1]
+  cells = unlist(strsplit(cells, split = ","))
+  cells = trimws(cells)
+  cells.df = cells
+  
+  unit = unit.df[1,1]
+  unit = unlist(strsplit(unit, split = ","))
+  unit = trimws(unit)
+  unit.df = unit
   
   #Rename the units something sensible
-  unit.df = replace(unit.df, unit.df == " Rb (ohm.cm^2)", "Rb")
-  unit.df = replace(unit.df, unit.df == " Alpha (cm.ohm^0.5)", "Alpha")
-  unit.df = replace(unit.df, unit.df == " CellMCap(uF/cm^2)", "Cm")
-  unit.df = replace(unit.df, unit.df == " Drift (%)", "Drift")
-  unit.df = replace(unit.df, unit.df == " RMSE", "RMSE")
-  cells.df = trimws(cells.df)
+  unit.df = replace(unit.df, unit.df == "Rb (ohm.cm^2)", "Rb")
+  unit.df = replace(unit.df, unit.df == "Alpha (cm.ohm^0.5)", "Alpha")
+  unit.df = replace(unit.df, unit.df == "CellMCap(uF/cm^2)", "Cm")
+  unit.df = replace(unit.df, unit.df == "Drift (%)", "Drift")
+  unit.df = replace(unit.df, unit.df == "RMSE", "RMSE")
   
   # Generate unique names vector
   uniquenamesvector = paste(unit.df,cells.df, sep="_")
-  cells.df = cells.df[1:length(cells.df)-1]
   
   # Merge well ID and unit variables together
-  alldata.df = rbind(uniquenamesvector,cells.df,data.df)
   
-  rm(uniquenamesvector, cells.df, data.df, unit.df)
-  
-  #Generate a funciton that changes the headers to the unique values
-  
-  retitle = function(df){
-    
-    names(df) = as.character(unlist(df[1,]))
-    df = df[-1,]
-    df
-  }
-  
-  alldata.df = retitle(alldata.df)
+  data.df = data.df %>% tidyr::separate(Data, uniquenamesvector, ",")
+  alldata.df = rbind(cells.df,data.df)
   
   
   # Save the timestamps and rename the first one something sensible
@@ -182,6 +218,13 @@ ecis_import_model_long = function(rawdata,samples)
   RMSE.df$timestamps = timestamps.df
   
   rm(timestamps.df)
+  
+  retitle = function(df){
+    
+    names(df) = as.character(unlist(df[1,]))
+    df = df[-1,]
+    df
+  }
   
   #Re-adjust the headers
   Alpha.df = retitle (Alpha.df)
@@ -227,6 +270,7 @@ ecis_import_model_long = function(rawdata,samples)
   
   # State that the experiment is not applicable at this point
   combined.df$Experiment = rawdata
+  combined.df$Time = as.numeric(combined.df$Time)
   
   return(combined.df)
 }

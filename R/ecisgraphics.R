@@ -1,5 +1,14 @@
 #Graphics generation
 
+# Fudge funciton, fix this later
+
+ecis_plot = function(data, unit, frequency, resolution)
+{
+  if(resolution == "all") { ecis_plot_all(data, unit, frequency)}
+  if(resolution == "experiment") { ecis_plot_experiments(data, unit, frequency)}
+  if(resolution == "summary") { ecis_plot_summary(data, unit, frequency)}
+}
+
 #' Generate a standard ECIS data representation
 #' 
 #' THIS FUNCTION IS DEPRECIATED, Use ECIS_plot_xxx series of funcitons for finer control over how to deal with replicate experiments. This graphic will underestimate error from replicate experiments.
@@ -134,6 +143,56 @@ ecis_plot_summary <- function (toplot.df, unit, frequency)
   return(plot)
 }
 
+
+#////////////////Dissection code ///////////////////////////////////
+ecis_plot_all_timeslice = function (data.df, unit, time)
+{
+  filtered.df = data.df
+  
+  filtered.df = subset(filtered.df, Time == time)
+  filtered.df = subset(filtered.df, Unit == unit)
+  
+  
+  filtered.df$Sample = paste(filtered.df$Sample, filtered.df$Well)
+  
+  ggplot(filtered.df, aes(x = Sample, y = Value, fill = Experiment))+
+    geom_bar(stat = "identity", position = position_dodge())+
+    theme(axis.text.x = element_text(angle = 90))
+  
+}
+
+ecis_plot_experiments_timeslice = function(data.df, unit, time)
+{
+  filtered.df = data.df
+  
+  filtered.df = subset(filtered.df, Time == time)
+  filtered.df = subset(filtered.df, Unit == unit)
+  
+  filtered2.df  = summarise(group_by(filtered.df, Experiment, Sample), sd=sd(Value), n=n(), sem = sd/sqrt(n), Value                     =mean(Value))
+  
+  ggplot(filtered2.df, aes(x = Sample, y = Value, fill = Experiment))+
+    geom_bar(stat = "identity", position = position_dodge())+
+    geom_errorbar(aes(ymin=Value-sem, ymax=Value+sem), width=.2, position = position_dodge(.9))
+  
+}
+
+ecis_plot_summary_timeslice = function(data.df, unit, time)
+{
+  filtered.df = data.df
+  
+  # First reduce the dataset to the single time point and unit that we can digest
+  filtered.df = subset(filtered.df, Time == time)
+  filtered.df = subset(filtered.df, Unit == unit)
+  
+  # Then use two dplyr statements to prepare the data for graphing
+  filtered2.df  = summarise(group_by(filtered.df, Experiment, Sample), Value = mean(Value))
+  filtered2.df = summarise(group_by(filtered2.df, Sample), sd=sd(Value), n=n(), sem = sd/sqrt(n), Value=mean(Value))
+  
+  # Then graph the output
+  ggplot(filtered2.df, aes(x = Sample, y = Value))+
+    geom_bar(stat = "identity")+
+    geom_errorbar(aes(ymin=Value-sem, ymax=Value+sem), width=.2)
+}
 
 # Multiplot with common key -------------------------------------------------------
 

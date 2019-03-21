@@ -4,12 +4,14 @@
 \alias{ecis_align_key}
 \title{Align key points in an ECIS trace}
 \usage{
-ecis_align_key(data.df, point)
+ecis_align_key(data.df, point, discrepancy = 5)
 }
 \arguments{
 \item{data.df}{A standard ECIS data file}
 
 \item{point}{Which key point, either "max" or "min"}
+
+\item{discrepancy}{A standard rounding constant to compensate for rounding errors in the subtraciton process}
 }
 \value{
 An ECIS dataset where the key time points all happen at time 0

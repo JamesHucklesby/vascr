@@ -2,7 +2,7 @@
 % Please edit documentation in R/importmaster.R
 \name{ecis_import_model_long}
 \alias{ecis_import_model_long}
-\title{Title}
+\title{Import raw modeled data}
 \usage{
 ecis_import_model_long(rawdata, samples)
 }
@@ -15,7 +15,7 @@ ecis_import_model_long(rawdata, samples)
 Data frame containing modeled data
 }
 \description{
-Title
+Import raw modeled data
 }
 \examples{
 

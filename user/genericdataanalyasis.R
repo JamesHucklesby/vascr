@@ -47,11 +47,24 @@ prism.df = ecis_prism(data.df, "R", "4000")
 write.csv(prism.df, file = "prismtest.csv", row.names = FALSE)
 
 #Align maxima to have a look at max and relative maximal Rb's
-aligned.df = ecis_align_key(data.df, "max")
+aligned.df = ecis_align_key(data.df, "max", 5)
 
 ecis_plot_all(aligned.df, "Rb", 0)
 ecis_plot_experiments(aligned.df, "Rb", 0)
-ecis_plot_summary(returndata.df, "Rb", 0)
+ecis_plot_summary(aligned.df, "Rb", 0)
 
 
 saveRDS(alldata.df, file = "sampledata.rds")
+
+ecis_plot_summary_timeslice(aligned.df, "Rb", 0)
+ecis_plot_experiments_timeslice(aligned.df, "Rb", 0)
+ecis_plot_experiments_timeslice(aligned.df, "Rb", 0)
+
+
+graphlet = ecis_plot_all(data.df, "Rb", 0)
+graphlet + geom_vline(xintercept=2)
+
+
+
+
+

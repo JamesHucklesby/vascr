@@ -14,9 +14,9 @@ First we use pretty standard code to consolodate all the samples down into R for
 library(ECISR)
 
 #Import three replicate experiments from ABP into data frames
-masterdata1.df = ecis_import_long("user/Growth1/Resample.abp", "user/Growth1/Model.csv", "user/Growth1/Samples.csv")
-masterdata2.df = ecis_import_long("user/Growth2/Resample.abp", "user/Growth2/Modeled.csv", "user/Growth2/Samples.csv")
-masterdata3.df = ecis_import_long("user/Growth3/Resample.abp", "user/Growth3/Modeled.csv", "user/Growth3/Samples.csv")
+masterdata1.df = ecis_import_long("Growth1/Resample.abp", "Growth1/Model.csv", "Growth1/Samples.csv")
+masterdata2.df = ecis_import_long("Growth2/Resample.abp", "Growth2/Modeled.csv", "Growth2/Samples.csv")
+masterdata3.df = ecis_import_long("Growth3/Resample.abp", "Growth3/Modeled.csv", "Growth3/Samples.csv")
 
 #Combine the three experiments
 alldata.df = ecis_combine(masterdata1.df, masterdata2.df, masterdata3.df)
@@ -38,7 +38,8 @@ Now we start data analyasis
 First we plot out the R 4000 readouts for all the samples to check them for consistency and to see any outliers.
 
 ```{r}
-ecis_plot_all(alldata.df, "R", 4000)
+e
+cis_plot_all(alldata.df, "R", 4000)
 ```
 
 All runs produced similar results, though the later ones seemed to have lower than the earlier ones. Difficult to know if this is an assay thing or some degradation of the cells from not being in the EBM2 basal media long term. Hard to know. Also not the random jumps in measurement starting from 4 days onward. Following normal issues in that, they increase over several data points in the raw data.
@@ -111,13 +112,15 @@ Returning all calues gices an absolue mess, though it shows that the outliers ha
 ecis_plot_summary(maxaligned.df, "R", 4000)
 ```
 
+To assess the stability of the barrier, I then shifted all the lines in the Y axis so that they aligned.
 
-To do: Have a dig through the powering formula and check that it works. There seems to be another rounding issue that's crept into the code.
+```{r}
+normalised.df = ecis_normalise(maxaligned.df, 0, FALSE)
+ecis_plot_summary(normalised.df, "Rb", 0)
+```
 
 
-
-
-
+This showed that over the first 24 hours (the bit that we are interested in) there is minimal to no difference between
 
 
 
