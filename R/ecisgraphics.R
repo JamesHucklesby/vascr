@@ -287,6 +287,8 @@ ecis_plotspectra = function(data, variable){
 #'
 #' @examples
 #' 
+#' ecis_plotmodel(data.df)
+#' 
 ecis_plotmodel <- function (alldata.df){
   
   m1 = ecis_plot_summary(alldata.df, "R" , 4000)

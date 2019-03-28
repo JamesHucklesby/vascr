@@ -17,4 +17,6 @@ This is a pre-generated piece of code that automaticaly plots all the variables 
 }
 \examples{
 
+ecis_plotmodel(data.df)
+
 }
