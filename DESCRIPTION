@@ -9,12 +9,12 @@ License: MIT
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.1.1
-Depends:tidyverse, dplyr, ggplot2, R (>= 3.0.0)
-Requires: plyr,
-    ggplot2,
-    tidyverse, 
-    gridExtra,
+Depends: R (>= 2.10), dplyr, stringr, tidyr
+Imports:tidyverse, ggplot2, gganimate, gifski, gridExtra,
     gganimate, 
-    transformr
+    transformr, plyr, dplyr, devtools
+    
+
+    
 
 

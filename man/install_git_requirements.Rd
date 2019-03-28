@@ -14,6 +14,6 @@ Title
 }
 \examples{
 
-install_git_requirements()
+#install_git_requirements()
 
 }

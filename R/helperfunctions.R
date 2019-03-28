@@ -47,7 +47,7 @@ ecis_summarise <- function(data.df){
 #' 
 #' This function normalises each unique experiment/well combination to it's value at the specified time. Contains options to do this either by division or normalisation. Can be run twice if both operations are desired.
 #'
-#' @param data Standard ECIS Dataframe
+#' @param data.df Standard ECIS Dataframe
 #' @param normtime Time to normalise the data to
 #' @param divide  If set to true, data will be normalsed via a division. If set to false (default) data will be normalsed by subtraction.
 #'

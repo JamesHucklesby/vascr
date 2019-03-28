@@ -1,6 +1,8 @@
 # Import Raw Data ---------------------------------------------------------
 
 #' Raw data importer
+#' 
+#' Raw data importer, generates a r dataframe from a raw ABP file
 #'
 #' @param rawdata A resampled ABP file containing the un-modeled data
 #' @param sampledefine A CSV file containing well numbers and their corresponding sample names
@@ -18,9 +20,9 @@
 #' 
 #' #Then run the import
 #' 
-#' ecis_import_raw_long(location_of_resampled_data, location_of_sample_defintions)
+#' #ecis_import_raw(location_of_resampled_data, location_of_sample_defintions)
 #' 
-ecis_import_raw_long = function(rawdata, sampledefine)
+ecis_import_raw = function(rawdata, sampledefine)
 {
 
   # Grab all the rows of the file and dump them into a data frame
@@ -29,7 +31,7 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   base::colnames(file.df) = "Data"
   
   #Generate a data frame containing the titles
-  titles.df = subset(file.df, str_detect(file.df$Data,"Index, Time,")) 
+  titles.df = subset(file.df, stringr::str_detect(file.df$Data,"Index, Time,")) 
   titlestring = titles.df[1,1]
   titles = unlist(strsplit(titlestring, split = ","))
   titles = trimws(titles)
@@ -50,9 +52,9 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   
   if (format[1,1] == "WellNum = 16")
   {
-    id_to_well.df = structure(list(ID = 1:16, Well = structure(1:16, .Label = c("A01", 
-                                                                                "A02", "A03", "A04", "A05", "A06", "A07", "A08", "B01", "B02", 
-                                                                                "B03", "B04", "B05", "B06", "B07", "B08"), class = "factor")), class = "data.frame", row.names = c(NA, -16L))
+    id_to_well.df = structure(list(ID = 1:16, Well = structure(1:16, .Label = c("A1", 
+                                                                                "A2", "A3", "A4", "A5", "A6", "A7", "A8", "B1", "B2", 
+                                                                                "B3", "B4", "B5", "B6", "B7", "B8"), class = "factor")), class = "data.frame", row.names = c(NA, -16L))
   }
   
   if (format[1,1] == "WellNum = 96")
@@ -90,14 +92,15 @@ ecis_import_raw_long = function(rawdata, sampledefine)
   # Split out frequency and R/C as needed
   fulldata_long.df = fulldata_long.df %>% tidyr::separate(Type, c("Unit", "Frequency"), " ")
   
-  # No longer do this as the samples were updated
-  #Change well A01 to well A1 so it lines up with sample definition file (could be earlier)
-  ##fulldata_long.df$Well = sub('(?<![0-9])0*(?=[0-9])', '', fulldata_long.df$Well, perl=TRUE)
   
   # Read in sample names and merge them with the long dataset
   names.df = read.csv(sampledefine, as.is = TRUE)
-  ####fulldata_long.df$Well = as.character(fulldata_long.df$Well)
-  ####names.df$Well = as.character(names.df$Well)
+  fulldata_long.df$Well = as.character(fulldata_long.df$Well)
+  names.df$Well = as.character(names.df$Well)
+  
+  fulldata_long.df$Well = ecis_standardise_wells(fulldata_long.df$Well)
+  names.df$Well = ecis_standardise_wells(names.df$Well)
+  
   combined.df = left_join(fulldata_long.df, names.df, by = "Well")
   
   # Strip the ID variable as it no longer has any use
@@ -158,9 +161,9 @@ samples = "HCMVEC/by_treatment.csv"
 #' 
 #' #Then run the import
 #' 
-#' ecis_import_model_long(location_of_modeled_data, location_of_sample_defintions)
+#' ecis_import_model(location_of_modeled_data, location_of_sample_defintions)
 #' 
-ecis_import_model_long = function(rawdata,samples)
+ecis_import_model = function(rawdata,samples)
 {
   
   file.df = read.delim(rawdata, as.is = TRUE, sep = "\n", strip.white = TRUE)
@@ -264,11 +267,14 @@ ecis_import_model_long = function(rawdata,samples)
   names.df = read.csv(samples)
   names.df$Well  = as.character(names.df$Well)
   combined.df$Well = as.character(combined.df$Well)
+  
+  names.df$Well = ecis_standardise_wells(names.df$Well)
+  combined.df$Well = ecis_standardise_wells(combined.df$Well)
+  
   combined.df = left_join(combined.df, names.df, by = "Well")
   
   combined.df$Frequency = 0;
   
-  # State that the experiment is not applicable at this point
   combined.df$Experiment = rawdata
   combined.df$Time = as.numeric(combined.df$Time)
   
@@ -298,13 +304,13 @@ ecis_import_model_long = function(rawdata,samples)
 #' 
 #' #Then run the import
 #' 
-#' ecis_import_long(location_of_resampled_data,location_of_modeled_data, location_of_sample_defintions)
+#' ecis_import(location_of_resampled_data,location_of_modeled_data, location_of_sample_defintions)
 #' 
-ecis_import_long = function ( resample, modeled, key)
+ecis_import = function ( resample, modeled, key)
 {
 
-raw.df = ecis_import_raw_long(resample, key)
-combined.df = ecis_import_model_long(modeled, key)
+raw.df = ecis_import_raw(resample, key)
+combined.df = ecis_import_model(modeled, key)
 
 masterdata.df = rbind(combined.df, raw.df)
 rm(combined.df, raw.df)
@@ -469,4 +475,26 @@ ecis_subset = function(data.df, nth)
   
   return(data.df)
   
+}
+
+
+
+
+
+#' Standardise wells
+#' 
+#' Replaces A01 in strings with A0. Important for importing ABP files which may use either notation.
+#'
+#' @param well The well to be standardised 
+#'
+#' @return Standardised well names
+#' 
+#' @export
+#'
+#' @examples 
+#' ecis_standardise_wells("A01")
+#' 
+ecis_standardise_wells = function(well)
+{
+  sub('(?<![0-9])0*(?=[0-9])', '', well, perl=TRUE)
 }

@@ -77,7 +77,7 @@ ecis_plot_all = function(data.df, unit, frequency)
 #' 
 #' This funciton plots individual experiments as separate lines on an ECIS data plot. Each experiment has a different line style. No error bars are included to keep the plot nice and clean.
 #'
-#' @param data.df An ECIS dataset
+#' @param toplot.df An ECIS dataset
 #' @param unit    Unit of interest
 #' @param frequency  Frequency of unit. All derrived units have a frequency of 0.
 #'
@@ -315,7 +315,7 @@ ecis_plotmodel <- function (alldata.df){
 #' @export
 #'
 #' @examples
-#' ecis_animatefrequency(data.df, "R", 5)
+#' #ecis_animatefrequency(data.df, "R", 5)
 #' 
 ecis_animatefrequency = function (alldata.df, unittoplot, frames){
   

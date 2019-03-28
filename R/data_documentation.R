@@ -1,33 +1,18 @@
-
-#' Lookup table for ECIS instruments. Converts physical addresses on the machine to wells in a 96 well plate.
-#' 
-#' @docType data
+#' Example data set from an ECIS growth experiment
 #'
-#' @usage data(ID_to_Well.csv)
+#' A dataset containing growth curves from a variety of experiments
 #'
-#' @format An object of class \code{"cross"}; see \code{\link[qtl]{read.cross}}.
-#'
-#' @keywords datasets
-#'
-#' @source Empiricaly generated
-#'
-#' @examples
-#' data(ID_to_Well.csv)
-
-
-
-
-#' Growth data for varying concentraions of a cell line. Used as a test case for varying funcitons.
-#' 
-#' @docType data
-#'
-#' @usage data(data.df)
-#'
-#' @format An object of class \code{"cross"}; see \code{\link[qtl]{read.cross}}.
-#'
-#' @keywords datasets
-#'
-#' @source Hucklesby et all 2018
-#'
-#' @examples
-#' data(grav)
+#' @format A data frame with 53940 rows and 10 variables:
+#' \describe{
+#'   \item{Experiment}{Date the experiment was conducted}
+#'   \item{Frequency}{Frequency of colleciton, modeled units have a frequency of 0}
+#'   \item{Sample}{Name of the sample located in that well}
+#'   \item{Time}{Capture time}
+#'   \item{TimeID}{Sequential number of the time point captured}
+#'   \item{Unit}{Unit that the value is measured in}
+#'   \item{Value}{Numerical value in units}
+#'   \item{Well}{Well of plate that was measured}
+#'   ...
+#' }
+#' @source James Hucklesby
+"data.df"

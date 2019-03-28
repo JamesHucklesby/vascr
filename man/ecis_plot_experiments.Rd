@@ -7,11 +7,11 @@
 ecis_plot_experiments(toplot.df, unit, frequency)
 }
 \arguments{
+\item{toplot.df}{An ECIS dataset}
+
 \item{unit}{Unit of interest}
 
 \item{frequency}{Frequency of unit. All derrived units have a frequency of 0.}
-
-\item{data.df}{An ECIS dataset}
 }
 \value{
 A ggplot2 object

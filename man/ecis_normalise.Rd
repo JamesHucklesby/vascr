@@ -7,11 +7,11 @@
 ecis_normalise(data.df, normtime, divide = FALSE)
 }
 \arguments{
+\item{data.df}{Standard ECIS Dataframe}
+
 \item{normtime}{Time to normalise the data to}
 
 \item{divide}{If set to true, data will be normalsed via a division. If set to false (default) data will be normalsed by subtraction.}
-
-\item{data}{Standard ECIS Dataframe}
 }
 \value{
 A standard ECIS dataset with each value normalised
