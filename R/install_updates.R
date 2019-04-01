@@ -8,7 +8,7 @@ utils::globalVariables("Time")
 utils::globalVariables("Value")
 
 
-#' Title
+#' Reinstalls the package from GitHub. Temporary.
 #'
 #' @return Installs all the git requisites for the package. Not available via CRAN.
 #' 
@@ -18,7 +18,7 @@ utils::globalVariables("Value")
 #' 
 #' #install_git_requirements()
 #' 
-install_git_requirements = function()
+reinstall_updates = function()
 {
 
 #This gives a private token to view my repostories
