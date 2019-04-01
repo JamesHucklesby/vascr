@@ -20,9 +20,6 @@ utils::globalVariables("Value")
 #' 
 install_git_requirements = function()
 {
-  
-install.packages("devtools")
-install.packages("gganimate")
 
 #This gives a private token to view my repostories
 devtools::install_github("JamesHucklesby/ECIS-R", auth_token = "b8b71100e6dfcb467c3777abacafbccd0dbfec94")

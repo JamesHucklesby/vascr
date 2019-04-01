@@ -2,12 +2,41 @@
 
 # Fudge funciton, fix this later
 
-ecis_plot = function(data, unit, frequency, resolution)
+#' ECIS plot
+#'
+#' @param data 
+#' @param unit 
+#' @param frequency 
+#' @param replication 
+#' @param time 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+ecis_plot = function(data, unit, frequency, replication, time = Inf, samplesubset)
 {
-  if(resolution == "all") { ecis_plot_all(data, unit, frequency)}
-  if(resolution == "experiment") { ecis_plot_experiments(data, unit, frequency)}
-  if(resolution == "summary") { ecis_plot_summary(data, unit, frequency)}
+  data = data %>% filter(str_detect(Sample, samplesubset))
+  
+  
+  if (is.infinite(time))
+  {
+  
+  if(replication == "all") { print(ecis_plot_all(data, unit, frequency))}
+  if(replication == "experiment") { print(ecis_plot_experiments(data, unit, frequency))}
+  if(replication == "summary") { print(ecis_plot_summary(data, unit, frequency))}
+  
+  # errors are not implimented yet
+  
+  }
+  else
+  {
+    if(replication == "all") { print(ecis_plot_all_timeslice(data, unit, time))}
+    if(replication == "experiment") { print(ecis_plot_experiments_timeslice(data, unit, time))}
+    if(replication == "summary") { print(ecis_plot_summary_timeslice(data, unit, time))}
+  }
 }
+
 
 #' Generate a standard ECIS data representation
 #' 
@@ -145,6 +174,19 @@ ecis_plot_summary <- function (toplot.df, unit, frequency)
 
 
 #////////////////Dissection code ///////////////////////////////////
+
+
+#' Generate a bar graph of a particular value at a single time
+#'
+#' @param data.df An ECIS data set
+#' @param unit Unit to plot
+#' @param time Time at which the cross section should be taken
+#'
+#' @return ggplot2 object containing the dataset
+#' 
+#' @export
+#'
+#' @examples
 ecis_plot_all_timeslice = function (data.df, unit, time)
 {
   filtered.df = data.df
@@ -161,6 +203,16 @@ ecis_plot_all_timeslice = function (data.df, unit, time)
   
 }
 
+#' Title
+#'
+#' @param data.df 
+#' @param unit 
+#' @param time 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ecis_plot_experiments_timeslice = function(data.df, unit, time)
 {
   filtered.df = data.df
@@ -176,6 +228,16 @@ ecis_plot_experiments_timeslice = function(data.df, unit, time)
   
 }
 
+#' Title
+#'
+#' @param data.df 
+#' @param unit 
+#' @param time 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ecis_plot_summary_timeslice = function(data.df, unit, time)
 {
   filtered.df = data.df
