@@ -2,7 +2,7 @@
 % Please edit documentation in R/importmaster.R
 \name{ecis_standardise_wells}
 \alias{ecis_standardise_wells}
-\title{Standardise wells}
+\title{Standardise well names accross import types}
 \usage{
 ecis_standardise_wells(well)
 }

@@ -289,7 +289,7 @@ ecis_import_model = function(rawdata,samples)
 
 
 
-# Merge the two import sources together -----------------------------------
+# Import all the data as a single function -----------------------------------
 
 
 #' Import all ECIS values, a child of ecis_import_raw and ecis_import_model
@@ -324,88 +324,9 @@ return(masterdata.df)
 
 }
 
-#' Generate summary data from combining experiments
-#'
-#' @param ... A series of data frames to be combined
-#'
-#' @return A standard ECIS data frame with summary statistics for each row. One row per sample and time combination.
-#' @export
-#'
-#' @examples
-#' 
-#' #Generate two pretend datasets
-#' experiment1.df = data.df
-#' experiment2.df = data.df
-#' 
-#' #ecis_combine_mean(experiment1.df, experiment2.df)
-#' warning("This funciton is broken")
-#' 
-ecis_combine_mean = function (...)
-{
-  warning("This funciton is broken")
-  
-  dataframes = list(...)
-  
-  alldata = ecis_summarise(dataframes[[1]][0,])
-  loops = 1
-  
-  for(i in dataframes){
-    indata = ecis_summarise(i)
-    indata$Experiment = loops
-    loops = loops + 1
-    alldata = rbind(alldata, indata)
-  }
-  
-  return (alldata)
-  
-}
 
-#' Export a prism-compatable data set
-#'
-#' @param data.df ECIS dataframe
-#' @param unit Unit of data to export
-#' @param frequency Frequency of data requored, modeled data defaults to 0
-#'
-#' @return A data frame that can be copied and pasted into prism
-#' @export
-#'
-#' @examples
-#' ecis_prism(data.df, "Rb", 0)
-#' 
 
-ecis_prism = function(data.df, unit, frequency){
-  
-  #Cut the data frame down to what can reasonably be represented on one prism table
-  
-  data.df = subset(data.df, Frequency == frequency)
-  data.df = subset(data.df, Unit == unit)
-  
-  data.df = dplyr::summarise(group_by(data.df, Sample, Time, Experiment),
-                                Value=mean(Value))
-  
-  #Get rid of all the variables that are not required in prism
-  data.df$n = NULL
-  data.df$sd = NULL
-  data.df$sem = NULL
-  data.df$Unit = NULL
-  data.df$Frequency = NULL
-  data.df$TimeID = NULL
-  
-  #Generate a row title
-  data.df$ExpSam = paste(data.df$Sample, "(",data.df$Experiment,")")
-  data.df$Experiment = NULL
-  data.df$Sample = NULL
-  
-  #Do the magic bit
-  data.df = tbl_df(data.df) #This row just makes tidyR work nicley
-  data.df = tidyr::spread(data.df, ExpSam, Value)
-  
-  #Now delete all the bracketed bits
-  base::colnames(data.df) = gsub("\\s*\\([^\\)]+\\)","",as.character(colnames(data.df)))
-  
-  return (data.df)
-}
-
+# Worker functions for importing files ------------------------------------
 
 
 #' Combine data frames end to end
@@ -451,42 +372,9 @@ ecis_combine = function (...)
   
 }
 
-#' Downsample data
-#' 
-#' Returns a subset of the original data set that has only every nth value. Greatly increases computational preformance for a minimal loss in resolution during time course experiments.
-#'
-#' @param data.df An ECIS dataset
-#' @param nth  An integer. Every nth value will be preserved in the subsetting
-#'
-#' @return Downsampled ECIS data set
-#' @export
-#'
-#' @examples
-#' 
-#' ecis_subset(data.df, 50)
-#' 
-ecis_subset = function(data.df, nth)
-{
-  
-  Time = unique(data.df$Time)
-  TimeID = c(1:length(Time))
-  time.df = data.frame(TimeID, Time)
-  
-  withid.df = dplyr::left_join(data.df, time.df, by="Time")
-  subset.df = subset(withid.df, (TimeID %% nth) == 1)
-  
-  data.df = subset.df
-  subset.df$TimeID = NULL
-  
-  return(data.df)
-  
-}
 
 
-
-
-
-#' Standardise wells
+#' Standardise well names accross import types
 #' 
 #' Replaces A01 in strings with A0. Important for importing ABP files which may use either notation.
 #'
