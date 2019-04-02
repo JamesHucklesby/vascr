@@ -12,8 +12,7 @@ RoxygenNote: 6.1.1
 Depends: R (>= 2.10), tidyverse
 Imports: ggplot2, gganimate, gridExtra,
     transformr, plyr, dplyr, devtools, tidyr, stringr, dplyr
-    
-
-    
-
-
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

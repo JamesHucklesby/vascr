@@ -2,7 +2,7 @@
 % Please edit documentation in R/importmaster.R
 \name{ecis_import_raw}
 \alias{ecis_import_raw}
-\title{Raw data importer}
+\title{ECIS raw data importer}
 \usage{
 ecis_import_raw(rawdata, sampledefine)
 }

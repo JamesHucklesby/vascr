@@ -1,9 +1,6 @@
-
-
-
 # Import Raw Data ---------------------------------------------------------
 
-#' Raw data importer
+#' ECIS raw data importer
 #' 
 #' Raw data importer, generates a r dataframe from a raw ABP file
 #'
