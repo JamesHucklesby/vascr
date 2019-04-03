@@ -14,7 +14,7 @@
 #' @export
 #'
 #' @examples
-ecis_plot = function(data, unit, frequency, replication, time = Inf, samplesubset)
+ecis_plot = function(data, unit, frequency, replication, time = Inf, samplesubset = "")
 {
   data = data %>% filter(str_detect(Sample, samplesubset))
   

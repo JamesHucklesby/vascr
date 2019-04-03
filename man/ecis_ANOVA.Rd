@@ -23,6 +23,9 @@ ANOVA results printed to the console.
 \description{
 This function takes a standard ECIS dataset and runs two way ANOVA on it. It then runs a post-hoc test to determine which groups are significatnly difference. Results are printed to the console as text.
 }
+\details{
+This analyasis requires multiple experiments, as working out the differences in a single experiment is a terrible idea (statisticaly speaking).
+}
 \examples{
 ecis_ANOVA(ECISR::data.df, "Rb",0,75)
 

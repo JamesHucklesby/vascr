@@ -2,15 +2,20 @@
 % Please edit documentation in R/statistical_methods.R
 \name{ecis_roundtime}
 \alias{ecis_roundtime}
-\title{Title}
+\title{Round time to the nearest actual data point}
 \usage{
 ecis_roundtime(data.df, time)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The data frame that contains the full list of times}
 
-\item{time}{}
+\item{time}{The time to be rounded}
 }
 \description{
-Title
+This sub-function allows the package to round a given data point to align with a measured datapoint. This is important, as it prevents the program trying to use data it does not have.
+}
+\examples{
+ecis_roundtime(data.df, 100)
+
+
 }
