@@ -40,6 +40,7 @@ An ECIS data frame has 8 variables
 
 Time - Time at which the reading was taken (in hours)
 Well - Which well the reading was taken from
+Unit - Unit value is measured in. Options are Rb, Alpha, Cm, RMSE, Drift, R, X, Z, C, P
 Value - The value of the reading taken
 Sample - The sample name. Multiple wells with the same sample name will be automatically grouped for graphing
 Frequency - The frequency at which the reading was taken. All modeled variables have a frequency of 0
