@@ -20,25 +20,33 @@
 ecis_normalise = function(data.df, normtime, divide = FALSE)
 {
   
+  roundedtime = ecis_roundtime(data.df, normtime)
+  
+  mininormaltable = subset(data.df, Time == roundedtime)
+  
+  fulltable = left_join(data.df, mininormaltable, by = c("Well" = "Well", "Frequency" = "Frequency", "Experiment" = "Experiment", "Unit" = "Unit", "Sample" = "Sample"))
+  
+  fulltable$Time = fulltable$Time.x
+  
+  
   if (divide == TRUE){
-    returndata.df = data.df %>%
-      dplyr:: group_by(Unit,Well,Sample,Frequency, Experiment) %>%
-      dplyr:: arrange(Time) %>%
-      dplyr:: mutate(Value = Value / Value[Time == normtime])
+    fulltable$Value = fulltable$Value.x / fulltable$Value.y
   }
   else{
-    returndata.df = data.df %>%
-      dplyr:: group_by(Unit,Well,Sample,Frequency, Experiment) %>%
-      dplyr:: arrange(Time) %>%
-      dplyr:: mutate(Value = Value - Value[Time == normtime])
+    fulltable$Value = fulltable$Value.x - fulltable$Value.y
   }
+  
+  fulltable$Time.y = NULL
+  fulltable$Time.x = NULL
+  fulltable$Value.x = NULL
+  fulltable$Value.y = NULL
   
   
   if(isFALSE(all(is.finite(returndata.df$Value)))){
     warning("NaN values or infinities generated in normalisation. Proceed with caution")
   }
   
-  return(returndata.df)
+  return(fulltable)
   
 }
 

@@ -3,6 +3,9 @@
 #' ANOVA analyasis of a single ECIS timepoint
 #' 
 #' This function takes a standard ECIS dataset and runs two way ANOVA on it. It then runs a post-hoc test to determine which groups are significatnly difference. Results are printed to the console as text.
+#' 
+#' 
+#' This analyasis requires multiple experiments, as working out the differences in a single experiment is a terrible idea (statisticaly speaking).
 #'
 #' @param data.df A standard ECIS dataset.
 #' @param unit Unit to be analysed.
