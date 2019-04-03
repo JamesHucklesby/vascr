@@ -38,39 +38,6 @@ ecis_plot = function(data, unit, frequency, replication, time = Inf, samplesubse
 }
 
 
-#' Generate a standard ECIS data representation
-#' 
-#' THIS FUNCTION IS DEPRECIATED, Use ECIS_plot_xxx series of funcitons for finer control over how to deal with replicate experiments. This graphic will underestimate error from replicate experiments.
-#'
-#' @param data.df An ECIS data set. Must be 
-#' @param unit The unit to plot
-#' @param frequency Frequency to plot. All modeled units have a default frequency of 0
-#'
-#' @return A GGplot2 object
-#' 
-#' @export 
-#'
-#' @examples
-#' ecis_plotvariable(data.df, "Rb", 0)
-#' 
-ecis_plotvariable <- function (data.df, unit, frequency)
-{
-  
-  # warning("THIS FUNCTION IS DEPRECIATED, USE ECIS_PLOT_XXX IN THE FUTURE")
-  
-  toplot.df = data.df
-  toplot.df = subset(data.df, Unit == unit)
-  toplot.df = subset(toplot.df, Frequency == frequency)
-  toplot2.df = summarise(group_by(toplot.df, Sample, Time),
-                       sd=sd(Value), n=n(), se = sd/sqrt(n), Value=mean(Value))
-  
-  plot = ggplot2::ggplot(data=toplot2.df, ggplot2::aes(x=Time, y=Value, colour=Sample)) +
-    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-se, ymax=Value+se)) +
-    ggplot2::labs(title = unit)+
-    ggplot2::geom_line()
-  
-  return(plot)
-}
 
 #' Plot all replicates from multiple experiments individualy
 #' 

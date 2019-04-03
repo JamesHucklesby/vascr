@@ -45,3 +45,8 @@ ecis_ANOVA  = function (data.df, unit, frequency, time, posthoc = "bonferoni")
   
   
 }
+
+
+ecis_plot(data.df, "Rb", 0, "summary")
+
+ecis_ANOVA(data.df, "Rb", 0, 100)
