@@ -20,6 +20,8 @@
 ecis_normalise = function(data.df, normtime, divide = FALSE)
 {
   
+  data.df$Time = round(data.df$Time, 3)
+  
   roundedtime = ecis_roundtime(data.df, normtime)
   
   mininormaltable = subset(data.df, Time == roundedtime)
@@ -42,7 +44,7 @@ ecis_normalise = function(data.df, normtime, divide = FALSE)
   fulltable$Value.y = NULL
   
   
-  if(isFALSE(all(is.finite(returndata.df$Value)))){
+  if(isFALSE(all(is.finite(fulltable$Value)))){
     warning("NaN values or infinities generated in normalisation. Proceed with caution")
   }
   
