@@ -15,6 +15,11 @@
 #'
 #' @return ANOVA results printed to the console.
 #' 
+#' @importFrom graphics hist
+#' @importFrom stats lm anova aov TukeyHSD
+#' @importFrom s20x normcheck 
+#' 
+#' 
 #' @export
 #'
 #' @examples

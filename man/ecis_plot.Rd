@@ -17,6 +17,9 @@ ecis_plot(data, unit, frequency, replication, time = Inf, samplesubset)
 
 \item{time}{}
 }
+\value{
+A ggplot2 object
+}
 \description{
 ECIS plot
 }

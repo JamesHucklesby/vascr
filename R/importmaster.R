@@ -9,6 +9,13 @@
 #'
 #' @return Data frame containing all the raw data readings from the ECIS Z0 instrument
 #' 
+#' @importFrom utils read.delim
+#' @importFrom tidyr separate spread gather
+#' @importFrom stringr str_detect
+#' @importFrom dplyr left_join
+#' 
+#' 
+#' 
 #' @export
 #'
 #' @examples
@@ -31,13 +38,13 @@ ecis_import_raw = function(rawdata, sampledefine)
   # Grab all the rows of the file and dump them into a data frame
   
   file.df = read.delim(rawdata, as.is = TRUE, sep = "\n", strip.white = TRUE)
-  base::colnames(file.df) = "Data"
+  colnames(file.df) = "Data"
   
   #Generate a data frame containing the titles
   titles.df = subset(file.df, stringr::str_detect(file.df$Data,"Index, Time,")) 
   titlestring = titles.df[1,1]
   titles = unlist(strsplit(titlestring, split = ","))
-  titles = trimws(titles)
+  titles = base::trimws(titles)
   
   #Import the whole dataset
   
@@ -154,6 +161,12 @@ samples = "HCMVEC/by_treatment.csv"
 #'
 #' @return Data frame containing modeled data
 #' @export
+#' 
+#' @importFrom stringr str_detect
+#' @importFrom tidyr separate gather
+#' @importFrom magrittr "%>%"
+#' @importFrom utils read.csv
+#' 
 #'
 #' @examples
 #' 
@@ -175,18 +188,18 @@ ecis_import_model = function(rawdata,samples)
   base::colnames(file.df) = "Data"
   
   #Import the dataset in segments so that you can get rid of the ECIS crap
-  cells.df = subset(file.df, str_detect(file.df$Data,"Well ID"))
-  unit.df = subset(file.df, str_detect(file.df$Data,"Time "))
-  data.df = subset(file.df, str_detect(file.df$Data,"^[0-9]"))
+  cells.df = subset(file.df, str_detect(file.df$"Data","Well ID"))
+  unit.df = subset(file.df, str_detect(file.df$"Data","Time "))
+  data.df = subset(file.df, str_detect(file.df$"Data","^[0-9]"))
   
   cells = cells.df[1,1]
   cells = unlist(strsplit(cells, split = ","))
-  cells = trimws(cells)
+  cells = base::trimws(cells)
   cells.df = cells
   
   unit = unit.df[1,1]
   unit = unlist(strsplit(unit, split = ","))
-  unit = trimws(unit)
+  unit = base::trimws(unit)
   unit.df = unit
   
   #Rename the units something sensible
@@ -201,7 +214,7 @@ ecis_import_model = function(rawdata,samples)
   
   # Merge well ID and unit variables together
   
-  data.df = data.df %>% tidyr::separate(Data, uniquenamesvector, ",")
+  data.df = data.df %>% tidyr::separate("Data", uniquenamesvector, ",")
   alldata.df = rbind(cells.df,data.df)
   
   
@@ -227,12 +240,6 @@ ecis_import_model = function(rawdata,samples)
   
   rm(timestamps.df)
   
-  retitle = function(df){
-    
-    names(df) = as.character(unlist(df[1,]))
-    df = df[-1,]
-    df
-  }
   
   #Re-adjust the headers
   Alpha.df = retitle (Alpha.df)

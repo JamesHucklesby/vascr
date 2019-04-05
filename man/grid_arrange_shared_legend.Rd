@@ -28,6 +28,6 @@ graph1 = ecis_plot_all(data.df, "Rb", 0)
 graph2 = ecis_plot_experiments(data.df, "Rb", 0)
 graph3 = ecis_plot_summary(data.df, "Rb", 0)
 
-grid_arrange_shared_legend (graph1, graph2, graph3, ncol = 1, nrow = 3)
+#grid_arrange_shared_legend (graph1, graph2, graph3, ncol = 1, nrow = 3)
 
 }

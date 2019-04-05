@@ -11,6 +11,8 @@
 #'
 #' @return A standard ECIS dataset with each value normalised
 #' 
+#' @importFrom dplyr left_join
+#' 
 #' @export
 #'
 #' @examples
@@ -19,8 +21,6 @@
 #' 
 ecis_normalise = function(data.df, normtime, divide = FALSE)
 {
-  
-  data.df$Time = round(data.df$Time, 3)
   
   roundedtime = ecis_roundtime(data.df, normtime)
   
@@ -66,6 +66,10 @@ ecis_normalise = function(data.df, normtime, divide = FALSE)
 #' @param discrepancy A standard rounding constant to compensate for rounding errors in the subtraciton process
 #'
 #' @return An ECIS dataset where the key time points all happen at time 0
+#' 
+#' @importFrom magrittr "%>%"
+#' @importFrom stringr str_detect
+#' @importFrom dplyr group_by arrange mutate
 #' 
 #' @export
 #'
@@ -114,6 +118,7 @@ ecis_align_key = function(data.df, point, discrepancy = 5){
 #'
 #' @return A standard ECIS data frame with summary statistics for each row. One row per sample and time combination.
 #' @export
+#' 
 #'
 #' @examples
 #' 
@@ -156,6 +161,9 @@ ecis_combine_mean = function (...)
 #' @param nth  An integer. Every nth value will be preserved in the subsetting
 #'
 #' @return Downsampled ECIS data set
+#' 
+#' @importFrom dplyr left_join
+#' 
 #' @export
 #'
 #' @examples
@@ -190,6 +198,7 @@ ecis_subset = function(data.df, nth)
 #' @return An ECIS dataset supplimented with summary statistics
 #' 
 #' @export
+#' @importFrom dplyr summarise
 #'
 #' @examples
 #' 

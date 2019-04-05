@@ -13,6 +13,9 @@ ecis_plot_experiments_timeslice(data.df, unit, time)
 
 \item{time}{}
 }
+\value{
+
+}
 \description{
 Title
 }

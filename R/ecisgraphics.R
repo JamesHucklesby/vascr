@@ -4,17 +4,26 @@
 
 #' ECIS plot
 #'
-#' @param data 
-#' @param unit 
-#' @param frequency 
-#' @param replication 
-#' @param time 
+#' @param data A standard ECIS data frame to plot
+#' @param unit Unit to plot
+#' @param frequency The frequency of data to display. All modelled variables have a frequency of 0
+#' @param replication How much of the replicaiton to display. Options are "all", "experiment", "summary".
+#' @param time The time to subset if a slice is required. If set to Inf all data will be displayed
+#' @param samplesubset Optional, only samples that contain this string will be plotted. Standard search and wildcard searches apply.
 #'
-#' @return
+#' @return A ggplot2 object
+#' 
 #' @export
+#' 
+#' @importFrom magrittr "%>%"
+#' @importFrom dplyr filter
 #'
 #' @examples
-ecis_plot = function(data, unit, frequency, replication, time = Inf, samplesubset)
+#' ecis_plot(data.df, "Rb", 0, "summary")
+#' ecis_plot(data.df, "Rb", 0, "summary", time = 75)
+#' 
+#' 
+ecis_plot = function(data, unit, frequency, replication, time = Inf, samplesubset = "")
 {
   data = data %>% filter(str_detect(Sample, samplesubset))
   
@@ -22,18 +31,18 @@ ecis_plot = function(data, unit, frequency, replication, time = Inf, samplesubse
   if (is.infinite(time))
   {
   
-  if(replication == "all") { ecis_plot_all(data, unit, frequency)}
-  if(replication == "experiment") { ecis_plot_experiments(data, unit, frequency)}
-  if(replication == "summary") { ecis_plot_summary(data, unit, frequency)}
+  if(replication == "all") { return(ecis_plot_all(data, unit, frequency))}
+  if(replication == "experiment") { return(ecis_plot_experiments(data, unit, frequency))}
+  if(replication == "summary") { return(ecis_plot_summary(data, unit, frequency))}
   
   # errors are not implimented yet
   
   }
   else
   {
-    if(replication == "all") { ecis_plot_all_timeslice(data, unit, time)}
-    if(replication == "experiment") { ecis_plot_experiments_timeslice(data, unit, time)}
-    if(replication == "summary") { ecis_plot_summary_timeslice(data, unit, time)}
+    if(replication == "all") { return(ecis_plot_all_timeslice(data, unit, time))}
+    if(replication == "experiment") { return(ecis_plot_experiments_timeslice(data, unit, time))}
+    if(replication == "summary") { return(ecis_plot_summary_timeslice(data, unit, time))}
   }
 }
 
@@ -49,6 +58,9 @@ ecis_plot = function(data, unit, frequency, replication, time = Inf, samplesubse
 #' @return A GGplot2 object
 #' 
 #' @export 
+#' 
+#' @importFrom dplyr summarise
+#' @importFrom ggplot2 ggplot geom_errorbar labs geom_line
 #'
 #' @examples
 #' ecis_plotvariable(data.df, "Rb", 0)
@@ -56,12 +68,10 @@ ecis_plot = function(data, unit, frequency, replication, time = Inf, samplesubse
 ecis_plotvariable <- function (data.df, unit, frequency)
 {
   
-  # warning("THIS FUNCTION IS DEPRECIATED, USE ECIS_PLOT_XXX IN THE FUTURE")
-  
   toplot.df = data.df
   toplot.df = subset(data.df, Unit == unit)
   toplot.df = subset(toplot.df, Frequency == frequency)
-  toplot2.df = summarise(group_by(toplot.df, Sample, Time),
+  toplot2.df = dplyr::summarise(group_by(toplot.df, Sample, Time),
                        sd=sd(Value), n=n(), se = sd/sqrt(n), Value=mean(Value))
   
   plot = ggplot2::ggplot(data=toplot2.df, ggplot2::aes(x=Time, y=Value, colour=Sample)) +
@@ -83,6 +93,8 @@ ecis_plotvariable <- function (data.df, unit, frequency)
 #' @return A ggplot2 object
 #' 
 #' @export
+#' 
+#' @importFrom ggplot2 ggplot labs geom_line aes
 #'
 #' @examples
 #' 
@@ -112,6 +124,9 @@ ecis_plot_all = function(data.df, unit, frequency)
 #'
 #' @return A ggplot2 object
 #' @export
+#' 
+#' @importFrom dplyr summarise group_by
+#' @importFrom ggplot2 ggplot geom_errorbar labs geom_line aes
 #'
 #' @examples
 #' 
@@ -130,8 +145,6 @@ ecis_plot_experiments = function(toplot.df, unit, frequency)
     ggplot2::labs(title = unit)+
     ggplot2::geom_line()
   
-  plot
-  
   return (plot)
 }
 
@@ -145,6 +158,9 @@ ecis_plot_experiments = function(toplot.df, unit, frequency)
 #' 
 #' @return A ggplot2 graph
 #' @export
+#' 
+#' @importFrom dplyr summarise
+#' @importFrom ggplot2 ggplot geom_errorbar labs geom_line aes
 #'
 #' @examples
 #' ecis_plot_summary(data.df, "Rb", 0)
@@ -181,6 +197,8 @@ ecis_plot_summary <- function (toplot.df, unit, frequency)
 #' @param data.df An ECIS data set
 #' @param unit Unit to plot
 #' @param time Time at which the cross section should be taken
+#' 
+#' @importFrom ggplot2 ggplot geom_errorbar labs geom_line theme aes
 #'
 #' @return ggplot2 object containing the dataset
 #' 
@@ -210,6 +228,10 @@ ecis_plot_all_timeslice = function (data.df, unit, time)
 #' @param time 
 #'
 #' @return
+#' 
+#' @importFrom dplyr summarise
+#' @importFrom ggplot2 ggplot geom_errorbar labs geom_bar aes position_dodge
+#' 
 #' @export
 #'
 #' @examples
@@ -233,6 +255,10 @@ ecis_plot_experiments_timeslice = function(data.df, unit, time)
 #' @param data.df 
 #' @param unit 
 #' @param time 
+#' 
+#' @importFrom dplyr summarise group_by
+#' @importFrom stats sd
+#' @importFrom ggplot2 ggplot geom_errorbar labs geom_bar aes position_dodge
 #'
 #' @return
 #' @export
@@ -266,7 +292,11 @@ ecis_plot_summary_timeslice = function(data.df, unit, time)
 #' @param position Where to place each graph. Unsure about this one.
 #'
 #' @return A multi-plot graph object
-#' @export
+#' 
+#' @importFrom ggplot2 ggplotGrob 
+#' @importFrom graphics legend
+#' @importFrom grid grid.draw unit
+#' @importFrom gridExtra arrangeGrob
 #'
 #' @examples
 #' 
@@ -274,7 +304,7 @@ ecis_plot_summary_timeslice = function(data.df, unit, time)
 #' graph2 = ecis_plot_experiments(data.df, "Rb", 0)
 #' graph3 = ecis_plot_summary(data.df, "Rb", 0)
 #' 
-#' grid_arrange_shared_legend (graph1, graph2, graph3, ncol = 1, nrow = 3)
+#' #grid_arrange_shared_legend (graph1, graph2, graph3, ncol = 1, nrow = 3)
 #' 
 grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, position = c("bottom", "right")) {
 
@@ -376,6 +406,11 @@ ecis_plotmodel <- function (alldata.df){
 #'
 #' @return A gganimate gif. Future itteration may include the ability to return the un-rendered object.
 #' 
+#' @importFrom ggplot2 ggplot geom_line aes labs scale_x_log10 scale_y_log10 geom_errorbar 
+#' @importFrom gganimate transition_time animate
+#' @importFrom dplyr n
+#' @importFrom stats sd
+#' 
 #' @export
 #'
 #' @examples
@@ -389,7 +424,6 @@ ecis_animatefrequency = function (alldata.df, unittoplot, frames){
   toplot.df = alldatasum.df
   toplot.df = subset(toplot.df, Unit == unittoplot)
   toplot.df$Frequency = as.numeric(toplot.df$Frequency)
-  toplot.df = subset(toplot.df, Time < 6)
   
   toplot2.df = toplot.df
   

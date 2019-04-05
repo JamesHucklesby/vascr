@@ -7,6 +7,9 @@
 #'
 #' @return A data frame that can be copied and pasted into prism
 #' @export
+#' 
+#' @importFrom tidyr spread
+#' @importFrom tibble as_tibble
 #'
 #' @examples
 #' ecis_prism(data.df, "Rb", 0)
@@ -36,7 +39,7 @@ ecis_prism = function(data.df, unit, frequency){
   data.df$Sample = NULL
   
   #Do the magic bit
-  data.df = tbl_df(data.df) #This row just makes tidyR work nicley
+  data.df = tibble :: as_tibble(data.df) #This row just makes tidyR work nicley
   data.df = tidyr::spread(data.df, ExpSam, Value)
   
   #Now delete all the bracketed bits
