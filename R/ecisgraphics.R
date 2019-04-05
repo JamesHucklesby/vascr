@@ -205,6 +205,7 @@ ecis_plot_summary <- function (toplot.df, unit, frequency)
 #' @export
 #'
 #' @examples
+#' 
 ecis_plot_all_timeslice = function (data.df, unit, time)
 {
   filtered.df = data.df
