@@ -398,8 +398,6 @@ ecis_plotmodel <- function (alldata.df){
 
 
 # Animate -----------------------------------------------------------------
-
-
 #' Animate frequency
 #' 
 #' Generate a gganimate graphic of frequency vs resistance. Each frame of the video represents a different time point
@@ -415,6 +413,7 @@ ecis_plotmodel <- function (alldata.df){
 #' @importFrom gifski gifski save_gif
 #' @importFrom dplyr n
 #' @importFrom stats sd
+#' @import gifski
 #' @import png
 #' 
 #' @export
@@ -422,24 +421,24 @@ ecis_plotmodel <- function (alldata.df){
 #' @examples
 #' ecis_animatefrequency(data.df, "R", 3)
 #' 
-#ecis_animatefrequency = function (alldata.df, unittoplot, frames){
-#  
-#  alldatasum.df = summarise(group_by(alldata.df, Sample, Time, Unit, Frequency),
-#                            sd=sd(Value), n=n(),Value=mean(Value))
-#  
-#  toplot.df = alldatasum.df
-#  toplot.df = subset(toplot.df, Unit == unittoplot)
-#  toplot.df$Frequency = as.numeric(toplot.df$Frequency)
-#  
-#  toplot2.df = toplot.df
-#  
-#  p = ggplot2::ggplot(toplot2.df, ggplot2::aes(Frequency, Value, colour = Sample)) +
-#    ggplot2:: geom_line( show.legend = TRUE) +
-#    ggplot2::labs(title = 'Days: {round(frame_time,1)}', x = 'Frequency (Hz)', y = 'Value (ohms)') +
-#    ggplot2::scale_x_log10() +
-#    ggplot2::scale_y_log10() +
-#    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-sd/sqrt(n), ymax=Value+sd/sqrt(n)), width=.1) +  
-#    gganimate::transition_time(Time)
-#  
-#  gganimate::animate(p, nframes = frames)
-# }
+ecis_animatefrequency = function (alldata.df, unittoplot, frames){
+  
+  alldatasum.df = summarise(group_by(alldata.df, Sample, Time, Unit, Frequency),
+                            sd=sd(Value), n=n(),Value=mean(Value))
+  
+  toplot.df = alldatasum.df
+  toplot.df = subset(toplot.df, Unit == unittoplot)
+  toplot.df$Frequency = as.numeric(toplot.df$Frequency)
+  
+  toplot2.df = toplot.df
+  
+  p = ggplot2::ggplot(toplot2.df, ggplot2::aes(Frequency, Value, colour = Sample)) +
+    ggplot2:: geom_line( show.legend = TRUE) +
+    ggplot2::labs(title = 'Days: {round(frame_time,1)}', x = 'Frequency (Hz)', y = 'Value (ohms)') +
+    ggplot2::scale_x_log10() +
+    ggplot2::scale_y_log10() +
+    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-sd/sqrt(n), ymax=Value+sd/sqrt(n)), width=.1) +  
+    gganimate::transition_time(Time)
+  
+  gganimate::animate(p, nframes = frames)
+}

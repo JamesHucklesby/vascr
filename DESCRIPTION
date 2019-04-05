@@ -11,7 +11,7 @@ LazyData: true
 RoxygenNote: 6.1.1
 Depends: R (>= 2.10)
 Imports: ggplot2, gganimate, gridExtra, s20x,
-    transformr, plyr, dplyr, devtools, tidyr, stringr, magrittr, grid, tibble
+    transformr, plyr, dplyr, devtools, tidyr, stringr, magrittr, grid, tibble, gifski, png
 Suggests: 
     knitr,
     rmarkdown
