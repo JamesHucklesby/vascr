@@ -15,6 +15,7 @@ addons:
       - cargo
       - libavfilter-dev
       - libudunits2-dev # my one
+      - BiocCheck
     sources:
       - sourceline: 'ppa:jonathonf/ffmpeg-4'
       - sourceline: 'ppa:jonathonf/ffmpeg-3'
