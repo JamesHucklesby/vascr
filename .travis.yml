@@ -18,6 +18,7 @@ addons:
     sources:
       - sourceline: 'ppa:jonathonf/ffmpeg-4'
       - sourceline: 'ppa:jonathonf/ffmpeg-3'
+    
 
 r_github_packages: r-lib/pkgdown
 
@@ -31,3 +32,6 @@ matrix:
   include:
   - r: devel
   - r: release
+  
+  
+bioc_check: true
