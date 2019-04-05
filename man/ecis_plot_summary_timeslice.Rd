@@ -7,11 +7,11 @@
 ecis_plot_summary_timeslice(data.df, unit, time)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{A standard ECIS dataset}
 
-\item{unit}{}
+\item{unit}{The unit to plot}
 
-\item{time}{}
+\item{time}{Time to plot a slice of}
 }
 \description{
 Title

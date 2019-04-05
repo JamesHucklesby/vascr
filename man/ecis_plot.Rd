@@ -4,22 +4,31 @@
 \alias{ecis_plot}
 \title{ECIS plot}
 \usage{
-ecis_plot(data, unit, frequency, replication, time = Inf, samplesubset)
+ecis_plot(data, unit, frequency, replication, time = Inf,
+  samplesubset = "")
 }
 \arguments{
-\item{data}{}
+\item{data}{A standard ECIS data frame to plot}
 
-\item{unit}{}
+\item{unit}{Unit to plot}
 
-\item{frequency}{}
+\item{frequency}{The frequency of data to display. All modelled variables have a frequency of 0}
 
-\item{replication}{}
+\item{replication}{How much of the replicaiton to display. Options are "all", "experiment", "summary".}
 
-\item{time}{}
+\item{time}{The time to subset if a slice is required. If set to Inf all data will be displayed}
+
+\item{samplesubset}{Optional, only samples that contain this string will be plotted. Standard search and wildcard searches apply.}
 }
 \value{
 A ggplot2 object
 }
 \description{
 ECIS plot
+}
+\examples{
+ecis_plot(data.df, "Rb", 0, "summary")
+ecis_plot(data.df, "Rb", 0, "summary", time = 75)
+
+
 }

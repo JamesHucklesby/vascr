@@ -2,20 +2,24 @@
 % Please edit documentation in R/ecisgraphics.R
 \name{ecis_plot_experiments_timeslice}
 \alias{ecis_plot_experiments_timeslice}
-\title{Title}
+\title{Plot a timeslice of an experiment}
 \usage{
 ecis_plot_experiments_timeslice(data.df, unit, time)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{A standard ECIS dataframe}
 
-\item{unit}{}
+\item{unit}{The unit to plot}
 
-\item{time}{}
+\item{time}{The time at which the dataframe should be cut}
 }
 \value{
-
+An ECIS dataframe
 }
 \description{
-Title
+Plot a timeslice of an experiment
+}
+\examples{
+ecis_plot_experiments_timeslice(data.df, "Rb", 70)
+
 }

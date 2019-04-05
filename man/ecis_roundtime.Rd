@@ -7,9 +7,12 @@
 ecis_roundtime(data.df, time)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{A standard ECIS data frame}
 
-\item{time}{}
+\item{time}{The time point that needs rounding}
+}
+\value{
+A timepoint that exactly aligns with a measured datapoint
 }
 \description{
 Title

@@ -72,10 +72,10 @@ ecis_plotvariable <- function (data.df, unit, frequency)
   toplot.df = subset(data.df, Unit == unit)
   toplot.df = subset(toplot.df, Frequency == frequency)
   toplot2.df = dplyr::summarise(group_by(toplot.df, Sample, Time),
-                       sd=sd(Value), n=n(), se = sd/sqrt(n), Value=mean(Value))
+                       sd=sd(Value), n=n(), Value=mean(Value))
   
   plot = ggplot2::ggplot(data=toplot2.df, ggplot2::aes(x=Time, y=Value, colour=Sample)) +
-    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-se, ymax=Value+se)) +
+    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-sd/sqrt(n), ymax=Value+sd/sqrt(n))) +
     ggplot2::labs(title = unit)+
     ggplot2::geom_line()
   
@@ -178,10 +178,10 @@ ecis_plot_summary <- function (toplot.df, unit, frequency)
   
   # Now repeat the calculation, but work out the intra-experimental error and statistics
   toplot2.df = summarise(group_by(toplot2.df, Sample, Time),
-                         sd=sd(Value), n=n(), se = sd/sqrt(n), Value=mean(Value))
+                         sd=sd(Value), n=n(), Value=mean(Value))
   
   plot = ggplot2::ggplot(data=toplot2.df, ggplot2::aes(x=Time, y=Value, colour=Sample)) +
-    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-se, ymax=Value+se)) +
+    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-sd/sqrt(n), ymax=Value+sd/sqrt(n))) +
     ggplot2::labs(title = unit)+
     ggplot2::geom_line()
   
@@ -198,7 +198,7 @@ ecis_plot_summary <- function (toplot.df, unit, frequency)
 #' @param unit Unit to plot
 #' @param time Time at which the cross section should be taken
 #' 
-#' @importFrom ggplot2 ggplot geom_errorbar labs geom_line theme aes
+#' @importFrom ggplot2 ggplot geom_errorbar labs geom_line theme aes element_text
 #'
 #' @return ggplot2 object containing the dataset
 #' 
@@ -221,13 +221,13 @@ ecis_plot_all_timeslice = function (data.df, unit, time)
   
 }
 
-#' Title
+#' Plot a timeslice of an experiment
 #'
-#' @param data.df 
-#' @param unit 
-#' @param time 
+#' @param data.df A standard ECIS dataframe
+#' @param unit The unit to plot
+#' @param time The time at which the dataframe should be cut
 #'
-#' @return
+#' @return An ECIS dataframe
 #' 
 #' @importFrom dplyr summarise
 #' @importFrom ggplot2 ggplot geom_errorbar labs geom_bar aes position_dodge
@@ -235,6 +235,8 @@ ecis_plot_all_timeslice = function (data.df, unit, time)
 #' @export
 #'
 #' @examples
+#' ecis_plot_experiments_timeslice(data.df, "Rb", 70)
+#' 
 ecis_plot_experiments_timeslice = function(data.df, unit, time)
 {
   filtered.df = data.df
@@ -242,19 +244,19 @@ ecis_plot_experiments_timeslice = function(data.df, unit, time)
   filtered.df = subset(filtered.df, Time == time)
   filtered.df = subset(filtered.df, Unit == unit)
   
-  filtered2.df  = summarise(group_by(filtered.df, Experiment, Sample), sd=sd(Value), n=n(), sem = sd/sqrt(n), Value                     =mean(Value))
+  filtered2.df  = summarise(group_by(filtered.df, Experiment, Sample), sd=sd(Value), n=n(), Value                     =mean(Value))
   
   ggplot(filtered2.df, aes(x = Sample, y = Value, fill = Experiment))+
     geom_bar(stat = "identity", position = position_dodge())+
-    geom_errorbar(aes(ymin=Value-sem, ymax=Value+sem), width=.2, position = position_dodge(.9))
+    geom_errorbar(aes(ymin=Value-sd/sqrt(n), ymax=Value+sd/sqrt(n)), width=.2, position = position_dodge(.9))
   
 }
 
 #' Title
 #'
-#' @param data.df 
-#' @param unit 
-#' @param time 
+#' @param data.df A standard ECIS dataset
+#' @param unit The unit to plot
+#' @param time Time to plot a slice of
 #' 
 #' @importFrom dplyr summarise group_by
 #' @importFrom stats sd
@@ -274,12 +276,12 @@ ecis_plot_summary_timeslice = function(data.df, unit, time)
   
   # Then use two dplyr statements to prepare the data for graphing
   filtered2.df  = summarise(group_by(filtered.df, Experiment, Sample), Value = mean(Value))
-  filtered2.df = summarise(group_by(filtered2.df, Sample), sd=sd(Value), n=n(), sem = sd/sqrt(n), Value=mean(Value))
+  filtered2.df = summarise(group_by(filtered2.df, Sample), sd=sd(Value), n=n(),  Value=mean(Value))
   
   # Then graph the output
   ggplot(filtered2.df, aes(x = Sample, y = Value))+
     geom_bar(stat = "identity")+
-    geom_errorbar(aes(ymin=Value-sem, ymax=Value+sem), width=.2)
+    geom_errorbar(aes(ymin=Value-sd/sqrt(n), ymax=Value+sd/sqrt(n)), width=.2)
 }
 
 # Multiplot with common key -------------------------------------------------------
@@ -408,18 +410,21 @@ ecis_plotmodel <- function (alldata.df){
 #' 
 #' @importFrom ggplot2 ggplot geom_line aes labs scale_x_log10 scale_y_log10 geom_errorbar 
 #' @importFrom gganimate transition_time animate
+#' @importFrom gifski gifski save_gif
 #' @importFrom dplyr n
 #' @importFrom stats sd
+#' @import gifski
+#' @import png
 #' 
 #' @export
 #'
 #' @examples
-#' #ecis_animatefrequency(data.df, "R", 5)
+#' ecis_animatefrequency(data.df, "R", 3)
 #' 
 ecis_animatefrequency = function (alldata.df, unittoplot, frames){
   
   alldatasum.df = summarise(group_by(alldata.df, Sample, Time, Unit, Frequency),
-                            sd=sd(Value), n=n(), se = sd/sqrt(n),Value=mean(Value))
+                            sd=sd(Value), n=n(),Value=mean(Value))
   
   toplot.df = alldatasum.df
   toplot.df = subset(toplot.df, Unit == unittoplot)
@@ -432,7 +437,7 @@ ecis_animatefrequency = function (alldata.df, unittoplot, frames){
     ggplot2::labs(title = 'Days: {round(frame_time,1)}', x = 'Frequency (Hz)', y = 'Value (ohms)') +
     ggplot2::scale_x_log10() +
     ggplot2::scale_y_log10() +
-    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-se, ymax=Value+se), width=.1) +  
+    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-sd/sqrt(n), ymax=Value+sd/sqrt(n)), width=.1) +  
     gganimate::transition_time(Time)
   
   gganimate::animate(p, nframes = frames)

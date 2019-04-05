@@ -29,6 +29,6 @@ location_of_sample_defintions = system.file("Samples.csv", package = "ECISR")
 
 #Then run the import
 
-#ecis_import_raw(location_of_resampled_data, location_of_sample_defintions)
+ecis_import_raw(location_of_resampled_data, location_of_sample_defintions)
 
 }

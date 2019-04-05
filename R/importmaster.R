@@ -30,7 +30,7 @@
 #' 
 #' #Then run the import
 #' 
-#' #ecis_import_raw(location_of_resampled_data, location_of_sample_defintions)
+#' ecis_import_raw(location_of_resampled_data, location_of_sample_defintions)
 #' 
 ecis_import_raw = function(rawdata, sampledefine)
 {
@@ -49,27 +49,27 @@ ecis_import_raw = function(rawdata, sampledefine)
   #Import the whole dataset
   
   # Import the meaty part of the data and clean up the dat types
-  fulldata.df = subset(file.df, str_detect(file.df$Data,"^T[0-9]"))
+  fulldata.df = subset(file.df, str_detect(file.df$"Data","^T[0-9]"))
   
-  fulldata.df = fulldata.df %>% tidyr::separate(Data, titles, ",|=")
+  fulldata.df = fulldata.df %>% tidyr::separate("Data", titles, ",|=")
   
   # Clean out the row data from each well's ID
-  fulldata.df = fulldata.df %>% tidyr::separate(Index, c("TimeID", "ID"), "W")
+  fulldata.df = fulldata.df %>% tidyr::separate("Index", c("TimeID", "ID"), "W")
   fulldata.df$TimeID = NULL
   
   #Find the cell correlates
-  format = subset(file.df, str_detect(file.df$Data,"WellNum"))
+  format = subset(file.df, str_detect(file.df$"Data","WellNum"))
   
   if (format[1,1] == "WellNum = 16")
   {
-    id_to_well.df = structure(list(ID = 1:16, Well = structure(1:16, .Label = c("A1", 
+    id_to_well.df = structure(list("ID" = 1:16, Well = structure(1:16, .Label = c("A1", 
                                                                                 "A2", "A3", "A4", "A5", "A6", "A7", "A8", "B1", "B2", 
                                                                                 "B3", "B4", "B5", "B6", "B7", "B8"), class = "factor")), class = "data.frame", row.names = c(NA, -16L))
   }
   
   if (format[1,1] == "WellNum = 96")
   {
-    id_to_well.df = structure(list(ID = 1:96, Well = structure(c(1L, 13L, 25L, 37L, 
+    id_to_well.df = structure(list("ID" = 1:96, Well = structure(c(1L, 13L, 25L, 37L, 
                                                                  49L, 61L, 73L, 85L, 5L, 17L, 29L, 41L, 53L, 65L, 77L, 89L, 6L, 
                                                                  18L, 30L, 42L, 54L, 66L, 78L, 90L, 7L, 19L, 31L, 43L, 55L, 67L, 
                                                                  79L, 91L, 8L, 20L, 32L, 44L, 56L, 68L, 80L, 92L, 9L, 21L, 33L, 
@@ -90,31 +90,31 @@ ecis_import_raw = function(rawdata, sampledefine)
                                                                                                                                                                                                   -96L))
   }
   
-  fulldata.df$ID = as.integer(fulldata.df$ID)
+  fulldata.df$"ID" = as.integer(fulldata.df$"ID")
   
   #Correlate the generated cell lookup table to ECIS's internal well id's
   fulldata.df = left_join(fulldata.df, id_to_well.df, by = "ID")
   
   #Make the wide dataset long
-  fulldata_long.df = fulldata.df %>% tidyr::gather(Type, Value, -Well, -Time, -ID)
-  fulldata_long.df$Value = as.numeric(fulldata_long.df$Value)
+  fulldata_long.df = fulldata.df %>% tidyr::gather("Type", Value, -Well, -Time, -"ID")
+  fulldata_long.df$Value = as.numeric(fulldata_long.df$"Value")
   
   # Split out frequency and R/C as needed
-  fulldata_long.df = fulldata_long.df %>% tidyr::separate(Type, c("Unit", "Frequency"), " ")
+  fulldata_long.df = fulldata_long.df %>% tidyr::separate("Type", c("Unit", "Frequency"), " ")
   
   
   # Read in sample names and merge them with the long dataset
   names.df = read.csv(sampledefine, as.is = TRUE)
-  fulldata_long.df$Well = as.character(fulldata_long.df$Well)
+  fulldata_long.df$"Well" = as.character(fulldata_long.df$"Well")
   names.df$Well = as.character(names.df$Well)
   
-  fulldata_long.df$Well = ecis_standardise_wells(fulldata_long.df$Well)
-  names.df$Well = ecis_standardise_wells(names.df$Well)
+  fulldata_long.df$"Well" = ecis_standardise_wells(fulldata_long.df$"Well")
+  names.df$"Well" = ecis_standardise_wells(names.df$"Well")
   
   combined.df = left_join(fulldata_long.df, names.df, by = "Well")
   
   # Strip the ID variable as it no longer has any use
-  combined.df$ID = NULL
+  combined.df$"ID" = NULL
   
   ############################### Generate the other physical quantaties
   
@@ -170,9 +170,10 @@ samples = "HCMVEC/by_treatment.csv"
 #'
 #' @examples
 #' 
-#' #First determine the locatins of your files relative to your dataset.
-#'  #Here we use system.file to pull a default out of the filesystem, but you #'  #can use a path relative to the file you are working on. 
-#'   #E.G "Experiment1/Raw.abp"
+#'  #First determine the locatins of your files relative to your dataset.
+#'  #Here we use system.file to pull a default out of the filesystem, but you 
+#'  #can use a path relative to the file you are working on. 
+#'  #E.G "Experiment1/Raw.abp"
 #' 
 #' location_of_modeled_data = system.file("Model.csv", package = "ECISR")
 #' location_of_sample_defintions = system.file("Samples.csv", package = "ECISR")
@@ -398,3 +399,5 @@ ecis_standardise_wells = function(well)
 {
   sub('(?<![0-9])0*(?=[0-9])', '', well, perl=TRUE)
 }
+
+
