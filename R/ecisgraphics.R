@@ -2,7 +2,6 @@
 
 # Fudge funciton, fix this later
 
-
 #' ECIS plot
 #'
 #' @param data A standard ECIS data frame to plot
@@ -58,6 +57,7 @@ ecis_plot = function(data, unit, frequency, replication, time = Inf, samplesubse
 #'
 #' @return A GGplot2 object
 #' 
+#' @export 
 #' 
 #' @importFrom dplyr summarise
 #' @importFrom ggplot2 ggplot geom_errorbar labs geom_line
@@ -92,6 +92,7 @@ ecis_plotvariable <- function (data.df, unit, frequency)
 #'
 #' @return A ggplot2 object
 #' 
+#' @export
 #' 
 #' @importFrom ggplot2 ggplot labs geom_line aes
 #'
@@ -122,6 +123,7 @@ ecis_plot_all = function(data.df, unit, frequency)
 #' @param frequency  Frequency of unit. All derrived units have a frequency of 0.
 #'
 #' @return A ggplot2 object
+#' @export
 #' 
 #' @importFrom dplyr summarise group_by
 #' @importFrom ggplot2 ggplot geom_errorbar labs geom_line aes
@@ -155,6 +157,7 @@ ecis_plot_experiments = function(toplot.df, unit, frequency)
 #' @param frequency Frequency of interest
 #' 
 #' @return A ggplot2 graph
+#' @export
 #' 
 #' @importFrom dplyr summarise
 #' @importFrom ggplot2 ggplot geom_errorbar labs geom_line aes
@@ -199,8 +202,7 @@ ecis_plot_summary <- function (toplot.df, unit, frequency)
 #'
 #' @return ggplot2 object containing the dataset
 #' 
-#'
-#' @examples
+#' @export
 #' 
 ecis_plot_all_timeslice = function (data.df, unit, time)
 {
@@ -229,6 +231,7 @@ ecis_plot_all_timeslice = function (data.df, unit, time)
 #' @importFrom dplyr summarise
 #' @importFrom ggplot2 ggplot geom_errorbar labs geom_bar aes position_dodge
 #' 
+#' @export
 #'
 #' @examples
 #' ecis_plot_experiments_timeslice(data.df, "Rb", 70)
@@ -258,7 +261,9 @@ ecis_plot_experiments_timeslice = function(data.df, unit, time)
 #' @importFrom stats sd
 #' @importFrom ggplot2 ggplot geom_errorbar labs geom_bar aes position_dodge
 #'
-#' @return
+#' @return A ggplot2 object
+#' @export 
+#'
 #' 
 ecis_plot_summary_timeslice = function(data.df, unit, time)
 {
@@ -404,7 +409,6 @@ ecis_plotmodel <- function (alldata.df){
 #' 
 #' @importFrom ggplot2 ggplot geom_line aes labs scale_x_log10 scale_y_log10 geom_errorbar 
 #' @importFrom gganimate transition_time animate
-#' @importFrom gifski gifski save_gif
 #' @importFrom dplyr n
 #' @importFrom stats sd
 #' @import gifski

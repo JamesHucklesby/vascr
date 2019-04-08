@@ -2,7 +2,7 @@
 % Please edit documentation in R/statistical_methods.R
 \name{ecis_roundtime}
 \alias{ecis_roundtime}
-\title{Title}
+\title{Standardise how well numbers are represented}
 \usage{
 ecis_roundtime(data.df, time)
 }
@@ -15,7 +15,7 @@ ecis_roundtime(data.df, time)
 A timepoint that exactly aligns with a measured datapoint
 }
 \description{
-Title
+Standardise how well numbers are represented
 }
 \examples{
 ecis_roundtime(data.df, 100)

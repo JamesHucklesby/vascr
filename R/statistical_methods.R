@@ -53,12 +53,14 @@ ecis_ANOVA  = function (data.df, unit, frequency, time, posthoc = "bonferoni")
 
 
 
-#' Title
+#' Standardise how well numbers are represented
 #'
 #' @param data.df A standard ECIS data frame
 #' @param time The time point that needs rounding
 #'
 #' @return A timepoint that exactly aligns with a measured datapoint
+#'
+#' @export
 #'
 #' @examples
 #' ecis_roundtime(data.df, 100)
