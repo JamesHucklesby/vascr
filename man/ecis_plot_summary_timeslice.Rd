@@ -13,6 +13,9 @@ ecis_plot_summary_timeslice(data.df, unit, time)
 
 \item{time}{Time to plot a slice of}
 }
+\value{
+
+}
 \description{
 Title
 }

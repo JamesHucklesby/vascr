@@ -17,3 +17,7 @@ A timepoint that exactly aligns with a measured datapoint
 \description{
 Title
 }
+\examples{
+ecis_roundtime(data.df, 100)
+
+}

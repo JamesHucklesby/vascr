@@ -19,3 +19,6 @@ ggplot2 object containing the dataset
 \description{
 Generate a bar graph of a particular value at a single time
 }
+\examples{
+
+}

@@ -59,9 +59,10 @@ ecis_ANOVA  = function (data.df, unit, frequency, time, posthoc = "bonferoni")
 #' @param time The time point that needs rounding
 #'
 #' @return A timepoint that exactly aligns with a measured datapoint
-#' @export
 #'
 #' @examples
+#' ecis_roundtime(data.df, 100)
+#' 
 ecis_roundtime = function(data.df, time)
 {
   times = unique (data.df$Time)
