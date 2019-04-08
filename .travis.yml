@@ -33,5 +33,3 @@ matrix:
   - r: devel
   - r: release
   
-  
-bioc_check: true
