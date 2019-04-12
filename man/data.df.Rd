@@ -17,7 +17,7 @@
   ...
 }}
 \source{
-James Hucklesby
+James Hucklesby 2018
 }
 \usage{
 data.df

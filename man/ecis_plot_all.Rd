@@ -21,7 +21,7 @@ This function produces a 'spaghetti plot' of all replicates accross multiple exp
 }
 \examples{
 
-ecis_plot_all(data.df, "Rb", 0)
+ecis_plot_all(data.df, 'Rb', 0)
 
 
 }

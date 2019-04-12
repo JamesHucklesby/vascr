@@ -20,6 +20,6 @@ An ECIS dataframe
 Plot a timeslice of an experiment
 }
 \examples{
-ecis_plot_experiments_timeslice(data.df, "Rb", 70)
+ecis_plot_experiments_timeslice(data.df, 'Rb', 70)
 
 }

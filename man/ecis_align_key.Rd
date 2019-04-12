@@ -9,7 +9,7 @@ ecis_align_key(data.df, point, discrepancy = 5)
 \arguments{
 \item{data.df}{A standard ECIS data file}
 
-\item{point}{Which key point, either "max" or "min"}
+\item{point}{Which key point, either 'max' or 'min'}
 
 \item{discrepancy}{A standard rounding constant to compensate for rounding errors in the subtraciton process}
 }
@@ -24,6 +24,6 @@ Sets the time at which each replicate well is maximal to time 0. Results in vari
 }
 \examples{
 
-ecis_align_key(data.df, "max")
-ecis_align_key(data.df, "min")
+ecis_align_key(data.df, 'max')
+ecis_align_key(data.df, 'min')
 }

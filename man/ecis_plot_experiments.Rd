@@ -21,6 +21,6 @@ This funciton plots individual experiments as separate lines on an ECIS data plo
 }
 \examples{
 
-ecis_plot_experiments (data.df, "Rb", 0)
+ecis_plot_experiments (data.df, 'Rb', 0)
 
 }

@@ -14,7 +14,7 @@ ecis_plot(data, unit, frequency, replication, time = Inf,
 
 \item{frequency}{The frequency of data to display. All modelled variables have a frequency of 0}
 
-\item{replication}{How much of the replicaiton to display. Options are "all", "experiment", "summary".}
+\item{replication}{How much of the replicaiton to display. Options are 'all', 'experiment', 'summary'.}
 
 \item{time}{The time to subset if a slice is required. If set to Inf all data will be displayed}
 
@@ -27,8 +27,8 @@ A ggplot2 object
 ECIS plot
 }
 \examples{
-ecis_plot(data.df, "Rb", 0, "summary")
-ecis_plot(data.df, "Rb", 0, "summary", time = 75)
+ecis_plot(data.df, 'Rb', 0, 'summary')
+ecis_plot(data.df, 'Rb', 0, 'summary', time = 75)
 
 
 }

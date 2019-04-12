@@ -1,4 +1,4 @@
-#Graphics generation
+# Graphics generation
 
 # Fudge funciton, fix this later
 
@@ -7,7 +7,7 @@
 #' @param data A standard ECIS data frame to plot
 #' @param unit Unit to plot
 #' @param frequency The frequency of data to display. All modelled variables have a frequency of 0
-#' @param replication How much of the replicaiton to display. Options are "all", "experiment", "summary".
+#' @param replication How much of the replicaiton to display. Options are 'all', 'experiment', 'summary'.
 #' @param time The time to subset if a slice is required. If set to Inf all data will be displayed
 #' @param samplesubset Optional, only samples that contain this string will be plotted. Standard search and wildcard searches apply.
 #'
@@ -15,35 +15,43 @@
 #' 
 #' @export
 #' 
-#' @importFrom magrittr "%>%"
+#' @importFrom magrittr '%>%'
 #' @importFrom dplyr filter
 #'
 #' @examples
-#' ecis_plot(data.df, "Rb", 0, "summary")
-#' ecis_plot(data.df, "Rb", 0, "summary", time = 75)
+#' ecis_plot(data.df, 'Rb', 0, 'summary')
+#' ecis_plot(data.df, 'Rb', 0, 'summary', time = 75)
 #' 
 #' 
-ecis_plot = function(data, unit, frequency, replication, time = Inf, samplesubset = "")
-{
-  data = data %>% filter(str_detect(Sample, samplesubset))
-  
-  
-  if (is.infinite(time))
-  {
-  
-  if(replication == "all") { return(ecis_plot_all(data, unit, frequency))}
-  if(replication == "experiment") { return(ecis_plot_experiments(data, unit, frequency))}
-  if(replication == "summary") { return(ecis_plot_summary(data, unit, frequency))}
-  
-  # errors are not implimented yet
-  
-  }
-  else
-  {
-    if(replication == "all") { return(ecis_plot_all_timeslice(data, unit, time))}
-    if(replication == "experiment") { return(ecis_plot_experiments_timeslice(data, unit, time))}
-    if(replication == "summary") { return(ecis_plot_summary_timeslice(data, unit, time))}
-  }
+ecis_plot = function(data, unit, frequency, replication, time = Inf, samplesubset = "") {
+    data = data %>% filter(str_detect(Sample, samplesubset))
+    
+    
+    if (is.infinite(time)) {
+        
+        if (replication == "all") {
+            return(ecis_plot_all(data, unit, frequency))
+        }
+        if (replication == "experiment") {
+            return(ecis_plot_experiments(data, unit, frequency))
+        }
+        if (replication == "summary") {
+            return(ecis_plot_summary(data, unit, frequency))
+        }
+        
+        # errors are not implimented yet
+        
+    } else {
+        if (replication == "all") {
+            return(ecis_plot_all_timeslice(data, unit, time))
+        }
+        if (replication == "experiment") {
+            return(ecis_plot_experiments_timeslice(data, unit, time))
+        }
+        if (replication == "summary") {
+            return(ecis_plot_summary_timeslice(data, unit, time))
+        }
+    }
 }
 
 
@@ -63,23 +71,21 @@ ecis_plot = function(data, unit, frequency, replication, time = Inf, samplesubse
 #' @importFrom ggplot2 ggplot geom_errorbar labs geom_line
 #'
 #' @examples
-#' ecis_plotvariable(data.df, "Rb", 0)
+#' ecis_plotvariable(data.df, 'Rb', 0)
 #' 
-ecis_plotvariable <- function (data.df, unit, frequency)
-{
-  
-  toplot.df = data.df
-  toplot.df = subset(data.df, Unit == unit)
-  toplot.df = subset(toplot.df, Frequency == frequency)
-  toplot2.df = dplyr::summarise(group_by(toplot.df, Sample, Time),
-                       sd=sd(Value), n=n(), Value=mean(Value))
-  
-  plot = ggplot2::ggplot(data=toplot2.df, ggplot2::aes(x=Time, y=Value, colour=Sample)) +
-    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-sd/sqrt(n), ymax=Value+sd/sqrt(n))) +
-    ggplot2::labs(title = unit)+
-    ggplot2::geom_line()
-  
-  return(plot)
+ecis_plotvariable <- function(data.df, unit, frequency) {
+    
+    toplot.df = data.df
+    toplot.df = subset(data.df, Unit == unit)
+    toplot.df = subset(toplot.df, Frequency == frequency)
+    toplot2.df = dplyr::summarise(group_by(toplot.df, Sample, Time), sd = sd(Value), n = n(), 
+        Value = mean(Value))
+    
+    plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample)) + 
+        ggplot2::geom_errorbar(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n))) + 
+        ggplot2::labs(title = unit) + ggplot2::geom_line()
+    
+    return(plot)
 }
 
 #' Plot all replicates from multiple experiments individualy
@@ -98,20 +104,18 @@ ecis_plotvariable <- function (data.df, unit, frequency)
 #'
 #' @examples
 #' 
-#' ecis_plot_all(data.df, "Rb", 0)
+#' ecis_plot_all(data.df, 'Rb', 0)
 #' 
 #' 
-ecis_plot_all = function(data.df, unit, frequency)
-{
-  
-  toplot.df = subset(data.df, Unit == unit)
-  toplot.df = subset(toplot.df, Frequency == frequency)
-  
-  plot = ggplot2::ggplot(data=toplot.df, ggplot2::aes(x=Time, y=Value, group = interaction(Well, Experiment), colour = Sample)) +
-    ggplot2::labs(title = unit)+
-    ggplot2::geom_line()
-  
-  return (plot)
+ecis_plot_all = function(data.df, unit, frequency) {
+    
+    toplot.df = subset(data.df, Unit == unit)
+    toplot.df = subset(toplot.df, Frequency == frequency)
+    
+    plot = ggplot2::ggplot(data = toplot.df, ggplot2::aes(x = Time, y = Value, group = interaction(Well, 
+        Experiment), colour = Sample)) + ggplot2::labs(title = unit) + ggplot2::geom_line()
+    
+    return(plot)
 }
 
 #' Plot individual experiments
@@ -130,22 +134,20 @@ ecis_plot_all = function(data.df, unit, frequency)
 #'
 #' @examples
 #' 
-#' ecis_plot_experiments (data.df, "Rb", 0)
+#' ecis_plot_experiments (data.df, 'Rb', 0)
 #' 
-ecis_plot_experiments = function(toplot.df, unit, frequency)
-{
-  
-  toplot.df = subset(toplot.df, Unit == unit)
-  toplot.df = subset(toplot.df, Frequency == frequency)
-  toplot2.df = summarise(group_by(toplot.df, Sample, Time, Experiment),
-                         sd=sd(Value), n=n(), se = sd/sqrt(n), Value=mean(Value))
-  
-  plot = ggplot2::ggplot(data=toplot2.df, ggplot2::aes(x=Time, y=Value, colour=Sample, linetype =  Experiment)) +
-    # geom_errorbar(ggplot2::aes(ymin=Value-se, ymax=Value+se)) +
-    ggplot2::labs(title = unit)+
-    ggplot2::geom_line()
-  
-  return (plot)
+ecis_plot_experiments = function(toplot.df, unit, frequency) {
+    
+    toplot.df = subset(toplot.df, Unit == unit)
+    toplot.df = subset(toplot.df, Frequency == frequency)
+    toplot2.df = summarise(group_by(toplot.df, Sample, Time, Experiment), sd = sd(Value), 
+        n = n(), se = sd/sqrt(n), Value = mean(Value))
+    
+    plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample, 
+        linetype = Experiment)) + # geom_errorbar(ggplot2::aes(ymin=Value-se, ymax=Value+se)) +
+    ggplot2::labs(title = unit) + ggplot2::geom_line()
+    
+    return(plot)
 }
 
 #' Plot summary statistics from replicate experiments
@@ -163,33 +165,29 @@ ecis_plot_experiments = function(toplot.df, unit, frequency)
 #' @importFrom ggplot2 ggplot geom_errorbar labs geom_line aes
 #'
 #' @examples
-#' ecis_plot_summary(data.df, "Rb", 0)
+#' ecis_plot_summary(data.df, 'Rb', 0)
 #' 
-ecis_plot_summary <- function (toplot.df, unit, frequency)
-{
-  
-  # Delete any un-needed data for this graph
-  toplot.df = subset(toplot.df, Unit == unit)
-  toplot.df = subset(toplot.df, Frequency == frequency)
-  
-  # Average each experiment, working out the average alone
-  toplot2.df = dplyr::summarise(group_by(toplot.df, Sample, Time, Experiment),
-                                Value=mean(Value))
-  
-  # Now repeat the calculation, but work out the intra-experimental error and statistics
-  toplot2.df = summarise(group_by(toplot2.df, Sample, Time),
-                         sd=sd(Value), n=n(), Value=mean(Value))
-  
-  plot = ggplot2::ggplot(data=toplot2.df, ggplot2::aes(x=Time, y=Value, colour=Sample)) +
-    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-sd/sqrt(n), ymax=Value+sd/sqrt(n))) +
-    ggplot2::labs(title = unit)+
-    ggplot2::geom_line()
-  
-  return(plot)
+ecis_plot_summary <- function(toplot.df, unit, frequency) {
+    
+    # Delete any un-needed data for this graph
+    toplot.df = subset(toplot.df, Unit == unit)
+    toplot.df = subset(toplot.df, Frequency == frequency)
+    
+    # Average each experiment, working out the average alone
+    toplot2.df = dplyr::summarise(group_by(toplot.df, Sample, Time, Experiment), Value = mean(Value))
+    
+    # Now repeat the calculation, but work out the intra-experimental error and statistics
+    toplot2.df = summarise(group_by(toplot2.df, Sample, Time), sd = sd(Value), n = n(), Value = mean(Value))
+    
+    plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample)) + 
+        ggplot2::geom_errorbar(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n))) + 
+        ggplot2::labs(title = unit) + ggplot2::geom_line()
+    
+    return(plot)
 }
 
 
-#////////////////Dissection code ///////////////////////////////////
+# ////////////////Dissection code ///////////////////////////////////
 
 
 #' Generate a bar graph of a particular value at a single time
@@ -204,20 +202,18 @@ ecis_plot_summary <- function (toplot.df, unit, frequency)
 #' 
 #' @export
 #' 
-ecis_plot_all_timeslice = function (data.df, unit, time)
-{
-  filtered.df = data.df
-  
-  filtered.df = subset(filtered.df, Time == time)
-  filtered.df = subset(filtered.df, Unit == unit)
-  
-  
-  filtered.df$Sample = paste(filtered.df$Sample, filtered.df$Well)
-  
-  ggplot(filtered.df, aes(x = Sample, y = Value, fill = Experiment))+
-    geom_bar(stat = "identity", position = position_dodge())+
-    theme(axis.text.x = element_text(angle = 90))
-  
+ecis_plot_all_timeslice = function(data.df, unit, time) {
+    filtered.df = data.df
+    
+    filtered.df = subset(filtered.df, Time == time)
+    filtered.df = subset(filtered.df, Unit == unit)
+    
+    
+    filtered.df$Sample = paste(filtered.df$Sample, filtered.df$Well)
+    
+    ggplot(filtered.df, aes(x = Sample, y = Value, fill = Experiment)) + geom_bar(stat = "identity", 
+        position = position_dodge()) + theme(axis.text.x = element_text(angle = 90))
+    
 }
 
 #' Plot a timeslice of an experiment
@@ -234,21 +230,21 @@ ecis_plot_all_timeslice = function (data.df, unit, time)
 #' @export
 #'
 #' @examples
-#' ecis_plot_experiments_timeslice(data.df, "Rb", 70)
+#' ecis_plot_experiments_timeslice(data.df, 'Rb', 70)
 #' 
-ecis_plot_experiments_timeslice = function(data.df, unit, time)
-{
-  filtered.df = data.df
-  
-  filtered.df = subset(filtered.df, Time == time)
-  filtered.df = subset(filtered.df, Unit == unit)
-  
-  filtered2.df  = summarise(group_by(filtered.df, Experiment, Sample), sd=sd(Value), n=n(), Value                     =mean(Value))
-  
-  ggplot(filtered2.df, aes(x = Sample, y = Value, fill = Experiment))+
-    geom_bar(stat = "identity", position = position_dodge())+
-    geom_errorbar(aes(ymin=Value-sd/sqrt(n), ymax=Value+sd/sqrt(n)), width=.2, position = position_dodge(.9))
-  
+ecis_plot_experiments_timeslice = function(data.df, unit, time) {
+    filtered.df = data.df
+    
+    filtered.df = subset(filtered.df, Time == time)
+    filtered.df = subset(filtered.df, Unit == unit)
+    
+    filtered2.df = summarise(group_by(filtered.df, Experiment, Sample), sd = sd(Value), n = n(), 
+        Value = mean(Value))
+    
+    ggplot(filtered2.df, aes(x = Sample, y = Value, fill = Experiment)) + geom_bar(stat = "identity", 
+        position = position_dodge()) + geom_errorbar(aes(ymin = Value - sd/sqrt(n), ymax = Value + 
+        sd/sqrt(n)), width = 0.2, position = position_dodge(0.9))
+    
 }
 
 #' Title
@@ -265,22 +261,20 @@ ecis_plot_experiments_timeslice = function(data.df, unit, time)
 #' @export 
 #'
 #' 
-ecis_plot_summary_timeslice = function(data.df, unit, time)
-{
-  filtered.df = data.df
-  
-  # First reduce the dataset to the single time point and unit that we can digest
-  filtered.df = subset(filtered.df, Time == time)
-  filtered.df = subset(filtered.df, Unit == unit)
-  
-  # Then use two dplyr statements to prepare the data for graphing
-  filtered2.df  = summarise(group_by(filtered.df, Experiment, Sample), Value = mean(Value))
-  filtered2.df = summarise(group_by(filtered2.df, Sample), sd=sd(Value), n=n(),  Value=mean(Value))
-  
-  # Then graph the output
-  ggplot(filtered2.df, aes(x = Sample, y = Value))+
-    geom_bar(stat = "identity")+
-    geom_errorbar(aes(ymin=Value-sd/sqrt(n), ymax=Value+sd/sqrt(n)), width=.2)
+ecis_plot_summary_timeslice = function(data.df, unit, time) {
+    filtered.df = data.df
+    
+    # First reduce the dataset to the single time point and unit that we can digest
+    filtered.df = subset(filtered.df, Time == time)
+    filtered.df = subset(filtered.df, Unit == unit)
+    
+    # Then use two dplyr statements to prepare the data for graphing
+    filtered2.df = summarise(group_by(filtered.df, Experiment, Sample), Value = mean(Value))
+    filtered2.df = summarise(group_by(filtered2.df, Sample), sd = sd(Value), n = n(), Value = mean(Value))
+    
+    # Then graph the output
+    ggplot(filtered2.df, aes(x = Sample, y = Value)) + geom_bar(stat = "identity") + geom_errorbar(aes(ymin = Value - 
+        sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.2)
 }
 
 # Multiplot with common key -------------------------------------------------------
@@ -301,42 +295,38 @@ ecis_plot_summary_timeslice = function(data.df, unit, time)
 #'
 #' @examples
 #' 
-#' graph1 = ecis_plot_all(data.df, "Rb", 0)
-#' graph2 = ecis_plot_experiments(data.df, "Rb", 0)
-#' graph3 = ecis_plot_summary(data.df, "Rb", 0)
+#' graph1 = ecis_plot_all(data.df, 'Rb', 0)
+#' graph2 = ecis_plot_experiments(data.df, 'Rb', 0)
+#' graph3 = ecis_plot_summary(data.df, 'Rb', 0)
 #' 
 #' #grid_arrange_shared_legend (graph1, graph2, graph3, ncol = 1, nrow = 3)
 #' 
-grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, position = c("bottom", "right")) {
-
-  requireNamespace('gridExtra')
-  requireNamespace('grid')
-  
-  plots <- list(...)
-  position <- match.arg(position)
-  g <- ggplot2::ggplotGrob(plots[[1]] + ggplot2::theme(legend.position = position))$grobs
-  legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
-  lheight <- sum(legend$height)
-  lwidth <- sum(legend$width)
-  gl <- lapply(plots, function(x) x + ggplot2::theme(legend.position="none"))
-  gl <- c(gl, ncol = ncol, nrow = nrow)
-  
-  combined <- switch(position,
-                     "bottom" = gridExtra::arrangeGrob(do.call(gridExtra::arrangeGrob, gl),
-                                            legend,
-                                            ncol = 1,
-                                            heights = grid::unit.c(grid::unit(1, "npc") - lheight, lheight)),
-                     "right" = gridExtra::arrangeGrob(do.call(gridExtra::arrangeGrob, gl),
-                                           legend,
-                                           ncol = 2,
-                                           widths = grid::unit.c(grid::unit(1, "npc") - lwidth, lwidth)))
-  
-  #grid.newpage()
-  grid::grid.draw(combined)
-  
-  # return gtable invisibly
-  invisible(combined)
-  
+grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, position = c("bottom", 
+    "right")) {
+    
+    requireNamespace("gridExtra")
+    requireNamespace("grid")
+    
+    plots <- list(...)
+    position <- match.arg(position)
+    g <- ggplot2::ggplotGrob(plots[[1]] + ggplot2::theme(legend.position = position))$grobs
+    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
+    lheight <- sum(legend$height)
+    lwidth <- sum(legend$width)
+    gl <- lapply(plots, function(x) x + ggplot2::theme(legend.position = "none"))
+    gl <- c(gl, ncol = ncol, nrow = nrow)
+    
+    combined <- switch(position, bottom = gridExtra::arrangeGrob(do.call(gridExtra::arrangeGrob, 
+        gl), legend, ncol = 1, heights = grid::unit.c(grid::unit(1, "npc") - lheight, lheight)), 
+        right = gridExtra::arrangeGrob(do.call(gridExtra::arrangeGrob, gl), legend, ncol = 2, 
+            widths = grid::unit.c(grid::unit(1, "npc") - lwidth, lwidth)))
+    
+    # grid.newpage()
+    grid::grid.draw(combined)
+    
+    # return gtable invisibly
+    invisible(combined)
+    
 }
 
 #' Plot graphs accross a standard ECIS spectra
@@ -349,24 +339,24 @@ grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, 
 #'
 #' @examples
 #' 
-#' ecis_plotspectra(data.df, "R")
+#' ecis_plotspectra(data.df, 'R')
 #' 
-ecis_plotspectra = function(data, variable){
-  
-  data = subset(data, Unit == variable)
-  
-  p1 = ecis_plot_summary(data, variable , 250)
-  p2 = ecis_plot_summary(data, variable, 500)
-  p3 = ecis_plot_summary(data, variable , 1000)
-  p4 = ecis_plot_summary(data, variable , 2000)
-  p5 = ecis_plot_summary(data, variable , 4000)
-  p6 = ecis_plot_summary(data, variable , 8000)
-  p7 = ecis_plot_summary(data, variable , 16000)
-  p8 = ecis_plot_summary(data, variable , 32000)
-  p9 = ecis_plot_summary(data, variable , 64000)
-  
-  grid_arrange_shared_legend(p1, p2, p3, p4, p5, p6, p7, p8, p9, ncol = 3, nrow = 3)
-  
+ecis_plotspectra = function(data, variable) {
+    
+    data = subset(data, Unit == variable)
+    
+    p1 = ecis_plot_summary(data, variable, 250)
+    p2 = ecis_plot_summary(data, variable, 500)
+    p3 = ecis_plot_summary(data, variable, 1000)
+    p4 = ecis_plot_summary(data, variable, 2000)
+    p5 = ecis_plot_summary(data, variable, 4000)
+    p6 = ecis_plot_summary(data, variable, 8000)
+    p7 = ecis_plot_summary(data, variable, 16000)
+    p8 = ecis_plot_summary(data, variable, 32000)
+    p9 = ecis_plot_summary(data, variable, 64000)
+    
+    grid_arrange_shared_legend(p1, p2, p3, p4, p5, p6, p7, p8, p9, ncol = 3, nrow = 3)
+    
 }
 
 #' Plot all values generated by the ECIS model
@@ -382,17 +372,17 @@ ecis_plotspectra = function(data, variable){
 #' 
 #' ecis_plotmodel(data.df)
 #' 
-ecis_plotmodel <- function (alldata.df){
-  
-  m1 = ecis_plot_summary(alldata.df, "R" , 4000)
-  m2 = ecis_plot_summary(alldata.df, "Rb", 0)
-  m3 = ecis_plot_summary(alldata.df, "Cm" , 0)
-  m4 = ecis_plot_summary(alldata.df, "Alpha" , 0)
-  m5 = ecis_plot_summary(alldata.df, "RMSE" , 0)
-  m6 = ecis_plot_summary(alldata.df, "Drift" , 0)
-  
-  return (grid_arrange_shared_legend(m1, m2, m3, m4, m5, m6, ncol = 2, nrow = 3))
-  
+ecis_plotmodel <- function(alldata.df) {
+    
+    m1 = ecis_plot_summary(alldata.df, "R", 4000)
+    m2 = ecis_plot_summary(alldata.df, "Rb", 0)
+    m3 = ecis_plot_summary(alldata.df, "Cm", 0)
+    m4 = ecis_plot_summary(alldata.df, "Alpha", 0)
+    m5 = ecis_plot_summary(alldata.df, "RMSE", 0)
+    m6 = ecis_plot_summary(alldata.df, "Drift", 0)
+    
+    return(grid_arrange_shared_legend(m1, m2, m3, m4, m5, m6, ncol = 2, nrow = 3))
+    
 }
 
 
@@ -418,26 +408,23 @@ ecis_plotmodel <- function (alldata.df){
 #' @export
 #'
 #' @examples
-#' ecis_animatefrequency(data.df, "R", 3)
+#' ecis_animatefrequency(data.df, 'R', 3)
 #' 
-ecis_animatefrequency = function (alldata.df, unittoplot, frames){
-  
-  alldatasum.df = summarise(group_by(alldata.df, Sample, Time, Unit, Frequency),
-                            sd=sd(Value), n=n(),Value=mean(Value))
-  
-  toplot.df = alldatasum.df
-  toplot.df = subset(toplot.df, Unit == unittoplot)
-  toplot.df$Frequency = as.numeric(toplot.df$Frequency)
-  
-  toplot2.df = toplot.df
-  
-  p = ggplot2::ggplot(toplot2.df, ggplot2::aes(Frequency, Value, colour = Sample)) +
-    ggplot2:: geom_line( show.legend = TRUE) +
-    ggplot2::labs(title = 'Days: {round(frame_time,1)}', x = 'Frequency (Hz)', y = 'Value (ohms)') +
-    ggplot2::scale_x_log10() +
-    ggplot2::scale_y_log10() +
-    ggplot2::geom_errorbar(ggplot2::aes(ymin=Value-sd/sqrt(n), ymax=Value+sd/sqrt(n)), width=.1) +  
-    gganimate::transition_time(Time)
-  
-  gganimate::animate(p, nframes = frames)
+ecis_animatefrequency = function(alldata.df, unittoplot, frames) {
+    
+    alldatasum.df = summarise(group_by(alldata.df, Sample, Time, Unit, Frequency), sd = sd(Value), 
+        n = n(), Value = mean(Value))
+    
+    toplot.df = alldatasum.df
+    toplot.df = subset(toplot.df, Unit == unittoplot)
+    toplot.df$Frequency = as.numeric(toplot.df$Frequency)
+    
+    toplot2.df = toplot.df
+    
+    p = ggplot2::ggplot(toplot2.df, ggplot2::aes(Frequency, Value, colour = Sample)) + ggplot2::geom_line(show.legend = TRUE) + 
+        ggplot2::labs(title = "Days: {round(frame_time,1)}", x = "Frequency (Hz)", y = "Value (ohms)") + 
+        ggplot2::scale_x_log10() + ggplot2::scale_y_log10() + ggplot2::geom_errorbar(ggplot2::aes(ymin = Value - 
+        sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.1) + gganimate::transition_time(Time)
+    
+    gganimate::animate(p, nframes = frames)
 }

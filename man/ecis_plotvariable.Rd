@@ -20,6 +20,6 @@ A GGplot2 object
 THIS FUNCTION IS DEPRECIATED, Use ECIS_plot_xxx series of funcitons for finer control over how to deal with replicate experiments. This graphic will underestimate error from replicate experiments.
 }
 \examples{
-ecis_plotvariable(data.df, "Rb", 0)
+ecis_plotvariable(data.df, 'Rb', 0)
 
 }

@@ -16,6 +16,6 @@ Standardised well names
 Replaces A01 in strings with A0. Important for importing ABP files which may use either notation.
 }
 \examples{
-ecis_standardise_wells("A01")
+ecis_standardise_wells('A01')
 
 }

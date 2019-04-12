@@ -1,4 +1,4 @@
-#// This file contains the statistical data analyasis
+# // This file contains the statistical data analyasis
 
 #' ANOVA analyasis of a single ECIS timepoint
 #' 
@@ -23,54 +23,32 @@
 #' @export
 #'
 #' @examples
-#' ecis_ANOVA(ECISR::data.df, "Rb",0,75)
+#' ecis_ANOVA(ECISR::data.df, 'Rb',0,75)
 #' 
-ecis_ANOVA  = function (data.df, unit, frequency, time, posthoc = "bonferoni")
-{
-  
-  # Round the number given to the function to the nearest actual measurement
-  timetouse = ecis_roundtime(data.df, time)
-  
-  # Cut the dataset down to a useable size (IE, )
-  filtered.df = data.df
-  filtered.df = subset(filtered.df, Time == timetouse)
-  filtered.df = subset(filtered.df, Unit == unit)
-  filtered.df = subset(filtered.df, Frequency == frequency)
-  
-  print(filtered.df)
-  
-  #Run a basic ANOVA
-  dat = filtered.df
-  hist(dat$Value)
-  fit <- lm(Value ~ Experiment + Sample, data = dat)
-  s20x::normcheck(fit, s = TRUE)
-  print(anova(fit))
-  fit <- aov(Value ~ Experiment + Sample, data = dat)
-  print(TukeyHSD(fit))
-  
-  
+ecis_ANOVA = function(data.df, unit, frequency, time, posthoc = "bonferoni") {
+    
+    # Round the number given to the function to the nearest actual measurement
+    timetouse = ecis_roundtime(data.df, time)
+    
+    # Cut the dataset down to a useable size (IE, )
+    filtered.df = data.df
+    filtered.df = subset(filtered.df, Time == timetouse)
+    filtered.df = subset(filtered.df, Unit == unit)
+    filtered.df = subset(filtered.df, Frequency == frequency)
+    
+    print(filtered.df)
+    
+    # Run a basic ANOVA
+    dat = filtered.df
+    hist(dat$Value)
+    fit <- lm(Value ~ Experiment + Sample, data = dat)
+    s20x::normcheck(fit, s = TRUE)
+    print(anova(fit))
+    fit <- aov(Value ~ Experiment + Sample, data = dat)
+    print(TukeyHSD(fit))
+    
+    
 }
 
 
-
-#' Standardise how well numbers are represented
-#'
-#' @param data.df A standard ECIS data frame
-#' @param time The time point that needs rounding
-#'
-#' @return A timepoint that exactly aligns with a measured datapoint
-#'
-#' @export
-#'
-#' @examples
-#' ecis_roundtime(data.df, 100)
-#' 
-ecis_roundtime = function(data.df, time)
-{
-  times = unique (data.df$Time)
-  numberinlist = which.min(abs(times - time)) 
-  timetouse = times[numberinlist]
-  
-  return(timetouse)
-}
 

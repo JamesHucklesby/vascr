@@ -14,5 +14,5 @@
 #'   \item{Well}{Well of plate that was measured}
 #'   ...
 #' }
-#' @source James Hucklesby
+#' @source James Hucklesby 2018
 "data.df"

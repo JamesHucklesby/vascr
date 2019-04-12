@@ -19,37 +19,36 @@
 #' 
 #' ecis_normalise(data.df, 100)
 #' 
-ecis_normalise = function(data.df, normtime, divide = FALSE)
-{
-  
-  roundedtime = ecis_roundtime(data.df, normtime)
-  
-  mininormaltable = subset(data.df, Time == roundedtime)
-  
-  fulltable = left_join(data.df, mininormaltable, by = c("Well" = "Well", "Frequency" = "Frequency", "Experiment" = "Experiment", "Unit" = "Unit", "Sample" = "Sample"))
-  
-  fulltable$Time = fulltable$Time.x
-  
-  
-  if (divide == TRUE){
-    fulltable$Value = fulltable$Value.x / fulltable$Value.y
-  }
-  else{
-    fulltable$Value = fulltable$Value.x - fulltable$Value.y
-  }
-  
-  fulltable$Time.y = NULL
-  fulltable$Time.x = NULL
-  fulltable$Value.x = NULL
-  fulltable$Value.y = NULL
-  
-  
-  if(isFALSE(all(is.finite(fulltable$Value)))){
-    warning("NaN values or infinities generated in normalisation. Proceed with caution")
-  }
-  
-  return(fulltable)
-  
+ecis_normalise = function(data.df, normtime, divide = FALSE) {
+    
+    roundedtime = ecis_roundtime(data.df, normtime)
+    
+    mininormaltable = subset(data.df, Time == roundedtime)
+    
+    fulltable = left_join(data.df, mininormaltable, by = c(Well = "Well", Frequency = "Frequency", 
+        Experiment = "Experiment", Unit = "Unit", Sample = "Sample"))
+    
+    fulltable$Time = fulltable$Time.x
+    
+    
+    if (divide == TRUE) {
+        fulltable$Value = fulltable$Value.x/fulltable$Value.y
+    } else {
+        fulltable$Value = fulltable$Value.x - fulltable$Value.y
+    }
+    
+    fulltable$Time.y = NULL
+    fulltable$Time.x = NULL
+    fulltable$Value.x = NULL
+    fulltable$Value.y = NULL
+    
+    
+    if (isFALSE(all(is.finite(fulltable$Value)))) {
+        warning("NaN values or infinities generated in normalisation. Proceed with caution")
+    }
+    
+    return(fulltable)
+    
 }
 
 # Align key ECIS datapoints -----------------------------------------------
@@ -62,12 +61,12 @@ ecis_normalise = function(data.df, normtime, divide = FALSE)
 #'Sets the time at which each replicate well is maximal to time 0. Results in variables aligned by maximum time, rather than time from seeding.
 #'
 #' @param data.df A standard ECIS data file
-#' @param point Which key point, either "max" or "min"
+#' @param point Which key point, either 'max' or 'min'
 #' @param discrepancy A standard rounding constant to compensate for rounding errors in the subtraciton process
 #'
 #' @return An ECIS dataset where the key time points all happen at time 0
 #' 
-#' @importFrom magrittr "%>%"
+#' @importFrom magrittr '%>%'
 #' @importFrom stringr str_detect
 #' @importFrom dplyr group_by arrange mutate
 #' 
@@ -75,37 +74,26 @@ ecis_normalise = function(data.df, normtime, divide = FALSE)
 #'
 #' @examples
 #' 
-#' ecis_align_key(data.df, "max")
-#' ecis_align_key(data.df, "min")
+#' ecis_align_key(data.df, 'max')
+#' ecis_align_key(data.df, 'min')
 
-ecis_align_key = function(data.df, point, discrepancy = 5){
-  
-  if (point == "max")
-  {
-    returndata.df = data.df %>%
-      dplyr:: group_by(Unit, Well, Sample, Frequency, Experiment) %>%
-      dplyr:: arrange(Time) %>%
-      dplyr:: mutate (Time = Time- Time[which.max(Value)])
-  }
-  
-  else if (point == "min")
-  {
-    returndata.df = data.df %>%
-      dplyr:: group_by(Unit, Well, Sample, Frequency, Experiment) %>%
-      dplyr:: arrange(Time) %>%
-      dplyr:: mutate (Time = Time- Time[which.min(Value)])
-  }
-  
-  else
-  {
-    warning("No supported key point string entered. Please try again")
-    return (FALSE)
-  }
-  
-  
-  returndata.df$Time = round(returndata.df$Time,discrepancy)
-  
-  return (returndata.df)
+ecis_align_key = function(data.df, point, discrepancy = 5) {
+    
+    if (point == "max") {
+        returndata.df = data.df %>% dplyr::group_by(Unit, Well, Sample, Frequency, Experiment) %>% 
+            dplyr::arrange(Time) %>% dplyr::mutate(Time = Time - Time[which.max(Value)])
+    } else if (point == "min") {
+        returndata.df = data.df %>% dplyr::group_by(Unit, Well, Sample, Frequency, Experiment) %>% 
+            dplyr::arrange(Time) %>% dplyr::mutate(Time = Time - Time[which.min(Value)])
+    } else {
+        warning("No supported key point string entered. Please try again")
+        return(FALSE)
+    }
+    
+    
+    returndata.df$Time = round(returndata.df$Time, discrepancy)
+    
+    return(returndata.df)
 }
 
 
@@ -127,26 +115,25 @@ ecis_align_key = function(data.df, point, discrepancy = 5){
 #' experiment2.df = data.df
 #' 
 #' #ecis_combine_mean(experiment1.df, experiment2.df)
-#' warning("This funciton is broken")
+#' warning('This funciton is broken')
 #' 
-ecis_combine_mean = function (...)
-{
-  warning("This funciton is broken")
-  
-  dataframes = list(...)
-  
-  alldata = ecis_summarise(dataframes[[1]][0,])
-  loops = 1
-  
-  for(i in dataframes){
-    indata = ecis_summarise(i)
-    indata$Experiment = loops
-    loops = loops + 1
-    alldata = rbind(alldata, indata)
-  }
-  
-  return (alldata)
-  
+ecis_combine_mean = function(...) {
+    warning("This funciton is broken")
+    
+    dataframes = list(...)
+    
+    alldata = ecis_summarise(dataframes[[1]][0, ])
+    loops = 1
+    
+    for (i in dataframes) {
+        indata = ecis_summarise(i)
+        indata$Experiment = loops
+        loops = loops + 1
+        alldata = rbind(alldata, indata)
+    }
+    
+    return(alldata)
+    
 }
 
 
@@ -168,23 +155,22 @@ ecis_combine_mean = function (...)
 #'
 #' @examples
 #' 
-#' ecis_subset(data.df, 50)
+#' ecis_subsample(data.df, 50)
 #' 
-ecis_subset = function(data.df, nth)
-{
-  
-  Time = unique(data.df$Time)
-  TimeID = c(1:length(Time))
-  time.df = data.frame(TimeID, Time)
-  
-  withid.df = dplyr::left_join(data.df, time.df, by="Time")
-  subset.df = subset(withid.df, (TimeID %% nth) == 1)
-  
-  data.df = subset.df
-  subset.df$TimeID = NULL
-  
-  return(data.df)
-  
+ecis_subsample = function(data.df, nth) {
+    
+    Time = unique(data.df$Time)
+    TimeID = c(1:length(Time))
+    time.df = data.frame(TimeID, Time)
+    
+    withid.df = dplyr::left_join(data.df, time.df, by = "Time")
+    subset.df = subset(withid.df, (TimeID%%nth) == 1)
+    
+    data.df = subset.df
+    subset.df$TimeID = NULL
+    
+    return(data.df)
+    
 }
 
 # Summary function --------------------------------------------------------
@@ -204,14 +190,14 @@ ecis_subset = function(data.df, nth)
 #' 
 #' ecis_summarise(data.df)
 #' 
-ecis_summarise <- function(data.df){
-  
-  average.df = summarise(group_by(data.df, Sample, Time, Unit, Frequency),                     
-                         sd=sd(Value), n=n(), sem = sd/sqrt(n),Value=mean(Value))
-  
-  average.df$Experiment = "Derrivative";
-  return (average.df)
-  
+ecis_summarise <- function(data.df) {
+    
+    average.df = summarise(group_by(data.df, Sample, Time, Unit, Frequency), sd = sd(Value), 
+        n = n(), sem = sd/sqrt(n), Value = mean(Value))
+    
+    average.df$Experiment = "Derrivative"
+    return(average.df)
+    
 }
 
 

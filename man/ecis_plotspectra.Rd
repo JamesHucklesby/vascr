@@ -19,6 +19,6 @@ Plot graphs accross a standard ECIS spectra
 }
 \examples{
 
-ecis_plotspectra(data.df, "R")
+ecis_plotspectra(data.df, 'R')
 
 }

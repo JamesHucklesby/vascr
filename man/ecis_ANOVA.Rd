@@ -27,6 +27,6 @@ This function takes a standard ECIS dataset and runs two way ANOVA on it. It the
 This analyasis requires multiple experiments, as working out the differences in a single experiment is a terrible idea (statisticaly speaking).
 }
 \examples{
-ecis_ANOVA(ECISR::data.df, "Rb",0,75)
+ecis_ANOVA(ECISR::data.df, 'Rb',0,75)
 
 }
