@@ -14,15 +14,17 @@ retitle = function(df) {
 }
 
 
-#' Title
+#' Subset an ECIS dataset on multiple factors
+#' 
+#' Generates a cut down dataset for processing purposes. Used heavily by all other internal functions, but may also be useful for inspecting digestable chunks of raw data.
 #'
-#' @param data.df 
-#' @param time 
-#' @param unit 
-#' @param frequency 
+#' @param data.df A standard ECIS dataset
+#' @param time The time to subset at
+#' @param unit The unit requred
+#' @param frequency The frequency at which the reading was taken. All modeled variables have a frequency of 0
 #' @param samplesubset 
 #'
-#' @returnA smaller ECIS dataset
+#' @return A smaller ECIS dataset
 #' 
 #' @importFrom dplyr filter
 #' @importFrom magrittr "%>%"

@@ -4,7 +4,7 @@
 \alias{ecis_plot}
 \title{ECIS plot}
 \usage{
-ecis_plot(data, unit, frequency, replication, time = Inf,
+ecis_plot(data, unit, frequency = 0, replication = "all", time = Inf,
   samplesubset = "")
 }
 \arguments{
@@ -27,8 +27,8 @@ A ggplot2 object
 ECIS plot
 }
 \examples{
-ecis_plot(data.df, 'Rb', 0, 'summary')
-ecis_plot(data.df, 'Rb', 0, 'summary', time = 75)
+ecis_plot(data.df, 'Rb', 0, 'all')
+ecis_plot(data.df, 'R', 4000, 'summary', time = 75)
 
 
 }

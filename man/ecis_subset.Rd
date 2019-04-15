@@ -2,24 +2,27 @@
 % Please edit documentation in R/helperfunctions.R
 \name{ecis_subset}
 \alias{ecis_subset}
-\title{Title}
+\title{Subset an ECIS dataset on multiple factors}
 \usage{
 ecis_subset(data.df, time = Inf, unit = "", frequency = Inf,
   samplesubset = "", experiment = "")
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{A standard ECIS dataset}
 
-\item{time}{}
+\item{time}{The time to subset at}
 
-\item{unit}{}
+\item{unit}{The unit requred}
 
-\item{frequency}{}
+\item{frequency}{The frequency at which the reading was taken. All modeled variables have a frequency of 0}
 
 \item{samplesubset}{}
 }
+\value{
+A smaller ECIS dataset
+}
 \description{
-Title
+Generates a cut down dataset for processing purposes. Used heavily by all other internal functions, but may also be useful for inspecting digestable chunks of raw data.
 }
 \examples{
 ecis_subset(data.df, time = 4.37, frequency = 4000, unit = "R", samplesubset = "05,000", experiment = "2")
