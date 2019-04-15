@@ -21,9 +21,7 @@
 #' 
 ecis_normalise = function(data.df, normtime, divide = FALSE) {
     
-    roundedtime = ecis_roundtime(data.df, normtime)
-    
-    mininormaltable = subset(data.df, Time == roundedtime)
+    mininormaltable = ecis_subset(data.df, time = time)
     
     fulltable = left_join(data.df, mininormaltable, by = c(Well = "Well", Frequency = "Frequency", 
         Experiment = "Experiment", Unit = "Unit", Sample = "Sample"))
@@ -96,45 +94,6 @@ ecis_align_key = function(data.df, point, discrepancy = 5) {
     return(returndata.df)
 }
 
-
-# Generate summary data ---------------------------------------------------
-
-
-#' Generate summary data from combining experiments
-#'
-#' @param ... A series of data frames to be combined
-#'
-#' @return A standard ECIS data frame with summary statistics for each row. One row per sample and time combination.
-#' @export
-#' 
-#'
-#' @examples
-#' 
-#' #Generate two pretend datasets
-#' experiment1.df = data.df
-#' experiment2.df = data.df
-#' 
-#' #ecis_combine_mean(experiment1.df, experiment2.df)
-#' warning('This funciton is broken')
-#' 
-ecis_combine_mean = function(...) {
-    warning("This funciton is broken")
-    
-    dataframes = list(...)
-    
-    alldata = ecis_summarise(dataframes[[1]][0, ])
-    loops = 1
-    
-    for (i in dataframes) {
-        indata = ecis_summarise(i)
-        indata$Experiment = loops
-        loops = loops + 1
-        alldata = rbind(alldata, indata)
-    }
-    
-    return(alldata)
-    
-}
 
 
 # Downsample data ---------------------------------------------------------

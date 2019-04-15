@@ -19,20 +19,20 @@
 #' @importFrom magrittr '%>%'
 #' @importFrom stats sd
 #' @importFrom dplyr filter group_by summarise
-#' @importFrom ggplot2 ggplot geom_line labs aes 
+#' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text
 #'
 #' @examples
 #' ecis_plot(data.df, 'Rb', 0, 'all')
 #' ecis_plot(data.df, 'R', 4000, 'summary', time = 75)
 #' 
 #' 
-ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf, samplesubset = "") {
+ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf, samplesubset = "", experiment = "") {
     
-  data = ecis_subset(data, unit = unit, frequency = frequency, time = time, samplesubset = samplesubset)
+  data = ecis_subset(data, unit = unit, frequency = frequency, time = time, samplesubset = samplesubset, experiment = experiment)
     
   # First we deal with if the graph requested is a line graph
     
-    if (is.infinite(time)) {
+    if (length(unique(data$Time))>1) { # Check if we are plotting a single, or multiple, time points
         
         if (replication == "all") {
               
@@ -84,12 +84,9 @@ ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf,
           
           return(plot)
         }
-      filtered.df = data
+
       
-      filtered.df = subset(filtered.df, Time == time)
-      filtered.df = subset(filtered.df, Unit == unit)
-      
-      filtered2.df = summarise(group_by(filtered.df, Experiment, Sample), sd = sd(Value), n = n(), 
+      filtered2.df = summarise(group_by(data, Experiment, Sample), sd = sd(Value), n = n(), 
                                Value = mean(Value))
       
       plot = ggplot(filtered2.df, aes(x = Sample, y = Value, fill = Experiment)) + geom_bar(stat = "identity", 
@@ -99,14 +96,9 @@ ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf,
       return (plot)
         }
         if (replication == "summary") {
-          filtered.df = data.df
-          
-          # First reduce the dataset to the single time point and unit that we can digest
-          filtered.df = subset(filtered.df, Time == time)
-          filtered.df = subset(filtered.df, Unit == unit)
           
           # Then use two dplyr statements to prepare the data for graphing
-          filtered2.df = summarise(group_by(filtered.df, Experiment, Sample), Value = mean(Value))
+          filtered2.df = summarise(group_by(data, Experiment, Sample), Value = mean(Value))
           filtered2.df = summarise(group_by(filtered2.df, Sample), sd = sd(Value), n = n(), Value = mean(Value))
           
           # Then graph the output

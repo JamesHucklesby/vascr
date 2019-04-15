@@ -7,7 +7,7 @@
 reinstall_updates()
 }
 \value{
-Installs all the git requisites for the package. Not available via CRAN.
+Installs all the git requisites for the package. Not yet available via CRAN.
 }
 \description{
 Reinstalls the package from GitHub. Temporary.

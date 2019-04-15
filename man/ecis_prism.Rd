@@ -4,7 +4,7 @@
 \alias{ecis_prism}
 \title{Export a prism-compatable data set}
 \usage{
-ecis_prism(data.df, unit, frequency)
+ecis_prism(data.df, unit, frequency = 0)
 }
 \arguments{
 \item{data.df}{ECIS dataframe}
@@ -20,6 +20,6 @@ A data frame that can be copied and pasted into prism
 Export a prism-compatable data set
 }
 \examples{
-ecis_prism(data.df, 'Rb', 0)
+ecis_prism(data.df, 'Rb')
 
 }

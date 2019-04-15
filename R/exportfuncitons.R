@@ -13,15 +13,14 @@
 #' @importFrom dplyr summarise group_by
 #'
 #' @examples
-#' ecis_prism(data.df, 'Rb', 0)
+#' ecis_prism(data.df, 'Rb')
 #' 
 
-ecis_prism = function(data.df, unit, frequency) {
+ecis_prism = function(data.df, unit, frequency = 0) {
     
     # Cut the data frame down to what can reasonably be represented on one prism table
     
-    data.df = subset(data.df, Frequency == frequency)
-    data.df = subset(data.df, Unit == unit)
+    data.df = ecis_subset(data.df, unit = unit, frequency = frequency)
     
     data.df = dplyr::summarise(group_by(data.df, Sample, Time, Experiment), Value = mean(Value))
     

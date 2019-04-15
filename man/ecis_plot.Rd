@@ -5,7 +5,7 @@
 \title{ECIS plot}
 \usage{
 ecis_plot(data, unit, frequency = 0, replication = "all", time = Inf,
-  samplesubset = "")
+  samplesubset = "", experiment = "")
 }
 \arguments{
 \item{data}{A standard ECIS data frame to plot}
@@ -18,7 +18,8 @@ ecis_plot(data, unit, frequency = 0, replication = "all", time = Inf,
 
 \item{time}{The time to subset if a slice is required. If set to Inf all data will be displayed}
 
-\item{samplesubset}{Optional, only samples that contain this string will be plotted. Standard search and wildcard searches apply.}
+\item{samplesubset}{Optional, only samples that contain this string will be plotted. Standard search and wildcard
+searches apply.}
 }
 \value{
 A ggplot2 object

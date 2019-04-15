@@ -10,13 +10,16 @@ ecis_subset(data.df, time = Inf, unit = "", frequency = Inf,
 \arguments{
 \item{data.df}{A standard ECIS dataset}
 
-\item{time}{The time to subset at}
+\item{time}{The time to subset at. Default will line plot all data, can also submit a vector of length 2
+and the times between those two points will be submited.}
 
 \item{unit}{The unit requred}
 
 \item{frequency}{The frequency at which the reading was taken. All modeled variables have a frequency of 0}
 
 \item{samplesubset}{}
+
+\item{experiment}{The experiment to plot. Default is all experiments}
 }
 \value{
 A smaller ECIS dataset
@@ -25,6 +28,6 @@ A smaller ECIS dataset
 Generates a cut down dataset for processing purposes. Used heavily by all other internal functions, but may also be useful for inspecting digestable chunks of raw data.
 }
 \examples{
-ecis_subset(data.df, time = 4.37, frequency = 4000, unit = "R", samplesubset = "05,000", experiment = "2")
+ecis_subset(data.df, time = c(20.23,50.73), frequency = 4000, unit = "R", samplesubset = "05,000", experiment = "2")
 
 }

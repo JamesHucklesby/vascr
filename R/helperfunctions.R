@@ -19,9 +19,11 @@ retitle = function(df) {
 #' Generates a cut down dataset for processing purposes. Used heavily by all other internal functions, but may also be useful for inspecting digestable chunks of raw data.
 #'
 #' @param data.df A standard ECIS dataset
-#' @param time The time to subset at
+#' @param time The time to subset at. Default will line plot all data, can also submit a vector of length 2
+#'  and the times between those two points will be submited.
 #' @param unit The unit requred
 #' @param frequency The frequency at which the reading was taken. All modeled variables have a frequency of 0
+#' @param experiment The experiment to plot. Default is all experiments
 #' @param samplesubset 
 #'
 #' @return A smaller ECIS dataset
@@ -32,15 +34,25 @@ retitle = function(df) {
 #' @export 
 #'
 #' @examples
-#' ecis_subset(data.df, time = 4.37, frequency = 4000, unit = "R", samplesubset = "05,000", experiment = "2")
+#' ecis_subset(data.df, time = c(20.23,50.73), frequency = 4000, unit = "R", samplesubset = "05,000", experiment = "2")
 #' 
 ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplesubset = "", experiment = ""){
   
-  if(is.finite(time)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
+  if (length(time) == 2) # If a vector of length 2 was submitted (ie two times) then we subset to that
+  {
+    data.df = data.df %>% filter(Time > time[1])
+    data.df = data.df %>% filter(Time < time[2])
+  }
+  
+  else if(is.finite(time)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
   {
   time = as.numeric(time) # Clean up the data type just in case the user is lazy
   actualtime = ecis_roundtime(data.df, time)
   data.df = data.df %>% filter(Time == actualtime)
+  }
+  else # The number is infinity, so return everything
+  {
+  
   }
 
   #Then we deal with the frequency

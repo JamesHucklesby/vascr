@@ -10,7 +10,7 @@ utils::globalVariables("Value")
 
 #' Reinstalls the package from GitHub. Temporary.
 #'
-#' @return Installs all the git requisites for the package. Not available via CRAN.
+#' @return Installs all the git requisites for the package. Not yet available via CRAN.
 #' 
 #' @export
 #'
