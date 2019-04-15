@@ -17,7 +17,7 @@ and the times between those two points will be submited.}
 
 \item{frequency}{The frequency at which the reading was taken. All modeled variables have a frequency of 0}
 
-\item{samplesubset}{}
+\item{samplesubset}{The samples to plot. A string that is searched accross all sample names, and those that match are plotted.}
 
 \item{experiment}{The experiment to plot. Default is all experiments}
 }
@@ -28,6 +28,7 @@ A smaller ECIS dataset
 Generates a cut down dataset for processing purposes. Used heavily by all other internal functions, but may also be useful for inspecting digestable chunks of raw data.
 }
 \examples{
-ecis_subset(data.df, time = c(20.23,50.73), frequency = 4000, unit = "R", samplesubset = "05,000", experiment = "2")
+ecis_subset(data.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
+samplesubset = "05,000", experiment = "2")
 
 }

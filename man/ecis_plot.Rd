@@ -18,7 +18,9 @@ ecis_plot(data, unit, frequency = 0, replication = "all", time = Inf,
 
 \item{time}{The time to subset if a slice is required. If set to Inf all data will be displayed}
 
-\item{samplesubset}{Optional, only samples that contain this string will be plotted. Standard search and wildcard
+\item{samplesubset}{Optional, only samples that contain this string will be plotted. Standard search and wildcard}
+
+\item{experiment}{Optional, allows you to limit the experiment plotted. Experiment names should be separated with |.
 searches apply.}
 }
 \value{

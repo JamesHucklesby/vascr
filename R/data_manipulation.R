@@ -21,7 +21,7 @@
 #' 
 ecis_normalise = function(data.df, normtime, divide = FALSE) {
     
-    mininormaltable = ecis_subset(data.df, time = time)
+    mininormaltable = ecis_subset(data.df, time = normtime)
     
     fulltable = left_join(data.df, mininormaltable, by = c(Well = "Well", Frequency = "Frequency", 
         Experiment = "Experiment", Unit = "Unit", Sample = "Sample"))

@@ -10,6 +10,7 @@
 #' @param replication How much of the replicaiton to display. Options are 'all', 'experiment', 'summary'.
 #' @param time The time to subset if a slice is required. If set to Inf all data will be displayed
 #' @param samplesubset Optional, only samples that contain this string will be plotted. Standard search and wildcard
+#' @param experiment Optional, allows you to limit the experiment plotted. Experiment names should be separated with |.
 #' searches apply.
 #'
 #' @return A ggplot2 object

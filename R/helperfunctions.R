@@ -24,7 +24,7 @@ retitle = function(df) {
 #' @param unit The unit requred
 #' @param frequency The frequency at which the reading was taken. All modeled variables have a frequency of 0
 #' @param experiment The experiment to plot. Default is all experiments
-#' @param samplesubset 
+#' @param samplesubset The samples to plot. A string that is searched accross all sample names, and those that match are plotted.
 #'
 #' @return A smaller ECIS dataset
 #' 
@@ -34,7 +34,8 @@ retitle = function(df) {
 #' @export 
 #'
 #' @examples
-#' ecis_subset(data.df, time = c(20.23,50.73), frequency = 4000, unit = "R", samplesubset = "05,000", experiment = "2")
+#' ecis_subset(data.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
+#' samplesubset = "05,000", experiment = "2")
 #' 
 ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplesubset = "", experiment = ""){
   
