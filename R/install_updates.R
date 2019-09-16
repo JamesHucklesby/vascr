@@ -1,11 +1,13 @@
+# Register the data frames column names used for dplyr manipulation to satisfy CMD check
+
 utils::globalVariables("Unit")
-utils::globalVariables("%>%")
 utils::globalVariables("Well")
 utils::globalVariables("Sample")
 utils::globalVariables("Frequency")
 utils::globalVariables("Experiment")
 utils::globalVariables("Time")
 utils::globalVariables("Value")
+utils::globalVariables("Stream")
 
 
 #' Reinstalls the package from GitHub. Temporary.

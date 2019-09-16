@@ -10,24 +10,36 @@
 #' @param replication How much of the replicaiton to display. Options are 'all', 'experiment', 'summary'.
 #' @param time The time to subset if a slice is required. If set to Inf all data will be displayed
 #' @param samplesubset Optional, only samples that contain this string will be plotted. Standard search and wildcard
-#' @param experiment Optional, allows you to limit the experiment plotted. Experiment names should be separated with |.
+#' @param experiment Optional, allows you to limit the experiment plotted. Experiment names should be separated with |
 #' searches apply.
+#' @param error Display error bars. 0 displays no error bars, 1 displays them all. Higher numbers will reduce the frequency of error bars plotted.
+#' @param linesize Width of mean lines shown on graphs
+#' @param errorsize Width of error bars shown on graphs
+#' @param alphavalue Alpha value of area enclosed by error bars. May be lowered for buisy graphs
+#'
 #'
 #' @return A ggplot2 object
 #' 
 #' @export
 #' 
-#' @importFrom magrittr '%>%'
 #' @importFrom stats sd
 #' @importFrom dplyr filter group_by summarise
 #' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text
 #'
 #' @examples
-#' ecis_plot(data.df, 'Rb', 0, 'all')
+#' ecis_plot(data.df, 'Rb', replication = 'summary', error = 2, linesize = 1, errorsize = 1, alphavalue = .1)
+#' ecis_plot(data.df, 'Rb', replication = 'all', error = 2, linesize = .1, errorsize = 1, alphavalue = .1)
 #' ecis_plot(data.df, 'R', 4000, 'summary', time = 75)
 #' 
-#' 
-ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf, samplesubset = "", experiment = "") {
+#'
+
+
+ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf, samplesubset = "", experiment = "", error = 1, linesize = 1, errorsize = 1, alphavalue = 0.1) {
+  
+  if (error>1)
+  {
+    data = ecis_subsample(data, error)
+  }
     
   data = ecis_subset(data, unit = unit, frequency = frequency, time = time, samplesubset = samplesubset, experiment = experiment)
     
@@ -37,17 +49,21 @@ ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf,
         
         if (replication == "all") {
               
-              plot = ggplot2::ggplot(data = data, ggplot2::aes(x = Time, y = Value, group = interaction(Well,                       Experiment), colour = Sample)) + ggplot2::labs(title = unit) + ggplot2::geom_line()
+              plot = ggplot2::ggplot(data = data, ggplot2::aes(x = Time, y = Value, group = interaction(Well,                       Experiment), colour = Sample, size = linesize)) + ggplot2::labs(title = unit) + ggplot2::geom_line()
           
           return(plot)
         }
+      
         else if (replication == "experiment") {
           toplot2.df = summarise(group_by(data, Sample, Time, Experiment), sd = sd(Value), 
-                                 n = n(), se = sd/sqrt(n), Value = mean(Value))
+                                 n = n(), Value = mean(Value))
           
-          plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample, 
-                                                                 linetype = Experiment)) + # geom_errorbar(ggplot2::aes               (ymin=Value-se, ymax=Value+se)) +
-            ggplot2::labs(title = unit) + ggplot2::geom_line()
+          plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample, linetype =   Experiment)) + ggplot2::labs(title = unit) + ggplot2::geom_line(size = linesize)
+          
+          if (error == 1)
+          {
+            plot = plot + ggplot2::geom_ribbon(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n), fill = Sample), alpha = alphavalue)  
+          }
           
           return(plot)
           
@@ -59,9 +75,12 @@ ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf,
           # Now repeat the calculation, but work out the intra-experimental error and statistics
           toplot2.df = summarise(group_by(toplot2.df, Sample, Time), sd = sd(Value), n = n(), Value = mean(Value))
           
-          plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample)) + 
-            ggplot2::geom_errorbar(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n))) + 
-            ggplot2::labs(title = unit) + ggplot2::geom_line()
+          plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample)) + ggplot2::labs(title = unit) + ggplot2::geom_line(size = linesize)
+          
+          if (error >0)
+          {
+          plot = plot + ggplot2::geom_ribbon(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n), fill = Sample), alpha = alphavalue) 
+          }
           
           return(plot)
           
@@ -80,9 +99,13 @@ ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf,
           
           filtered.df$Sample = paste(filtered.df$Sample, filtered.df$Well)
           
-          plot = ggplot(filtered.df, aes(x = Sample, y = Value, fill = Experiment))              + geom_bar(stat = "identity", 
-                                                                                        position = position_dodge()) + theme(axis.text.x = element_text(angle = 90))
-          
+
+          plot = ggplot(filtered.df, aes(x = Sample, y = Value, fill = Experiment)) 
+          if(error == 1)
+          {
+          plot = plot + geom_bar(stat = "identity",  position = position_dodge()) + theme(axis.text.x = element_text(angle = 90))
+          }
+            
           return(plot)
         }
 
@@ -91,8 +114,12 @@ ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf,
                                Value = mean(Value))
       
       plot = ggplot(filtered2.df, aes(x = Sample, y = Value, fill = Experiment)) + geom_bar(stat = "identity", 
-                                                                                     position = position_dodge()) + geom_errorbar(aes(ymin = Value - sd/sqrt(n), ymax = Value + 
-                                                                                                                                        sd/sqrt(n)), width = 0.2, position = position_dodge(0.9))
+                                                                                     position = position_dodge()) 
+      
+      if(error == 1)
+      {
+      plot = plot + geom_errorbar(aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.2, position = position_dodge(0.9))
+      }
       
       return (plot)
         }
@@ -103,8 +130,14 @@ ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf,
           filtered2.df = summarise(group_by(filtered2.df, Sample), sd = sd(Value), n = n(), Value = mean(Value))
           
           # Then graph the output
-          ggplot(filtered2.df, aes(x = Sample, y = Value)) + geom_bar(stat = "identity") + geom_errorbar(aes(ymin = Value - 
-                                                                                                               sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.2)
+          plot = ggplot(filtered2.df, aes(x = Sample, y = Value)) + geom_bar(stat = "identity") 
+          
+          if(error == 1)
+          {
+          plot = plot + geom_errorbar(aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.2)
+          }
+          
+          return (plot)
         }
 }
 
@@ -127,11 +160,11 @@ ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf,
 #'
 #' @examples
 #' 
-#' graph1 = ecis_plot(data.df, 'Rb', 0, 'all')
-#' graph2 = ecis_plot(data.df, 'Rb', 0, 'experiment')
-#' graph3 = ecis_plot(data.df, 'Rb', 0, 'summary')
+#' #graph1 = ecis_plot(data.df, 'Rb', 0, 'all')
+#' #graph2 = ecis_plot(data.df, 'Rb', 0, 'experiment')
+#' #graph3 = ecis_plot(data.df, 'Rb', 0, 'summary')
 #' 
-#' #grid_arrange_shared_legend (graph1, graph2, graph3, ncol = 1, nrow = 3)
+#' #grid_arrange_shared_legend(graph1, graph2, graph3, ncol = 1, nrow = 3)
 #' 
 grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, position = c("bottom", 
     "right")) {
@@ -187,7 +220,7 @@ ecis_plotspectra = function(data, variable) {
     p8 = ecis_plot(data, variable, 32000)
     p9 = ecis_plot(data, variable, 64000)
     
-    grid_arrange_shared_legend(p1, p2, p3, p4, p5, p6, p7, p8, p9, ncol = 3, nrow = 3)
+    return(grid_arrange_shared_legend(p1, p2, p3, p4, p5, p6, p7, p8, p9, ncol = 3, nrow = 3))
     
 }
 

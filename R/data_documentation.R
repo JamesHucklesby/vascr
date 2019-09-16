@@ -1,7 +1,5 @@
 #' Example data set from an ECIS growth experiment
 #'
-#' A dataset containing growth curves from a variety of experiments
-#'
 #' @format A data frame with 53940 rows and 10 variables:
 #' \describe{
 #'   \item{Experiment}{Date the experiment was conducted}
@@ -14,5 +12,6 @@
 #'   \item{Well}{Well of plate that was measured}
 #'   ...
 #' }
+#' @description A dataset containing growth curves from a variety of experiments
 #' @source James Hucklesby 2018
 "data.df"

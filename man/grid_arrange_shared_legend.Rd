@@ -24,10 +24,10 @@ Internal funciton for aligning grids
 }
 \examples{
 
-graph1 = ecis_plot(data.df, 'Rb', 0, 'all')
-graph2 = ecis_plot(data.df, 'Rb', 0, 'experiment')
-graph3 = ecis_plot(data.df, 'Rb', 0, 'summary')
+#graph1 = ecis_plot(data.df, 'Rb', 0, 'all')
+#graph2 = ecis_plot(data.df, 'Rb', 0, 'experiment')
+#graph3 = ecis_plot(data.df, 'Rb', 0, 'summary')
 
-#grid_arrange_shared_legend (graph1, graph2, graph3, ncol = 1, nrow = 3)
+#grid_arrange_shared_legend(graph1, graph2, graph3, ncol = 1, nrow = 3)
 
 }

@@ -58,7 +58,16 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplesu
 
   #Then we deal with the frequency
   
-  if(is.finite(frequency)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
+  if(frequency == "raw")
+  {
+    data.df = data.df %>% filter(Frequency > 0 )
+    
+  } else if (frequency == "modeled")
+  {
+    data.df = data.df %>% filter(Frequency == 0)
+  }
+  
+  else if(is.finite(frequency)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
   {
     frequency = as.numeric(frequency) # clean up the data type just in case the user is lazy
     data.df = data.df %>% filter(Frequency == frequency)

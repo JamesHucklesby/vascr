@@ -21,10 +21,16 @@ ecis_ANOVA(data.df, unit, frequency, time, posthoc = "bonferoni")
 ANOVA results printed to the console.
 }
 \description{
-This function takes a standard ECIS dataset and runs two way ANOVA on it. It then runs a post-hoc test to determine which groups are significatnly difference. Results are printed to the console as text.
+This function takes a standard ECIS dataset and runs two way ANOVA on it based on the variaiton between treatments and experiments. It then runs a post-hoc test to determine which pairs of groups are statistically different. Results are printed to the console as text.
 }
 \details{
-This analyasis requires multiple experiments, as working out the differences in a single experiment is a terrible idea (statisticaly speaking).
+This analyasis requires multiple experiments, as working out the differences in a single experiment is not a good idea because it does not account for experimental variaiton, making the analyasis weaker and more unreliable as results may not be repeatable.
+
+Firstly, a histogram is generated for a visual check of the data. This should mimic what you are expecting.
+
+To interpret the data first check that the data is roughly linear on the Shapiro-Wilk normailty graph,and that the p<0.05. This is more important for smaller datasets, and becomes irrelevant once n>9. Therefore you can be relativley non-stringent when applying this test to three independent experiments, where each experiment had triplicates. Also check that the residuals on the right hand graph are roughly normal, this is easier for larger datasets.
+
+Finally look at the Analysis of Variance Table. This will tell you if you had any differences between
 }
 \examples{
 ecis_ANOVA(ECISR::data.df, 'Rb',0,75)

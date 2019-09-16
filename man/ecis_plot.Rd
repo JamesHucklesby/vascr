@@ -5,7 +5,8 @@
 \title{ECIS plot}
 \usage{
 ecis_plot(data, unit, frequency = 0, replication = "all", time = Inf,
-  samplesubset = "", experiment = "")
+  samplesubset = "", experiment = "", error = 1, linesize = 1,
+  errorsize = 1, alphavalue = 0.1)
 }
 \arguments{
 \item{data}{A standard ECIS data frame to plot}
@@ -20,8 +21,16 @@ ecis_plot(data, unit, frequency = 0, replication = "all", time = Inf,
 
 \item{samplesubset}{Optional, only samples that contain this string will be plotted. Standard search and wildcard}
 
-\item{experiment}{Optional, allows you to limit the experiment plotted. Experiment names should be separated with |.
+\item{experiment}{Optional, allows you to limit the experiment plotted. Experiment names should be separated with |
 searches apply.}
+
+\item{error}{Display error bars. 0 displays no error bars, 1 displays them all. Higher numbers will reduce the frequency of error bars plotted.}
+
+\item{linesize}{Width of mean lines shown on graphs}
+
+\item{errorsize}{Width of error bars shown on graphs}
+
+\item{alphavalue}{Alpha value of area enclosed by error bars. May be lowered for buisy graphs}
 }
 \value{
 A ggplot2 object
@@ -30,7 +39,8 @@ A ggplot2 object
 ECIS plot
 }
 \examples{
-ecis_plot(data.df, 'Rb', 0, 'all')
+ecis_plot(data.df, 'Rb', replication = 'summary', error = 2, linesize = 1, errorsize = 1, alphavalue = .1)
+ecis_plot(data.df, 'Rb', replication = 'all', error = 2, linesize = .1, errorsize = 1, alphavalue = .1)
 ecis_plot(data.df, 'R', 4000, 'summary', time = 75)
 
 
