@@ -27,8 +27,10 @@
 #' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text
 #'
 #' @examples
-#' ecis_plot(data.df, 'Rb', replication = 'summary', error = 2, linesize = 1, errorsize = 1, alphavalue = .1)
-#' ecis_plot(data.df, 'Rb', replication = 'all', error = 2, linesize = .1, errorsize = 1, alphavalue = .1)
+#' ecis_plot(data.df, 'Rb', replication = 'summary', 
+#' error = 2, linesize = 1, errorsize = 1, alphavalue = .1)
+#' ecis_plot(data.df, 'Rb', replication = 'all',
+#'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1)
 #' ecis_plot(data.df, 'R', 4000, 'summary', time = 75)
 #' 
 #'

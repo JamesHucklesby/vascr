@@ -1,3 +1,16 @@
+# Register the data frames column names used for dplyr manipulation to satisfy CMD check
+
+utils::globalVariables("Unit")
+utils::globalVariables("Well")
+utils::globalVariables("Sample")
+utils::globalVariables("Frequency")
+utils::globalVariables("Experiment")
+utils::globalVariables("Time")
+utils::globalVariables("Value")
+utils::globalVariables("Stream")
+
+
+
 #' Example data set from an ECIS growth experiment
 #'
 #' @format A data frame with 53940 rows and 10 variables:
