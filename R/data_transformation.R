@@ -17,7 +17,7 @@
 #'
 #' @examples
 #' 
-#' ecis_normalise(data.df, 100)
+#' ecis_normalise(growth.df, 100)
 #' 
 ecis_normalise = function(data.df, normtime, divide = FALSE) {
     
@@ -81,8 +81,8 @@ ecis_normalise = function(data.df, normtime, divide = FALSE) {
 #'
 #' @examples
 #' 
-#' ecis_align_key(data.df, 'max')
-#' ecis_align_key(data.df, 'min')
+#' ecis_align_key(growth.df, 'max')
+#' ecis_align_key(growth.df, 'min')
 
 ecis_align_key = function(data.df, point, discrepancy = 5) {
     
@@ -111,10 +111,10 @@ ecis_align_key = function(data.df, point, discrepancy = 5) {
 
 
 
-# Downsample data ---------------------------------------------------------
+# subsample data ---------------------------------------------------------
 
 
-#' Downsample data
+#' Subsample data
 #' 
 #' Returns a subset of the original data set that has only every nth value. Greatly increases computational preformance for a minimal loss in resolution during time course experiments.
 #'
@@ -129,7 +129,7 @@ ecis_align_key = function(data.df, point, discrepancy = 5) {
 #'
 #' @examples
 #' 
-#' ecis_subsample(data.df, 50)
+#' ecis_subsample(growth.df, 50)
 #' 
 ecis_subsample = function(data.df, nth) {
     
@@ -157,13 +157,13 @@ ecis_subsample = function(data.df, nth) {
 #'
 #' @examples
 #' 
-#' ecis_currentfrequency(data.df)
+#' ecis_current_frequency(growth.df)
 #' 
 #' 
-ecis_currentfrequency = function (data.df)
+ecis_current_frequency = function (data.df)
 {
-  times = unique (data.df$Time)
-  return((max(times)-min(times))/(length(times)-1))
+  times = unique (data.df$Time) # Make a list of unique datapoints 
+  return((max(times)-min(times))/(length(times)-1)) # Then divide the total time by the number of times to give the frequency
 }
 
 
@@ -175,6 +175,7 @@ ecis_currentfrequency = function (data.df)
 #' @param by  The frequency at which to resample
 #' @param from The value at which to start resampling
 #' @param to  The max value to resample
+#' @param zero_time The value that will be set as 0 after the normalisation is done. Usefull for aligning treatment times of multiple experiments.
 #' 
 #' @importFrom stringr str_remove
 #' @importFrom tidyr unite spread gather separate
@@ -187,20 +188,14 @@ ecis_currentfrequency = function (data.df)
 #'
 #' @examples
 #' 
-#' ecis_resample(data.df, 8, 50 ,100)
+#' ecis_resample(growth.df, 100, 50 ,100, 50)
 #' 
-ecis_resample = function (data, by, from = -Inf, to = Inf)
+ecis_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 {
   
-  #First we chuck any data outside the time ranges as this is wasted modeling work
-  #data = ecis_subset(data, time = c(from-0.000001,to+0.000001))
+  movedata = data.df
   
-  #Now check that the ranges are sensible (don't do this)
-  
-  # New data set
-  
-  movedata = data
-  movedata$TimeID = NULL
+  movedata$Time = movedata$Time - zero_time
   
   combinedcolnames = colnames(movedata)
   cleancolnames = str_remove(combinedcolnames, "Time")
@@ -233,6 +228,82 @@ ecis_resample = function (data, by, from = -Inf, to = Inf)
   movedata4 = gather(movedata3, Stream, Value, -Time)
   movedata5 = movedata4 %>% separate(Stream, cleancolnames, sep = "_")
   
+  if (length(unique(movedata5$Time))>length(unique(data.df$Time)))
+  {
+    warning("You have oversampled your data, meaning that you now have more datapoints than you originally collected. This may be misleading, use with care.")
+  }
+  
   return(movedata5)
+  
+}
+
+
+#' Subset an ECIS dataset on multiple factors
+#' 
+#' Generates a cut down dataset for processing purposes. Used heavily by all other internal functions, but may also be useful for inspecting digestable chunks of raw data.
+#'
+#' @param data.df A standard ECIS dataset
+#' @param time The time to subset at. Default will line plot all data, can also submit a vector of length 2
+#'  and the times between those two points will be submited.
+#' @param unit The unit requred
+#' @param frequency The frequency at which the reading was taken. All modeled variables have a frequency of 0
+#' @param experiment The experiment to plot. Default is all experiments
+#' @param samplesubset The samples to plot. A string that is searched accross all sample names, and those that match are plotted.
+#'
+#' @return A smaller ECIS dataset
+#' 
+#' @importFrom dplyr filter
+#' @importFrom magrittr "%>%"
+#' @importFrom stringr str_detect
+#' @export 
+#'
+#' @examples
+#' ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
+#' samplesubset = "05,000", experiment = "2")
+#' 
+ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplesubset = "", experiment = ""){
+  
+  if (length(time) == 2) # If a vector of length 2 was submitted (ie two times) then we subset to that
+  {
+    data.df = data.df %>% filter(Time > time[1])
+    data.df = data.df %>% filter(Time < time[2])
+  }
+  
+  else if(is.finite(time)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
+  {
+    time = as.numeric(time) # Clean up the data type just in case the user is lazy
+    actualtime = ecis_roundtime(data.df, time)
+    data.df = data.df %>% filter(Time == actualtime)
+  }
+  else # The number is infinity, so return everything
+  {
+    
+  }
+  
+  #Then we deal with the frequency
+  
+  if(frequency == "raw")
+  {
+    data.df = data.df %>% filter(Frequency > 0 )
+    
+  } else if (frequency == "modeled")
+  {
+    data.df = data.df %>% filter(Frequency == 0)
+  }
+  
+  else if(is.finite(frequency)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
+  {
+    frequency = as.numeric(frequency) # clean up the data type just in case the user is lazy
+    data.df = data.df %>% filter(Frequency == frequency)
+  }
+  
+  #Then we deal with the textey ones
+  
+  data.df = data.df %>% filter(str_detect(Unit, unit))
+  data.df = data.df %>% filter(str_detect(Sample, samplesubset))
+  data.df = data.df %>% filter(str_detect(Experiment, experiment))
+  
+  return(data.df)
+  
   
 }

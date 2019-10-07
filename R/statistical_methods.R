@@ -29,7 +29,7 @@
 #' @export
 #'
 #' @examples
-#' ecis_ANOVA(ECISR::data.df, 'Rb',0,75)
+#' ecis_ANOVA(growth.df, 'Rb',0,75)
 #' 
 ecis_ANOVA = function(data.df, unit, frequency, time, posthoc = "bonferoni") {
     
@@ -73,7 +73,7 @@ ecis_ANOVA = function(data.df, unit, frequency, time, posthoc = "bonferoni") {
 #'
 #' @examples
 #' 
-#' ecis_summarise(data.df)
+#' ecis_summarise(growth.df)
 #' 
 ecis_summarise <- function(data.df) {
   

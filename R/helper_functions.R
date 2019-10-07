@@ -13,77 +13,22 @@ retitle = function(df) {
     df
 }
 
-
-#' Subset an ECIS dataset on multiple factors
+#' Standardise well names accross import types
 #' 
-#' Generates a cut down dataset for processing purposes. Used heavily by all other internal functions, but may also be useful for inspecting digestable chunks of raw data.
+#' Replaces A01 in strings with A0. Important for importing ABP files which may use either notation.
 #'
-#' @param data.df A standard ECIS dataset
-#' @param time The time to subset at. Default will line plot all data, can also submit a vector of length 2
-#'  and the times between those two points will be submited.
-#' @param unit The unit requred
-#' @param frequency The frequency at which the reading was taken. All modeled variables have a frequency of 0
-#' @param experiment The experiment to plot. Default is all experiments
-#' @param samplesubset The samples to plot. A string that is searched accross all sample names, and those that match are plotted.
+#' @param well The well to be standardised 
 #'
-#' @return A smaller ECIS dataset
+#' @return Standardised well names
 #' 
-#' @importFrom dplyr filter
-#' @importFrom magrittr "%>%"
-#' @importFrom stringr str_detect
-#' @export 
+#' @export
 #'
-#' @examples
-#' ecis_subset(data.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
-#' samplesubset = "05,000", experiment = "2")
+#' @examples 
+#' ecis_standardise_wells('A01')
 #' 
-ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplesubset = "", experiment = ""){
-  
-  if (length(time) == 2) # If a vector of length 2 was submitted (ie two times) then we subset to that
-  {
-    data.df = data.df %>% filter(Time > time[1])
-    data.df = data.df %>% filter(Time < time[2])
-  }
-  
-  else if(is.finite(time)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
-  {
-  time = as.numeric(time) # Clean up the data type just in case the user is lazy
-  actualtime = ecis_roundtime(data.df, time)
-  data.df = data.df %>% filter(Time == actualtime)
-  }
-  else # The number is infinity, so return everything
-  {
-  
-  }
-
-  #Then we deal with the frequency
-  
-  if(frequency == "raw")
-  {
-    data.df = data.df %>% filter(Frequency > 0 )
-    
-  } else if (frequency == "modeled")
-  {
-    data.df = data.df %>% filter(Frequency == 0)
-  }
-  
-  else if(is.finite(frequency)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
-  {
-    frequency = as.numeric(frequency) # clean up the data type just in case the user is lazy
-    data.df = data.df %>% filter(Frequency == frequency)
-  }
-
-  #Then we deal with the textey ones
-  
-  data.df = data.df %>% filter(str_detect(Unit, unit))
-  data.df = data.df %>% filter(str_detect(Sample, samplesubset))
-  data.df = data.df %>% filter(str_detect(Experiment, experiment))
-  
-  return(data.df)
-  
-  
+ecis_standardise_wells = function(well) {
+  sub("(?<![0-9])0*(?=[0-9])", "", well, perl = TRUE)
 }
-
 
 
 #' Standardise how well numbers are represented

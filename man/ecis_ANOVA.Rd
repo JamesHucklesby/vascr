@@ -33,6 +33,6 @@ To interpret the data first check that the data is roughly linear on the Shapiro
 Finally look at the Analysis of Variance Table. This will tell you if you had any differences between
 }
 \examples{
-ecis_ANOVA(ECISR::data.df, 'Rb',0,75)
+ecis_ANOVA(growth.df, 'Rb',0,75)
 
 }

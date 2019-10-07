@@ -24,6 +24,6 @@ Sets the time at which each replicate well is maximal to time 0. Results in vari
 }
 \examples{
 
-ecis_align_key(data.df, 'max')
-ecis_align_key(data.df, 'min')
+ecis_align_key(growth.df, 'max')
+ecis_align_key(growth.df, 'min')
 }

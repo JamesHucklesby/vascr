@@ -38,15 +38,23 @@ The two smaller functions ecis_import_raw (rawdata.abp, lookups) or ecis_import_
 
 An ECIS data frame has 8 variables
 
-Time - Time at which the reading was taken (in hours)
-Well - Which well the reading was taken from
-Unit - Unit value is measured in. Options are Rb, Alpha, Cm, RMSE, Drift, R, X, Z, C, P
-Value - The value of the reading taken
-Sample - The sample name. Multiple wells with the same sample name will be automatically grouped for graphing
-Frequency - The frequency at which the reading was taken. All modeled variables have a frequency of 0
-Experiment - The file name from which the experiment was generated
+Time - Time at which the reading was taken (in hours)  
+Well - Which well the reading was taken from  
+Unit - Unit value is measured in. Options are Rb, Alpha, Cm, RMSE, Drift, R, X, Z, C, P  
+Value - The value of the reading taken  
+Sample - The sample name. Multiple wells with the same sample name will be automatically grouped for graphing  
+Frequency - The frequency at which the reading was taken. All modeled variables have a frequency of 0  
+Experiment - The file name from which the experiment was generated  
 
 ecis_import imports data files in this format. This format is required for other ecis funcitons in this package to work correctly.
+
+The first 10 rows from the growth curves example are shown below
+
+```{r}
+library(ECISR)
+head(growth.df, n=10)
+```
+
 
 ## ecis_combine (data1, data2 ...)
 
@@ -69,6 +77,7 @@ Time is set automaticaly to infinity. This triggers the generation of a line plo
 
 unit
 
+## End my vingettte
 
 ## The stuff on how to write Vingette
 

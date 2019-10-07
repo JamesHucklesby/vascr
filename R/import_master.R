@@ -331,7 +331,9 @@ ecis_import = function(resample, modeled, key) {
 # Worker functions for importing files ------------------------------------
 
 
-#' Combine data frames end to end
+#' Combine ECIS data frames end to end
+#' 
+#' This funciton will combine ECIS datasets end to end. Preferential to use over a simple rbind command as it runs additional checks to ensure that datapoints are correctly generated
 #'
 #' @param ... List of data frames to be combined
 #'
@@ -343,10 +345,11 @@ ecis_import = function(resample, modeled, key) {
 #' 
 #' #Make two fake experiments worth of data
 #' 
-#' experiment1.df = data.df
-#' experiment2.df = data.df
+#' experiment1.df = ecis_subset(growth.df, experiment = "1")
+#' experiment2.df = ecis_subset(growth.df, experiment = "2")
+#' experiment3.df = ecis_subset(growth.df, experiment = "3")
 #' 
-#' ecis_combine(experiment1.df, experiment2.df)
+#' ecis_combine(experiment1.df, experiment2.df, experiment3.df)
 #' 
 ecis_combine = function(...) {
     
@@ -358,6 +361,24 @@ ecis_combine = function(...) {
     alldata = dataframes[[1]][0, ]
     loops = 1
     
+    # Check that both dataframes have the same timebase
+    for (i in dataframes)
+    {
+      if (!(exists("timepointstomerge")))
+      {
+        timepointstomerge = unique(i$Time)
+      }
+     
+      print(timepointstomerge)
+        
+        if (!identical(timepointstomerge,unique(i$Time)))
+      {
+        warning("Datasets have different non-identical timebases. Please resample one or more of these datasets before running this function again or graphs may not be properly generated.")
+      }
+    }
+    
+    # Mash all the dataframes together
+    
     for (i in dataframes) {
         indata = i
         indata$Experiment = paste(loops, ":", indata$Experiment)
@@ -367,27 +388,9 @@ ecis_combine = function(...) {
     
     alldata$Experiment = as.factor(alldata$Experiment)
     
+    
     return(alldata)
     
-}
-
-
-
-#' Standardise well names accross import types
-#' 
-#' Replaces A01 in strings with A0. Important for importing ABP files which may use either notation.
-#'
-#' @param well The well to be standardised 
-#'
-#' @return Standardised well names
-#' 
-#' @export
-#'
-#' @examples 
-#' ecis_standardise_wells('A01')
-#' 
-ecis_standardise_wells = function(well) {
-    sub("(?<![0-9])0*(?=[0-9])", "", well, perl = TRUE)
 }
 
 

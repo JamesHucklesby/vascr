@@ -27,4 +27,4 @@ utils::globalVariables("Stream")
 #' }
 #' @description A dataset containing growth curves from a variety of experiments
 #' @source James Hucklesby 2018
-"data.df"
+"growth.df"

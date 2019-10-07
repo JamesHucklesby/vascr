@@ -4,16 +4,16 @@
 \alias{ecis_resample}
 \title{Resample ECIS data onto a constant time base}
 \usage{
-ecis_resample(data, by, from = -Inf, to = Inf)
+ecis_resample(data.df, by, from = -Inf, to = Inf)
 }
 \arguments{
-\item{data}{A standard ECIS data frame}
-
 \item{by}{The frequency at which to resample}
 
 \item{from}{The value at which to start resampling}
 
 \item{to}{The max value to resample}
+
+\item{data}{A standard ECIS data frame}
 }
 \value{
 An ECIS dataset with re-located time points
@@ -23,6 +23,6 @@ This will currently over-sample data, use with care
 }
 \examples{
 
-ecis_resample(data.df, 8, 50 ,100)
+ecis_resample(growth.df, 8, 50 ,100)
 
 }

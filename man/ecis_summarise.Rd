@@ -17,6 +17,6 @@ Creates and ECIS dataset that has had all samples of the same type averaged toge
 }
 \examples{
 
-ecis_summarise(data.df)
+ecis_summarise(growth.df)
 
 }

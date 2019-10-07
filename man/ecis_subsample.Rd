@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_transformation.R
 \name{ecis_subsample}
 \alias{ecis_subsample}
-\title{Downsample data}
+\title{Subsample data}
 \usage{
 ecis_subsample(data.df, nth)
 }
@@ -19,6 +19,6 @@ Returns a subset of the original data set that has only every nth value. Greatly
 }
 \examples{
 
-ecis_subsample(data.df, 50)
+ecis_subsample(growth.df, 50)
 
 }
