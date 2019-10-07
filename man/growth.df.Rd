@@ -10,14 +10,13 @@
   \item{Frequency}{Frequency of colleciton, modeled units have a frequency of 0}
   \item{Sample}{Name of the sample located in that well}
   \item{Time}{Capture time}
-  \item{TimeID}{Sequential number of the time point captured}
   \item{Unit}{Unit that the value is measured in}
   \item{Value}{Numerical value in units}
   \item{Well}{Well of plate that was measured}
   ...
 }}
 \source{
-James Hucklesby 2018
+James Hucklesby 2019
 }
 \usage{
 growth.df

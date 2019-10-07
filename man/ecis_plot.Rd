@@ -39,11 +39,10 @@ A ggplot2 object
 ECIS plot
 }
 \examples{
-ecis_plot(data.df, 'Rb', replication = 'summary', 
+ecis_plot(growth.df, 'Rb', replication = 'summary', 
 error = 2, linesize = 1, errorsize = 1, alphavalue = .1)
-ecis_plot(data.df, 'Rb', replication = 'all',
+ecis_plot(growth.df, 'Rb', replication = 'all',
  error = 2, linesize = .1, errorsize = 1, alphavalue = .1)
-ecis_plot(data.df, 'R', 4000, 'summary', time = 75)
-
+ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
 
 }

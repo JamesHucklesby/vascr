@@ -18,6 +18,6 @@ A timepoint that exactly aligns with a measured datapoint
 Standardise how well numbers are represented
 }
 \examples{
-ecis_roundtime(data.df, 100)
+ecis_roundtime(growth.df, 100)
 
 }

@@ -171,7 +171,7 @@ ecis_current_frequency = function (data.df)
 #' 
 #' This will currently over-sample data, use with care
 #'
-#' @param data A standard ECIS data frame
+#' @param data.df A standard ECIS data frame
 #' @param by  The frequency at which to resample
 #' @param from The value at which to start resampling
 #' @param to  The max value to resample

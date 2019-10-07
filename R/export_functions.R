@@ -13,7 +13,7 @@
 #' @importFrom dplyr summarise group_by
 #'
 #' @examples
-#' ecis_prism(data.df, 'Rb')
+#' ecis_prism(growth.df, 'Rb')
 #' 
 
 ecis_prism = function(data.df, unit, frequency = 0) {

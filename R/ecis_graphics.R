@@ -27,12 +27,11 @@
 #' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text
 #'
 #' @examples
-#' ecis_plot(data.df, 'Rb', replication = 'summary', 
+#' ecis_plot(growth.df, 'Rb', replication = 'summary', 
 #' error = 2, linesize = 1, errorsize = 1, alphavalue = .1)
-#' ecis_plot(data.df, 'Rb', replication = 'all',
+#' ecis_plot(growth.df, 'Rb', replication = 'all',
 #'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1)
-#' ecis_plot(data.df, 'R', 4000, 'summary', time = 75)
-#' 
+#' ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
 #'
 
 
@@ -162,9 +161,9 @@ ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf,
 #'
 #' @examples
 #' 
-#' #graph1 = ecis_plot(data.df, 'Rb', 0, 'all')
-#' #graph2 = ecis_plot(data.df, 'Rb', 0, 'experiment')
-#' #graph3 = ecis_plot(data.df, 'Rb', 0, 'summary')
+#' #graph1 = ecis_plot(growth.df, 'Rb', 0, 'all')
+#' #graph2 = ecis_plot(growth.df, 'Rb', 0, 'experiment')
+#' #graph3 = ecis_plot(growth.df, 'Rb', 0, 'summary')
 #' 
 #' #grid_arrange_shared_legend(graph1, graph2, graph3, ncol = 1, nrow = 3)
 #' 
@@ -206,7 +205,7 @@ grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, 
 #'
 #' @examples
 #' 
-#' ecis_plotspectra(data.df, 'R')
+#' ecis_plotspectra(growth.df, 'R')
 #' 
 ecis_plotspectra = function(data, variable) {
     
@@ -237,7 +236,7 @@ ecis_plotspectra = function(data, variable) {
 #'
 #' @examples
 #' 
-#' ecis_plotmodel(data.df)
+#' ecis_plotmodel(growth.df)
 #' 
 ecis_plotmodel <- function(alldata.df) {
     
@@ -275,7 +274,7 @@ ecis_plotmodel <- function(alldata.df) {
 #' @export
 #'
 #' @examples
-#' ecis_animatefrequency(data.df, 'R', 3)
+#' ecis_animatefrequency(growth.df, 'R', 3)
 #' 
 ecis_animatefrequency = function(alldata.df, unittoplot, frames) {
     

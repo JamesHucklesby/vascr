@@ -60,7 +60,7 @@ head(growth.df, n=10)
 
 ECIS combine returns a data frame contianing both the datasets fed to it. 
 
-It will also check that the time points are resampled to the same frequency, if not it will give a warning, in which case the data frames should be resampled and re-modelled again.
+It will also check that the time points are resampled to the same frequency, if not it will give a warning, in which case the data frames should be resampled before this function is run again.
 
 ## ecis_plot (data.df, )
 
@@ -76,6 +76,10 @@ time
 Time is set automaticaly to infinity. This triggers the generation of a line plot showing the change in a variable over time. By nominating a time (in hours) a bar plot of the differneces at that time point will be generated. This "timeslice" graph is usefull in evaluating the output of ANOVA and subsequent statistical analyasis.
 
 unit
+
+
+
+
 
 ## End my vingettte
 

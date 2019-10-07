@@ -41,7 +41,7 @@ ecis_standardise_wells = function(well) {
 #' @export
 #'
 #' @examples
-#' ecis_roundtime(data.df, 100)
+#' ecis_roundtime(growth.df, 100)
 #' 
 ecis_roundtime = function(data.df, time) {
   times = unique(data.df$Time)

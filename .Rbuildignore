@@ -4,3 +4,4 @@
 ^packrat/
 ^\.Rprofile$
 ^\.git$
+^draft_functions\.R$
