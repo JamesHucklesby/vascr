@@ -51,7 +51,7 @@ ecis_import imports data files in this format. This format is required for other
 The first 10 rows from the growth curves example are shown below
 
 ```{r}
-library(ECISR)
+library(ecisr)
 head(growth.df, n=10)
 ```
 

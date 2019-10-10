@@ -21,9 +21,9 @@ Import all ECIS values, a child of ecis_import_raw and ecis_import_model
 }
 \examples{
 
-location_of_resampled_data = system.file('Resample.abp', package = 'ECISR')
-location_of_modeled_data = system.file('Model.csv', package = 'ECISR')
-location_of_sample_defintions = system.file('Samples.csv', package = 'ECISR')
+location_of_resampled_data = system.file('Resample.abp', package = 'ecisr')
+location_of_modeled_data = system.file('Model.csv', package = 'ecisr')
+location_of_sample_defintions = system.file('Samples.csv', package = 'ecisr')
 
 #Then run the import
 

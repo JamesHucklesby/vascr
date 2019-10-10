@@ -6,7 +6,7 @@ playarea = function ()
 {
   
   # Maximal response frequency selection  
-  data.df = ECISR::growth.df
+  data.df = ecisr::growth.df
   time = 100
   
   small.df = ecis_subset(data.df, frequency = "raw", time = time)

@@ -24,8 +24,8 @@ Import raw modeled data
  #can use a path relative to the file you are working on. 
  #E.G 'Experiment1/Raw.abp'
 
-location_of_modeled_data = system.file('Model.csv', package = 'ECISR')
-location_of_sample_defintions = system.file('Samples.csv', package = 'ECISR')
+location_of_modeled_data = system.file('Model.csv', package = 'ecisr')
+location_of_sample_defintions = system.file('Samples.csv', package = 'ecisr')
 
 #Then run the import
 

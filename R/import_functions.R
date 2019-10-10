@@ -25,8 +25,8 @@
 #' #but you can use a path relative to the file you are working on. 
 #' #E.G 'Experiment1/Raw.abp'
 #' 
-#' location_of_resampled_data = system.file('Resample.abp', package = 'ECISR')
-#' location_of_sample_defintions = system.file('Samples.csv', package = 'ECISR')
+#' location_of_resampled_data = system.file('Resample.abp', package = 'ecisr')
+#' location_of_sample_defintions = system.file('Samples.csv', package = 'ecisr')
 #' 
 #' #Then run the import
 #' 
@@ -170,8 +170,8 @@ samples = "HCMVEC/by_treatment.csv"
 #'  #can use a path relative to the file you are working on. 
 #'  #E.G 'Experiment1/Raw.abp'
 #' 
-#' location_of_modeled_data = system.file('Model.csv', package = 'ECISR')
-#' location_of_sample_defintions = system.file('Samples.csv', package = 'ECISR')
+#' location_of_modeled_data = system.file('Model.csv', package = 'ecisr')
+#' location_of_sample_defintions = system.file('Samples.csv', package = 'ecisr')
 #' 
 #' #Then run the import
 #' 
@@ -306,9 +306,9 @@ ecis_import_model = function(rawdata, samples) {
 #'
 #' @examples
 #' 
-#' location_of_resampled_data = system.file('Resample.abp', package = 'ECISR')
-#' location_of_modeled_data = system.file('Model.csv', package = 'ECISR')
-#' location_of_sample_defintions = system.file('Samples.csv', package = 'ECISR')
+#' location_of_resampled_data = system.file('Resample.abp', package = 'ecisr')
+#' location_of_modeled_data = system.file('Model.csv', package = 'ecisr')
+#' location_of_sample_defintions = system.file('Samples.csv', package = 'ecisr')
 #' 
 #' #Then run the import
 #' 
