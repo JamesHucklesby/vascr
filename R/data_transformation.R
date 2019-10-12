@@ -272,7 +272,7 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplesu
   else if(is.finite(time)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
   {
     time = as.numeric(time) # Clean up the data type just in case the user is lazy
-    actualtime = ecis_roundtime(data.df, time)
+    actualtime = ecis_find_time(data.df, time)
     data.df = data.df %>% filter(Time == actualtime)
   }
   else # The number is infinity, so return everything

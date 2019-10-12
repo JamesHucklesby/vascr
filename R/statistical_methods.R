@@ -34,7 +34,7 @@
 ecis_ANOVA = function(data.df, unit, frequency, time, posthoc = "bonferoni") {
     
     # Round the number given to the function to the nearest actual measurement
-    timetouse = ecis_roundtime(data.df, time)
+    timetouse = ecis_find_time(data.df, time)
     
     # Cut the dataset down to a useable size (IE, only pull out the timepoint we want to analyse)
     #FUTURE: Impliment this off the back of ecis_subset
