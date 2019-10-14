@@ -50,7 +50,7 @@ ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf,
         
         if (replication == "all") {
               
-              plot = ggplot2::ggplot(data = data, ggplot2::aes(x = Time, y = Value, group = interaction(Well,                       Experiment), colour = Sample, size = linesize)) + ggplot2::labs(title = unit) + ggplot2::geom_line()
+              plot = ggplot2::ggplot(data = data, ggplot2::aes(x = Time, y = Value, group = interaction(Well,                       Experiment), colour = Sample, size = linesize)) + ggplot2::labs(title = unit) + ggplot2::geom_line(size = linesize)
           
           return(plot)
         }

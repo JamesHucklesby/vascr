@@ -1,4 +1,4 @@
-# // This file contains the statistical data analyasis
+# This file contains the statistical data analyasis
 
 #' ANOVA analyasis of a single ECIS timepoint
 #' 
