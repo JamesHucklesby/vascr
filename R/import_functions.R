@@ -327,6 +327,59 @@ ecis_import = function(resample, modeled, key) {
 }
 
 
+#' Exclude erronious data from an ECIS dataframe
+#'
+#' @param data.df The source dataset
+#' @param samples The sample(s) to exclude
+#' @param wells The well(s) to exclude
+#'
+#' @return The altered dataset
+#' @export
+#' 
+#' @importFrom dplyr filter
+#' @importFrom magrittr "%>%"
+#'
+#' @examples
+#' 
+#' unique(growth.df$Sample)
+#' excludedgrowth.df = ecis_exclude(growth.df, samples = c("35,000 cells", "0 cells"))
+#' unique(excludedgrowth.df$Sample)
+#' 
+#' unique(growth.df$Well)
+#' excludedgrowth.df = ecis_exclude(growth.df, wells = c("A1", "B1", "C1"))
+#' unique(excludedgrowth.df$Well)
+#' 
+#' unique(growth.df$Experiment)
+#' excludedgrowth.df = ecis_exclude(growth.df, experiment = c(1,2))
+#' unique(excludedgrowth.df$Experiment)
+#' 
+ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = FALSE, times = FALSE)
+{
+  
+  for (sample in samples)
+  {
+    data.df = data.df %>% filter(Sample != sample)
+  }
+  
+  for (well in wells)
+  {
+    data.df = data.df %>% filter(Well != well)
+  }
+  
+  for (experiment in experiments)
+  {
+    data.df = data.df %>% filter(Experiment != experiment)
+  }
+  
+  for (time in times)
+  {
+    data.df = data.df %>% filter(Time != time)
+  }
+  
+  return (data.df)
+}
+
+
 
 # Worker functions for importing files ------------------------------------
 
