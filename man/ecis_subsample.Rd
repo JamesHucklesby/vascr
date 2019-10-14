@@ -19,6 +19,7 @@ Returns a subset of the original data set that has only every nth value. Greatly
 }
 \examples{
 
-ecis_subsample(growth.df, 50)
+data = ecis_subsample(growth.df, 50)
+head(data)
 
 }

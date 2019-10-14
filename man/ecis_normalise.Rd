@@ -21,6 +21,7 @@ This function normalises each unique experiment/well combination to it's value a
 }
 \examples{
 
-ecis_normalise(growth.df, 100)
+data = ecis_normalise(growth.df, 100)
+head(data)
 
 }

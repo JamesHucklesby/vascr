@@ -4,7 +4,8 @@
 \alias{ecis_exclude}
 \title{Exclude erronious data from an ECIS dataframe}
 \usage{
-ecis_exclude(data.df, samples = 0, wells = 0)
+ecis_exclude(data.df, samples = FALSE, wells = FALSE,
+  experiments = FALSE, times = FALSE)
 }
 \arguments{
 \item{data.df}{The source dataset}
@@ -28,5 +29,9 @@ unique(excludedgrowth.df$Sample)
 unique(growth.df$Well)
 excludedgrowth.df = ecis_exclude(growth.df, wells = c("A1", "B1", "C1"))
 unique(excludedgrowth.df$Well)
+
+unique(growth.df$Experiment)
+excludedgrowth.df = ecis_exclude(growth.df, experiment = c(1,2))
+unique(excludedgrowth.df$Experiment)
 
 }

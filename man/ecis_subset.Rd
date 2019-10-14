@@ -28,7 +28,8 @@ A smaller ECIS dataset
 Generates a cut down dataset for processing purposes. Used heavily by all other internal functions, but may also be useful for inspecting digestable chunks of raw data.
 }
 \examples{
-ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
+data = ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
 samplesubset = "05,000", experiment = "2")
+head(data)
 
 }

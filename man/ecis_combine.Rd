@@ -23,6 +23,7 @@ experiment1.df = ecis_subset(growth.df, experiment = "1")
 experiment2.df = ecis_subset(growth.df, experiment = "2")
 experiment3.df = ecis_subset(growth.df, experiment = "3")
 
-ecis_combine(experiment1.df, experiment2.df, experiment3.df)
+data = ecis_combine(experiment1.df, experiment2.df, experiment3.df)
+head(data)
 
 }

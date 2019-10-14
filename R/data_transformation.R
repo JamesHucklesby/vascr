@@ -17,7 +17,8 @@
 #'
 #' @examples
 #' 
-#' ecis_normalise(growth.df, 100)
+#' data = ecis_normalise(growth.df, 100)
+#' head(data)
 #' 
 ecis_normalise = function(data.df, normtime, divide = FALSE) {
     
@@ -81,8 +82,10 @@ ecis_normalise = function(data.df, normtime, divide = FALSE) {
 #'
 #' @examples
 #' 
-#' ecis_align_key(growth.df, 'max')
-#' ecis_align_key(growth.df, 'min')
+#' data = ecis_align_key(growth.df, 'max')
+#' head(data)
+#' data = ecis_align_key(growth.df, 'min')
+#' head(data)
 
 ecis_align_key = function(data.df, point, discrepancy = 5) {
     
@@ -129,7 +132,8 @@ ecis_align_key = function(data.df, point, discrepancy = 5) {
 #'
 #' @examples
 #' 
-#' ecis_subsample(growth.df, 50)
+#' data = ecis_subsample(growth.df, 50)
+#' head(data)
 #' 
 ecis_subsample = function(data.df, nth) {
     
@@ -188,7 +192,8 @@ ecis_current_frequency = function (data.df)
 #'
 #' @examples
 #' 
-#' ecis_resample(growth.df, 100, 50 ,100, 50)
+#' data = ecis_resample(growth.df, 100, 50 ,100, 50)
+#' head (data)
 #' 
 ecis_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 {
@@ -258,8 +263,9 @@ ecis_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 #' @export 
 #'
 #' @examples
-#' ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
+#' data = ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
 #' samplesubset = "05,000", experiment = "2")
+#' head(data)
 #' 
 ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplesubset = "", experiment = ""){
   

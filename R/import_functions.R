@@ -30,7 +30,8 @@
 #' 
 #' #Then run the import
 #' 
-#' ecis_import_raw(location_of_resampled_data, location_of_sample_defintions)
+#' data = ecis_import_raw(location_of_resampled_data, location_of_sample_defintions)
+#' head(data)
 #' 
 ecis_import_raw = function(rawdata, sampledefine) {
     
@@ -175,7 +176,8 @@ samples = "HCMVEC/by_treatment.csv"
 #' 
 #' #Then run the import
 #' 
-#' ecis_import_model(location_of_modeled_data, location_of_sample_defintions)
+#' data = ecis_import_model(location_of_modeled_data, location_of_sample_defintions)
+#' head(data)
 #' 
 ecis_import_model = function(rawdata, samples) {
     
@@ -312,7 +314,8 @@ ecis_import_model = function(rawdata, samples) {
 #' 
 #' #Then run the import
 #' 
-#' ecis_import(location_of_resampled_data,location_of_modeled_data, location_of_sample_defintions)
+#' data = ecis_import(location_of_resampled_data,location_of_modeled_data, location_of_sample_defintions)
+#' head(data)
 #' 
 ecis_import = function(resample, modeled, key) {
     
@@ -402,7 +405,8 @@ ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = F
 #' experiment2.df = ecis_subset(growth.df, experiment = "2")
 #' experiment3.df = ecis_subset(growth.df, experiment = "3")
 #' 
-#' ecis_combine(experiment1.df, experiment2.df, experiment3.df)
+#' data = ecis_combine(experiment1.df, experiment2.df, experiment3.df)
+#' head(data)
 #' 
 ecis_combine = function(...) {
     
