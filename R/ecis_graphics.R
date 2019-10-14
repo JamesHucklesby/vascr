@@ -205,21 +205,28 @@ grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, 
 #'
 #' @examples
 #' 
-#' ecis_plotspectra(growth.df, 'R')
+#' ecis_plotspectra(growth.df, 'R', replication = "summary")
 #' 
-ecis_plotspectra = function(data, variable) {
+ecis_plotspectra = function(data, variable, ...) {
     
     data = subset(data, Unit == variable)
     
-    p1 = ecis_plot(data, variable, 250)
-    p2 = ecis_plot(data, variable, 500)
-    p3 = ecis_plot(data, variable, 1000)
-    p4 = ecis_plot(data, variable, 2000)
-    p5 = ecis_plot(data, variable, 4000)
-    p6 = ecis_plot(data, variable, 8000)
-    p7 = ecis_plot(data, variable, 16000)
-    p8 = ecis_plot(data, variable, 32000)
-    p9 = ecis_plot(data, variable, 64000)
+    expectedfrequencies = c(250,500,1000,2000,4000,8000,16000,32000,64000)
+    
+    if(!setequal(expectedfrequencies, unique(data$Frequency)))
+    {
+      warning("Frequencies do not match the standard set and therefore some graphs may not be shown")
+    }
+    
+    p1 = ecis_plot(data, variable, 250, ...)
+    p2 = ecis_plot(data, variable, 500, ...)
+    p3 = ecis_plot(data, variable, 1000, ...)
+    p4 = ecis_plot(data, variable, 2000, ...)
+    p5 = ecis_plot(data, variable, 4000, ...)
+    p6 = ecis_plot(data, variable, 8000, ...)
+    p7 = ecis_plot(data, variable, 16000, ...)
+    p8 = ecis_plot(data, variable, 32000, ...)
+    p9 = ecis_plot(data, variable, 64000, ...)
     
     return(grid_arrange_shared_legend(p1, p2, p3, p4, p5, p6, p7, p8, p9, ncol = 3, nrow = 3))
     
@@ -236,16 +243,16 @@ ecis_plotspectra = function(data, variable) {
 #'
 #' @examples
 #' 
-#' ecis_plotmodel(growth.df)
+#' ecis_plotmodel(growth.df, replication = "all")
 #' 
-ecis_plotmodel <- function(alldata.df) {
+ecis_plotmodel <- function(alldata.df, ...) {
     
-    m1 = ecis_plot(alldata.df, "R", 4000)
-    m2 = ecis_plot(alldata.df, "Rb", 0)
-    m3 = ecis_plot(alldata.df, "Cm", 0)
-    m4 = ecis_plot(alldata.df, "Alpha", 0)
-    m5 = ecis_plot(alldata.df, "RMSE", 0)
-    m6 = ecis_plot(alldata.df, "Drift", 0)
+    m1 = ecis_plot(alldata.df, "R", 4000, ...)
+    m2 = ecis_plot(alldata.df, "Rb", 0, ...)
+    m3 = ecis_plot(alldata.df, "Cm", 0, ...)
+    m4 = ecis_plot(alldata.df, "Alpha", 0, ...)
+    m5 = ecis_plot(alldata.df, "RMSE", 0, ...)
+    m6 = ecis_plot(alldata.df, "Drift", 0, ...)
     
     return(grid_arrange_shared_legend(m1, m2, m3, m4, m5, m6, ncol = 2, nrow = 3))
     
