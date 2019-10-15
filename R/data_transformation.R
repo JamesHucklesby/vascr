@@ -253,7 +253,7 @@ ecis_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 #' @param unit The unit requred
 #' @param frequency The frequency at which the reading was taken. All modeled variables have a frequency of 0
 #' @param experiment The experiment to plot. Default is all experiments
-#' @param samplesubset The samples to plot. A string that is searched accross all sample names, and those that match are plotted.
+#' @param samplecontains The samples to plot. A string that is searched accross all sample names, and those that match are plotted.
 #'
 #' @return A smaller ECIS dataset
 #' 
@@ -264,10 +264,10 @@ ecis_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 #'
 #' @examples
 #' data = ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
-#' samplesubset = "05,000", experiment = "2")
+#' samplecontains = "05,000", experiment = "2")
 #' head(data)
 #' 
-ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplesubset = "", experiment = ""){
+ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplecontains = "", experiment = ""){
   
   if (length(time) == 2) # If a vector of length 2 was submitted (ie two times) then we subset to that
   {

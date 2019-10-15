@@ -356,7 +356,7 @@ ecis_import = function(resample, modeled, key) {
 #' excludedgrowth.df = ecis_exclude(growth.df, experiment = c(1,2))
 #' unique(excludedgrowth.df$Experiment)
 #' 
-ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = FALSE, times = FALSE)
+ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = FALSE, times = FALSE, values = FALSE)
 {
   
   for (sample in samples)
@@ -377,6 +377,11 @@ ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = F
   for (time in times)
   {
     data.df = data.df %>% filter(Time != time)
+  }
+  
+  for (value in values)
+  {
+    data.df = data.df %>% filter(Value != value)
   }
   
   return (data.df)
