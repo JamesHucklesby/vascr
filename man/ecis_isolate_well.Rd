@@ -7,9 +7,9 @@
 ecis_isolate_well(data.df, well)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The dataset the well is in}
 
-\item{well}{}
+\item{well}{The well to be isolated}
 }
 \value{
 A ggplot graph showing the isoated well and the experimental median well

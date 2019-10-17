@@ -13,6 +13,12 @@ ecis_exclude(data.df, samples = FALSE, wells = FALSE,
 \item{samples}{The sample(s) to exclude}
 
 \item{wells}{The well(s) to exclude}
+
+\item{experiments}{The experiment(s) to exclude}
+
+\item{times}{The time(s) to exclude}
+
+\item{values}{The value(s) to exclude}
 }
 \value{
 The altered dataset

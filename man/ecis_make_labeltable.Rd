@@ -8,17 +8,17 @@ ecis_make_labeltable(data.df, time, unit, frequency, confidence = 0.95,
   format = "toplot")
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The dataframe to analyse}
 
-\item{time}{}
+\item{time}{The time to analyse}
 
-\item{unit}{}
+\item{unit}{The unit to analyse}
 
-\item{frequency}{}
+\item{frequency}{The frequency to analyse}
 
-\item{confidence}{}
+\item{confidence}{The confidence level to analyse - default is 0.95}
 
-\item{format}{}
+\item{format}{The format to return the data frame as}
 }
 \value{
 A table of what is significant

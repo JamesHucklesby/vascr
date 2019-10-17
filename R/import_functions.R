@@ -314,7 +314,8 @@ ecis_import_model = function(rawdata, samples) {
 #' 
 #' #Then run the import
 #' 
-#' data = ecis_import(location_of_resampled_data,location_of_modeled_data, location_of_sample_defintions)
+#' data = ecis_import(location_of_resampled_data,location_of_modeled_data, 
+#' location_of_sample_defintions)
 #' head(data)
 #' 
 ecis_import = function(resample, modeled, key) {
@@ -335,6 +336,9 @@ ecis_import = function(resample, modeled, key) {
 #' @param data.df The source dataset
 #' @param samples The sample(s) to exclude
 #' @param wells The well(s) to exclude
+#' @param experiments The experiment(s) to exclude
+#' @param times The time(s) to exclude
+#' @param values The value(s) to exclude
 #'
 #' @return The altered dataset
 #' @export
@@ -356,6 +360,7 @@ ecis_import = function(resample, modeled, key) {
 #' excludedgrowth.df = ecis_exclude(growth.df, experiment = c(1,2))
 #' unique(excludedgrowth.df$Experiment)
 #' 
+
 ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = FALSE, times = FALSE, values = FALSE)
 {
   

@@ -20,6 +20,8 @@ and the times between those two points will be submited.}
 \item{samplecontains}{The samples to plot. A string that is searched accross all sample names, and those that match are plotted.}
 
 \item{experiment}{The experiment to plot. Default is all experiments}
+
+\item{well}{The wells required}
 }
 \value{
 A smaller ECIS dataset

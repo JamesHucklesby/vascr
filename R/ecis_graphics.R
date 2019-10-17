@@ -16,6 +16,7 @@
 #' @param linesize Width of mean lines shown on graphs
 #' @param errorsize Width of error bars shown on graphs
 #' @param alphavalue Alpha value of area enclosed by error bars. May be lowered for buisy graphs
+#' @param confidence The confidence to use when generating basic significance plots
 #'
 #'
 #' @return A ggplot2 object
@@ -24,7 +25,7 @@
 #' 
 #' @importFrom stats sd
 #' @importFrom dplyr filter group_by summarise
-#' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text
+#' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text geom_text
 #'
 #' @examples
 #' ecis_plot(growth.df, 'Rb', replication = 'summary', 
@@ -32,7 +33,7 @@
 #' ecis_plot(growth.df, 'Rb', replication = 'all',
 #'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1)
 #' ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
-#' ecis_plot(data.df, "R", "4000", "summary", 50, confidence = 0.95)
+#' ecis_plot(growth.df, "R", "4000", "summary", 50, confidence = 0.95)
 #'
 
 
@@ -295,7 +296,7 @@ ecis_plot_dilution = function (data.df, unit, frequency, replication, time)
 #'
 #' @return A gganimate gif. Future itteration may include the ability to return the un-rendered object.
 #' 
-#' @importFrom ggplot2 ggplot geom_line aes labs scale_x_log10 scale_y_log10 geom_errorbar 
+#' @importFrom ggplot2 ggplot geom_line aes labs scale_x_log10 scale_y_log10 geom_errorbar position_stack
 #' @importFrom gganimate transition_time animate
 #' @importFrom dplyr n
 #' @importFrom stats sd
@@ -329,8 +330,8 @@ ecis_animatefrequency = function(alldata.df, unittoplot, frames) {
 
 #' Graph a single well that is misbehaving
 #'
-#' @param data.df 
-#' @param well 
+#' @param data.df The dataset the well is in
+#' @param well The well to be isolated
 #' 
 #' @importFrom magrittr "%>%"
 #' @importFrom dplyr group_by mutate ungroup

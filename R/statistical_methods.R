@@ -60,12 +60,12 @@ ecis_ANOVA = function(data.df, unit, frequency, time, posthoc = "bonferoni") {
 
 #' Make a dataframe of what is significant
 #'
-#' @param data.df 
-#' @param time 
-#' @param unit 
-#' @param frequency 
-#' @param confidence 
-#' @param format
+#' @param data.df The dataframe to analyse
+#' @param time The time to analyse
+#' @param unit The unit to analyse
+#' @param frequency The frequency to analyse
+#' @param confidence The confidence level to analyse - default is 0.95
+#' @param format The format to return the data frame in
 #' 
 #' @importFrom stats aov lm TukeyHSD
 #' @importFrom data.table setDT

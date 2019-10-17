@@ -254,6 +254,7 @@ ecis_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 #' @param frequency The frequency at which the reading was taken. All modeled variables have a frequency of 0
 #' @param experiment The experiment to plot. Default is all experiments
 #' @param samplecontains The samples to plot. A string that is searched accross all sample names, and those that match are plotted.
+#' @param well The wells required
 #'
 #' @return A smaller ECIS dataset
 #' 

@@ -32,6 +32,8 @@ searches apply.}
 \item{errorsize}{Width of error bars shown on graphs}
 
 \item{alphavalue}{Alpha value of area enclosed by error bars. May be lowered for buisy graphs}
+
+\item{confidence}{The confidence to use when generating basic significance plots}
 }
 \value{
 A ggplot2 object
@@ -45,6 +47,6 @@ error = 2, linesize = 1, errorsize = 1, alphavalue = .1)
 ecis_plot(growth.df, 'Rb', replication = 'all',
  error = 2, linesize = .1, errorsize = 1, alphavalue = .1)
 ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
-ecis_plot(data.df, "R", "4000", "summary", 50, confidence = 0.95)
+ecis_plot(growth.df, "R", "4000", "summary", 50, confidence = 0.95)
 
 }
