@@ -58,7 +58,7 @@ ecis_ANOVA = function(data.df, unit, frequency, time, posthoc = "bonferoni") {
     
 }
 
-#' Make a dataframe of what is significant
+#' Make a dataframe of what is statistically significant
 #'
 #' @param data.df The dataframe to analyse
 #' @param time The time to analyse
@@ -78,10 +78,11 @@ ecis_ANOVA = function(data.df, unit, frequency, time, posthoc = "bonferoni") {
 #'
 #' @examples
 #' 
-#' ecis_make_labeltable(growth.df, 50, "R", 4000, 0.95)
+#' ecis_make_significance_table(growth.df, 50, "R", 4000, 0.95)
+#' ecis_make_significance_table(growth.df, 50, "R", 4000, 0.95, format = "Tukey_data")
 #' 
 #' 
-ecis_make_labeltable = function(data.df, time, unit, frequency, confidence = 0.95, format = "toplot")
+ecis_make_significance_table = function(data.df, time, unit, frequency, confidence = 0.95, format = "toplot")
 {
   
   data = ecis_subset(data.df, time = time, unit = unit, frequency = frequency)
@@ -104,12 +105,24 @@ ecis_make_labeltable = function(data.df, time, unit, frequency, confidence = 0.9
   Tukey.labels = setDT(Tukey.labels, keep.rownames = TRUE)[]
   
   Tukey.labels = Tukey.labels %>% separate(rn, c("A", "B"), sep = "-")
+  
+  if (format == "Tukey_data")
+  {
+    
+ Tukey.labels$Significance <- symnum(Tukey.labels$Tukey.level, corr = FALSE, na = FALSE, 
+            cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 
+            symbols = c("***", "**", "*", ".", " "))
+ 
+  return(Tukey.labels)
+  }
+  else if (format == "toplot")
+  {
+  # Reformat for graphics
   Tukey.labels = subset(Tukey.labels, Tukey.levels<0.05)
   
   #Generate a list of all the row names
   alllabels = c(Tukey.labels$A, Tukey.labels$B)
   alllabels = unique(alllabels)
-  
   
   sources = c()
   sinks = c()
@@ -127,6 +140,11 @@ ecis_make_labeltable = function(data.df, time, unit, frequency, confidence = 0.9
   labeltable = data.frame("Sample" = sources, "Label" = sinks)
   
   return(labeltable)
+  }
+  else
+  {
+    warning("Unknown output format. Check and try again")
+  }
   
 }
 

@@ -139,7 +139,7 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
           filtered2.df = summarise(group_by(filtered2.df, Sample), sd = sd(Value), n = n(), Value = mean(Value))
           if (confidence>0)
           {
-            labeltable = ecis_make_labeltable(data, time, unit, frequency, 0.95, format = "toplot")
+            labeltable = ecis_make_significance_table(data, time, unit, frequency, 0.95, format = "toplot")
             filtered2.df = left_join(filtered2.df, labeltable, by = "Sample")
             plot = ggplot(filtered2.df, aes(x = Sample, y = Value, label = Label)) + geom_bar(stat = "identity") +
            geom_text(aes(label=Label),position=position_stack(0.5))
