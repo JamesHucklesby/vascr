@@ -24,7 +24,7 @@ Imports: ggplot2,
         tibble, 
         gifski, png, graphics, 
         stats, utils, 
-        transformr
+        transformr, data.table
 Suggests: 
     knitr,
     rmarkdown,

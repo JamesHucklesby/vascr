@@ -5,7 +5,7 @@
 \title{Exclude erronious data from an ECIS dataframe}
 \usage{
 ecis_exclude(data.df, samples = FALSE, wells = FALSE,
-  experiments = FALSE, times = FALSE)
+  experiments = FALSE, times = FALSE, values = FALSE)
 }
 \arguments{
 \item{data.df}{The source dataset}

@@ -58,6 +58,78 @@ ecis_ANOVA = function(data.df, unit, frequency, time, posthoc = "bonferoni") {
     
 }
 
+#' Make a dataframe of what is significant
+#'
+#' @param data.df 
+#' @param time 
+#' @param unit 
+#' @param frequency 
+#' @param confidence 
+#' @param format
+#' 
+#' @importFrom stats aov lm TukeyHSD
+#' @importFrom data.table setDT
+#' @importFrom tidyr separate
+#' @importFrom stringr str_c
+#' @importFrom magrittr "%>%"
+#'
+#' @return A table of what is significant
+#' @export
+#'
+#' @examples
+#' 
+#' ecis_make_labeltable(growth.df, 50, "R", 4000, 0.95)
+#' 
+#' 
+ecis_make_labeltable = function(data.df, time, unit, frequency, confidence = 0.95, format = "toplot")
+{
+  
+  data = ecis_subset(data.df, time = time, unit = unit, frequency = frequency)
+  
+  # What is the effect of the treatment on the value ?
+  model=lm( data$Value ~ data$Sample )
+  ANOVA=aov(model)
+  
+  # Tukey test to study each pair of treatment :
+  TUKEY <- TukeyHSD(x=ANOVA,conf.level=0.95)
+  
+  # Tuckey test representation :, shouldn't be included here
+  #plot(TUKEY , las=1 , col="brown")
+  
+  # Extract labels and factor levels from Tukey post-hoc 
+  Tukey.levels <- TUKEY[["data$Sample"]][,4] # pull out the tukey significance levels
+  Tukey.labels <- data.frame(Tukey.levels)
+  
+  
+  Tukey.labels = setDT(Tukey.labels, keep.rownames = TRUE)[]
+  
+  Tukey.labels = Tukey.labels %>% separate(rn, c("A", "B"), sep = "-")
+  Tukey.labels = subset(Tukey.labels, Tukey.levels<0.05)
+  
+  #Generate a list of all the row names
+  alllabels = c(Tukey.labels$A, Tukey.labels$B)
+  alllabels = unique(alllabels)
+  
+  
+  sources = c()
+  sinks = c()
+  
+  for(label in alllabels)
+  {
+    source = (label)
+    sink = (c(subset(Tukey.labels, A == label)$B, subset(Tukey.labels, B == label)$A))
+    sink = str_c(sink, collapse = "\n")
+    sources = append(sources, source)
+    sinks = append(sinks, sink)
+    
+  }
+  
+  labeltable = data.frame("Sample" = sources, "Label" = sinks)
+  
+  return(labeltable)
+  
+}
+
 # Summary function --------------------------------------------------------
 
 #' Summarise ECIS datasets from a single experiment

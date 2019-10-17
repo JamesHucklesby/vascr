@@ -4,9 +4,10 @@
 \alias{ecis_plot}
 \title{ECIS plot}
 \usage{
-ecis_plot(data, unit, frequency = 0, replication = "all", time = Inf,
-  samplesubset = "", experiment = "", error = 1, linesize = 1,
-  errorsize = 1, alphavalue = 0.1)
+ecis_plot(data, unit = "R", frequency = 4000,
+  replication = "summary", time = Inf, samplecontains = "",
+  experiment = "", error = 1, linesize = 1, errorsize = 1,
+  alphavalue = 0.1, confidence = 0)
 }
 \arguments{
 \item{data}{A standard ECIS data frame to plot}
@@ -19,7 +20,7 @@ ecis_plot(data, unit, frequency = 0, replication = "all", time = Inf,
 
 \item{time}{The time to subset if a slice is required. If set to Inf all data will be displayed}
 
-\item{samplesubset}{Optional, only samples that contain this string will be plotted. Standard search and wildcard}
+\item{samplecontains}{Optional, only samples that contain this string will be plotted. Standard search and wildcard}
 
 \item{experiment}{Optional, allows you to limit the experiment plotted. Experiment names should be separated with |
 searches apply.}
@@ -44,5 +45,6 @@ error = 2, linesize = 1, errorsize = 1, alphavalue = .1)
 ecis_plot(growth.df, 'Rb', replication = 'all',
  error = 2, linesize = .1, errorsize = 1, alphavalue = .1)
 ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
+ecis_plot(data.df, "R", "4000", "summary", 50, confidence = 0.95)
 
 }

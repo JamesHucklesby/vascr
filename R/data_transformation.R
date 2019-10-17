@@ -264,10 +264,13 @@ ecis_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 #'
 #' @examples
 #' data = ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
+#' samplecontains = "05,000", experiment = "2", well = "G5")
+#' head(data)
+#' data = ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
 #' samplecontains = "05,000", experiment = "2")
 #' head(data)
 #' 
-ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplecontains = "", experiment = ""){
+ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplecontains = "", experiment = "", well = ""){
   
   if (length(time) == 2) # If a vector of length 2 was submitted (ie two times) then we subset to that
   {
@@ -299,17 +302,95 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, sampleco
   
   else if(is.finite(frequency)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
   {
-    frequency = as.numeric(frequency) # clean up the data type just in case the user is lazy
+    frequency = as.numeric(frequency) # clean up the data type
     data.df = data.df %>% filter(Frequency == frequency)
   }
   
   #Then we deal with the textey ones
   
   data.df = data.df %>% filter(str_detect(Unit, unit))
-  data.df = data.df %>% filter(str_detect(Sample, samplesubset))
+  data.df = data.df %>% filter(str_detect(Sample, samplecontains))
   data.df = data.df %>% filter(str_detect(Experiment, experiment))
+  
+  if (!(well == ""))
+  {
+  well = ecis_standardise_wells(well)
+  data.df = data.df %>% filter(Well == well)
+  }
   
   return(data.df)
   
+  
+}
+
+
+#' Automatically strip badly connected wells from an ECIS dataset
+#'
+#' @param data.df A standard ECIS data frame
+#' @param threshold How stringent to be in excluding wells. Higher is less stringent. Default is 5.
+#' @param frequency Frequency to run numbers on, default is 4000
+#' @param unit Unit to use in detection, default is R
+#'
+#' @return An ECIS dataframe, minus the offending wells. Will also print which wells have been excluded for manual review.
+#' @export
+#' 
+#' @importFrom dplyr group_by mutate summarise arrange distinct left_join
+#' @importFrom magrittr "%>%"
+#'
+#' @examples
+#' ecis_strip_badwells (growth.df)
+#' 
+#' 
+ecis_strip_badwells = function(data.df, threshold = 5, frequency = 4000, unit = "R")
+{
+  
+  cycles = 0
+  runagain = TRUE
+  
+  cleandata.df = subset(data.df, !is.na(Value)) # Exclude wells where there is no data available (IE connection lost)
+  
+  cleandata.df = ecis_subset(cleandata.df, unit = unit, frequency = frequency) # Run the diagnosis on only one frequency to save time, at R4000
+  
+  
+  #Calculate the fractional difference between the sample mean and the value of the well in each experiment at each timepoint
+  while(runagain == TRUE)
+  {
+    
+    metadata =  cleandata.df %>%
+      group_by(Experiment, Sample, Time) %>%
+      mutate(movementfrommean = abs(Value - mean(Value))/mean(Value)) %>%
+      group_by(Well, Experiment) %>%
+      summarise(Score = max(movementfrommean)) %>%
+      arrange(desc(Score)) %>%
+      left_join(cleandata.df, by = c("Well", "Experiment"))
+    
+    togo = metadata %>%
+      distinct(Well, Score, Experiment) %>%
+      subset(Score>threshold)
+    
+    cleandata.df = ecis_exclude(cleandata.df, wells = togo$Well)
+    
+    if (cycles == 0)
+    {
+      strippedwells = togo
+      cycles = cycles + 1
+    }
+    else
+    {
+      strippedwells = rbind(strippedwells, togo)
+      cycles = cycles+1
+    }
+    
+    if (nrow(togo)==0)
+    {
+      runagain = FALSE
+      print ("Wells removed:")
+      strippedwells$Location = paste(strippedwells$Experiment, strippedwells$Well)
+      print(strippedwells$Location)
+    }
+    
+  }
+  
+  return(ecis_exclude(data.df, wells = strippedwells$Well))
   
 }

@@ -5,7 +5,7 @@
 \title{Subset an ECIS dataset on multiple factors}
 \usage{
 ecis_subset(data.df, time = Inf, unit = "", frequency = Inf,
-  samplesubset = "", experiment = "")
+  samplecontains = "", experiment = "", well = "")
 }
 \arguments{
 \item{data.df}{A standard ECIS dataset}
@@ -17,7 +17,7 @@ and the times between those two points will be submited.}
 
 \item{frequency}{The frequency at which the reading was taken. All modeled variables have a frequency of 0}
 
-\item{samplesubset}{The samples to plot. A string that is searched accross all sample names, and those that match are plotted.}
+\item{samplecontains}{The samples to plot. A string that is searched accross all sample names, and those that match are plotted.}
 
 \item{experiment}{The experiment to plot. Default is all experiments}
 }
@@ -29,7 +29,10 @@ Generates a cut down dataset for processing purposes. Used heavily by all other 
 }
 \examples{
 data = ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
-samplesubset = "05,000", experiment = "2")
+samplecontains = "05,000", experiment = "2", well = "G5")
+head(data)
+data = ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
+samplecontains = "05,000", experiment = "2")
 head(data)
 
 }

@@ -9,7 +9,7 @@
 #' @param frequency The frequency of data to display. All modelled variables have a frequency of 0
 #' @param replication How much of the replicaiton to display. Options are 'all', 'experiment', 'summary'.
 #' @param time The time to subset if a slice is required. If set to Inf all data will be displayed
-#' @param samplesubset Optional, only samples that contain this string will be plotted. Standard search and wildcard
+#' @param samplecontains Optional, only samples that contain this string will be plotted. Standard search and wildcard
 #' @param experiment Optional, allows you to limit the experiment plotted. Experiment names should be separated with |
 #' searches apply.
 #' @param error Display error bars. 0 displays no error bars, 1 displays them all. Higher numbers will reduce the frequency of error bars plotted.
@@ -32,17 +32,23 @@
 #' ecis_plot(growth.df, 'Rb', replication = 'all',
 #'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1)
 #' ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
+#' ecis_plot(data.df, "R", "4000", "summary", 50, confidence = 0.95)
 #'
 
 
-ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf, samplesubset = "", experiment = "", error = 1, linesize = 1, errorsize = 1, alphavalue = 0.1) {
+ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = 1, linesize = 1, errorsize = 1, alphavalue = 0.1, confidence = 0) {
+  
+  if(unit == "Rb" || unit == "Cm" || unit == "Alpha" || unit == "RMSE" || unit == "Drift")
+  {
+    frequency = 0
+  }
   
   if (error>1)
   {
     data = ecis_subsample(data, error)
   }
     
-  data = ecis_subset(data, unit = unit, frequency = frequency, time = time, samplesubset = samplesubset, experiment = experiment)
+  data = ecis_subset(data, unit = unit, frequency = frequency, time = time, samplecontains = samplecontains, experiment = experiment)
     
   # First we deal with if the graph requested is a line graph
     
@@ -110,7 +116,8 @@ ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf,
           return(plot)
         }
 
-      
+      if (replication == "experiment")
+      {
       filtered2.df = summarise(group_by(data, Experiment, Sample), sd = sd(Value), n = n(), 
                                Value = mean(Value))
       
@@ -129,9 +136,19 @@ ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf,
           # Then use two dplyr statements to prepare the data for graphing
           filtered2.df = summarise(group_by(data, Experiment, Sample), Value = mean(Value))
           filtered2.df = summarise(group_by(filtered2.df, Sample), sd = sd(Value), n = n(), Value = mean(Value))
+          if (confidence>0)
+          {
+            labeltable = ecis_make_labeltable(data, time, unit, frequency, 0.95, format = "toplot")
+            filtered2.df = left_join(filtered2.df, labeltable, by = "Sample")
+            plot = ggplot(filtered2.df, aes(x = Sample, y = Value, label = Label)) + geom_bar(stat = "identity") +
+           geom_text(aes(label=Label),position=position_stack(0.5))
+          }
           
+          else
+          {
           # Then graph the output
           plot = ggplot(filtered2.df, aes(x = Sample, y = Value)) + geom_bar(stat = "identity") 
+          }
           
           if(error == 1)
           {
@@ -140,8 +157,8 @@ ecis_plot = function(data, unit, frequency = 0, replication = "all", time = Inf,
           
           return (plot)
         }
+    }
 }
-
 
 # Multiplot with common key -------------------------------------------------------
 
@@ -309,3 +326,44 @@ ecis_animatefrequency = function(alldata.df, unittoplot, frames) {
     
     gganimate::animate(p, nframes = frames)
 }
+
+#' Graph a single well that is misbehaving
+#'
+#' @param data.df 
+#' @param well 
+#' 
+#' @importFrom magrittr "%>%"
+#' @importFrom dplyr group_by mutate ungroup
+#' 
+#'
+#' @return A ggplot graph showing the isoated well and the experimental median well
+#' @export 
+#'
+#' @examples
+#' 
+#' ecis_isolate_well(growth.df, "A3")
+#' 
+ecis_isolate_well= function(data.df, well)
+{
+  
+  well = ecis_standardise_wells(well)
+  data.df$Well = ecis_standardise_wells(data.df$Well)
+  cleandata.df = ecis_subset(data.df, unit = "R", frequency = 4000, well = well)
+  
+  badwell = ecis_subset(cleandata.df, well = well)
+  badwell$Sample = paste(badwell$Experiment, badwell$Sample, badwell$Well)
+  
+  medianwell = cleandata.df %>%
+    group_by(Time) %>%
+    mutate(Value = median(Value), Sample = "Experimental Mean Well", Well = "Z00") %>%
+    ungroup
+  
+  toplot.df = rbind(badwell, medianwell)
+  
+  
+  ecis_plot(toplot.df, "R", 4000, "all")
+}
+
+
+
+
