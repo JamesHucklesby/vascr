@@ -87,8 +87,10 @@ ecis_make_significance_table = function(data.df, time, unit, frequency, confiden
   
   data = ecis_subset(data.df, time = time, unit = unit, frequency = frequency)
   
+  
+  
   # What is the effect of the treatment on the value ?
-  model=lm( data$Value ~ data$Sample )
+  model=lm(data$Value ~ data$Experiment + data$Sample)
   ANOVA=aov(model)
   
   # Tukey test to study each pair of treatment :
@@ -106,19 +108,19 @@ ecis_make_significance_table = function(data.df, time, unit, frequency, confiden
   
   Tukey.labels = Tukey.labels %>% separate(rn, c("A", "B"), sep = "-")
   
+  Tukey.labels$Significance <- symnum(Tukey.labels$Tukey.level, corr = FALSE, na = FALSE, 
+                                      cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 
+                                      symbols = c("***", "**", "*", ".", " "))
+  
   if (format == "Tukey_data")
   {
-    
- Tukey.labels$Significance <- symnum(Tukey.labels$Tukey.level, corr = FALSE, na = FALSE, 
-            cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 
-            symbols = c("***", "**", "*", ".", " "))
  
   return(Tukey.labels)
   }
   else if (format == "toplot")
   {
   # Reformat for graphics
-  Tukey.labels = subset(Tukey.labels, Tukey.levels<0.05)
+  Tukey.labels = subset(Tukey.labels, Tukey.levels<(1-confidence))
   
   #Generate a list of all the row names
   alllabels = c(Tukey.labels$A, Tukey.labels$B)
@@ -127,10 +129,13 @@ ecis_make_significance_table = function(data.df, time, unit, frequency, confiden
   sources = c()
   sinks = c()
   
+  Tukey.labels$Asig = paste(Tukey.labels$A, Tukey.labels$Significance)
+  Tukey.labels$Bsig = paste(Tukey.labels$B, Tukey.labels$Significance)
+  
   for(label in alllabels)
   {
     source = (label)
-    sink = (c(subset(Tukey.labels, A == label)$B, subset(Tukey.labels, B == label)$A))
+    sink = (c(subset(Tukey.labels, A == label)$Bsig,subset(Tukey.labels, B == label)$Asig))
     sink = str_c(sink, collapse = "\n")
     sources = append(sources, source)
     sinks = append(sinks, sink)
@@ -138,7 +143,6 @@ ecis_make_significance_table = function(data.df, time, unit, frequency, confiden
   }
   
   labeltable = data.frame("Sample" = sources, "Label" = sinks)
-  
   return(labeltable)
   }
   else

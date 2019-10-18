@@ -33,11 +33,13 @@
 #' ecis_plot(growth.df, 'Rb', replication = 'all',
 #'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1)
 #' ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
-#' ecis_plot(growth.df, "R", "4000", "summary", 50, confidence = 0.95)
+#' ecis_plot(growth2.df, "R", "4000", "summary", 50, confidence = 0.1)
 #'
 
 
-ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = 1, linesize = 1, errorsize = 1, alphavalue = 0.1, confidence = 0) {
+ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = 1, linesize = 1, errorsize = 1, alphavalue = 0.1, confidence = 1) {
+  
+  rawdata = data
   
   if(unit == "Rb" || unit == "Cm" || unit == "Alpha" || unit == "RMSE" || unit == "Drift")
   {
@@ -137,9 +139,13 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
           # Then use two dplyr statements to prepare the data for graphing
           filtered2.df = summarise(group_by(data, Experiment, Sample), Value = mean(Value))
           filtered2.df = summarise(group_by(filtered2.df, Sample), sd = sd(Value), n = n(), Value = mean(Value))
-          if (confidence>0)
+          if (confidence<1)
           {
-            labeltable = ecis_make_significance_table(data, time, unit, frequency, 0.95, format = "toplot")
+            if(!(ecis_detect_normal(rawdata)==FALSE))
+            {
+              warning("Normalised dataset detected, ANOVA results will be invalid")
+            }
+            labeltable = ecis_make_significance_table(data, time, unit, frequency, confidence, format = "toplot")
             filtered2.df = left_join(filtered2.df, labeltable, by = "Sample")
             plot = ggplot(filtered2.df, aes(x = Sample, y = Value, label = Label)) + geom_bar(stat = "identity") +
            geom_text(aes(label=Label),position=position_stack(0.5))

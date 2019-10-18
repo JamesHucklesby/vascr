@@ -74,3 +74,88 @@ ecis_find_time = function(data.df, time) {
   return(timetouse)
 }
 
+#' Detect if an ECIS dataset has been normalised
+#'
+#' @param data.df an ECIS dataset
+#'
+#' @return The time the data was normalised to, or FALSE if not normalised
+#' @export
+#'
+#' @examples
+#' 
+#' standard = growth.df
+#' normal = ecis_normalise(growth.df, 100)
+#' ecis_detect_normal(standard)
+#' ecis_detect_normal(normal)
+
+ecis_detect_normal = function(data.df)
+{
+  timecrushed = data.df %>% group_by(Time) %>% 
+    summarise(deviation = sd(Value))
+  timecrushed = subset(timecrushed, deviation == 0)
+  if (nrow(timecrushed)==0)
+  {
+    return (FALSE)
+  }
+  return(timecrushed$Time)
+}
+
+
+#' Title
+#'
+#' @param string 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+#' ecis_generate_continuous("  30,000.01 cells + 1 mg/ml TNFa")
+#' 
+ecis_generate_continuous = function(string)
+{
+  string2 = gsub(",", "", string)     #Remove commas from numbers
+  string3 = paste( "#", string2, "#") #Add protective filler so we can strip off end characters later
+  string4 = gsub("[^0-9.-]", "#", string3) # Replace everything non-numeric with #'s 
+  
+  
+  tempstring = "" # setup a placeholer to keep track of if the optimisation is still doing something
+  
+  while(!identical(tempstring,string4)) # Itterate, removing all duplicate #'s
+  {
+    tempstring = string4
+    string4 = gsub("##", "#", string4)
+  }
+  
+  rm(tempstring)
+  
+  string5 = substr(string4, 2, str_length(string4)-1) # Remove the protective #'s we added earlier
+  
+  string6 = gsub("#", ",", string5) # Switch out the # for a , to be standard
+  
+  return(string6)
+  
+}
+
+#' Title
+#'
+#' @param data.df 
+#' @param fields 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' data.df = growth.df
+#' data.df$Sample = paste(data.df$Sample, " 10nm nothing")
+#' ecis_explode_continuous(data.df, c("Cells", "Nothing"))
+
+#' 
+ecis_explode_continuous = function(data.df, fields)
+{
+  data.df$Sample = ecis_generate_continuous(data.df$Sample)
+  data.df = data.df %>% separate(Sample, fields)
+  return(data.df)
+}
+
+
