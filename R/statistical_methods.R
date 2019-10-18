@@ -67,7 +67,7 @@ ecis_ANOVA = function(data.df, unit, frequency, time, posthoc = "bonferoni") {
 #' @param confidence The confidence level to analyse - default is 0.95
 #' @param format The format to return the data frame in
 #' 
-#' @importFrom stats aov lm TukeyHSD
+#' @importFrom stats aov lm TukeyHSD symnum
 #' @importFrom data.table setDT
 #' @importFrom tidyr separate
 #' @importFrom stringr str_c

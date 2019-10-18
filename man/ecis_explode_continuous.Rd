@@ -2,17 +2,20 @@
 % Please edit documentation in R/helper_functions.R
 \name{ecis_explode_continuous}
 \alias{ecis_explode_continuous}
-\title{Title}
+\title{Explode continuous variables in an ECIS dataframe}
 \usage{
 ecis_explode_continuous(data.df, fields)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{A standard ECIS dataframe}
 
-\item{fields}{}
+\item{fields}{The names of the fields that will be split from the name}
+}
+\value{
+A dataframe with the sample variables exploded
 }
 \description{
-Title
+Explode continuous variables in an ECIS dataframe
 }
 \examples{
 data.df = growth.df

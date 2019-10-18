@@ -2,15 +2,18 @@
 % Please edit documentation in R/helper_functions.R
 \name{ecis_generate_continuous}
 \alias{ecis_generate_continuous}
-\title{Title}
+\title{Generate CSV separated continuous variables}
 \usage{
 ecis_generate_continuous(string)
 }
 \arguments{
-\item{string}{}
+\item{string}{The string to be converted to a continuous vector}
+}
+\value{
+A CSV separated list of continuous variables
 }
 \description{
-Title
+Generate CSV separated continuous variables
 }
 \examples{
 

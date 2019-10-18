@@ -33,7 +33,7 @@
 #' ecis_plot(growth.df, 'Rb', replication = 'all',
 #'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1)
 #' ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
-#' ecis_plot(growth2.df, "R", "4000", "summary", 50, confidence = 0.1)
+#' ecis_plot(growth.df, "R", "4000", "summary", 50, confidence = 0.1)
 #'
 
 

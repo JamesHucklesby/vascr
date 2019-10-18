@@ -101,12 +101,15 @@ ecis_detect_normal = function(data.df)
 }
 
 
-#' Title
+#' Generate CSV separated continuous variables
 #'
-#' @param string 
+#' @param string The string to be converted to a continuous vector
 #'
-#' @return
-#' @export
+#' @return A CSV separated list of continuous variables
+#' 
+#' @importFrom stringr str_length
+#' 
+#' @export 
 #'
 #' @examples
 #' 
@@ -137,12 +140,16 @@ ecis_generate_continuous = function(string)
   
 }
 
-#' Title
+#' Explode continuous variables in an ECIS dataframe
 #'
-#' @param data.df 
-#' @param fields 
+#' @param data.df A standard ECIS dataframe
+#' @param fields The names of the fields that will be split from the name
 #'
-#' @return
+#' @return A dataframe with the sample variables exploded
+#' 
+#' @importFrom magrittr "%>%"
+#' @importFrom tidyr separate
+#' 
 #' @export
 #'
 #' @examples
