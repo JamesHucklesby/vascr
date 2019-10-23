@@ -18,5 +18,7 @@ Replaces A1 in strings with A01. Important for importing ABP files which may use
 \examples{
 ecis_standardise_wells('A01')
 ecis_standardise_wells('A 1')
+ecis_standardise_wells('tortoise') # Non-standardisable becomes NA
+ecis_standardise_wells(growth.df$Well)
 
 }

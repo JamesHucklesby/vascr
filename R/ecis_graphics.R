@@ -18,6 +18,7 @@
 #' @param confidence The confidence to use when generating basic significance plots
 #' @param xlab X axis value
 #' @param ylab Y axis value
+#' @param title The title of the ggplot
 #'
 #' @return A ggplot2 object
 #' 
@@ -33,7 +34,8 @@
 #' ecis_plot(growth.df, 'Rb', replication = 'all',
 #'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
 #'  ecis_plot(growth.df, 'Rb', replication = 'experiment',
-#'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb", xlab = "Hours")
+#'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
+#'  , xlab = "Hours")
 #' ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
 #' ecis_plot(growth.df, "R", "4000", "summary", 50, confidence = 0.1)
 #'
@@ -363,7 +365,7 @@ ecis_isolate_well= function(data.df, well)
   
   well = ecis_standardise_wells(well)
   data.df$Well = ecis_standardise_wells(data.df$Well)
-  cleandata.df = ecis_subset(data.df, unit = "R", frequency = 4000, well = well)
+  cleandata.df = ecis_subset(data.df, unit = "R", frequency = 4000)
   
   badwell = ecis_subset(cleandata.df, well = well)
   badwell$Sample = paste(badwell$Experiment, badwell$Sample, badwell$Well)
@@ -376,9 +378,36 @@ ecis_isolate_well= function(data.df, well)
   toplot.df = rbind(badwell, medianwell)
   
   
-  ecis_plot(toplot.df, "R", 4000, "all")
+  ecis_plot(toplot.df, "R", 4000, "all", title = paste('Well',well))
 }
 
 
+#' Plot the wells of a 96 well plate
+#'
+#' @param data.df A standard ECIS dataframe. Ideally this will contain only one experiment, but multiple experiments are supported.
+#' @param unit The unit to plot. Default is R
+#' @param frequency The frequency to plot. Default is 4000
+#'
+#' @importFrom ggplot2 aes geom_line facet_grid labs
+#'
+#' @return A GGplot2 matrix
+#' @export 
+#'
+#' @examples
+#' ecis_plot_plate(growth.df, unit = "Rb")
+#' 
+ecis_plot_plate = function(data.df, unit = "R", frequency = 4000)
+{
+  # Cut the data down to what is needed
+  data = ecis_subset(data.df, unit = unit, frequency = frequency)
+  
+  # Grab the column and row components from each well to allow plate separation
+  data$col = substr(data$Well,1,1)
+  data$row = substr(data$Well,2,3)
+  
+  plot =  ggplot(data=data, aes(x=Time, y = Value, colour = Sample, linetype = Experiment)) + geom_line() + facet_grid(col~row) + labs(x = "Time(hours)", y=ecis_titles(unit,frequency))
+  
+  return (plot)
+}
 
 

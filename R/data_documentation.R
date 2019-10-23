@@ -9,7 +9,7 @@ utils::globalVariables("Time")
 utils::globalVariables("Value")
 utils::globalVariables("Stream")
 
-utils::globalVariables(c("A","B","Label","Score","desc","geom_text","median","movementfrommean","position_stack","rn", "deviation"))
+utils::globalVariables(c("A","B","Label","Score","desc","geom_text","median","movementfrommean","position_stack","rn", "deviation", "expwells", "badremoved"))
 
 
 

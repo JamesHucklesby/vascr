@@ -39,6 +39,8 @@ searches apply.}
 \item{xlab}{X axis value}
 
 \item{ylab}{Y axis value}
+
+\item{title}{The title of the ggplot}
 }
 \value{
 A ggplot2 object
@@ -52,7 +54,8 @@ error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = 
 ecis_plot(growth.df, 'Rb', replication = 'all',
  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
  ecis_plot(growth.df, 'Rb', replication = 'experiment',
- error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb", xlab = "Hours")
+ error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
+ , xlab = "Hours")
 ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
 ecis_plot(growth.df, "R", "4000", "summary", 50, confidence = 0.1)
 

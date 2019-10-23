@@ -26,11 +26,11 @@ Automatically strip badly connected wells from an ECIS dataset
 # Make a defective well in the dataset
 baddata = growth.df
 welltobreak = "B1"
-baddata$randoms = sample(baddata$Value*2, size = nrow(data), replace = TRUE)
+baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
 baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
 
 welltobreak = "H4"
-baddata$randoms = sample(baddata$Value*2, size = nrow(data), replace = TRUE)
+baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
 baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
 
 # Plot out the well, and then try to detect it

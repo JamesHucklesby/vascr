@@ -28,11 +28,11 @@ Exclude automatically detected wells that have a connection issue from the datas
 # Make a defective well in the dataset
 baddata = growth.df
 welltobreak = "B1"
-baddata$randoms = sample(baddata$Value*2, size = nrow(data), replace = TRUE)
+baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
 baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
 
 welltobreak = "H4"
-baddata$randoms = sample(baddata$Value*2, size = nrow(data), replace = TRUE)
+baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
 baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
 
 ecis_exclude_badwells(baddata, threshold = 1)

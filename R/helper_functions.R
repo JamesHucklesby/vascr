@@ -26,6 +26,8 @@ retitle = function(df) {
 #' @examples 
 #' ecis_standardise_wells('A01')
 #' ecis_standardise_wells('A 1')
+#' ecis_standardise_wells('tortoise') # Non-standardisable becomes NA
+#' ecis_standardise_wells(growth.df$Well)
 #' 
 ecis_standardise_wells = function(well) {
   
@@ -36,19 +38,33 @@ ecis_standardise_wells = function(well) {
   well = gsub("(?<![0-9])([0-9])(?![0-9])", "0\\1", well, perl = TRUE) # Add 0's
   
   # Check that it now conforms
+
+  
+  if(is.na(match(well[1],ecis_96_well_names())))
+  {
+    return ("NA")
+  }
+  
+  return(well)
+}
+
+#' All the well names of a 96 well plate
+#'
+#' @return Vector containing all wells of a 96 well plate
+#' @export
+#'
+#' @examples
+#' ecis_96_well_names()
+#' 
+ecis_96_well_names = function()
+{
   
   wells = expand.grid(LETTERS[1:8],c(1:12))
   wells$pasted = paste(wells$Var1,wells$Var2)
   wells = as.vector(wells$pasted)
   wells = gsub(" ", "", wells, fixed = TRUE) # Remove spaces
   wells = gsub("(?<![0-9])([0-9])(?![0-9])", "0\\1", wells, perl = TRUE) # Add O's
-  
-  if(!(well %in% wells))
-  {
-    return ("NA")
-  }
-  
-  return(well)
+  return(wells)
 }
 
 

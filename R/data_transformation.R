@@ -273,6 +273,15 @@ ecis_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 #' 
 ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplecontains = "", experiment = "", well = ""){
   
+  if (well != "")
+      {
+        well = ecis_standardise_wells(well)
+      }
+  
+  
+  data.df$Well = ecis_standardise_wells(data.df$Well)
+  
+  
   if(unit == "Rb" || unit == "Cm" || unit == "Alpha" || unit == "RMSE" || unit == "Drift") # Wipe out frequency if it is a modelled variable as that makes no sense
   {
     frequency = 0
@@ -347,11 +356,11 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, sampleco
 #' # Make a defective well in the dataset
 #' baddata = growth.df
 #' welltobreak = "B1"
-#' baddata$randoms = sample(baddata$Value*2, size = nrow(data), replace = TRUE)
+#' baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
 #' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
 #' 
 #' welltobreak = "H4"
-#' baddata$randoms = sample(baddata$Value*2, size = nrow(data), replace = TRUE)
+#' baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
 #' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
 #' 
 #' # Plot out the well, and then try to detect it
@@ -439,11 +448,11 @@ ecis_detect_badwells = function(data.df, threshold = 5, frequency = 4000, unit =
 #' # Make a defective well in the dataset
 #' baddata = growth.df
 #' welltobreak = "B1"
-#' baddata$randoms = sample(baddata$Value*2, size = nrow(data), replace = TRUE)
+#' baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
 #' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
 #' 
 #' welltobreak = "H4"
-#' baddata$randoms = sample(baddata$Value*2, size = nrow(data), replace = TRUE)
+#' baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
 #' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
 #' 
 #' ecis_exclude_badwells(baddata, threshold = 1)
@@ -478,7 +487,7 @@ ecis_exclude_badwells = function(data.df, threshold = 5, frequency = 4000, unit 
  }
  
  toreturn = dplyr::filter(data.df,!expwells %in% expwellstogo)
- toreturn = dplyr::select(badremoved, -c("expwells"))
+ toreturn = dplyr::select(toreturn, -c("expwells"))
  
  return(toreturn)
  
