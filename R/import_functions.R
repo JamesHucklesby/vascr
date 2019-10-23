@@ -361,6 +361,7 @@ ecis_import = function(resample, modeled, key) {
 #' unique(excludedgrowth.df$Experiment)
 #' 
 
+
 ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = FALSE, times = FALSE, values = FALSE)
 {
   

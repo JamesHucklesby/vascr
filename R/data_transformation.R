@@ -273,6 +273,11 @@ ecis_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 #' 
 ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplecontains = "", experiment = "", well = ""){
   
+  if(unit == "Rb" || unit == "Cm" || unit == "Alpha" || unit == "RMSE" || unit == "Drift") # Wipe out frequency if it is a modelled variable as that makes no sense
+  {
+    frequency = 0
+  }
+  
   if (length(time) == 2) # If a vector of length 2 was submitted (ie two times) then we subset to that
   {
     data.df = data.df %>% filter(Time > time[1])
@@ -332,17 +337,30 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, sampleco
 #' @param frequency Frequency to run numbers on, default is 4000
 #' @param unit Unit to use in detection, default is R
 #'
-#' @return An ECIS dataframe, minus the offending wells. Will also print which wells have been excluded for manual review.
+#' @return  A tibble containing the offending wells, which experiment they are from and the score they were removed with
 #' @export
 #' 
 #' @importFrom dplyr group_by mutate summarise arrange distinct left_join
 #' @importFrom magrittr "%>%"
 #'
 #' @examples
-#' ecis_strip_badwells (growth.df)
+#' # Make a defective well in the dataset
+#' baddata = growth.df
+#' welltobreak = "B1"
+#' baddata$randoms = sample(baddata$Value*2, size = nrow(data), replace = TRUE)
+#' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
 #' 
+#' welltobreak = "H4"
+#' baddata$randoms = sample(baddata$Value*2, size = nrow(data), replace = TRUE)
+#' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
 #' 
-ecis_strip_badwells = function(data.df, threshold = 5, frequency = 4000, unit = "R")
+#' # Plot out the well, and then try to detect it
+#' ecis_detect_badwells(baddata,1)
+#' 
+#' # Check it works for a good dataset
+#' ecis_detect_badwells(growth.df,1)
+#' 
+ecis_detect_badwells = function(data.df, threshold = 5, frequency = 4000, unit = "R")
 {
   
   cycles = 0
@@ -369,29 +387,100 @@ ecis_strip_badwells = function(data.df, threshold = 5, frequency = 4000, unit = 
       distinct(Well, Score, Experiment) %>%
       subset(Score>threshold)
     
-    cleandata.df = ecis_exclude(cleandata.df, wells = togo$Well)
+    cleandata.df = ecis_exclude(cleandata.df, wells = togo$Well[1]) # Remove the most offending well. Do this itterativley so the scores have less of an effect on each other (important if a spikey well hits one that is continuously highly raised)
     
-    if (cycles == 0)
+    if(nrow(togo)==0 & cycles == 0)
     {
+      runagain = FALSE
       strippedwells = togo
+    }
+    
+    else if(nrow(togo)==0)
+    {
+      runagain = FALSE
+    }
+    else if (cycles == 0)
+    {
+      strippedwells = togo[1,]
       cycles = cycles + 1
     }
     else
     {
-      strippedwells = rbind(strippedwells, togo)
+      strippedwells = rbind(strippedwells, togo[1,])
       cycles = cycles+1
     }
     
-    if (nrow(togo)==0)
-    {
-      runagain = FALSE
-      print ("Wells removed:")
-      strippedwells$Location = paste(strippedwells$Experiment, strippedwells$Well)
-      print(strippedwells$Location)
-    }
     
   }
   
-  return(ecis_exclude(data.df, wells = strippedwells$Well))
+  
+  return(strippedwells)
+  
+}
+
+
+
+
+#' Exclude automatically detected wells that have a connection issue from the dataset
+#'
+#' @param data.df The dataset to parse
+#' @param threshold The threshold stringency to use in detection. Default is 5, the range of 1-10 may be appropriate. Higher numbers are less stringent.
+#' @param frequency The frequency to use for detection, default is 4000 Hz
+#' @param unit  The unit to run the detection on, default is R
+#' @param verbose Prints which wells have been removed in the terminal. Should be used when first investigating data to allow for follow up plots with ecis_isolate_well to be conducted.
+#'
+#' @return A standard ECIS dataframe, minus the detected wells
+#' 
+#' @importFrom dplyr filter select
+#' 
+#' @export
+#'
+#' @examples
+#' # Make a defective well in the dataset
+#' baddata = growth.df
+#' welltobreak = "B1"
+#' baddata$randoms = sample(baddata$Value*2, size = nrow(data), replace = TRUE)
+#' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
+#' 
+#' welltobreak = "H4"
+#' baddata$randoms = sample(baddata$Value*2, size = nrow(data), replace = TRUE)
+#' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
+#' 
+#' ecis_exclude_badwells(baddata, threshold = 1)
+#' ecis_exclude_badwells(growth.df, threshold = 1)
+#' 
+ecis_exclude_badwells = function(data.df, threshold = 5, frequency = 4000, unit = "R", verbose = TRUE)
+{
+
+ # Detect if any bad wells are present
+  
+ toremove = ecis_detect_badwells(data.df, threshold = threshold, frequency = frequency, unit = unit)
+ 
+ if(nrow(toremove) ==0) # If nothing is bad, just return the data frame
+ {
+   if (verbose)
+   {
+   print("No bad wells detected")
+   }
+   return(data.df)
+ }
+ 
+ 
+ toremove$expwells = paste(toremove$Experiment, ":", toremove$Well, sep="")
+ data.df$expwells = paste(data.df$Experiment, ":", data.df$Well, sep="")
+ 
+ expwellstogo = toremove$expwells
+ 
+ if(verbose)
+ {
+ print("Wells Removed:")
+ print(expwellstogo)
+ }
+ 
+ toreturn = dplyr::filter(data.df,!expwells %in% expwellstogo)
+ toreturn = dplyr::select(badremoved, -c("expwells"))
+ 
+ return(toreturn)
+ 
   
 }

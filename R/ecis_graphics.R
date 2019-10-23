@@ -1,6 +1,5 @@
 # Graphics generation
 
-# Fudge funciton, fix this later
 
 #' ECIS plot
 #'
@@ -17,7 +16,8 @@
 #' @param errorsize Width of error bars shown on graphs
 #' @param alphavalue Alpha value of area enclosed by error bars. May be lowered for buisy graphs
 #' @param confidence The confidence to use when generating basic significance plots
-#'
+#' @param xlab X axis value
+#' @param ylab Y axis value
 #'
 #' @return A ggplot2 object
 #' 
@@ -29,21 +29,29 @@
 #'
 #' @examples
 #' ecis_plot(growth.df, 'Rb', replication = 'summary', 
-#' error = 2, linesize = 1, errorsize = 1, alphavalue = .1)
+#' error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
 #' ecis_plot(growth.df, 'Rb', replication = 'all',
-#'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1)
+#'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+#'  ecis_plot(growth.df, 'Rb', replication = 'experiment',
+#'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb", xlab = "Hours")
 #' ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
 #' ecis_plot(growth.df, "R", "4000", "summary", 50, confidence = 0.1)
 #'
 
 
-ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = 1, linesize = 1, errorsize = 1, alphavalue = 0.1, confidence = 1) {
+ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = 1, linesize = 1, errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title") {
   
   rawdata = data
   
-  if(unit == "Rb" || unit == "Cm" || unit == "Alpha" || unit == "RMSE" || unit == "Drift")
+  # If possible, adjust non-specific unit
+  if (ylab == "Value")
   {
-    frequency = 0
+    ylab = ecis_titles(unit)
+    print ("Title updated")
+  }
+  else
+  {
+    print ("Title ignored")
   }
   
   if (error>1)
@@ -59,7 +67,7 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
         
         if (replication == "all") {
               
-              plot = ggplot2::ggplot(data = data, ggplot2::aes(x = Time, y = Value, group = interaction(Well,                       Experiment), colour = Sample, size = linesize)) + ggplot2::labs(title = unit) + ggplot2::geom_line(size = linesize)
+              plot = ggplot2::ggplot(data = data, ggplot2::aes(x = Time, y = Value, group = interaction(Well,                       Experiment), colour = Sample, size = linesize)) + ggplot2::labs(title = title, x=xlab, y=ylab) + ggplot2::geom_line(size = linesize)
           
           return(plot)
         }
@@ -68,7 +76,7 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
           toplot2.df = summarise(group_by(data, Sample, Time, Experiment), sd = sd(Value), 
                                  n = n(), Value = mean(Value))
           
-          plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample, linetype =   Experiment)) + ggplot2::labs(title = unit) + ggplot2::geom_line(size = linesize)
+          plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample, linetype =   Experiment)) + labs(title = title, x=xlab, y=ylab) + ggplot2::geom_line(size = linesize)
           
           if (error == 1)
           {
@@ -85,7 +93,7 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
           # Now repeat the calculation, but work out the intra-experimental error and statistics
           toplot2.df = summarise(group_by(toplot2.df, Sample, Time), sd = sd(Value), n = n(), Value = mean(Value))
           
-          plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample)) + ggplot2::labs(title = unit) + ggplot2::geom_line(size = linesize)
+          plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample)) + labs(title = title, x=xlab, y=ylab) + ggplot2::geom_line(size = linesize)
           
           if (error >0)
           {

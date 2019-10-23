@@ -166,3 +166,37 @@ ecis_explode_continuous = function(data.df, fields)
 }
 
 
+#' Title
+#'
+#' @param unit The unit to submit
+#' @param frequency The frequency to submit
+#'
+#' @return An expression containing the correct data label for the unit
+#' @export
+#'
+#' @examples
+#' 
+#' ecis_titles("Rb")
+#' 
+ecis_titles = function (unit, frequency = 0)
+{
+  
+  # Modeled paramater
+  if (unit == "Rb"){return (expression(paste("Rb (",Omega," cm"^2, ")")))}
+  if (unit == "Cm"){return (expression(paste("Cm (",mu,"F/cm"^2, ")")))}
+  if (unit == "Alpha"){return (expression(paste("Alpha (",ohm," cm"^2, ")")))}
+  if(unit == "RMSE") { return("Model Fit RMSE")}
+  if(unit == "Drift") { return("Drift (%)")}
+  
+  # Measured quantaties
+  if(unit == "C") { return(expression(paste("Capacitance (",mu,"F)")))}
+  if(unit == "R") { return("Resistance (ohm)")}
+  if(unit == "P") { return("Phase (degrees)")}
+  if(unit == "X") { return("Reactance (ohm)")}
+  if(unit == "Z") { return("Impedance (ohm)")}
+  
+  # If not overriden, return what was input
+  return(unit)
+  
+}
+

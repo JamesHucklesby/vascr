@@ -7,7 +7,8 @@
 ecis_plot(data, unit = "R", frequency = 4000,
   replication = "summary", time = Inf, samplecontains = "",
   experiment = "", error = 1, linesize = 1, errorsize = 1,
-  alphavalue = 0.1, confidence = 1)
+  alphavalue = 0.1, confidence = 1, xlab = "Time (hours)",
+  ylab = "Value", title = "Title")
 }
 \arguments{
 \item{data}{A standard ECIS data frame to plot}
@@ -34,6 +35,10 @@ searches apply.}
 \item{alphavalue}{Alpha value of area enclosed by error bars. May be lowered for buisy graphs}
 
 \item{confidence}{The confidence to use when generating basic significance plots}
+
+\item{xlab}{X axis value}
+
+\item{ylab}{Y axis value}
 }
 \value{
 A ggplot2 object
@@ -43,9 +48,11 @@ ECIS plot
 }
 \examples{
 ecis_plot(growth.df, 'Rb', replication = 'summary', 
-error = 2, linesize = 1, errorsize = 1, alphavalue = .1)
+error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
 ecis_plot(growth.df, 'Rb', replication = 'all',
- error = 2, linesize = .1, errorsize = 1, alphavalue = .1)
+ error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+ ecis_plot(growth.df, 'Rb', replication = 'experiment',
+ error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb", xlab = "Hours")
 ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
 ecis_plot(growth.df, "R", "4000", "summary", 50, confidence = 0.1)
 
