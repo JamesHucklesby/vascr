@@ -129,60 +129,95 @@ ecis_detect_normal = function(data.df)
 #'
 #' @examples
 #' 
-#' ecis_generate_continuous("  30,000.01 cells + 1 mg/ml TNFa")
+#' ecis_generate_continuous("  30,000.01 cells ")
 #' 
 ecis_generate_continuous = function(string)
 {
+  
   string2 = gsub(",", "", string)     #Remove commas from numbers
   string3 = paste( "#", string2, "#") #Add protective filler so we can strip off end characters later
-  string4 = gsub("[^0-9.-]", "#", string3) # Replace everything non-numeric with #'s 
-  
-  
-  tempstring = "" # setup a placeholer to keep track of if the optimisation is still doing something
-  
-  while(!identical(tempstring,string4)) # Itterate, removing all duplicate #'s
-  {
-    tempstring = string4
-    string4 = gsub("##", "#", string4)
-  }
-  
-  rm(tempstring)
-  
+  string3.5 = gsub("[^0-9.-]", "#", string3) # Replace everything non-numeric with #'s 
+  string4 = ecis_collapse_hash(string3.5) # Remove duplicate #'s
   string5 = substr(string4, 2, str_length(string4)-1) # Remove the protective #'s we added earlier
-  
   string6 = gsub("#", ",", string5) # Switch out the # for a , to be standard
   
-  return(string6)
+  title1 = string # Make a copy of the string
+  title1.5 = trimws(title1) # Trim off any leading or trailing white spaces. We can't just strip the lot as some will be in titles and we want to conserve these
+  title2 = gsub("[,+:_*-]","#",title1.5) # Hash out any deliniators that might be used
+  title2.5 = paste( "#", title2, "#", sep = "") # Add protective endplates
+  title4 = gsub("[0-9.]", "#", title2.5) # Hash out all numbers, as these are effectivley deliniators
+  title4.6 = gsub("# ", "#", title4) # Remove any spaces between hashes, as they delineate nothing
+  title4.6 = gsub("# ", "#", title4) # Repeat a few times for completeness
+  title4.6 = gsub("# ", "#", title4) # Finish the job hash space job
+  title4.7 = gsub(" #", "#", title4.6) # Finish the job hash space job
+  title4.7 = gsub(" #", "#", title4.7) # Finish the job hash space job
+  title4.7 = gsub(" #", "#", title4.7) # Finish the job hash space job
+  title5 = ecis_collapse_hash(title4.7) # Itterativley delete all the hashes
+  title6 = substr(title5, 2, str_length(title5)-1) # Remove the protective #'s we added earlier
+  title7 = gsub("#", ",", title6) # Switch out the # for a , to be standard
   
+  return(paste(string6, title7, sep = ":"))
+}
+
+ecis_collapse_hash = function(string)
+{
+tempstring = "" # setup a placeholer to keep track of if the optimisation is still doing something
+
+while(!identical(tempstring,string)) # Itterate, removing all duplicate #'s
+{
+  tempstring = string
+  string = gsub("##", "#", string)
+}
+
+return(string)
+
 }
 
 #' Explode continuous variables in an ECIS dataframe
 #'
 #' @param data.df A standard ECIS dataframe
 #' @param fields The names of the fields that will be split from the name
+#' @param selectformat Force the software to use something other than the most common format
 #'
 #' @return A dataframe with the sample variables exploded
 #' 
 #' @importFrom magrittr "%>%"
 #' @importFrom tidyr separate
+#' @importFrom plyr mapvalues
 #' 
 #' @export
 #'
 #' @examples
 #' data.df = growth.df
-#' data.df$Sample = paste(data.df$Sample, " 10nm nothing")
-#' ecis_explode_continuous(data.df, c("Cells", "Nothing"))
-
-#' 
-ecis_explode_continuous = function(data.df, fields)
+#' data.df$Sample = paste(data.df$Sample, "+ 10nm nothing")
+#' exploded = ecis_explode_continuous(data.df)
+ecis_explode_continuous = function(data.df, fields, selectformat = 1)
 {
-  data.df$Sample = ecis_generate_continuous(data.df$Sample)
-  data.df = data.df %>% separate(Sample, fields)
-  return(data.df)
+   
+   data.df = data.df %>% separate(Sample, c("V1", "V2", "V3"), sep = "[+]", remove = FALSE)
+   
+   uniquenames = unique(data.df$V1)
+   correctuniquenames = ecis_generate_continuous(uniquenames)
+   data.df$V1 = mapvalues(data.df$V1, uniquenames, correctuniquenames)
+   
+   uniquenames = unique(data.df$V2)
+   correctuniquenames = ecis_generate_continuous(uniquenames)
+   data.df$V2 = mapvalues(data.df$V2, uniquenames, correctuniquenames)
+   
+   uniquenames = unique(data.df$V3)
+   correctuniquenames = ecis_generate_continuous(uniquenames)
+   data.df$V3 = mapvalues(data.df$V3, uniquenames, correctuniquenames)
+  
+   
+   data.df = data.df %>% separate(V1, into = c("Val1","Var1"), sep = ":")
+   data.df = data.df %>% separate(V2, into = c("Val2","Var2"), sep = ":")
+   data.df = data.df %>% separate(V3, into = c("Val3","Var3"), sep = ":")
+   
+   return (data.df)
 }
 
 
-#' Title
+#' Generate human readable versions of the unit variable for graphing
 #'
 #' @param unit The unit to submit
 #' @param frequency The frequency to submit
@@ -214,5 +249,38 @@ ecis_titles = function (unit, frequency = 0)
   # If not overriden, return what was input
   return(unit)
   
+}
+
+
+#' Fix typographical errors in an ECIS dataframe
+#' 
+#' This function will go through all the sample and experiment names and replace all the values that are incorrect. Usefull for fixing up typographical errors, or places where you have named things differently inadvertently.
+#'
+#' @param data.df the data to correct
+#' @param incorrect the error to be corrected
+#' @param correct the corrrect string
+#' @param limit can be set to "Sample or "Experiment" to limit the replacement to a single variable
+#'
+#' @return the repared dataframe
+#' @export
+#'
+#' @examples
+#' 
+#' ecis_fix_error(growth.df, "cells", "cells plated")
+#' 
+ecis_fix_error = function (data.df, incorrect, correct, limit = "None")
+{
+  
+  if (limit == "None" || limit == "Sample")
+  {
+  data.df$Sample = gsub(incorrect, correct, data.df$Sample)
+  }
+  
+  if (limit == "None" || limit == "Experiment")
+  {
+  data.df$Experiment = gsub(incorrect, correct, data.df$Experiment)
+  }
+  
+  return(data.df)
 }
 

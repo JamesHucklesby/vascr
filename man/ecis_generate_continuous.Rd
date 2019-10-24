@@ -17,6 +17,6 @@ Generate CSV separated continuous variables
 }
 \examples{
 
-ecis_generate_continuous("  30,000.01 cells + 1 mg/ml TNFa")
+ecis_generate_continuous("  30,000.01 cells ")
 
 }

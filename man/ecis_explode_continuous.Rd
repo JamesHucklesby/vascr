@@ -4,12 +4,14 @@
 \alias{ecis_explode_continuous}
 \title{Explode continuous variables in an ECIS dataframe}
 \usage{
-ecis_explode_continuous(data.df, fields)
+ecis_explode_continuous(data.df, fields, selectformat = 1)
 }
 \arguments{
 \item{data.df}{A standard ECIS dataframe}
 
 \item{fields}{The names of the fields that will be split from the name}
+
+\item{selectformat}{Force the software to use something other than the most common format}
 }
 \value{
 A dataframe with the sample variables exploded
@@ -19,7 +21,6 @@ Explode continuous variables in an ECIS dataframe
 }
 \examples{
 data.df = growth.df
-data.df$Sample = paste(data.df$Sample, " 10nm nothing")
-ecis_explode_continuous(data.df, c("Cells", "Nothing"))
-
+data.df$Sample = paste(data.df$Sample, "+ 10nm nothing")
+exploded = ecis_explode_continuous(data.df)
 }

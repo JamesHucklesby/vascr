@@ -2,7 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{ecis_titles}
 \alias{ecis_titles}
-\title{Title}
+\title{Generate human readable versions of the unit variable for graphing}
 \usage{
 ecis_titles(unit, frequency = 0)
 }
@@ -15,7 +15,7 @@ ecis_titles(unit, frequency = 0)
 An expression containing the correct data label for the unit
 }
 \description{
-Title
+Generate human readable versions of the unit variable for graphing
 }
 \examples{
 

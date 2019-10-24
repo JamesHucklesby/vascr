@@ -14,7 +14,7 @@ Depends: R (>= 3.6)
 Imports: ggplot2, 
         gganimate, 
         gridExtra, 
-        s20x,
+        s20x,plyr,
         dplyr,
         devtools, 
         tidyr, 
