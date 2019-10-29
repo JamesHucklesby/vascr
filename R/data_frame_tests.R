@@ -18,19 +18,19 @@
 #' data = ecis_subset(growth.df, time = 100, unit = "R", frequency = 4000)
 #' 
 #' # Test a full compliment of data passes
-#' ecis_test_integrity(data)
+#' ecis_test_design(data)
 #' 
-#' ecis_test_integrity(growth.df)
+#' ecis_test_design(growth.df)
 
 #' # Test function picks up unbalanced replicate #'s
 #' data2 = ecis_exclude(data, well = c("A1", "B1", "C1"))
-#' ecis_test_integrity(data2)
+#' ecis_test_design(data2)
 
 #' # Test function picks up missing pairs (in this case due to Rb not being established)
 #' data3 = ecis_subset(growth.df, time = 100, unit = "Rb")
-#' ecis_test_integrity(data3)
+#' ecis_test_design(data3)
 #' 
-ecis_test_integrity = function(data.df, verbose = FALSE)
+ecis_test_design = function(data.df, verbose = FALSE)
 {
   
   data = data.df  #Copy out the data so we can muck with if needed
@@ -59,6 +59,7 @@ ecis_test_integrity = function(data.df, verbose = FALSE)
     tests$balanced_samples = TRUE
   }
   
+  
   # Check --- is replicate number balanced ----------------------------------------------------------------------
   
   pairs = as.data.frame(experimental_pairs)
@@ -81,3 +82,41 @@ ecis_test_integrity = function(data.df, verbose = FALSE)
   return(tests)
   
 }
+
+
+#' Test the summary level of an ECIS dataframe
+#'
+#' @param data.df A standard ECIS dataframe
+#'
+#' @return A summarised standard ECIS dataframe
+#'
+#' @export
+#'
+#' @examples
+#' experiment.df = ecis_summarise(growth.df, "experiment")
+#' summary.df = ecis_summarise(growth.df, "summary")
+#' 
+#' ecis_test_summary_level(growth.df)
+#' ecis_test_summary_level(experiment.df)
+#' ecis_test_summary_level(summary.df)
+#' 
+ecis_test_summary_level = function(data.df)
+{
+  if(identical(unique(data.df$Experiment),"Summary"))
+  {
+    return ("summary")
+  }
+  
+  else if(identical(unique(data.df$Well),"Z00"))
+  {
+    return ("experiment")
+  }
+  else
+  {
+  return("replicate")
+  }
+  
+  
+}
+
+

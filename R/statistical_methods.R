@@ -159,21 +159,74 @@ ecis_make_significance_table = function(data.df, time, unit, frequency, confiden
 #' Creates and ECIS dataset that has had all samples of the same type averaged together. Assumes that each sample is independent, IE that this function has already been run on individual experiments
 #'
 #' @param data.df An ECIS dataset in standard format
+#' @param level The level of replication to generate the summary at. Options are "experiment" or "summary"
 #'
 #' @return An ECIS dataset supplimented with summary statistics
 #' 
 #' @export
-#' @importFrom dplyr summarise
+#' @importFrom dplyr summarise group_by n
+#' @importFrom magrittr "%>%"
 #'
 #' @examples
 #' 
 #' ecis_summarise(growth.df)
+#' ecis_summarise(growth.df, "experiment")
+#' ecis_summarise(growth.df, "replicate")
 #' 
-ecis_summarise <- function(data.df) {
+#' 
+ecis_summarise <- function(data.df, level = "summary") {
   
-  average.df = summarise(group_by(data.df, 'Sample', 'Time', 'Unit', 'Frequency'), sd = sd(Value), n = n(), sem = sd/sqrt(n), Value = mean(Value))
+  summary_level = ecis_test_summary_level(data.df)
   
-  average.df$Experiment = "Derrivative"
-  return(average.df)
+  if(level == summary_level)
+  {
+    warning("Function not required, the data frame is already at that level")
+    return (data.df)
+  }
+  
+  # If possible, make experimental resolution
+  
+  if(summary_level == "replicate")
+  {
+  experiment.df = data.df %>%
+    group_by(Time, Unit, Frequency, Sample, Experiment) %>%
+    summarise(sd = sd(Value), n = n(), Well = "Z00",Value = mean(Value))
+  }
+  else if(summary_level == "experiment")
+  {
+    experiment.df = data.df
+  }
+  
+  # If possible, make summary resolution
+  
+  if (summary_level == "experiment" || summary_level == "replicate")
+  {
+    summary.df = experiment.df %>%
+      group_by(Time, Unit, Frequency, Sample) %>%
+      summarise(mean = mean(Value), Experiment = "Summary")
+  }
+  else if(summary_level == "summary")
+  {
+    summary.df = data.df
+  }
+  else
+  {
+    warning ("Can't determine summary level, check data frame integrity")
+    return ("NA")
+  }
+  
+  if(level == "summary" && exists ("summary.df"))
+  {
+    return(summary.df)
+  }
+  else if(level == "experiment" && exists ("experiment.df"))
+  {
+    return(experiment.df)
+  }
+  else
+  {
+    warning("Invalid level requested. Please check level is valid and you have presented a data frame that has a higher resolution than the summary you have requested")
+    return("NA")
+  }
   
 }

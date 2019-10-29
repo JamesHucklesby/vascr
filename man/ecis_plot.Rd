@@ -46,7 +46,7 @@ searches apply.}
 A ggplot2 object
 }
 \description{
-ECIS plot
+The master function for generating ggplot2 objects from ECIS data. Incorporates all the summarising, testing and graphing operations into a single function.
 }
 \examples{
 ecis_plot(growth.df, 'Rb', replication = 'summary', 

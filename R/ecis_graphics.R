@@ -2,6 +2,8 @@
 
 
 #' ECIS plot
+#' 
+#' The master function for generating ggplot2 objects from ECIS data. Incorporates all the summarising, testing and graphing operations into a single function.
 #'
 #' @param data A standard ECIS data frame to plot
 #' @param unit Unit to plot
@@ -67,14 +69,14 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
     
     if (length(unique(data$Time))>1) { # Check if we are plotting a single, or multiple, time points
         
-        if (replication == "all") {
+        if (replication == "wells") {
               
               plot = ggplot2::ggplot(data = data, ggplot2::aes(x = Time, y = Value, group = interaction(Well,                       Experiment), colour = Sample, size = linesize)) + ggplot2::labs(title = title, x=xlab, y=ylab) + ggplot2::geom_line(size = linesize)
           
           return(plot)
         }
       
-        else if (replication == "experiment") {
+        else if (replication == "experiments") {
           toplot2.df = summarise(group_by(data, Sample, Time, Experiment), sd = sd(Value), 
                                  n = n(), Value = mean(Value))
           
@@ -113,7 +115,7 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
      # Then we deal with if a single time point has been requested
         
     } else {
-        if (replication == "all") {
+        if (replication == "wells") {
           
           filtered.df = data
           
@@ -129,7 +131,7 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
           return(plot)
         }
 
-      if (replication == "experiment")
+      if (replication == "experiments")
       {
       filtered2.df = summarise(group_by(data, Experiment, Sample), sd = sd(Value), n = n(), 
                                Value = mean(Value))
@@ -279,7 +281,7 @@ ecis_plot_spectra = function(data, variable, ...) {
 #'
 #' @examples
 #' 
-#' ecis_plot_model(growth.df, replication = "all")
+#' ecis_plot_model(growth.df, replication = "wells")
 #' 
 ecis_plot_model <- function(alldata.df, ...) {
     
@@ -378,7 +380,9 @@ ecis_isolate_well= function(data.df, well)
   toplot.df = rbind(badwell, medianwell)
   
   
-  ecis_plot(toplot.df, "R", 4000, "all", title = paste('Well',well))
+  plot = ecis_plot(toplot.df, "R", 4000, "wells", title = paste('Well',well))
+  
+  return (plot)
 }
 
 

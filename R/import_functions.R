@@ -339,6 +339,9 @@ ecis_import = function(resample, modeled, key) {
 #' @param experiments The experiment(s) to exclude
 #' @param times The time(s) to exclude
 #' @param values The value(s) to exclude
+#' @param vs The isolated variables-unit pairs to exclude
+#' @param vars The isolated variables to exclude
+#' @param vals The isolated values to exclude
 #'
 #' @return The altered dataset
 #' @export
@@ -362,7 +365,7 @@ ecis_import = function(resample, modeled, key) {
 #' 
 
 
-ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = FALSE, times = FALSE, values = FALSE)
+ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = FALSE, times = FALSE, values = FALSE, vars = FALSE, vals = FALSE, vs = FALSE)
 {
   
   for (sample in samples)
@@ -390,8 +393,38 @@ ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = F
     data.df = data.df %>% filter(Value != value)
   }
   
+  for (var in vars)
+  {
+    if('V1' %in% colnames(data.df)){data.df = data.df %>% filter(Var1 != var)}
+    if('V2' %in% colnames(data.df)){data.df = data.df %>% filter(Var2 != var)}
+    if('V3' %in% colnames(data.df)){data.df = data.df %>% filter(Var3 != var)}
+    if('V4' %in% colnames(data.df)){data.df = data.df %>% filter(Var4 != var)}
+    if('V5' %in% colnames(data.df)){data.df = data.df %>% filter(Var5 != var)}
+
+  }
+  
+  for (val in vals)
+  {
+    if('Val1' %in% colnames(data.df)){data.df = data.df %>% filter(Val1 != val)}
+    if('Val2' %in% colnames(data.df)){data.df = data.df %>% filter(Val2 != val)}
+    if('Val3' %in% colnames(data.df)){data.df = data.df %>% filter(Val3 != val)}
+    if('Val4' %in% colnames(data.df)){data.df = data.df %>% filter(Val4 != val)}
+    if('Val5' %in% colnames(data.df)){data.df = data.df %>% filter(Val5 != val)}
+
+  }
+  
+  for (v in vs)
+  {
+    if('V1' %in% colnames(data.df)){data.df = data.df %>% filter(V1 != v)}
+    if('V2' %in% colnames(data.df)){data.df = data.df %>% filter(V2 != v)}
+    if('V3' %in% colnames(data.df)){data.df = data.df %>% filter(V3 != v)}
+    if('V4' %in% colnames(data.df)){data.df = data.df %>% filter(V4 != v)}
+    if('V5' %in% colnames(data.df)){data.df = data.df %>% filter(V5 != v)}
+  }
+  
   return (data.df)
 }
+
 
 
 

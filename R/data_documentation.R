@@ -9,8 +9,10 @@ utils::globalVariables("Time")
 utils::globalVariables("Value")
 utils::globalVariables("Stream")
 
-utils::globalVariables(c("A","B","Label","Score","desc","geom_text","median","movementfrommean","position_stack","rn", "deviation", "expwells", "badremoved", "V1", "V2", "V3", "mapvalues"))
+utils::globalVariables(c("A","B","Label","Score","desc","geom_text","median","movementfrommean","position_stack","rn", "deviation", "expwells", "badremoved", "V1", "V2", "V3","V4", "V5", "mapvalues", "V1.1", "V2.1", "V3.1", "V4.1", "V5.1", "Var1"))
 
+utils::globalVariables(c("Var1", "Var2", "Var3", "Var4", "Var5"))
+utils::globalVariables(c("Val1", "Val2", "Val3", "Val4", "Val5"))
 
 
 #' Example data set from an ECIS growth experiment

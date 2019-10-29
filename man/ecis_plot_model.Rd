@@ -19,6 +19,6 @@ This is a pre-generated piece of code that automaticaly plots all the variables 
 }
 \examples{
 
-ecis_plot_model(growth.df, replication = "all")
+ecis_plot_model(growth.df, replication = "wells")
 
 }

@@ -5,7 +5,8 @@
 \title{Exclude erronious data from an ECIS dataframe}
 \usage{
 ecis_exclude(data.df, samples = FALSE, wells = FALSE,
-  experiments = FALSE, times = FALSE, values = FALSE)
+  experiments = FALSE, times = FALSE, values = FALSE, vars = FALSE,
+  vals = FALSE, vs = FALSE)
 }
 \arguments{
 \item{data.df}{The source dataset}
@@ -19,6 +20,12 @@ ecis_exclude(data.df, samples = FALSE, wells = FALSE,
 \item{times}{The time(s) to exclude}
 
 \item{values}{The value(s) to exclude}
+
+\item{vars}{The isolated variables to exclude}
+
+\item{vals}{The isolated values to exclude}
+
+\item{vs}{The isolated variables-unit pairs to exclude}
 }
 \value{
 The altered dataset

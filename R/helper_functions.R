@@ -184,6 +184,7 @@ return(string)
 #' @importFrom magrittr "%>%"
 #' @importFrom tidyr separate
 #' @importFrom plyr mapvalues
+#' @importFrom purrr map_lgl
 #' 
 #' @export
 #'
@@ -193,25 +194,44 @@ return(string)
 #' exploded = ecis_explode_continuous(data.df)
 ecis_explode_continuous = function(data.df, fields, selectformat = 1)
 {
+  # Explode out each factor, as delineated with a + 
+  
+   data.df = data.df %>% separate(Sample, c("V1", "V2", "V3", "V4", "V5"), sep = "[+]", remove = FALSE, fill = "right")
    
-   data.df = data.df %>% separate(Sample, c("V1", "V2", "V3"), sep = "[+]", remove = FALSE)
+   # Now we replace the values with the machine standardised versions. we use map_values as this is much, much faster than processing each of the strings individualy, as they are often repeated many thousand times
    
    uniquenames = unique(data.df$V1)
    correctuniquenames = ecis_generate_continuous(uniquenames)
-   data.df$V1 = mapvalues(data.df$V1, uniquenames, correctuniquenames)
+   data.df$V1.1 = mapvalues(data.df$V1, uniquenames, correctuniquenames)
    
    uniquenames = unique(data.df$V2)
    correctuniquenames = ecis_generate_continuous(uniquenames)
-   data.df$V2 = mapvalues(data.df$V2, uniquenames, correctuniquenames)
+   data.df$V2.1 = mapvalues(data.df$V2, uniquenames, correctuniquenames)
    
    uniquenames = unique(data.df$V3)
    correctuniquenames = ecis_generate_continuous(uniquenames)
-   data.df$V3 = mapvalues(data.df$V3, uniquenames, correctuniquenames)
+   data.df$V3.1 = mapvalues(data.df$V3, uniquenames, correctuniquenames)
+   
+   uniquenames = unique(data.df$V4)
+   correctuniquenames = ecis_generate_continuous(uniquenames)
+   data.df$V4.1 = mapvalues(data.df$V4, uniquenames, correctuniquenames)
+   
+   uniquenames = unique(data.df$V5)
+   correctuniquenames = ecis_generate_continuous(uniquenames)
+   data.df$V5.1 = mapvalues(data.df$V5, uniquenames, correctuniquenames)
   
    
-   data.df = data.df %>% separate(V1, into = c("Val1","Var1"), sep = ":")
-   data.df = data.df %>% separate(V2, into = c("Val2","Var2"), sep = ":")
-   data.df = data.df %>% separate(V3, into = c("Val3","Var3"), sep = ":")
+   # Then separate the machine readable columns into the relevant parts
+   
+   data.df = data.df %>% separate(V1.1, into = c("Val1","Var1"), sep = ":")
+   data.df = data.df %>% separate(V2.1, into = c("Val2","Var2"), sep = ":")
+   data.df = data.df %>% separate(V3.1, into = c("Val3","Var3"), sep = ":")
+   data.df = data.df %>% separate(V4.1, into = c("Val4","Var4"), sep = ":")
+   data.df = data.df %>% separate(V5.1, into = c("Val5","Var5"), sep = ":")
+   
+   # Then clean up anu un-used columns
+   emptyindex <- map_lgl(data.df, ~ all(is.na(.)))
+   data.df <- data.df[, !emptyindex]
    
    return (data.df)
 }

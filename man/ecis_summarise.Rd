@@ -4,10 +4,12 @@
 \alias{ecis_summarise}
 \title{Summarise ECIS datasets from a single experiment}
 \usage{
-ecis_summarise(data.df)
+ecis_summarise(data.df, level = "summary")
 }
 \arguments{
 \item{data.df}{An ECIS dataset in standard format}
+
+\item{level}{The level of replication to generate the summary at. Options are "experiment" or "summary"}
 }
 \value{
 An ECIS dataset supplimented with summary statistics
@@ -18,5 +20,8 @@ Creates and ECIS dataset that has had all samples of the same type averaged toge
 \examples{
 
 ecis_summarise(growth.df)
+ecis_summarise(growth.df, "experiment")
+ecis_summarise(growth.df, "replicate")
+
 
 }
