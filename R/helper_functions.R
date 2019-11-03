@@ -1,18 +1,3 @@
-#' Retitle
-#' 
-#' Recapitulation of the funciton in tidyR, allows the re-titling of a data frame from the top row of a dataset. Used in import funcitons to set titles from the content of ABP files. For internal use only.
-#'
-#' @param df A data frame containing the desired values in the top row
-#'
-#' @return A dataframe where the top row has been converted to titles.
-# 
-retitle = function(df) {
-    
-    names(df) = as.character(unlist(df[1, ]))
-    df = df[-1, ]
-    df
-}
-
 #' Standardise well names accross import types
 #' 
 #' Replaces A1 in strings with A01. Important for importing ABP files which may use either notation. Returns NA if the string could not be normalised, which can be configured to throw a warning in import code.
@@ -117,124 +102,35 @@ ecis_detect_normal = function(data.df)
 }
 
 
-#' Generate CSV separated continuous variables
+#' Remove all non-core ECIS data from a data frame
+#' 
+#' Usefull if you want to to further data manipluation, without having to worry about tracking multiple, unknown columns.
+#' 
+#' @param data.df 
+#' @param subset 
+#' 
+#' @importFrom stringr str_trim
 #'
-#' @param string The string to be converted to a continuous vector
-#'
-#' @return A CSV separated list of continuous variables
-#' 
-#' @importFrom stringr str_length
-#' 
-#' @export 
-#'
-#' @examples
-#' 
-#' ecis_generate_continuous("  30,000.01 cells ")
-#' 
-ecis_generate_continuous = function(string)
-{
-  
-  string2 = gsub(",", "", string)     #Remove commas from numbers
-  string3 = paste( "#", string2, "#") #Add protective filler so we can strip off end characters later
-  string3.5 = gsub("[^0-9.-]", "#", string3) # Replace everything non-numeric with #'s 
-  string4 = ecis_collapse_hash(string3.5) # Remove duplicate #'s
-  string5 = substr(string4, 2, str_length(string4)-1) # Remove the protective #'s we added earlier
-  string6 = gsub("#", ",", string5) # Switch out the # for a , to be standard
-  
-  title1 = string # Make a copy of the string
-  title1.5 = trimws(title1) # Trim off any leading or trailing white spaces. We can't just strip the lot as some will be in titles and we want to conserve these
-  title2 = gsub("[,+:_*-]","#",title1.5) # Hash out any deliniators that might be used
-  title2.5 = paste( "#", title2, "#", sep = "") # Add protective endplates
-  title4 = gsub("[0-9.]", "#", title2.5) # Hash out all numbers, as these are effectivley deliniators
-  title4.6 = gsub("# ", "#", title4) # Remove any spaces between hashes, as they delineate nothing
-  title4.6 = gsub("# ", "#", title4) # Repeat a few times for completeness
-  title4.6 = gsub("# ", "#", title4) # Finish the job hash space job
-  title4.7 = gsub(" #", "#", title4.6) # Finish the job hash space job
-  title4.7 = gsub(" #", "#", title4.7) # Finish the job hash space job
-  title4.7 = gsub(" #", "#", title4.7) # Finish the job hash space job
-  title5 = ecis_collapse_hash(title4.7) # Itterativley delete all the hashes
-  title6 = substr(title5, 2, str_length(title5)-1) # Remove the protective #'s we added earlier
-  title7 = gsub("#", ",", title6) # Switch out the # for a , to be standard
-  
-  return(paste(string6, title7, sep = ":"))
-}
-
-ecis_collapse_hash = function(string)
-{
-tempstring = "" # setup a placeholer to keep track of if the optimisation is still doing something
-
-while(!identical(tempstring,string)) # Itterate, removing all duplicate #'s
-{
-  tempstring = string
-  string = gsub("##", "#", string)
-}
-
-return(string)
-
-}
-
-#' Explode continuous variables in an ECIS dataframe
-#'
-#' @param data.df A standard ECIS dataframe
-#' @param fields The names of the fields that will be split from the name
-#' @param selectformat Force the software to use something other than the most common format
-#'
-#' @return A dataframe with the sample variables exploded
-#' 
-#' @importFrom magrittr "%>%"
-#' @importFrom tidyr separate
-#' @importFrom plyr mapvalues
-#' @importFrom purrr map_lgl
-#' 
+#' @return
 #' @export
 #'
 #' @examples
-#' data.df = growth.df
-#' data.df$Sample = paste(data.df$Sample, "+ 10nm nothing")
-#' exploded = ecis_explode_continuous(data.df)
-ecis_explode_continuous = function(data.df, fields, selectformat = 1)
+#' exploded.df = ecis_explode(growth.df)
+#` cleaned.df = ecis_remove_metadata(exploded.df)
+#` identical(growth.df,cleaned.df)
+ecis_remove_metadata = function(data.df, subset = "all")
 {
-  # Explode out each factor, as delineated with a + 
   
-   data.df = data.df %>% separate(Sample, c("V1", "V2", "V3", "V4", "V5"), sep = "[+]", remove = FALSE, fill = "right")
-   
-   # Now we replace the values with the machine standardised versions. we use map_values as this is much, much faster than processing each of the strings individualy, as they are often repeated many thousand times
-   
-   uniquenames = unique(data.df$V1)
-   correctuniquenames = ecis_generate_continuous(uniquenames)
-   data.df$V1.1 = mapvalues(data.df$V1, uniquenames, correctuniquenames)
-   
-   uniquenames = unique(data.df$V2)
-   correctuniquenames = ecis_generate_continuous(uniquenames)
-   data.df$V2.1 = mapvalues(data.df$V2, uniquenames, correctuniquenames)
-   
-   uniquenames = unique(data.df$V3)
-   correctuniquenames = ecis_generate_continuous(uniquenames)
-   data.df$V3.1 = mapvalues(data.df$V3, uniquenames, correctuniquenames)
-   
-   uniquenames = unique(data.df$V4)
-   correctuniquenames = ecis_generate_continuous(uniquenames)
-   data.df$V4.1 = mapvalues(data.df$V4, uniquenames, correctuniquenames)
-   
-   uniquenames = unique(data.df$V5)
-   correctuniquenames = ecis_generate_continuous(uniquenames)
-   data.df$V5.1 = mapvalues(data.df$V5, uniquenames, correctuniquenames)
+  summary_level = ecis_test_summary_level(data.df)
   
-   
-   # Then separate the machine readable columns into the relevant parts
-   
-   data.df = data.df %>% separate(V1.1, into = c("Val1","Var1"), sep = ":")
-   data.df = data.df %>% separate(V2.1, into = c("Val2","Var2"), sep = ":")
-   data.df = data.df %>% separate(V3.1, into = c("Val3","Var3"), sep = ":")
-   data.df = data.df %>% separate(V4.1, into = c("Val4","Var4"), sep = ":")
-   data.df = data.df %>% separate(V5.1, into = c("Val5","Var5"), sep = ":")
-   
-   # Then clean up anu un-used columns
-   emptyindex <- map_lgl(data.df, ~ all(is.na(.)))
-   data.df <- data.df[, !emptyindex]
-   
-   return (data.df)
+  if(summary_level == "summary" || summary_level == "experiment")
+  {
+    warning("You are removing some summary statistics. These are not re-generatable using ecis_explode alone, and must be regenerated with ecis_summarise.")
+  }
+  
+  removed.df = data.df %>% select(Time, Unit, Well, Value, Sample, Frequency, Experiment)
 }
+
 
 
 #' Generate human readable versions of the unit variable for graphing
@@ -302,5 +198,35 @@ ecis_fix_error = function (data.df, incorrect, correct, limit = "None")
   }
   
   return(data.df)
+}
+
+
+#' Find the mode of a categorical variable
+#'
+#' @param x vector to find mode of
+#'
+#' @return the most commonly occouring character 
+#' @export
+#'
+#' @examples
+#' categorical_mode(c("Cat", "Cat", "Monkey"))
+#' 
+categorical_mode = function(x){
+  
+  if(length(unique(x))==1)
+  {
+    return (unique(x)) 
+  }
+  
+  ta = table(x)
+  tam = max(ta)
+  if (all(ta == tam))
+    mod = NA
+  else
+    if(is.numeric(x))
+      mod = as.numeric(names(ta)[ta == tam])
+  else
+    mod = names(ta)[ta == tam]
+  return(mod)
 }
 

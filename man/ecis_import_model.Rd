@@ -4,12 +4,12 @@
 \alias{ecis_import_model}
 \title{Import raw modeled data}
 \usage{
-ecis_import_model(rawdata, samples)
+ecis_import_model(modeled.csv, sampledefine)
 }
 \arguments{
-\item{rawdata}{Raw modeled data in APB format}
+\item{modeled.csv}{Raw modeled data in APB format}
 
-\item{samples}{CSV file containing which wells correspond to which values}
+\item{sampledefine}{CSV file containing which wells correspond to which values}
 }
 \value{
 Data frame containing modeled data
@@ -24,12 +24,12 @@ Import raw modeled data
  #can use a path relative to the file you are working on. 
  #E.G 'Experiment1/Raw.abp'
 
-location_of_modeled_data = system.file('Model.csv', package = 'ecisr')
-location_of_sample_defintions = system.file('Samples.csv', package = 'ecisr')
+rawdata = system.file('Model.csv', package = 'ecisr')
+sampledefine = system.file('Samples.csv', package = 'ecisr')
 
 #Then run the import
 
-data = ecis_import_model(location_of_modeled_data, location_of_sample_defintions)
+data = ecis_import_model(rawdata, sampledefine)
 head(data)
 
 }

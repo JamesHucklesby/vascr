@@ -174,6 +174,8 @@ ecis_make_significance_table = function(data.df, time, unit, frequency, confiden
 #' ecis_summarise(growth.df, "replicate")
 #' 
 #' 
+#' exploded.df = ecis_explode(growth.df)
+#' 
 ecis_summarise <- function(data.df, level = "summary") {
   
   summary_level = ecis_test_summary_level(data.df)
@@ -190,7 +192,7 @@ ecis_summarise <- function(data.df, level = "summary") {
   {
   experiment.df = data.df %>%
     group_by(Time, Unit, Frequency, Sample, Experiment) %>%
-    summarise(sd = sd(Value), n = n(), Well = "Z00",Value = mean(Value))
+    summarise(sd = sd(Value), n = n(),sem = sd/sqrt(n), Well = "Z00",Value = mean(Value))
   }
   else if(summary_level == "experiment")
   {
@@ -203,17 +205,14 @@ ecis_summarise <- function(data.df, level = "summary") {
   {
     summary.df = experiment.df %>%
       group_by(Time, Unit, Frequency, Sample) %>%
-      summarise(mean = mean(Value), Experiment = "Summary")
-  }
-  else if(summary_level == "summary")
-  {
-    summary.df = data.df
+      summarise(sd = sd(Value), totaln = sum(n), n = n(), sem = sd/sqrt(n), Value = mean(Value), Experiment = "Summary")
   }
   else
   {
     warning ("Can't determine summary level, check data frame integrity")
     return ("NA")
   }
+
   
   if(level == "summary" && exists ("summary.df"))
   {

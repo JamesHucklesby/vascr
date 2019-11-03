@@ -24,4 +24,6 @@ ecis_summarise(growth.df, "experiment")
 ecis_summarise(growth.df, "replicate")
 
 
+exploded.df = ecis_explode(growth.df)
+
 }

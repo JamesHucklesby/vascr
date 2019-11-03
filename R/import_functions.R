@@ -1,5 +1,72 @@
 # Import Raw Data ---------------------------------------------------------
 
+
+#' Retitle
+#' 
+#' Recapitulation of the funciton in tidyR, allows the re-titling of a data frame from the top row of a dataset. Used in import funcitons to set titles from the content of ABP files. For internal use only.
+#'
+#' @param df A data frame containing the desired values in the top row
+#'
+#' @return A dataframe where the top row has been converted to titles.
+# 
+retitle = function(df) {
+  
+  names(df) = as.character(unlist(df[1, ]))
+  df = df[-1, ]
+  df
+}
+
+#' Internal function to assign sample names to a data frame
+#'
+#' @param data an ECIS data frame
+#' @param sampledefine  path to the file containing the sample definitions
+#'
+#' @return A standard ECIS data frame, annotated
+#' @export
+#'
+#' @examples
+#' # This function is baked into ecis_import and it's parts
+#' 
+ecis_assign_samples = function (data, sampledefine)
+{
+  # Read in the data table created by the user
+  names.df = read.csv(sampledefine, as.is = TRUE)
+  
+  # Standardise all wells
+  names.df$Well = ecis_standardise_wells(names.df$Well)
+  data$Well = ecis_standardise_wells(data$Well)
+  
+  #Take a copy of the original exploded dataset for later
+  names2.df = names.df
+  
+  
+  #Sanity check that the user has fed the right file
+  if(colnames(names.df)[1] != "Well")
+  {
+    warning("The first column is not entitled 'Well'. Please check this and try to import again")
+  }
+  
+  
+  # Copy down the col name into each cell, separated by _
+  for (col in colnames(names.df)[2:length(colnames(names.df))])
+  {
+    names.df[[col]] = paste(names.df[[col]],col, sep ="_")
+  }
+  
+  # Unite the columns with full names
+  names.df = names.df %>% unite(col = Sample,colnames(names.df)[2:length(colnames(names.df))], sep = " + ")
+  #Stick this onto the exploded dataset
+  names.df = left_join(names.df, names2.df, by = "Well")
+  #Stick the whole thing onto the data
+  combined.df = left_join(data, names.df, by = "Well")
+  
+  
+  # Return dataset
+  return(combined.df)
+}
+
+
+
 #' ECIS raw data importer
 #' 
 #' Raw data importer, generates a r dataframe from a raw ABP file
@@ -25,12 +92,12 @@
 #' #but you can use a path relative to the file you are working on. 
 #' #E.G 'Experiment1/Raw.abp'
 #' 
-#' location_of_resampled_data = system.file('Resample.abp', package = 'ecisr')
-#' location_of_sample_defintions = system.file('Samples.csv', package = 'ecisr')
+#' rawdata = system.file('Resample.abp', package = 'ecisr')
+#' sampledefine = system.file('Samples.csv', package = 'ecisr')
 #' 
 #' #Then run the import
 #' 
-#' data = ecis_import_raw(location_of_resampled_data, location_of_sample_defintions)
+#' data = ecis_import_raw(rawdata, sampledefine)
 #' head(data)
 #' 
 ecis_import_raw = function(rawdata, sampledefine) {
@@ -45,8 +112,7 @@ ecis_import_raw = function(rawdata, sampledefine) {
     titlestring = titles.df[1, 1]
     titles = unlist(strsplit(titlestring, split = ","))
     titles = base::trimws(titles)
-    
-    # Import the whole dataset
+  
     
     # Import the meaty part of the data and clean up the dat types
     fulldata.df = subset(file.df, str_detect(file.df$Data, "^T[0-9]"))
@@ -98,24 +164,12 @@ ecis_import_raw = function(rawdata, sampledefine) {
     fulldata_long.df = fulldata_long.df %>% tidyr::separate("Type", c("Unit", "Frequency"), 
         " ")
     
-    
-    # Read in sample names and merge them with the long dataset
-    names.df = read.csv(sampledefine, as.is = TRUE)
-    fulldata_long.df$Well = as.character(fulldata_long.df$Well)
-    names.df$Well = as.character(names.df$Well)
-    
-    fulldata_long.df$Well = ecis_standardise_wells(fulldata_long.df$Well)
-    names.df$Well = ecis_standardise_wells(names.df$Well)
-    
-    combined.df = left_join(fulldata_long.df, names.df, by = "Well")
-    
-    # Strip the ID variable as it no longer has any use
-    combined.df$ID = NULL
+    fulldata_long.df$ID = NULL
     
     ############################### Generate the other physical quantaties
     
     # Wrangle data so it is in columns
-    child1.df = combined.df
+    child1.df = fulldata_long.df
     child1.df$Value = abs(child1.df$Value)
     widedata.df = tidyr::spread(child1.df, Unit, Value)
     widedata.df$Frequency = as.numeric(widedata.df$Frequency)
@@ -126,7 +180,7 @@ ecis_import_raw = function(rawdata, sampledefine) {
     widedata.df$P = 90 - (atan(widedata.df$X/widedata.df$R)/(2 * pi) * 360)
     
     # Change format back
-    longdata.df = tidyr::gather(widedata.df, Unit, Value, -Well, -Time, -Frequency, -Sample)
+    longdata.df = tidyr::gather(widedata.df, Unit, Value, -Well, -Time, -Frequency)
     
     # Fix data types
     longdata.df$Unit = factor(longdata.df$Unit)
@@ -138,22 +192,22 @@ ecis_import_raw = function(rawdata, sampledefine) {
     # Add the file name as the experiment ID
     longdata.df$Experiment = rawdata
     
+    longdata.df$Well = ecis_standardise_wells(longdata.df$Well)
+    combined.df = ecis_assign_samples(longdata.df, sampledefine)
     
     # Explicitly return
-    return(longdata.df)
+    combined.df$well = NULL
+    return(combined.df)
 }
 
 
 # Import modeled data -----------------------------------------------------
 
-rawdata = "HCMVEC/ECIS_190218_MFT_1_TimeResample_RbA.csv"
-samples = "HCMVEC/by_treatment.csv"
-
 
 #' Import raw modeled data
 #'
-#' @param rawdata Raw modeled data in APB format
-#' @param samples CSV file containing which wells correspond to which values
+#' @param modeled.csv Raw modeled data in APB format
+#' @param sampledefine CSV file containing which wells correspond to which values
 #'
 #' @return Data frame containing modeled data
 #' @export
@@ -171,16 +225,18 @@ samples = "HCMVEC/by_treatment.csv"
 #'  #can use a path relative to the file you are working on. 
 #'  #E.G 'Experiment1/Raw.abp'
 #' 
-#' location_of_modeled_data = system.file('Model.csv', package = 'ecisr')
-#' location_of_sample_defintions = system.file('Samples.csv', package = 'ecisr')
+#' rawdata = system.file('Model.csv', package = 'ecisr')
+#' sampledefine = system.file('Samples.csv', package = 'ecisr')
 #' 
 #' #Then run the import
 #' 
-#' data = ecis_import_model(location_of_modeled_data, location_of_sample_defintions)
+#' data = ecis_import_model(rawdata, sampledefine)
 #' head(data)
 #' 
-ecis_import_model = function(rawdata, samples) {
+ecis_import_model = function(modeled.csv, sampledefine) {
     
+    rawdata = modeled.csv
+  
     file.df = read.delim(rawdata, as.is = TRUE, sep = "\n", strip.white = TRUE)
     base::colnames(file.df) = "Data"
     
@@ -211,7 +267,7 @@ ecis_import_model = function(rawdata, samples) {
     
     # Merge well ID and unit variables together
     
-    data.df = data.df %>% tidyr::separate("Data", uniquenamesvector, ",")
+    data.df = data.df %>% tidyr::separate("Data", uniquenamesvector, ",", extra = "drop")
     alldata.df = rbind(cells.df, data.df)
     
     
@@ -274,21 +330,14 @@ ecis_import_model = function(rawdata, samples) {
     combined.df$Well = factor(combined.df$Well)
     
     # import the naming tags
-    names.df = read.csv(samples)
-    names.df$Well = as.character(names.df$Well)
-    combined.df$Well = as.character(combined.df$Well)
+    combined2.df = ecis_assign_samples(combined.df, sampledefine)
     
-    names.df$Well = ecis_standardise_wells(names.df$Well)
-    combined.df$Well = ecis_standardise_wells(combined.df$Well)
+    combined2.df$Frequency = 0
     
-    combined.df = left_join(combined.df, names.df, by = "Well")
+    combined2.df$Experiment = rawdata
+    combined2.df$Time = as.numeric(combined2.df$Time)
     
-    combined.df$Frequency = 0
-    
-    combined.df$Experiment = rawdata
-    combined.df$Time = as.numeric(combined.df$Time)
-    
-    return(combined.df)
+    return(combined2.df)
 }
 
 
@@ -393,34 +442,6 @@ ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = F
     data.df = data.df %>% filter(Value != value)
   }
   
-  for (var in vars)
-  {
-    if('V1' %in% colnames(data.df)){data.df = data.df %>% filter(Var1 != var)}
-    if('V2' %in% colnames(data.df)){data.df = data.df %>% filter(Var2 != var)}
-    if('V3' %in% colnames(data.df)){data.df = data.df %>% filter(Var3 != var)}
-    if('V4' %in% colnames(data.df)){data.df = data.df %>% filter(Var4 != var)}
-    if('V5' %in% colnames(data.df)){data.df = data.df %>% filter(Var5 != var)}
-
-  }
-  
-  for (val in vals)
-  {
-    if('Val1' %in% colnames(data.df)){data.df = data.df %>% filter(Val1 != val)}
-    if('Val2' %in% colnames(data.df)){data.df = data.df %>% filter(Val2 != val)}
-    if('Val3' %in% colnames(data.df)){data.df = data.df %>% filter(Val3 != val)}
-    if('Val4' %in% colnames(data.df)){data.df = data.df %>% filter(Val4 != val)}
-    if('Val5' %in% colnames(data.df)){data.df = data.df %>% filter(Val5 != val)}
-
-  }
-  
-  for (v in vs)
-  {
-    if('V1' %in% colnames(data.df)){data.df = data.df %>% filter(V1 != v)}
-    if('V2' %in% colnames(data.df)){data.df = data.df %>% filter(V2 != v)}
-    if('V3' %in% colnames(data.df)){data.df = data.df %>% filter(V3 != v)}
-    if('V4' %in% colnames(data.df)){data.df = data.df %>% filter(V4 != v)}
-    if('V5' %in% colnames(data.df)){data.df = data.df %>% filter(V5 != v)}
-  }
   
   return (data.df)
 }

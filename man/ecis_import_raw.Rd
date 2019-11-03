@@ -24,12 +24,12 @@ Raw data importer, generates a r dataframe from a raw ABP file
 #but you can use a path relative to the file you are working on. 
 #E.G 'Experiment1/Raw.abp'
 
-location_of_resampled_data = system.file('Resample.abp', package = 'ecisr')
-location_of_sample_defintions = system.file('Samples.csv', package = 'ecisr')
+rawdata = system.file('Resample.abp', package = 'ecisr')
+sampledefine = system.file('Samples.csv', package = 'ecisr')
 
 #Then run the import
 
-data = ecis_import_raw(location_of_resampled_data, location_of_sample_defintions)
+data = ecis_import_raw(rawdata, sampledefine)
 head(data)
 
 }

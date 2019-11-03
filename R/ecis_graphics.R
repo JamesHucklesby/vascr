@@ -28,7 +28,7 @@
 #' 
 #' @importFrom stats sd
 #' @importFrom dplyr filter group_by summarise
-#' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text geom_text
+#' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text geom_text geom_ribbon
 #'
 #' @examples
 #' ecis_plot(growth.df, 'Rb', replication = 'summary', 
@@ -109,7 +109,7 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
         }
         else
         {
-          warning("Unrecognised level of replicaton selected. Please state either 'all', 'experiment' or 'summary'")
+          warning("Unrecognised level of replicaton selected. Please state either 'wells', 'experiments' or 'summary'")
         }
         
      # Then we deal with if a single time point has been requested

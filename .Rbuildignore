@@ -5,3 +5,4 @@
 ^\.Rprofile$
 ^\.git$
 ^draft_functions\.R$
+^excluded/

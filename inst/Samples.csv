@@ -1,25 +1,25 @@
-Well,Sample
-A1,"35,000 cells"
-A2,"35,000 cells"
-A3,"35,000 cells"
-B1,"30,000 cells"
-B2,"30,000 cells"
-B3,"30,000 cells"
-C1,"25,000 cells"
-C2,"25,000 cells"
-C3,"25,000 cells"
-D1,"20,000 cells"
-D2,"20,000 cells"
-D3,"20,000 cells"
-E1,"15,000 cells"
-E2,"15,000 cells"
-E3,"15,000 cells"
-F1,"10,000 cells"
-F2,"10,000 cells"
-F3,"10,000 cells"
-G1,"05,000 cells"
-G2,"05,000 cells"
-G3,"05,000 cells"
-H1,0 cells
-H2,0 cells
-H3,0 cells
+Well,cells,line
+A1,"35,000",ECV
+A2,"35,000",ECV
+A3,"35,000",ECV
+B1,"30,000",ECV
+B2,"30,000",ECV
+B3,"30,000",ECV
+C1,"25,000",ECV
+C2,"25,000",ECV
+C3,"25,000",ECV
+D1,"20,000",ECV
+D2,"20,000",ECV
+D3,"20,000",ECV
+E1,"15,000",ECV
+E2,"15,000",ECV
+E3,"15,000",ECV
+F1,"10,000",ECV
+F2,"10,000",ECV
+F3,"10,000",ECV
+G1,"5,000",ECV
+G2,"5,000",ECV
+G3,"5,000",ECV
+H1,0,ECV
+H2,0,ECV
+H3,0,ECV

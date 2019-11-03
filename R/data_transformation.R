@@ -271,6 +271,7 @@ ecis_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 #' samplecontains = "05,000", experiment = "2")
 #' head(data)
 #' 
+
 ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplecontains = "", experiment = "", well = ""){
   
   if (well != "")
@@ -329,7 +330,6 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, sampleco
   
   if (!(well == ""))
   {
-  well = ecis_standardise_wells(well)
   data.df = data.df %>% filter(Well == well)
   }
   
