@@ -30,11 +30,11 @@ Although the Applied Biophysics software produces graphs and is adequate for bas
 By contrast ECISR allows direct access to the data using R, and has statistical analyasis tools built in. The graphs ECISR generates are standard ggplot2 objects, meaning that you can modifiy them further in R. Alternativley, ECISR will allow you to output your data in a prism friendly format, allowing for graphing elsewhere without having to first run the data through excel. ECISR also contains tools to run ANOVA analyasis, and is able to select an appropriate statistical analyasis automatically by inspecting the dataset. R's bulit in statistical tools can also be employed, allowing for custom statistical analyasis as needed.
 
 ## Analyasis structure
-ECIS data visualisation is best conducted in 4 stages:
-* Import of raw data
-* Cleaning and removal of erronious data
-* Plotting and interpretation of results
-* Formal statistical testing
+ECIS data visualisation is best conducted in 4 stages:   
+* Import of raw data   
+* Cleaning and removal of erronious data   
+* Plotting and interpretation of results   
+* Formal statistical testing   
 
 We will follow these steps in this document, using a test dataset, growth.df. This dataset contains three independent ECIS experiments plotting the growth of HCMEC/D3 cells at various seeding densities.
 
@@ -60,7 +60,7 @@ Well  | cell number | cell line
 A1  | 5000 |HCMEC D3
 A2  | 10,000 |HCMEC D3
 
-Repeat this process for each of the replicate experiments. You shoudl end up with three files for each experiment, saved in a folder on your computer.
+Repeat this process for each of the replicate experiments. You should end up with three files for each experiment, saved in a folder on your computer.
 
 ### Create a new R project in RStudio, and install ECISR
 
@@ -71,16 +71,46 @@ For the purposes of this article, we will use RStudio for data analyasis. This i
 3. Select Existing Directory
 4. Select the directory containing the files you created in the previous step, then press "Create Project"
 
+### Import the files to ECISR
+
+We must first install and load in the ECISR package. This loads up all the tools we need to analyse our dataset.
+```{r eval = FALSE}
+# First we install devtools, which allows us to then install the package from GitHub. Then we use it to install ecisr
+#This code should be run once, when you start using the package
+if (!require(devtools)) install.packages('devtools')
+require(devtools)
+if (!require(ecisr))     devtools::install_github("JamesHucklesby/ECIS-R", auth_token == "b8b71100e6dfcb467c3777abacafbccd0dbfec94", ref = "master")
+```
 
 
+Firstly, we import the files individually before merging them into a single file. The combining function also checks that the data is in the correct format, and that the files are equivelent.
 
-ecis_import will then take all 3 of these files and combine them into a single R dataframe.
+```{r eval = FALSE}
+library(ecisr)
+
+# First we import all 3 datasets to R (commented out here to make package generation faster)
+growth1.df = ecis_import("growth1_raw.abp", "growth1_modeled.csv", "growth1_samples.csv")
+growth1resample = ecis_resample(growth1.df, 5, 0,200)
+
+growth2.df = ecis_import("growth2_raw.abp", "growth2_modeled.csv", "growth2_samples.csv")
+growth2resample = ecis_resample(growth2.df, 5, 0,200)
+
+growth3.df = ecis_import("growth3_raw.abp", "growth3_modeled.csv", "growth3_samples.csv")
+growth3resample = ecis_resample(growth3.df, 5, 0,200)
+
+
+ecis_plot(resampled)
+```
+```{r}
+head(ecisr::growth.df)
+```
+
 
 The two smaller functions ecis_import_raw (rawdata.abp, lookups) or ecis_import_modelled(modelled.csv, lookups) can be used if only the raw or moddeled data respectivley are required.
 
 ## Structure of an ECIS data frame
 
-An ECIS data frame has 8 variables
+An ECIS data frame has 8 core variables and the ability to have additional user-defined variables added
 
 Time - Time at which the reading was taken (in hours)  
 Well - Which well the reading was taken from  
@@ -90,21 +120,19 @@ Sample - The sample name. Multiple wells with the same sample name will be autom
 Frequency - The frequency at which the reading was taken. All modeled variables have a frequency of 0  
 Experiment - The file name from which the experiment was generated  
 
+other columns will also be added, based on what you stated in your csv when you imported the files
+
 ecis_import imports data files in this format. This format is required for other ecis funcitons in this package to work correctly.
 
-The first 10 rows from the growth.df example is shown below
+## Resample the data
+ECIS generates very large ammounts of data. Furthermore, different experiments are often sampled by the ECIS machine at slightly different intervals, making direct comparsons dificult. To fix this problem, we resample the data so that the time points within it are sensible.
 
-```{r}
-library(ecisr)
-head(growth.df, n=10)
+```{r eval = FALSE}
+growth2.df = ecis_resample(ecisr::growth.df, 1, from = 0, to = 200)
+ecis_plot(growth2.df)
+
 ```
 
-
-## Combine replicate datasets
-
-ECIS combine returns a data frame contianing both the datasets fed to it. 
-
-It will also check that the time points are resampled to the same frequency, if not it will give a warning, in which case the data frames should be resampled before this function is run again.
 
 ## ecis_plot (data.df, )
 

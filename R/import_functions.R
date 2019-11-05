@@ -97,13 +97,14 @@ ecis_assign_samples = function (data, sampledefine)
 #' 
 #' #Then run the import
 #' 
-#' data = ecis_import_raw(rawdata, sampledefine)
+#' data2 = ecis_import_raw(rawdata, sampledefine, .1, 1, 1.4, 0)
 #' head(data)
 #' 
-ecis_import_raw = function(rawdata, sampledefine) {
+ecis_import_raw = function(rawdata, sampledefine, by, from = Inf, to = Inf, zero_time = 0, verbose = TRUE, no_process = FALSE) {
     
     # Grab all the rows of the file and dump them into a data frame
-    
+    print("Importing raw data")  
+  
     file.df = read.delim(rawdata, as.is = TRUE, sep = "\n", strip.white = TRUE)
     colnames(file.df) = "Data"
     
@@ -153,6 +154,11 @@ ecis_import_raw = function(rawdata, sampledefine) {
     
     fulldata.df$ID = as.integer(fulldata.df$ID)
     
+    #Cut out un-needed data for performance reasons
+    fulldata.df$Time = as.numeric(fulldata.df$Time)
+    fulldata.df = subset(fulldata.df, Time>from)
+    fulldata.df = subset(fulldata.df, Time<to)
+    
     # Correlate the generated cell lookup table to ECIS's internal well id's
     fulldata.df = left_join(fulldata.df, id_to_well.df, by = "ID")
     
@@ -167,6 +173,7 @@ ecis_import_raw = function(rawdata, sampledefine) {
     fulldata_long.df$ID = NULL
     
     ############################### Generate the other physical quantaties
+    print("Generating physical quantaties from ABP data")
     
     # Wrangle data so it is in columns
     child1.df = fulldata_long.df
@@ -195,8 +202,12 @@ ecis_import_raw = function(rawdata, sampledefine) {
     longdata.df$Well = ecis_standardise_wells(longdata.df$Well)
     combined.df = ecis_assign_samples(longdata.df, sampledefine)
     
+    # Resample the data
+    print("resampling raw data")
+    combined.df = ecis_resample(combined.df, by = by, from = from, to = to, zero_time = zero_time)
+    
+    
     # Explicitly return
-    combined.df$well = NULL
     return(combined.df)
 }
 
@@ -225,16 +236,17 @@ ecis_import_raw = function(rawdata, sampledefine) {
 #'  #can use a path relative to the file you are working on. 
 #'  #E.G 'Experiment1/Raw.abp'
 #' 
-#' rawdata = system.file('Model.csv', package = 'ecisr')
+#' modeled.csv = system.file('Model.csv', package = 'ecisr')
 #' sampledefine = system.file('Samples.csv', package = 'ecisr')
 #' 
 #' #Then run the import
 #' 
-#' data = ecis_import_model(rawdata, sampledefine)
+#' data = ecis_import_model(modeled.csv, sampledefine, 0.1, 0.1, 0.9)
 #' head(data)
 #' 
-ecis_import_model = function(modeled.csv, sampledefine) {
+ecis_import_model = function(modeled.csv, sampledefine, by, from = Inf, to = Inf, zero_time = 0, verbose = TRUE) {
     
+    print("Importing modelled data")
     rawdata = modeled.csv
   
     file.df = read.delim(rawdata, as.is = TRUE, sep = "\n", strip.white = TRUE)
@@ -270,6 +282,10 @@ ecis_import_model = function(modeled.csv, sampledefine) {
     data.df = data.df %>% tidyr::separate("Data", uniquenamesvector, ",", extra = "drop")
     alldata.df = rbind(cells.df, data.df)
     
+    # Remove unneeded data
+    data.df$Time = as.numeric(data.df$Time)
+    data2.df = subset(data.df, Time>from)
+    data2.df = subset(data.df, Time<to)
     
     # Save the timestamps and rename the first one something sensible
     timestamps.df = alldata.df$`Time (hrs)_Well ID`
@@ -337,6 +353,9 @@ ecis_import_model = function(modeled.csv, sampledefine) {
     combined2.df$Experiment = rawdata
     combined2.df$Time = as.numeric(combined2.df$Time)
     
+    print("Resampling modelled data")
+    combined2.df = ecis_resample(combined2.df, by, from, to, zero_time)
+    
     return(combined2.df)
 }
 
@@ -363,17 +382,20 @@ ecis_import_model = function(modeled.csv, sampledefine) {
 #' 
 #' #Then run the import
 #' 
-#' data = ecis_import(location_of_resampled_data,location_of_modeled_data, 
-#' location_of_sample_defintions)
+#' data = ecis_import(location_of_resampled_data,location_of_modeled_data,location_of_sample_defintions, 5, 0, 200)
 #' head(data)
 #' 
-ecis_import = function(resample, modeled, key) {
+ecis_import = function(resample, modeled, key, by, from = Inf, to = Inf, zero_time = 0, verbose = TRUE, experiment = NULL) {
     
-    raw.df = ecis_import_raw(resample, key)
-    combined.df = ecis_import_model(modeled, key)
+    raw.df = ecis_import_raw(resample, key, by, from = from, to = to, zero_time = zero_time, verbose = verbose)
+    combined.df = ecis_import_model(modeled, key, by, from = from, to = to, zero_time = zero_time, verbose = verbose)
     
     masterdata.df = rbind(combined.df, raw.df)
-    rm(combined.df, raw.df)
+    
+    if(!is.null(experiment))
+    {
+      masterdata.df$Experiment = experiment
+    }
     
     return(masterdata.df)
     
@@ -490,8 +512,6 @@ ecis_combine = function(...) {
       {
         timepointstomerge = unique(i$Time)
       }
-     
-      print(timepointstomerge)
         
         if (!identical(timepointstomerge,unique(i$Time)))
       {

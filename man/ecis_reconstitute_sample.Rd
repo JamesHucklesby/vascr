@@ -24,6 +24,6 @@ ecis_reconstitute_sample("35,000 cells")
 ecis_test_explosion_integrity(growth.df)
 reconstituted = growth.df
 reconstituted$Sample = ecis_reconstitute_sample(reconstituted$Sample)
-ecis_test_explosion_integrity(reconstituted.df)
+ecis_test_explosion_integrity(reconstituted)
 
 }

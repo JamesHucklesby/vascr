@@ -17,21 +17,27 @@
 #' @param unit Unit to be analysed.
 #' @param frequency Frequency to be used. All modeled units have a frequency of 0.
 #' @param time  Time to be used.
-#' @param posthoc Post hoc test to use. Options include Tukey. More to be added in the future.
 #'
 #' @return ANOVA results printed to the console.
 #' 
 #' @importFrom graphics hist
-#' @importFrom stats lm anova aov TukeyHSD
+#' @importFrom stats lm anova aov TukeyHSD residuals shapiro.test
 #' @importFrom s20x normcheck 
+#' @importFrom ggpubr ggqqplot
+#' @importFrom ggplot2 geom_density geom_rug position_jitter geom_histogram geom_vline geom_boxplot stat_smooth geom_hline ggtitle xlab ylab
+#' @importFrom car leveneTest
+#' 
+#' @importFrom cowplot plot_grid
+#' @importFrom gridExtra arrangeGrob
+#' 
 #' 
 #' 
 #' @export
 #'
 #' @examples
-#' ecis_ANOVA(growth.df, 'Rb',0,75)
+#' ecis_ANOVA(growth.df, 'R',4000,50)
 #' 
-ecis_ANOVA = function(data.df, unit, frequency, time, posthoc = "bonferoni") {
+ecis_ANOVA = function(data.df, unit, frequency, time) {
     
     # Round the number given to the function to the nearest actual measurement
     timetouse = ecis_find_time(data.df, time)
@@ -40,22 +46,108 @@ ecis_ANOVA = function(data.df, unit, frequency, time, posthoc = "bonferoni") {
     #FUTURE: Impliment this off the back of ecis_subset
     
     filtered.df = data.df
-    filtered.df = subset(filtered.df, Time == timetouse)
     filtered.df = subset(filtered.df, Unit == unit)
     filtered.df = subset(filtered.df, Frequency == frequency)
     
+    timeplot = ecis_plot(data.df, unit = unit, frequency = frequency, title = "Time Selected")
+    timeplot = timeplot + geom_vline(xintercept = timetouse, color = "blue")
+    timeplot = timeplot + labs(title = "Timepoint selected")
+    
+    # Not we get rid of all the data points we don't need, leaving only the one key     one
+    filtered.df = subset(filtered.df, Time == timetouse)
+    
+    exploded = ecis_explode(filtered.df)
+    imploded = ecis_implode(exploded, stripidentical = TRUE)
+    
+    overallplot <- ggplot(imploded, aes(x=Sample, y=Value, color = Experiment)) + 
+      geom_boxplot() + labs(title = "Replicate data")
+  
+    
     # Run a basic ANOVA, normcheck and Tukey's HSD
     dat = filtered.df
-    hist(dat$Value)
     fit <- lm(Value ~ Experiment + Sample, data = dat)
-    s20x::normcheck(fit, s = TRUE)
+    
+    aov_residuals <- residuals(object = fit)
+    
+    qqplot = ggqqplot(aov_residuals)
+    shapirotest = shapiro.test(aov_residuals)
+    shapirow = round(shapirotest$statistic[[1]],3)
+    shapirop = round(shapirotest$p,3)
+    
+    if(shapirop>0.05)
+    {
+      passes = "Pass"
+    }else
+    {
+      passes = "Fail"
+    }
+    
+    qqplot = qqplot + labs(title = "Normality test",
+                           subtitle = paste("Shapiro-Wilk, W=", shapirow, ", P=", shapirop, ",", passes))
+    
+    levenetest = leveneTest(Value ~ Experiment*Sample, data = dat)
+    
+    f = round(levenetest$`F value`[1],3)
+    p = round(levenetest$`Pr(>F)`[1],3)
+    
+    if(p>0.05)
+    {
+      pass = "Pass"
+    }else
+    {
+      pass = "Fail"
+    }
+  
+    
+    filtered.df$residuals <- residuals(fit)
+    filteredplot.df = filtered.df
+    filteredplot.df$Value = filtered.df$residuals
+    
+    normaloverlayplot = ggplot2::ggplot(filteredplot.df, aes(x = Value)) + 
+      ggplot2::geom_histogram(aes(y =..density..),
+                              colour = "black",
+                              bins = 10,
+                              fill = "white") +
+      ggplot2::stat_function(fun = dnorm, args = list(mean = mean(filteredplot.df$Value), sd = sd(filteredplot.df$Value))) + labs(title = "Normality of residuals check", subtitle = "Normal curve and histogram should align")
+    
+    qqplot = ecis_polish_plot(qqplot)
+    normaloverlayplot = ecis_polish_plot(normaloverlayplot)
+    
+    p1<-ggplot(fit, aes(.fitted, .resid))+geom_point()
+    p1<-p1+stat_smooth(method="loess")+geom_hline(yintercept=0, col="red", linetype="dashed")
+    p1<-p1+xlab("Fitted values")+ylab("Residuals")
+    p1<-p1+ggtitle("Residual vs Fitted Plot")+theme_bw()
+    p1 = p1 + labs(title = "Homogeneity of Variances test",
+           subtitle = paste("Levene's Test, F=", f, ", P=", f, ",", pass))
+    
+    overallplot = ecis_polish_plot(overallplot)
+    p = ecis_polish_plot(p)
+    timeplot = ecis_polish_plot(timeplot)
+    p1 = ecis_polish_plot(p1)
+    
+    differences = ecis_plot(data.df, unit = unit, frequency = frequency, time = time, replication = "summary", confidence = 0.949999)
+    
+    ##normcheck = grid.arrange(qqplot, normaloverlayplot, ncol = 2)
+    
+    ##checks = grid.arrange(overallplot,timeplot,qqplot, normaloverlayplot, p1, ecis_polish_plot(differences), ncol = 2)
+    
+    ##overall = grid.arrange(checks, differences)
+    
+   grid =  plot_grid(arrangeGrob(timeplot, overallplot, ncol = 2),
+             arrangeGrob(qqplot, normaloverlayplot, p1, ncol = 3),
+              arrangeGrob(differences, nrow = 1),
+              nrow = 3, rel_heights = c(1/4, 1/4, 1/2)) 
+    
+    
     print(anova(fit))
     fit <- aov(Value ~ Experiment + Sample, data = dat)
     print ("");
     print ("");
     print(TukeyHSD(fit))
     
-    
+    return(grid)
+    #multiplot = grid_arrange_shared_legend(plot, plot2)
+    #return(multiplot)
 }
 
 #' Make a dataframe of what is statistically significant
@@ -229,3 +321,8 @@ ecis_summarise <- function(data.df, level = "summary") {
   }
   
 }
+
+
+#ecis_plot_normal(ecis_subset(growth, unit = "R", time = 50))
+#ecis_ANOVA(growth, unit = "R", time = 50, frequency = 4000)
+

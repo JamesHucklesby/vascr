@@ -4,7 +4,8 @@
 \alias{ecis_import}
 \title{Import all ECIS values, a child of ecis_import_raw and ecis_import_model}
 \usage{
-ecis_import(resample, modeled, key)
+ecis_import(resample, modeled, key, by, from = Inf, to = Inf,
+  zero_time = 0, verbose = TRUE, experiment = NULL)
 }
 \arguments{
 \item{resample}{A resampled APB file for import}
@@ -27,8 +28,7 @@ location_of_sample_defintions = system.file('Samples.csv', package = 'ecisr')
 
 #Then run the import
 
-data = ecis_import(location_of_resampled_data,location_of_modeled_data, 
-location_of_sample_defintions)
+data = ecis_import(location_of_resampled_data,location_of_modeled_data,location_of_sample_defintions, 5, 0, 200)
 head(data)
 
 }

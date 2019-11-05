@@ -4,7 +4,8 @@
 \alias{ecis_import_raw}
 \title{ECIS raw data importer}
 \usage{
-ecis_import_raw(rawdata, sampledefine)
+ecis_import_raw(rawdata, sampledefine, by, from = Inf, to = Inf,
+  zero_time = 0, verbose = TRUE, no_process = FALSE)
 }
 \arguments{
 \item{rawdata}{A resampled ABP file containing the un-modeled data}
@@ -29,7 +30,7 @@ sampledefine = system.file('Samples.csv', package = 'ecisr')
 
 #Then run the import
 
-data = ecis_import_raw(rawdata, sampledefine)
+data2 = ecis_import_raw(rawdata, sampledefine, .1, 1, 1.4, 0)
 head(data)
 
 }

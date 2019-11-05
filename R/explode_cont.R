@@ -50,9 +50,11 @@ ecis_explode = function(data)
 
 #' Test that the datset is correctly formatted for explosion
 #'
-#' @param data 
+#' @param data An ECIS data frame
+#' 
+#' @importFrom stringr str_count
 #'
-#' @return
+#' @return A boolean value
 #' @export
 #'
 #' @examples
@@ -61,7 +63,7 @@ ecis_explode = function(data)
 #' data.df$Sample = paste(data.df$Sample, "+ 10_nm nothing important")
 #' data.df$Sample = paste(data.df$Sample, "+ 4_nm Carpet + ECV_line")
 #' 
-#' ecis_test_explosion_integrity(data.df)
+#' ecis_test_explosion_integrity(growth.df)
 #' 
 ecis_test_explosion_integrity = function(data)
 {
@@ -74,4 +76,25 @@ ecis_test_explosion_integrity = function(data)
   return(allsamplescomplete && allsamplesidentical)
   
 }
+
+
+#' Test if an ECIS data frame is exploded
+#'
+#' @param data the data frame to test
+#'
+#' @return True (exploded) or false (not exploded)
+#' @export
+#'
+#' @examples
+#' ecis_test_exploded(growth.df)
+#' imploded = ecis_implode(growth.df)
+#' ecis_test_exploded(imploded)
+#' 
+ecis_test_exploded = function(data)
+{
+  minidata = data[1,]
+  minidataexploded = ecis_explode(minidata)
+  return(identical(minidata, minidataexploded))
+}
+
 

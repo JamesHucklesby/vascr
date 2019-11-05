@@ -7,7 +7,10 @@
 ecis_test_explosion_integrity(data)
 }
 \arguments{
-\item{data}{}
+\item{data}{An ECIS data frame}
+}
+\value{
+A boolean value
 }
 \description{
 Test that the datset is correctly formatted for explosion
@@ -18,6 +21,6 @@ data.df$Sample = str_replace(data.df$Sample, " ", "_")
 data.df$Sample = paste(data.df$Sample, "+ 10_nm nothing important")
 data.df$Sample = paste(data.df$Sample, "+ 4_nm Carpet + ECV_line")
 
-ecis_test_explosion_integrity(data.df)
+ecis_test_explosion_integrity(growth.df)
 
 }

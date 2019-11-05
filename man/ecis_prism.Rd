@@ -4,7 +4,8 @@
 \alias{ecis_prism}
 \title{Export a prism-compatable data set}
 \usage{
-ecis_prism(data.df, unit, frequency = 0)
+ecis_prism(data.df, unit, frequency = 0, replication = "summary",
+  experiment = "")
 }
 \arguments{
 \item{data.df}{ECIS dataframe}
@@ -17,9 +18,10 @@ ecis_prism(data.df, unit, frequency = 0)
 A data frame that can be copied and pasted into prism
 }
 \description{
-Export a prism-compatable data set
+This function will automatically average the wells in each experiment, to give a prism-compatable dataset at the experiment level. This allows prism to generate appropriate error bars.
 }
 \examples{
-ecis_prism(growth.df, 'Rb')
+ecis_prism(growth.df, 'Rb', replication = "summary")
+prism = ecis_prism(growth.df, 'Rb', replication = "wells")
 
 }

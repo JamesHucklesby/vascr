@@ -4,7 +4,8 @@
 \alias{ecis_import_model}
 \title{Import raw modeled data}
 \usage{
-ecis_import_model(modeled.csv, sampledefine)
+ecis_import_model(modeled.csv, sampledefine, by, from = Inf, to = Inf,
+  zero_time = 0, verbose = TRUE)
 }
 \arguments{
 \item{modeled.csv}{Raw modeled data in APB format}
@@ -24,12 +25,12 @@ Import raw modeled data
  #can use a path relative to the file you are working on. 
  #E.G 'Experiment1/Raw.abp'
 
-rawdata = system.file('Model.csv', package = 'ecisr')
+modeled.csv = system.file('Model.csv', package = 'ecisr')
 sampledefine = system.file('Samples.csv', package = 'ecisr')
 
 #Then run the import
 
-data = ecis_import_model(rawdata, sampledefine)
+data = ecis_import_model(modeled.csv, sampledefine, 0.1, 0.1, 0.9)
 head(data)
 
 }

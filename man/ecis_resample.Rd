@@ -4,7 +4,7 @@
 \alias{ecis_resample}
 \title{Resample ECIS data onto a constant time base}
 \usage{
-ecis_resample(data.df, by, from = -Inf, to = Inf, zero_time = 0)
+ecis_resample(data.df, by, from = Inf, to = Inf, zero_time = 0)
 }
 \arguments{
 \item{data.df}{A standard ECIS data frame}
@@ -25,7 +25,8 @@ This will currently over-sample data, use with care
 }
 \examples{
 
-data = ecis_resample(growth.df, 100, 50 ,100, 50)
+data = ecis_resample(ecisr::growth.df, 10, 50 ,100, 50)
 head (data)
+data = ecis_resample(growth1.df, 5, 50 ,100, 0)
 
 }

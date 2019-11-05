@@ -106,12 +106,12 @@ ecis_detect_normal = function(data.df)
 #' 
 #' Usefull if you want to to further data manipluation, without having to worry about tracking multiple, unknown columns.
 #' 
-#' @param data.df 
-#' @param subset 
+#' @param data.df An ECIS dataset
+#' @param subset What to strip off. Default is all, more options to come.
 #' 
 #' @importFrom stringr str_trim
 #'
-#' @return
+#' @return A dataset containing only the core ECIS columns
 #' @export
 #'
 #' @examples
@@ -129,6 +129,8 @@ ecis_remove_metadata = function(data.df, subset = "all")
   }
   
   removed.df = data.df %>% select(Time, Unit, Well, Value, Sample, Frequency, Experiment)
+  
+  return(removed.df)
 }
 
 

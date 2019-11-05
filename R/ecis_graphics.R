@@ -8,7 +8,7 @@
 #' @param data A standard ECIS data frame to plot
 #' @param unit Unit to plot
 #' @param frequency The frequency of data to display. All modelled variables have a frequency of 0
-#' @param replication How much of the replicaiton to display. Options are 'all', 'experiment', 'summary'.
+#' @param replication How much of the replicaiton to display. Options are 'all', 'experiment', 'summary" or "plate"
 #' @param time The time to subset if a slice is required. If set to Inf all data will be displayed
 #' @param samplecontains Optional, only samples that contain this string will be plotted. Standard search and wildcard
 #' @param experiment Optional, allows you to limit the experiment plotted. Experiment names should be separated with |
@@ -21,6 +21,8 @@
 #' @param xlab X axis value
 #' @param ylab Y axis value
 #' @param title The title of the ggplot
+#' @param stripidentical Remove cols from the data where all data points are identical. Default is true.
+#' @param cols The columns of data to display in the names of plots. Allows for shortening of names where the automatic stripidentical fails.
 #'
 #' @return A ggplot2 object
 #' 
@@ -28,12 +30,12 @@
 #' 
 #' @importFrom stats sd
 #' @importFrom dplyr filter group_by summarise
-#' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text geom_text geom_ribbon
+#' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text geom_text geom_ribbon geom_point
 #'
 #' @examples
 #' ecis_plot(growth.df, 'Rb', replication = 'summary', 
 #' error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-#' ecis_plot(growth.df, 'Rb', replication = 'all',
+#' ecis_plot(growth.df, 'Rb', replication = 'wells',
 #'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
 #'  ecis_plot(growth.df, 'Rb', replication = 'experiment',
 #'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
@@ -41,29 +43,73 @@
 #' ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
 #' ecis_plot(growth.df, "R", "4000", "summary", 50, confidence = 0.1)
 #'
+#'ecis_plot(growth.df)
+#'
+#'ecis_plot(growth.df, continuous = "cells", replication = "summary", time = 50)
 
 
-ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = 1, linesize = 1, errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title") {
+ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = TRUE, preprocessed = FALSE, continuous = NULL, alignkey = NULL) 
+  {
   
+  # Start by aligning key points or normalising (need the whole dataset)
+  if(!is.null(alignkey))
+  {
+    data = ecis_align_key(data, alignkey)
+  }
+  
+  if(!is.null(normtime))
+  {
+    data = ecis_normalise(data, normtime, divide)
+  }
+  
+  
+  # First we delete what we don't need for performance reasons
+  
+    data = ecis_subset(data, unit = unit, frequency = frequency, time = time, samplecontains = samplecontains, experiment = experiment)
+  
+  #ToDo add a check here
+    
+  if (!preprocessed)
+  {
+  data = ecis_explode(data)
+  data = ecis_implode(data, stripidentical = stripidentical)
+  data = ecis_explode(data)
+  }
+  
+  if (error>1 && error<Inf)
+  {
+    data = ecis_subsample(data, error)
+  }
+  
+  # Keep a copy of the full dataset for later if need be
   rawdata = data
   
   # If possible, adjust non-specific unit
   if (ylab == "Value")
   {
     ylab = ecis_titles(unit)
-    print ("Title updated")
-  }
-  else
-  {
-    print ("Title ignored")
   }
   
-  if (error>1)
+  if (title == "Title")
   {
-    data = ecis_subsample(data, error)
+    title = unit
   }
+  
+  if(!is.null(continuous))
+  {
+    plot = ecis_plot_continuous(data = data, unit = unit, frequency = frequency, replication = replication, time = time, error = error,alphavalue  = alphavalue, xlab = xlab, ylab = ylab, title = title, cols = cols, continuous = continuous)
     
-  data = ecis_subset(data, unit = unit, frequency = frequency, time = time, samplecontains = samplecontains, experiment = experiment)
+    return(ecis_polish_plot(plot))
+  }
+  
+  
+  if(replication == "plate")
+  {
+    return(ecis_polish_plot(ecis_plot_plate(data, unit, frequency, verbose)))
+  }
+  
+  # Then replace underscores back with spaces
+  data$Sample = str_replace(data$Sample, "_", " ")
     
   # First we deal with if the graph requested is a line graph
     
@@ -73,7 +119,7 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
               
               plot = ggplot2::ggplot(data = data, ggplot2::aes(x = Time, y = Value, group = interaction(Well,                       Experiment), colour = Sample, size = linesize)) + ggplot2::labs(title = title, x=xlab, y=ylab) + ggplot2::geom_line(size = linesize)
           
-          return(plot)
+          return(ecis_polish_plot(plot))
         }
       
         else if (replication == "experiments") {
@@ -82,12 +128,17 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
           
           plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample, linetype =   Experiment)) + labs(title = title, x=xlab, y=ylab) + ggplot2::geom_line(size = linesize)
           
-          if (error == 1)
+          if (error == Inf)
           {
             plot = plot + ggplot2::geom_ribbon(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n), fill = Sample), alpha = alphavalue)  
           }
           
-          return(plot)
+          if (error>0 && error < Inf)
+          {
+            plot = plot + ggplot2::geom_errorbar(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n)))  
+          }
+          
+          return(ecis_polish_plot(plot))
           
         }
         else if (replication == "summary") {
@@ -99,12 +150,17 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
           
           plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample)) + labs(title = title, x=xlab, y=ylab) + ggplot2::geom_line(size = linesize)
           
-          if (error >0)
+          if (error == Inf)
           {
           plot = plot + ggplot2::geom_ribbon(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n), fill = Sample), alpha = alphavalue) 
           }
           
-          return(plot)
+          if (0< error && error < Inf)
+          {
+            plot = plot + ggplot2::geom_errorbar(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n))) 
+          }
+          
+          return(ecis_polish_plot(plot))(plot)
           
         }
         else
@@ -122,13 +178,14 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
           filtered.df$Sample = paste(filtered.df$Sample, filtered.df$Well)
           
 
-          plot = ggplot(filtered.df, aes(x = Sample, y = Value, fill = Experiment)) 
-          if(error == 1)
+          plot = ggplot(filtered.df, aes(x = Sample, y = Value, fill = Experiment))+
+            ggplot2::labs(title = title, x=xlab, y=ylab) 
+          if(error == Inf)
           {
           plot = plot + geom_bar(stat = "identity",  position = position_dodge()) + theme(axis.text.x = element_text(angle = 90))
           }
             
-          return(plot)
+          return(ecis_polish_plot(plot))(plot)
         }
 
       if (replication == "experiments")
@@ -136,15 +193,14 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
       filtered2.df = summarise(group_by(data, Experiment, Sample), sd = sd(Value), n = n(), 
                                Value = mean(Value))
       
-      plot = ggplot(filtered2.df, aes(x = Sample, y = Value, fill = Experiment)) + geom_bar(stat = "identity", 
-                                                                                     position = position_dodge()) 
+      plot = ggplot(filtered2.df, aes(x = Sample, y = Value, fill = Experiment)) + geom_bar(stat = "identity", position = position_dodge()) + ggplot2::labs(title = title, x=xlab, y=ylab)
       
-      if(error == 1)
+      if(error == Inf)
       {
       plot = plot + geom_errorbar(aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.2, position = position_dodge(0.9))
       }
       
-      return (plot)
+      return(ecis_polish_plot(plot)) (plot)
         }
         if (replication == "summary") {
           
@@ -160,21 +216,21 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
             labeltable = ecis_make_significance_table(data, time, unit, frequency, confidence, format = "toplot")
             filtered2.df = left_join(filtered2.df, labeltable, by = "Sample")
             plot = ggplot(filtered2.df, aes(x = Sample, y = Value, label = Label)) + geom_bar(stat = "identity") +
-           geom_text(aes(label=Label),position=position_stack(0.5))
+           geom_text(aes(label=Label),position=position_stack(0.8)) + ggplot2::labs(title = title, x=xlab, y=ylab)
           }
           
           else
           {
           # Then graph the output
-          plot = ggplot(filtered2.df, aes(x = Sample, y = Value)) + geom_bar(stat = "identity") 
+          plot = ggplot(filtered2.df, aes(x = Sample, y = Value)) + geom_bar(stat = "identity") + ggplot2::labs(title = title, x=xlab, y=ylab)
           }
           
-          if(error == 1)
+          if(error == Inf)
           {
           plot = plot + geom_errorbar(aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.2)
           }
           
-          return (plot)
+          return(ecis_polish_plot(plot))
         }
     }
 }
@@ -255,15 +311,15 @@ ecis_plot_spectra = function(data, variable, ...) {
       warning("Frequencies do not match the standard set and therefore some graphs may not be shown")
     }
     
-    p1 = ecis_plot(data, variable, 250, ...)
-    p2 = ecis_plot(data, variable, 500, ...)
-    p3 = ecis_plot(data, variable, 1000, ...)
-    p4 = ecis_plot(data, variable, 2000, ...)
-    p5 = ecis_plot(data, variable, 4000, ...)
-    p6 = ecis_plot(data, variable, 8000, ...)
-    p7 = ecis_plot(data, variable, 16000, ...)
-    p8 = ecis_plot(data, variable, 32000, ...)
-    p9 = ecis_plot(data, variable, 64000, ...)
+    p1 = ecis_plot(data, variable, 250, title = "250 Hz", ...)
+    p2 = ecis_plot(data, variable, 500,title = "500 Hz", ...)
+    p3 = ecis_plot(data, variable, 1000,title = "1,000 Hz", ...)
+    p4 = ecis_plot(data, variable, 2000,title = "2,000 Hz", ...)
+    p5 = ecis_plot(data, variable, 4000,title = "4,000 Hz", ...)
+    p6 = ecis_plot(data, variable, 8000,title = "8,000 Hz", ...)
+    p7 = ecis_plot(data, variable, 16000,title = "16,000 Hz", ...)
+    p8 = ecis_plot(data, variable, 32000,title = "32,000 Hz", ...)
+    p9 = ecis_plot(data, variable, 64000,title = "64,000 Hz", ...)
     
     return(grid_arrange_shared_legend(p1, p2, p3, p4, p5, p6, p7, p8, p9, ncol = 3, nrow = 3))
     
@@ -274,7 +330,7 @@ ecis_plot_spectra = function(data, variable, ...) {
 #' This is a pre-generated piece of code that automaticaly plots all the variables generated by the ECIS model against time. Resistance at 4000 Hz is also included as a sensible sanity check of the model. 
 #'
 #' @param alldata.df An ECIS data frame
-#' @param ... Any other arguements from ecis_plot that you might want passed through to generate the graphs
+#' @param ... Any other arguements from ecis_plot that you might want passed through to all of the graphs
 #'
 #' @return A matrix containing graphs of all the variables generated by the ECIS model.
 #' @export
@@ -285,21 +341,32 @@ ecis_plot_spectra = function(data, variable, ...) {
 #' 
 ecis_plot_model <- function(alldata.df, ...) {
     
-    m1 = ecis_plot(alldata.df, "R", 4000, ...)
-    m2 = ecis_plot(alldata.df, "Rb", 0, ...)
-    m3 = ecis_plot(alldata.df, "Cm", 0, ...)
-    m4 = ecis_plot(alldata.df, "Alpha", 0, ...)
-    m5 = ecis_plot(alldata.df, "RMSE", 0, ...)
-    m6 = ecis_plot(alldata.df, "Drift", 0, ...)
+    m1 = ecis_plot(alldata.df, "R", 4000, title = "R (4000 Hz)", ...)
+    m2 = ecis_plot(alldata.df, "Rb", title = "Rb", ...)
+    m3 = ecis_plot(alldata.df, "Cm", title = "Cm", ...)
+    m4 = ecis_plot(alldata.df, "Alpha",title = "Alpha", ...)
     
-    return(grid_arrange_shared_legend(m1, m2, m3, m4, m5, m6, ncol = 2, nrow = 3))
+    return(grid_arrange_shared_legend(m1, m2, m3, m4, ncol = 2, nrow = 2))
     
 }
 
 
-ecis_plot_dilution = function (data.df, unit, frequency, replication, time)
+#' Post-processing on ECIS plots to make them a bit more pretty
+#'
+#' @param plot The plot to format
+#'
+#' @importFrom ggplot2 theme_bw 
+#' @importFrom ggpubr rotate_x_text
+#'
+#' @return A standardised ggplot2 object
+#' @export
+#'
+#' @examples
+#' # Automatically applied to ggplot, should not be required externaly
+#' 
+ecis_polish_plot = function(plot)
 {
-  
+  return(plot + theme_bw() + rotate_x_text(angle = 45))
 }
 
 
@@ -350,6 +417,8 @@ ecis_animatefrequency = function(alldata.df, unittoplot, frames) {
 #'
 #' @param data.df The dataset the well is in
 #' @param well The well to be isolated
+#' @param title The title of the plot
+#' @param ... Other conditions to pass on to the ecis_plot command that generates the graph
 #' 
 #' @importFrom magrittr "%>%"
 #' @importFrom dplyr group_by mutate ungroup
@@ -360,17 +429,22 @@ ecis_animatefrequency = function(alldata.df, unittoplot, frames) {
 #'
 #' @examples
 #' 
-#' ecis_isolate_well(growth.df, "A3")
+#' ecis_plot_isolate(growth.df, well = "A3")
 #' 
-ecis_isolate_well= function(data.df, well)
+ecis_plot_isolate= function(data.df, well, title = "Well isolation plot", unit = "R", frequency = 4000, ...)
 {
+  
+  if(title=="Title")
+  {
+    title = "Well Isolation Plot"
+  }
   
   well = ecis_standardise_wells(well)
   data.df$Well = ecis_standardise_wells(data.df$Well)
-  cleandata.df = ecis_subset(data.df, unit = "R", frequency = 4000)
+  cleandata.df = ecis_subset(data.df, unit = unit, frequency = frequency)
   
   badwell = ecis_subset(cleandata.df, well = well)
-  badwell$Sample = paste(badwell$Experiment, badwell$Sample, badwell$Well)
+  badwell$Sample = paste(badwell$Well, badwell$Sample,badwell$Experiment)
   
   medianwell = cleandata.df %>%
     group_by(Time) %>%
@@ -379,8 +453,7 @@ ecis_isolate_well= function(data.df, well)
   
   toplot.df = rbind(badwell, medianwell)
   
-  
-  plot = ecis_plot(toplot.df, "R", 4000, "wells", title = paste('Well',well))
+  plot = ecis_plot(toplot.df, unit, frequency, "wells", title = title, preprocessed = TRUE, ...)
   
   return (plot)
 }
@@ -391,6 +464,7 @@ ecis_isolate_well= function(data.df, well)
 #' @param data.df A standard ECIS dataframe. Ideally this will contain only one experiment, but multiple experiments are supported.
 #' @param unit The unit to plot. Default is R
 #' @param frequency The frequency to plot. Default is 4000
+#' @param verbose Prints out the scores for each well. On by default.
 #'
 #' @importFrom ggplot2 aes geom_line facet_grid labs
 #'
@@ -400,7 +474,7 @@ ecis_isolate_well= function(data.df, well)
 #' @examples
 #' ecis_plot_plate(growth.df, unit = "Rb")
 #' 
-ecis_plot_plate = function(data.df, unit = "R", frequency = 4000)
+ecis_plot_plate = function(data.df, unit = "R", frequency = 4000, verbose = TRUE)
 {
   # Cut the data down to what is needed
   data = ecis_subset(data.df, unit = unit, frequency = frequency)
@@ -410,6 +484,8 @@ ecis_plot_plate = function(data.df, unit = "R", frequency = 4000)
   data$row = substr(data$Well,2,3)
   
   plot =  ggplot(data=data, aes(x=Time, y = Value, colour = Sample, linetype = Experiment)) + geom_line() + facet_grid(col~row) + labs(x = "Time(hours)", y=ecis_titles(unit,frequency))
+  
+  print(ecis_detect_badwells(data.df, threshold = 0))
   
   return (plot)
 }

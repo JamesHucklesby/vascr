@@ -6,9 +6,11 @@
 \usage{
 ecis_plot(data, unit = "R", frequency = 4000,
   replication = "summary", time = Inf, samplecontains = "",
-  experiment = "", error = 1, linesize = 1, errorsize = 1,
-  alphavalue = 0.1, confidence = 1, xlab = "Time (hours)",
-  ylab = "Value", title = "Title")
+  experiment = "", error = Inf, linesize = 1, normtime = NULL,
+  divide = FALSE, errorsize = 1, alphavalue = 0.1, confidence = 1,
+  xlab = "Time (hours)", ylab = "Value", title = "Title",
+  stripidentical = TRUE, cols = NULL, verbose = TRUE,
+  preprocessed = FALSE, continuous = NULL, alignkey = NULL)
 }
 \arguments{
 \item{data}{A standard ECIS data frame to plot}
@@ -17,7 +19,7 @@ ecis_plot(data, unit = "R", frequency = 4000,
 
 \item{frequency}{The frequency of data to display. All modelled variables have a frequency of 0}
 
-\item{replication}{How much of the replicaiton to display. Options are 'all', 'experiment', 'summary'.}
+\item{replication}{How much of the replicaiton to display. Options are 'all', 'experiment', 'summary" or "plate"}
 
 \item{time}{The time to subset if a slice is required. If set to Inf all data will be displayed}
 
@@ -41,6 +43,10 @@ searches apply.}
 \item{ylab}{Y axis value}
 
 \item{title}{The title of the ggplot}
+
+\item{stripidentical}{Remove cols from the data where all data points are identical. Default is true.}
+
+\item{cols}{The columns of data to display in the names of plots. Allows for shortening of names where the automatic stripidentical fails.}
 }
 \value{
 A ggplot2 object
@@ -51,7 +57,7 @@ The master function for generating ggplot2 objects from ECIS data. Incorporates 
 \examples{
 ecis_plot(growth.df, 'Rb', replication = 'summary', 
 error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-ecis_plot(growth.df, 'Rb', replication = 'all',
+ecis_plot(growth.df, 'Rb', replication = 'wells',
  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
  ecis_plot(growth.df, 'Rb', replication = 'experiment',
  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
@@ -59,4 +65,7 @@ ecis_plot(growth.df, 'Rb', replication = 'all',
 ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
 ecis_plot(growth.df, "R", "4000", "summary", 50, confidence = 0.1)
 
+ecis_plot(growth.df)
+
+ecis_plot(growth.df, continuous = "cells", replication = "summary", time = 50)
 }

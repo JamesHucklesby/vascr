@@ -4,7 +4,7 @@
 \alias{ecis_ANOVA}
 \title{ANOVA analyasis of a single ECIS timepoint}
 \usage{
-ecis_ANOVA(data.df, unit, frequency, time, posthoc = "bonferoni")
+ecis_ANOVA(data.df, unit, frequency, time)
 }
 \arguments{
 \item{data.df}{A standard ECIS dataset.}
@@ -14,8 +14,6 @@ ecis_ANOVA(data.df, unit, frequency, time, posthoc = "bonferoni")
 \item{frequency}{Frequency to be used. All modeled units have a frequency of 0.}
 
 \item{time}{Time to be used.}
-
-\item{posthoc}{Post hoc test to use. Options include Tukey. More to be added in the future.}
 }
 \value{
 ANOVA results printed to the console.
@@ -33,6 +31,6 @@ To interpret the data first check that the data is roughly linear on the Shapiro
 Finally look at the Analysis of Variance Table. This will tell you if you had any differences between
 }
 \examples{
-ecis_ANOVA(growth.df, 'Rb',0,75)
+ecis_ANOVA(growth.df, 'R',4000,50)
 
 }

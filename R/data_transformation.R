@@ -192,13 +192,34 @@ ecis_current_frequency = function (data.df)
 #'
 #' @examples
 #' 
-#' data = ecis_resample(growth.df, 100, 50 ,100, 50)
+#' data = ecis_resample(ecisr::growth.df, 10, 50 ,100, 50)
 #' head (data)
+#' data = ecis_resample(growth1.df, 5, 50 ,100, 0)
 #' 
-ecis_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
+ecis_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
 {
   
-  movedata = data.df
+  if(from == Inf)
+  {
+    from = min(data.df$Time)
+  }
+  if(to == Inf)
+  {
+    to = max(data.df$Time)
+  }
+  
+  if(from<min(data.df$Time))
+  {
+    warning(paste("From is below than the minimum time in the dataset. Please select a number above", min(data.df$Time)))
+  }
+  
+  if(to>max(data.df$Time))
+  {
+    warning(paste("To is greater than the maximum of the dataset. Please select a number below", max(data.df$Time)))
+  }
+  
+  movedata = ecis_remove_metadata(data.df)
+  movedata = ecis_subset(movedata, time = c(from,to))
   
   movedata$Time = movedata$Time - zero_time
   
@@ -207,7 +228,7 @@ ecis_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
   cleancolnames = str_remove(cleancolnames, "Value")
   cleancolnames = cleancolnames[cleancolnames!= ""]
   
-  movedata = unite(movedata, col = "Stream", -Value, -Time)
+  movedata = unite(movedata, col = "Stream", -Value, -Time, sep = "#")
   movedata = unique(movedata)
   movedata2 = spread(movedata, Stream, Value)
   
@@ -231,14 +252,17 @@ ecis_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
   }
   
   movedata4 = gather(movedata3, Stream, Value, -Time)
-  movedata5 = movedata4 %>% separate(Stream, cleancolnames, sep = "_")
+  movedata5 = movedata4 %>% separate(Stream, cleancolnames, sep = "#")
   
   if (length(unique(movedata5$Time))>length(unique(data.df$Time)))
   {
     warning("You have oversampled your data, meaning that you now have more datapoints than you originally collected. This may be misleading, use with care.")
   }
   
-  return(movedata5)
+  movedata6 = ecis_remove_metadata(movedata5)
+  movedata6 = ecis_explode(movedata6)
+  
+  return(movedata6)
   
 }
 
@@ -274,7 +298,7 @@ ecis_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 
 ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplecontains = "", experiment = "", well = ""){
   
-  if (well != "")
+  if (all(well != ""))
       {
         well = ecis_standardise_wells(well)
       }
@@ -328,7 +352,7 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, sampleco
   data.df = data.df %>% filter(str_detect(Sample, samplecontains))
   data.df = data.df %>% filter(str_detect(Experiment, experiment))
   
-  if (!(well == ""))
+  if (!all((well == "")))
   {
   data.df = data.df %>% filter(Well == well)
   }

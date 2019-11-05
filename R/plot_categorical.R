@@ -1,51 +1,132 @@
 ####################### Improved split
 
 
-testing = function()
+#' Plot a categorical ECIS variable
+#'
+#' @param data A standard ECIS dataset
+#' @param unit The unit to plot
+#' @param frequency The frequency to plot
+#' @param replication The replication level to plot at
+#' @param time The time to run this analyasis at
+#' @param error How much error to display
+#' @param alphavalue The alpha of the error bars (how clear they are so you can see the overlap)
+#' @param xlab Label on the X axis
+#' @param ylab  Label on the Y axis
+#' @param title The title
+#' @param cols The column names to display
+#' @param continuous The nominated continuous variable
+#'
+#' @return a ggplot 2 object
+#' @export
+#'
+#' @examples
+#'
+#'ecis_plot_continuous(growth.df, "R", 4000, "wells", 50, Inf, continuous = "cells")
+#'ecis_plot_continuous(growth.df, "R", 4000, "experiments", 50, continuous = "cells")
+#'ecis_plot_continuous(growth.df, "R", 4000, "summary", 50, continuous = "cells", error = Inf)
+#'
+#' 
+ecis_plot_continuous = function(data, unit = "R", frequency = 4000, replication = "summary", time, error = Inf, alphavalue = 0.5, xlab  = NULL, ylab = "Value", title = "", cols, continuous)
 {
+  
+  if(is.null(xlab))
+  {
+    xlab = continuous
+  }
 
 # Plot replicates
   
-cont = "cells"
+data = ecis_subset(data, time = time, unit = unit, frequency = frequency)
 
-ecis_plot(plgconc, unit = "Rb", confidence = 0.95)
+data$Val1 = data[[continuous]]
+data$Val1 = as.numeric(data$Val1)
+
+# Plot out individual wells
+
+if(replication == "wells")
+{
+
+plot = ggplot(data, aes(Val1, Value)) +
+ geom_point(aes(color = Experiment)) + ggplot2::labs(title = title, x=xlab, y=ylab)
+
+return(ecis_polish_plot(plot))
+}
 
 
-data = plgconc
-data$Sample = paste(data$Sample, "+ HMEC-1")
-data = ecis_subset(data, unit = "Rb", time = 50)
-explodeddata = ecis_explode(data)
+# Plot out experimetal wells
 
-data$val1 = data[[cont]]
-data$var1 = data[[cont]]
-
-
-ggplot(data, aes(Val1, Value)) +
- geom_point(aes(color = Experiment))
-
-
-### Now make the experimental graph
-
+if (replication == "experiments")
+{
 experiment = ecis_summarise(data, "experiment")
 experiment = ecis_explode(experiment)
 
-ggplot(experiment, aes(Val1, Value)) +
-  geom_line(aes(color = Experiment)) +
-  geom_errorbar(aes(ymin = Value-sem, ymax = Value + sem, color = Experiment))
+experiment$Val1 = experiment[[continuous]]
+experiment$Val1 = as.numeric(experiment$Val1)
 
-ggplot(experiment, aes(Val1, Value)) +
+
+if(error == 0)
+{
+    plot = ecis_subsample(summary, error)
+    plot = ggplot(summary, aes(Val1, Value)) +
+      geom_line(aes(color = Experiment)) + ggplot2::labs(title = title, x=xlab, y=ylab)
+    
+    return(ecis_polish_plot(plot))
+}
+
+if (error < Inf)
+{
+  ecis_subsample(experiment, error)
+plot = ggplot(experiment, aes(Val1, Value)) +
   geom_line(aes(color = Experiment)) +
-  geom_ribbon(aes(ymin = Value-sem, ymax = Value + sem, fill = Experiment), alpha = alphavalue) +
-  labs(x = categorical_mode(data$Var1)) 
+  geom_errorbar(aes(ymin = Value-sem, ymax = Value + sem, color = Experiment)) + ggplot2::labs(title = title, x=xlab, y=ylab)
+
+return(ecis_polish_plot(plot))
+}
+
+if (error == Inf)
+{
+plot = ggplot(experiment, aes(Val1, Value)) +
+  geom_line(aes(color = Experiment)) +
+  geom_ribbon(aes(ymin = Value-sem, ymax = Value + sem, fill =Experiment), alpha =   alphavalue) + ggplot2::labs(title = title, x=xlab, y=ylab)
+}
+
+return(ecis_polish_plot(plot))
+}
+
 
 ### Now make the summary graphs
-
+if (replication == "summary")
+{
 summary = ecis_summarise(data, "summary")
 summary = ecis_explode(summary)
 
-ggplot(summary, aes(Val1, Value)) +
+summary$Val1 = summary[[continuous]]
+summary$Val1 = as.numeric(summary$Val1)
+
+if (error<Inf)
+{
+  summary = ecis_subsample(summary, error)
+plot = ggplot(summary, aes(Val1, Value)) +
   geom_line() +
-  geom_errorbar(aes(ymin = Value-sem, ymax = Value+sem))
+  geom_errorbar(aes(ymin = Value-sem, ymax = Value+sem)) + ggplot2::labs(title = title, x=xlab, y=ylab)
+}
+
+if (error ==0 )
+{
+  plot = ggplot(summary, aes(Val1, Value)) +
+    geom_line() + ggplot2::labs(title = title, x=xlab, y=ylab)
+}
+
+if(error == Inf)
+{
+  plot = ggplot(summary, aes(Val1, Value)) +
+    geom_line() +
+  geom_ribbon(aes(ymin = Value-sem, ymax = Value + sem), alpha = alphavalue) + ggplot2::labs(title = title, x=xlab, y=ylab)
+}
+
+return(ecis_polish_plot(plot))
+}
+
 }
 
 
@@ -67,6 +148,7 @@ ecis_check_categorical = function(data)
 #' @return A CSV separated list of continuous variables
 #' 
 #' @importFrom stringr str_length str_split
+#' @importFrom purrr as_vector
 #' 
 #' @export 
 #'
@@ -79,7 +161,7 @@ ecis_check_categorical = function(data)
 #' ecis_test_explosion_integrity(growth.df)
 #' reconstituted = growth.df
 #' reconstituted$Sample = ecis_reconstitute_sample(reconstituted$Sample)
-#' ecis_test_explosion_integrity(reconstituted.df)
+#' ecis_test_explosion_integrity(reconstituted)
 #' 
 ecis_reconstitute_sample = function(string)
 {
@@ -163,10 +245,10 @@ ecis_collapse_hash = function(string)
 #' #exploded = ecis_explode(data.df)
 #' 
 #' #Check the function
-#' #imploded = ecis_implode_continuous(exploded, cols = c('cells', 'nm nothing important'))
-#' #imploded = ecis_implode_continuous(exploded, cols = c('cells', "nm nothing important"), stripidentical = TRUE)
+#' #imploded = ecis_implode(exploded, cols = c('cells', 'nm nothing important'))
+#' #imploded = ecis_implode(exploded, cols = c('cells', "nm nothing important"), stripidentical = TRUE)
 #' 
-ecis_implode_continuous = function(data, cols = NULL, stripidentical = FALSE)
+ecis_implode = function(data, cols = NULL, stripidentical = FALSE)
 {
   
   if(is.null(cols))  # If cols is not specified, use the lot
@@ -193,11 +275,24 @@ ecis_implode_continuous = function(data, cols = NULL, stripidentical = FALSE)
   }
 
 
-miniexploded = select(exploded, c(ecis_cols(),cols))
+miniexploded = select(data, c(ecis_cols(),cols))
 miniexploded$Sample = NULL
 
 for(col in cols)
 {
+  numericcol = NA
+  oldw <- getOption("warn")
+  options(warn = -1)
+  
+  numericcol = as.numeric(miniexploded[[col]])
+  options(warn = oldw)
+  
+  if (!(all(is.na(numericcol))))
+  {
+  miniexploded[[col]] = numericcol
+  miniexploded[[col]] = format(miniexploded[[col]],big.mark=",",scientific=FALSE, trim = TRUE)
+  }
+  
   miniexploded[[col]] = paste(miniexploded[[col]], col, sep ="_")
 }
 

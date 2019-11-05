@@ -4,7 +4,8 @@
 \alias{ecis_plot_plate}
 \title{Plot the wells of a 96 well plate}
 \usage{
-ecis_plot_plate(data.df, unit = "R", frequency = 4000)
+ecis_plot_plate(data.df, unit = "R", frequency = 4000,
+  verbose = TRUE)
 }
 \arguments{
 \item{data.df}{A standard ECIS dataframe. Ideally this will contain only one experiment, but multiple experiments are supported.}
@@ -12,6 +13,8 @@ ecis_plot_plate(data.df, unit = "R", frequency = 4000)
 \item{unit}{The unit to plot. Default is R}
 
 \item{frequency}{The frequency to plot. Default is 4000}
+
+\item{verbose}{Prints out the scores for each well. On by default.}
 }
 \value{
 A GGplot2 matrix

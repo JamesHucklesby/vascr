@@ -7,9 +7,12 @@
 ecis_remove_metadata(data.df, subset = "all")
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{An ECIS dataset}
 
-\item{subset}{}
+\item{subset}{What to strip off. Default is all, more options to come.}
+}
+\value{
+A dataset containing only the core ECIS columns
 }
 \description{
 Usefull if you want to to further data manipluation, without having to worry about tracking multiple, unknown columns.

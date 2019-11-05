@@ -1,4 +1,13 @@
 
+
+ecis_test = function ()
+{
+  
+}
+
+
+
+
 #' Test the integrity of an ECIS dataframe
 #' 
 #' This function will run a whole suite of tests on an ECIS dataframe, to check that it is both well designed for statistical analysis as well as technically intact
