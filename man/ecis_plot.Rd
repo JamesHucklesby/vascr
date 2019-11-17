@@ -59,7 +59,7 @@ ecis_plot(growth.df, 'Rb', replication = 'summary',
 error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
 ecis_plot(growth.df, 'Rb', replication = 'wells',
  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
- ecis_plot(growth.df, 'Rb', replication = 'experiment',
+ ecis_plot(growth.df, 'Rb', replication = 'experiments',
  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
  , xlab = "Hours")
 ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)

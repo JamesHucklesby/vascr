@@ -52,7 +52,7 @@ ecis_explode = function(data)
 #'
 #' @param data An ECIS data frame
 #' 
-#' @importFrom stringr str_count
+#' @importFrom stringr str_count str_replace
 #'
 #' @return A boolean value
 #' @export

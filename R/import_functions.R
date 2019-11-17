@@ -29,6 +29,13 @@ retitle = function(df) {
 #' 
 ecis_assign_samples = function (data, sampledefine)
 {
+  if(is.null(sampledefine)) # If samples are not defined, bypass this and just spit out well numbers as names
+  {
+    data$Well = ecis_standardise_wells(data$Well)
+    data$Sample = paste(data$Well, "Well", sep = "_")
+    return(data)
+  }
+  
   # Read in the data table created by the user
   names.df = read.csv(sampledefine, as.is = TRUE)
   
@@ -97,8 +104,12 @@ ecis_assign_samples = function (data, sampledefine)
 #' 
 #' #Then run the import
 #' 
-#' data2 = ecis_import_raw(rawdata, sampledefine, .1, 1, 1.4, 0)
+#' data2 = ecis_import_raw(rawdata, sampledefine, .1, 1, 1.4)
 #' head(data)
+#' 
+#' data2 = ecis_import_raw(rawdata, NULL, 1, 0, 70)
+#' data3 = subset(data2, Value<20000)
+#' ecis_plot(data3, replication = "plate")
 #' 
 ecis_import_raw = function(rawdata, sampledefine, by, from = Inf, to = Inf, zero_time = 0, verbose = TRUE, no_process = FALSE) {
     

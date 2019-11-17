@@ -1,5 +1,3 @@
-####################### Improved split
-
 
 #' Plot a categorical ECIS variable
 #'
@@ -157,11 +155,6 @@ ecis_check_categorical = function(data)
 #' ecis_reconstitute_sample("1nm cheese + 1nm cars")
 #' ecis_reconstitute_sample("   5,000.939 nM Oranges")
 #' ecis_reconstitute_sample("35,000 cells")
-#' 
-#' ecis_test_explosion_integrity(growth.df)
-#' reconstituted = growth.df
-#' reconstituted$Sample = ecis_reconstitute_sample(reconstituted$Sample)
-#' ecis_test_explosion_integrity(reconstituted)
 #' 
 ecis_reconstitute_sample = function(string)
 {

@@ -322,7 +322,3 @@ ecis_summarise <- function(data.df, level = "summary") {
   
 }
 
-
-#ecis_plot_normal(ecis_subset(growth, unit = "R", time = 50))
-#ecis_ANOVA(growth, unit = "R", time = 50, frequency = 4000)
-

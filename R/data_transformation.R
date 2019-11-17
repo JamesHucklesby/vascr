@@ -192,9 +192,8 @@ ecis_current_frequency = function (data.df)
 #'
 #' @examples
 #' 
-#' data = ecis_resample(ecisr::growth.df, 10, 50 ,100, 50)
+#' data = ecis_resample(growth.df, 10, 50 ,100, 50)
 #' head (data)
-#' data = ecis_resample(growth1.df, 5, 50 ,100, 0)
 #' 
 ecis_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
 {
