@@ -30,7 +30,11 @@ sampledefine = system.file('Samples.csv', package = 'ecisr')
 
 #Then run the import
 
-data2 = ecis_import_raw(rawdata, sampledefine, .1, 1, 1.4, 0)
+data2 = ecis_import_raw(rawdata, sampledefine, .1, 1, 1.4)
 head(data)
+
+data2 = ecis_import_raw(rawdata, NULL, 1, 0, 70)
+data3 = subset(data2, Value<20000)
+ecis_plot(data3, replication = "plate")
 
 }
