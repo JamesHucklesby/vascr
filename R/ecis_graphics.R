@@ -15,14 +15,22 @@
 #' searches apply.
 #' @param error Display error bars. 0 displays no error bars, 1 displays them all. Higher numbers will reduce the frequency of error bars plotted.
 #' @param linesize Width of mean lines shown on graphs
+#' @param normtime The time to normalise the data to
+#' @param divide Selector for if normalisation should be done by division or subtraction. Default is subtraction (FALSE)
 #' @param errorsize Width of error bars shown on graphs
 #' @param alphavalue Alpha value of area enclosed by error bars. May be lowered for buisy graphs
 #' @param confidence The confidence to use when generating basic significance plots
 #' @param xlab X axis value
 #' @param ylab Y axis value
 #' @param title The title of the ggplot
-#' @param stripidentical Remove cols from the data where all data points are identical. Default is true.
-#' @param cols The columns of data to display in the names of plots. Allows for shortening of names where the automatic stripidentical fails.
+#' @param stripidentical Remove cols from the data where all data points are identical. Default is true
+#' @param cols The columns of data to display in the names of plots. Allows for shortening of names where the automatic stripidentical fails
+#' @param verbose Outputs where in the funtion ploting is happening. Usefull for debugging as needed
+#' @param preprocessed Selects if the data is preprocessed. Will not run explosion and implosion if that is the case
+#' @param continuous Selects a continuous point for plotting
+#' @param alignkey Aligns key points (max, min ect). See ecis_align_key for details
+#' @param continuouscontains Subset of samplecontains, only returns data where the continuous value contains this data
+#' @param returndata Return the dataset, rather than the graph. Default FALSE, usefull for debugging
 #'
 #' @return A ggplot2 object
 #' 
@@ -48,7 +56,7 @@
 #'ecis_plot(growth.df, continuous = "cells", replication = "summary", time = 50)
 
 
-ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = TRUE, preprocessed = FALSE, continuous = NULL, alignkey = NULL) 
+ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = TRUE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE) 
   {
   
   # Start by aligning key points or normalising (need the whole dataset)
@@ -75,6 +83,11 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
   data = ecis_implode(data, stripidentical = stripidentical)
   data = ecis_explode(data)
   }
+    
+  if(!is.null(continuouscontains))
+  {
+    data = ecis_subset_continuous(data, continuouscontains)
+  }
   
   if (error>1 && error<Inf)
   {
@@ -94,6 +107,12 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
   {
     title = unit
   }
+  
+  if(returndata)
+  {
+    return(data)
+  }
+  
   
   if(!is.null(continuous))
   {
@@ -200,8 +219,9 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
       plot = plot + geom_errorbar(aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.2, position = position_dodge(0.9))
       }
       
-      return(ecis_polish_plot(plot)) (plot)
-        }
+      return(ecis_polish_plot(plot))
+      }
+      
         if (replication == "summary") {
           
           # Then use two dplyr statements to prepare the data for graphing
@@ -418,6 +438,8 @@ ecis_animatefrequency = function(alldata.df, unittoplot, frames) {
 #' @param data.df The dataset the well is in
 #' @param well The well to be isolated
 #' @param title The title of the plot
+#' @param unit The unit to plot. Default is R
+#' @param frequency The frequency to plot. Default is 4000
 #' @param ... Other conditions to pass on to the ecis_plot command that generates the graph
 #' 
 #' @importFrom magrittr "%>%"

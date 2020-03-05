@@ -14,6 +14,10 @@ ecis_plot_isolate(data.df, well, title = "Well isolation plot",
 
 \item{title}{The title of the plot}
 
+\item{unit}{The unit to plot. Default is R}
+
+\item{frequency}{The frequency to plot. Default is 4000}
+
 \item{...}{Other conditions to pass on to the ecis_plot command that generates the graph}
 }
 \value{

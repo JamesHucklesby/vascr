@@ -13,6 +13,10 @@ ecis_prism(data.df, unit, frequency = 0, replication = "summary",
 \item{unit}{Unit of data to export}
 
 \item{frequency}{Frequency of data requored, modeled data defaults to 0}
+
+\item{replication}{The level of replicaiton to output. Default is summary of all experiments}
+
+\item{experiment}{The experiment to export. Default is all experiments}
 }
 \value{
 A data frame that can be copied and pasted into prism

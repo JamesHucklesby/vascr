@@ -292,6 +292,9 @@ for(col in cols)
 miniexploded$Sample = NULL
 miniexploded = unite(miniexploded, Sample, cols, sep = " + ")
 
+miniexploded$Sample = str_remove(miniexploded$Sample, "\\+ _Note")
+miniexploded$Sample = str_remove(miniexploded$Sample, "_Note")
+
 return(miniexploded)
 }
 

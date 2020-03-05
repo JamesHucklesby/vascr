@@ -99,17 +99,17 @@ ecis_assign_samples = function (data, sampledefine)
 #' #but you can use a path relative to the file you are working on. 
 #' #E.G 'Experiment1/Raw.abp'
 #' 
-#' rawdata = system.file('Resample.abp', package = 'ecisr')
-#' sampledefine = system.file('Samples.csv', package = 'ecisr')
+#' # rawdata = system.file('Resample.abp', package = 'ecisr')
+#' # sampledefine = system.file('Samples.csv', package = 'ecisr')
 #' 
 #' #Then run the import
 #' 
-#' data2 = ecis_import_raw(rawdata, sampledefine, .1, 1, 1.4)
-#' head(data)
+#' #data2 = ecis_import_raw(rawdata, sampledefine, .1, 1, 1.4)
+#' #head(data)
 #' 
-#' data2 = ecis_import_raw(rawdata, NULL, 1, 0, 70)
-#' data3 = subset(data2, Value<20000)
-#' ecis_plot(data3, replication = "plate")
+#' #data2 = ecis_import_raw(rawdata, NULL, 1, 0, 70)
+#' #data3 = subset(data2, Value<20000)
+#' #ecis_plot(data3, replication = "plate")
 #' 
 ecis_import_raw = function(rawdata, sampledefine, by, from = Inf, to = Inf, zero_time = 0, verbose = TRUE, no_process = FALSE) {
     

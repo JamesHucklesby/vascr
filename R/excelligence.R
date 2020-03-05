@@ -45,7 +45,7 @@
 #   {
 #     time = str_remove(line, "Cell Index at: ")
 #   }
-#   
+# 
 #   alltimes = c(alltimes, time)
 # }
 # 
@@ -98,4 +98,47 @@
 # 
 # 
 # 
+# ecis_subset_continuous = function(data, continuous)
+# {
+#   
+# cols = colnames(data)
 # 
+# # Add the standard ECIS cols
+# colstokeep = ecis_cols()
+# 
+# # Match the columns that are detected
+# for(grab in continuous)
+# {
+# colstokeep = c(colstokeep, (cols[str_detect(cols, grab)]))
+# }
+# 
+# exploded[,colstokeep]
+# 
+# }
+# 
+# minexploded = ecis_subset_continuous(exploded, c("LanatosideC"))
+# minimploded = ecis_implode(minexploded)
+# 
+# ecis_plot(imploded, unit = "CI", frequency = "0", replication = "experiments", continuouscontains = "ATP")
+# 
+# ecis_explode(minimploded)
+# 
+# 
+# 
+# ### See if we can find controls
+# 
+# cols = colnames(data)
+# 
+# conts = match(cols, ecis_cols())
+# conts = is.na(conts)
+# 
+# 
+# colsdata = data[conts]
+# 
+# ecis_exploded_cols(data)
+# 
+# 
+# 
+# 
+# 
+# unique(imploded$Sample)
