@@ -516,3 +516,23 @@ ecis_exclude_badwells = function(data.df, threshold = 5, frequency = 4000, unit 
  
   
 }
+
+
+
+ecis_subset_continuous = function(data, continuous)
+{
+  
+  cols = colnames(data)
+  
+  # Add the standard ECIS cols
+  colstokeep = ecis_cols()
+  
+  # Match the columns that are detected
+  for(grab in continuous)
+  {
+    colstokeep = c(colstokeep, (cols[str_detect(cols, grab)]))
+  }
+  
+  exploded[,colstokeep]
+  
+}
