@@ -16,6 +16,8 @@ A boolean value
 Test that the datset is correctly formatted for explosion
 }
 \examples{
+library(stringr)
+
 data.df = growth.df
 data.df$Sample = str_replace(data.df$Sample, " ", "_")
 data.df$Sample = paste(data.df$Sample, "+ 10_nm nothing important")

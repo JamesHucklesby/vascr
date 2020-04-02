@@ -10,7 +10,8 @@ ecis_plot(data, unit = "R", frequency = 4000,
   divide = FALSE, errorsize = 1, alphavalue = 0.1, confidence = 1,
   xlab = "Time (hours)", ylab = "Value", title = "Title",
   stripidentical = TRUE, cols = NULL, verbose = TRUE,
-  preprocessed = FALSE, continuous = NULL, alignkey = NULL)
+  preprocessed = FALSE, continuous = NULL, alignkey = NULL,
+  continuouscontains = NULL, returndata = FALSE)
 }
 \arguments{
 \item{data}{A standard ECIS data frame to plot}
@@ -32,6 +33,10 @@ searches apply.}
 
 \item{linesize}{Width of mean lines shown on graphs}
 
+\item{normtime}{The time to normalise the data to}
+
+\item{divide}{Selector for if normalisation should be done by division or subtraction. Default is subtraction (FALSE)}
+
 \item{errorsize}{Width of error bars shown on graphs}
 
 \item{alphavalue}{Alpha value of area enclosed by error bars. May be lowered for buisy graphs}
@@ -44,9 +49,21 @@ searches apply.}
 
 \item{title}{The title of the ggplot}
 
-\item{stripidentical}{Remove cols from the data where all data points are identical. Default is true.}
+\item{stripidentical}{Remove cols from the data where all data points are identical. Default is true}
 
-\item{cols}{The columns of data to display in the names of plots. Allows for shortening of names where the automatic stripidentical fails.}
+\item{cols}{The columns of data to display in the names of plots. Allows for shortening of names where the automatic stripidentical fails}
+
+\item{verbose}{Outputs where in the funtion ploting is happening. Usefull for debugging as needed}
+
+\item{preprocessed}{Selects if the data is preprocessed. Will not run explosion and implosion if that is the case}
+
+\item{continuous}{Selects a continuous point for plotting}
+
+\item{alignkey}{Aligns key points (max, min ect). See ecis_align_key for details}
+
+\item{continuouscontains}{Subset of samplecontains, only returns data where the continuous value contains this data}
+
+\item{returndata}{Return the dataset, rather than the graph. Default FALSE, usefull for debugging}
 }
 \value{
 A ggplot2 object
@@ -59,7 +76,7 @@ ecis_plot(growth.df, 'Rb', replication = 'summary',
 error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
 ecis_plot(growth.df, 'Rb', replication = 'wells',
  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
- ecis_plot(growth.df, 'Rb', replication = 'experiment',
+ ecis_plot(growth.df, 'Rb', replication = 'experiments',
  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
  , xlab = "Hours")
 ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)

@@ -1,5 +1,3 @@
-####################### Improved split
-
 
 #' Plot a categorical ECIS variable
 #'
@@ -15,6 +13,8 @@
 #' @param title The title
 #' @param cols The column names to display
 #' @param continuous The nominated continuous variable
+#' 
+#' @importFrom ggplot2 aes labs geom_point geom_line geom_errorbar geom_ribbon
 #'
 #' @return a ggplot 2 object
 #' @export
@@ -158,11 +158,6 @@ ecis_check_categorical = function(data)
 #' ecis_reconstitute_sample("   5,000.939 nM Oranges")
 #' ecis_reconstitute_sample("35,000 cells")
 #' 
-#' ecis_test_explosion_integrity(growth.df)
-#' reconstituted = growth.df
-#' reconstituted$Sample = ecis_reconstitute_sample(reconstituted$Sample)
-#' ecis_test_explosion_integrity(reconstituted)
-#' 
 ecis_reconstitute_sample = function(string)
 {
   
@@ -250,6 +245,7 @@ ecis_collapse_hash = function(string)
 #' 
 ecis_implode = function(data, cols = NULL, stripidentical = FALSE)
 {
+  data$Instrument = "Machine"
   
   if(is.null(cols))  # If cols is not specified, use the lot
   {
@@ -299,6 +295,9 @@ for(col in cols)
 miniexploded$Sample = NULL
 miniexploded = unite(miniexploded, Sample, cols, sep = " + ")
 
+miniexploded$Sample = str_remove(miniexploded$Sample, "\\+ _Note")
+miniexploded$Sample = str_remove(miniexploded$Sample, "_Note")
+
 return(miniexploded)
 }
 
@@ -332,7 +331,7 @@ ecis_exploded_cols = function(data)
 #' 
 ecis_cols  = function(set = "core")
 {
-  return(c("Time", "Unit", "Value", "Well", "Sample", "Frequency", "Experiment"))
+  return(c("Time", "Unit", "Value", "Well", "Sample", "Frequency", "Experiment", "Instrument"))
 }
 
 

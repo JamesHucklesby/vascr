@@ -141,8 +141,9 @@ This function is the main plotting worker function for R. It is a recapitulation
 
 levels
 all = plots each replicate from all experiments in a spaghetti graph
+wells = plots out each well in it's own seperate facet of a large graph
 experiment = plots each experiment as a single experiment
-summary = plots the summary data from multiple independent experiments. The statistics are set up so as to display the inter-experimental, not intra-experimental variation, giving a more accurate display of experimental variation accross the population.
+summary = plots the summary data from multiple independent experiments. The statistics are set up so as to display the inter-experimental, not intra-experimental variation, giving a more accurate display of experimental variation accross the population
 
 time
 Time is set automaticaly to infinity. This triggers the generation of a line plot showing the change in a variable over time. By nominating a time (in hours) a bar plot of the differneces at that time point will be generated. This "timeslice" graph is usefull in evaluating the output of ANOVA and subsequent statistical analyasis.

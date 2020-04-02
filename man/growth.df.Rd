@@ -13,6 +13,8 @@
   \item{Unit}{Unit that the value is measured in}
   \item{Value}{Numerical value in units}
   \item{Well}{Well of plate that was measured}
+  \item{cells}{Number of cells added to each well}
+  \item{line}{The cell line used in this experiment (all HCMEC/D3)}
   ...
 }}
 \source{

@@ -25,8 +25,7 @@ This will currently over-sample data, use with care
 }
 \examples{
 
-data = ecis_resample(ecisr::growth.df, 10, 50 ,100, 50)
+data = ecis_resample(growth.df, 10, 50 ,100, 50)
 head (data)
-data = ecis_resample(growth1.df, 5, 50 ,100, 0)
 
 }

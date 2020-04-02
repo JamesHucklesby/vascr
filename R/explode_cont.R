@@ -52,12 +52,14 @@ ecis_explode = function(data)
 #'
 #' @param data An ECIS data frame
 #' 
-#' @importFrom stringr str_count
+#' @importFrom stringr str_count str_replace
 #'
 #' @return A boolean value
 #' @export
 #'
 #' @examples
+#' library(stringr)
+#' 
 #' data.df = growth.df
 #' data.df$Sample = str_replace(data.df$Sample, " ", "_")
 #' data.df$Sample = paste(data.df$Sample, "+ 10_nm nothing important")

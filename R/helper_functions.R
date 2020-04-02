@@ -1,3 +1,19 @@
+#' Calculate mode of a dataset
+#'
+#' @param v Vector of numeric data to find the mode of
+#'
+#' @return The mode of the vector
+#' @export
+#'
+#' @examples
+#' 
+#' getmode(c(1,3,3,4,7))
+getmode <- function(v) {
+  uniqv <- unique(v)
+  uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+
 #' Standardise well names accross import types
 #' 
 #' Replaces A1 in strings with A01. Important for importing ABP files which may use either notation. Returns NA if the string could not be normalised, which can be configured to throw a warning in import code.
@@ -70,6 +86,29 @@ ecis_96_well_names = function()
 ecis_find_time = function(data.df, time) {
   times = unique(data.df$Time)
   numberinlist = which.min(abs(times - time))
+  timetouse = times[numberinlist]
+  
+  return(timetouse)
+}
+
+#' Align frequencies
+#' 
+#' When running analyasis, you can only subset or plot a time that exists in the dataset. These are not always logical or easy to remember. This function rounds the number given to the nearest frequency that is actually in the dataset.
+#'
+#' @param data.df A standard ECIS data frame
+#' @param frequency The tfrequency that needs rounding
+#'
+#' @return A timepoint that exactly aligns with a measured datapoint
+#'
+#' @export
+#'
+#' @examples
+#' ecis_find_frequency(growth.df, 4382)
+#' 
+ecis_find_frequency = function(data.df, frequency) {
+  data.df$Frequency = as.numeric(data.df$Frequency)
+  times = unique(data.df$Frequency)
+  numberinlist = which.min(abs(times - frequency))
   timetouse = times[numberinlist]
   
   return(timetouse)
@@ -231,4 +270,164 @@ categorical_mode = function(x){
     mod = names(ta)[ta == tam]
   return(mod)
 }
+
+
+#' Exclude erronious data from an ECIS dataframe
+#'
+#' @param data.df The source dataset
+#' @param samples The sample(s) to exclude
+#' @param wells The well(s) to exclude
+#' @param experiments The experiment(s) to exclude
+#' @param times The time(s) to exclude
+#' @param values The value(s) to exclude
+#' @param vs The isolated variables-unit pairs to exclude
+#' @param vars The isolated variables to exclude
+#' @param vals The isolated values to exclude
+#'
+#' @return The altered dataset
+#' @export
+#' 
+#' @importFrom dplyr filter
+#' @importFrom magrittr "%>%"
+#'
+#' @examples
+#' 
+#' unique(growth.df$Sample)
+#' excludedgrowth.df = ecis_exclude(growth.df, samples = c("35,000 cells", "0 cells"))
+#' unique(excludedgrowth.df$Sample)
+#' 
+#' unique(growth.df$Well)
+#' excludedgrowth.df = ecis_exclude(growth.df, wells = c("A1", "B1", "C1"))
+#' unique(excludedgrowth.df$Well)
+#' 
+#' unique(growth.df$Experiment)
+#' excludedgrowth.df = ecis_exclude(growth.df, experiment = c(1,2))
+#' unique(excludedgrowth.df$Experiment)
+#' 
+
+
+ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = FALSE, times = FALSE, values = FALSE, vars = FALSE, vals = FALSE, vs = FALSE)
+{
+  
+  for (sample in samples)
+  {
+    data.df = data.df %>% filter(Sample != sample)
+  }
+  
+  for (well in wells)
+  {
+    data.df = data.df %>% filter(Well != well)
+  }
+  
+  for (experiment in experiments)
+  {
+    data.df = data.df %>% filter(Experiment != experiment)
+  }
+  
+  for (time in times)
+  {
+    data.df = data.df %>% filter(Time != time)
+  }
+  
+  for (value in values)
+  {
+    data.df = data.df %>% filter(Value != value)
+  }
+  
+  
+  return (data.df)
+}
+
+
+
+
+# Worker functions for importing files ------------------------------------
+
+
+#' Combine ECIS data frames end to end
+#' 
+#' This funciton will combine ECIS datasets end to end. Preferential to use over a simple rbind command as it runs additional checks to ensure that datapoints are correctly generated
+#'
+#' @param ... List of data frames to be combined
+#' @param resample Automatically try and resample the dataset. Default is FALSE
+#'
+#' @return A single data frame containing all the data imported, automaticaly incremented by experiment
+#' 
+#' @export
+#'
+#' @examples
+#' 
+#' #Make two fake experiments worth of data
+#' 
+#' experiment1.df = ecis_subset(growth.df, experiment = "1")
+#' experiment2.df = ecis_subset(growth.df, experiment = "2")
+#' experiment3.df = ecis_subset(growth.df, experiment = "3")
+#' 
+#' data = ecis_combine(experiment1.df, experiment2.df, experiment3.df)
+#' head(data)
+#' 
+ecis_combine = function(..., resample = FALSE) {
+  
+  dataframes = list(...)
+  
+  # Test filler variables dataframes = list(child1.df, child2.df, child3.df) i = 1
+  
+  # Generate an empty data frame with the correct columns to fill later
+  alldata = dataframes[[1]][0, ]
+  loops = 1
+  
+  # Check that both dataframes have the same timebase
+  for (i in dataframes)
+  {
+    if (!(exists("timepointstomerge")))
+    {
+      timepointstomerge = unique(i$Time)
+    }
+    
+ if ((!identical(timepointstomerge,unique(i$Time))) & isFALSE(resample))
+    {
+      warning("Datasets have different non-identical timebases. Please resample one or more of these datasets before running this function again or graphs may not be properly generated.")
+    }
+  }
+  
+  # Mash all the dataframes together
+  
+  for (i in dataframes) {
+    indata = i
+    indata$Experiment = paste(loops, ":", indata$Experiment)
+    loops = loops + 1
+    alldata = rbind(alldata, indata)
+  }
+  
+  alldata$Experiment = as.factor(alldata$Experiment)
+  
+  if(isTRUE(resample))
+  {
+    frequency = ecis_current_frequency(alldata)
+    
+  }
+  
+  
+  return(alldata)
+  
+}
+
+
+#' Retitle
+#' 
+#' Recapitulation of the funciton in tidyR, allows the re-titling of a data frame from the top row of a dataset. Used in import funcitons to set titles from the content of ABP files. For internal use only.
+#'
+#' @param df A data frame containing the desired values in the top row
+#'
+#' @return A dataframe where the top row has been converted to titles.
+# 
+retitle = function(df) {
+  
+  names(df) = as.character(unlist(df[1, ]))
+  df = df[-1, ]
+  df
+}
+
+
+
 

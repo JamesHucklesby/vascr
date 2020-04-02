@@ -15,14 +15,22 @@
 #' searches apply.
 #' @param error Display error bars. 0 displays no error bars, 1 displays them all. Higher numbers will reduce the frequency of error bars plotted.
 #' @param linesize Width of mean lines shown on graphs
+#' @param normtime The time to normalise the data to
+#' @param divide Selector for if normalisation should be done by division or subtraction. Default is subtraction (FALSE)
 #' @param errorsize Width of error bars shown on graphs
 #' @param alphavalue Alpha value of area enclosed by error bars. May be lowered for buisy graphs
 #' @param confidence The confidence to use when generating basic significance plots
 #' @param xlab X axis value
 #' @param ylab Y axis value
 #' @param title The title of the ggplot
-#' @param stripidentical Remove cols from the data where all data points are identical. Default is true.
-#' @param cols The columns of data to display in the names of plots. Allows for shortening of names where the automatic stripidentical fails.
+#' @param stripidentical Remove cols from the data where all data points are identical. Default is true
+#' @param cols The columns of data to display in the names of plots. Allows for shortening of names where the automatic stripidentical fails
+#' @param verbose Outputs where in the funtion ploting is happening. Usefull for debugging as needed
+#' @param preprocessed Selects if the data is preprocessed. Will not run explosion and implosion if that is the case
+#' @param continuous Selects a continuous point for plotting
+#' @param alignkey Aligns key points (max, min ect). See ecis_align_key for details
+#' @param continuouscontains Subset of samplecontains, only returns data where the continuous value contains this data
+#' @param returndata Return the dataset, rather than the graph. Default FALSE, usefull for debugging
 #'
 #' @return A ggplot2 object
 #' 
@@ -30,14 +38,14 @@
 #' 
 #' @importFrom stats sd
 #' @importFrom dplyr filter group_by summarise
-#' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text geom_text geom_ribbon geom_point
+#' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text geom_text geom_ribbon geom_point geom_errorbar
 #'
 #' @examples
 #' ecis_plot(growth.df, 'Rb', replication = 'summary', 
 #' error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
 #' ecis_plot(growth.df, 'Rb', replication = 'wells',
 #'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-#'  ecis_plot(growth.df, 'Rb', replication = 'experiment',
+#'  ecis_plot(growth.df, 'Rb', replication = 'experiments',
 #'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
 #'  , xlab = "Hours")
 #' ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
@@ -48,8 +56,10 @@
 #'ecis_plot(growth.df, continuous = "cells", replication = "summary", time = 50)
 
 
-ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = TRUE, preprocessed = FALSE, continuous = NULL, alignkey = NULL) 
+ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = TRUE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE) 
   {
+  
+  data$Instrument = NULL
   
   # Start by aligning key points or normalising (need the whole dataset)
   if(!is.null(alignkey))
@@ -75,6 +85,11 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
   data = ecis_implode(data, stripidentical = stripidentical)
   data = ecis_explode(data)
   }
+    
+  if(!is.null(continuouscontains))
+  {
+    data = ecis_subset_continuous(data, continuouscontains)
+  }
   
   if (error>1 && error<Inf)
   {
@@ -94,6 +109,12 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
   {
     title = unit
   }
+  
+  if(returndata)
+  {
+    return(data)
+  }
+  
   
   if(!is.null(continuous))
   {
@@ -200,8 +221,9 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
       plot = plot + geom_errorbar(aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.2, position = position_dodge(0.9))
       }
       
-      return(ecis_polish_plot(plot)) (plot)
-        }
+      return(ecis_polish_plot(plot))
+      }
+      
         if (replication == "summary") {
           
           # Then use two dplyr statements to prepare the data for graphing
@@ -370,54 +392,56 @@ ecis_polish_plot = function(plot)
 }
 
 
-# Animate -----------------------------------------------------------------
-#' Animate frequency
+#' Animation removed due to compatabilty issues with CRAN. To be re-introduced later.
 #' 
-#' Generate a gganimate graphic of frequency vs resistance. Each frame of the video represents a different time point
-#'
-#' @param alldata.df An ECIS dataframe
-#' @param unittoplot Which ECIS unit is to be plotted. Can't plot modeled variables as these are derrivative from ECIS models.
-#' @param frames Number of frames to render. More frames gives a smoother graphic, but is more computationaly expensive to generate.
-#'
-#' @return A gganimate gif. Future itteration may include the ability to return the un-rendered object.
 #' 
-#' @importFrom ggplot2 ggplot geom_line aes labs scale_x_log10 scale_y_log10 geom_errorbar position_stack
-#' @importFrom gganimate transition_time animate
-#' @importFrom dplyr n
-#' @importFrom stats sd
-#' @import gifski
-#' @import png
-#' @import transformr
-#' 
-#' @export
-#'
-#' @examples
-#' ecis_animatefrequency(growth.df, 'R', 3)
-#' 
-ecis_animatefrequency = function(alldata.df, unittoplot, frames) {
-    
-    alldatasum.df = summarise(group_by(alldata.df, Sample, Time, Unit, Frequency), sd = sd(Value), 
-        n = n(), Value = mean(Value))
-    
-    toplot.df = alldatasum.df
-    toplot.df = subset(toplot.df, Unit == unittoplot)
-    toplot.df$Frequency = as.numeric(toplot.df$Frequency)
-    
-    toplot2.df = toplot.df
-    
-    p = ggplot2::ggplot(toplot2.df, ggplot2::aes(Frequency, Value, colour = Sample)) + ggplot2::geom_line(show.legend = TRUE) + 
-        ggplot2::labs(title = "Days: {round(frame_time,1)}", x = "Frequency (Hz)", y = "Value (ohms)") + 
-        ggplot2::scale_x_log10() + ggplot2::scale_y_log10() + ggplot2::geom_errorbar(ggplot2::aes(ymin = Value - 
-        sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.1) + gganimate::transition_time(Time)
-    
-    gganimate::animate(p, nframes = frames)
-}
+#' # Animate -----------------------------------------------------------------
+#' #' Animate frequency
+#' #' 
+#' #' Generate a gganimate graphic of frequency vs resistance. Each frame of the video represents a different time point
+#' #'
+#' #' @param alldata.df An ECIS dataframe
+#' #' @param unittoplot Which ECIS unit is to be plotted. Can't plot modeled variables as these are derrivative from ECIS models.
+#' #' @param frames Number of frames to render. More frames gives a smoother graphic, but is more computationaly expensive to generate.
+#' #'
+#' #' @return A gganimate gif. Future itteration may include the ability to return the un-rendered object.
+#' #' 
+#' #' @importFrom ggplot2 ggplot geom_line aes labs scale_x_log10 scale_y_log10 geom_errorbar position_stack
+#' #' @importFrom gganimate transition_time animate
+#' #' @importFrom dplyr n
+#' #' @importFrom stats sd
+#' #' 
+#' #' @export
+#' #'
+#' #' @examples
+#' #' ecis_animatefrequency(growth.df, 'R', 3)
+#' #' 
+#' ecis_animatefrequency = function(alldata.df, unittoplot, frames) {
+#'     
+#'     alldatasum.df = summarise(group_by(alldata.df, Sample, Time, Unit, Frequency), sd = sd(Value), 
+#'         n = n(), Value = mean(Value))
+#'     
+#'     toplot.df = alldatasum.df
+#'     toplot.df = subset(toplot.df, Unit == unittoplot)
+#'     toplot.df$Frequency = as.numeric(toplot.df$Frequency)
+#'     
+#'     toplot2.df = toplot.df
+#'     
+#'     p = ggplot2::ggplot(toplot2.df, ggplot2::aes(Frequency, Value, colour = Sample)) + ggplot2::geom_line(show.legend = TRUE) + 
+#'         ggplot2::labs(title = "Days: {round(frame_time,1)}", x = "Frequency (Hz)", y = "Value (ohms)") + 
+#'         ggplot2::scale_x_log10() + ggplot2::scale_y_log10() + ggplot2::geom_errorbar(ggplot2::aes(ymin = Value - 
+#'         sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.1) + gganimate::transition_time(Time)
+#'     
+#'     gganimate::animate(p, nframes = frames)
+#' }
 
 #' Graph a single well that is misbehaving
 #'
 #' @param data.df The dataset the well is in
 #' @param well The well to be isolated
 #' @param title The title of the plot
+#' @param unit The unit to plot. Default is R
+#' @param frequency The frequency to plot. Default is 4000
 #' @param ... Other conditions to pass on to the ecis_plot command that generates the graph
 #' 
 #' @importFrom magrittr "%>%"

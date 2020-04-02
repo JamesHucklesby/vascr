@@ -6,6 +6,8 @@
 #' @param data.df ECIS dataframe
 #' @param unit Unit of data to export
 #' @param frequency Frequency of data requored, modeled data defaults to 0
+#' @param replication The level of replicaiton to output. Default is summary of all experiments
+#' @param experiment The experiment to export. Default is all experiments
 #'
 #' @return A data frame that can be copied and pasted into prism
 #' @export

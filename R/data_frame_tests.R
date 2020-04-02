@@ -54,7 +54,7 @@ ecis_test_design = function(data.df, verbose = FALSE)
   
   theoretical_pairs = expand.grid(Sample = unique(data$Sample), Experiment = unique(data$Experiment))
   theoretical_pairs = paste(theoretical_pairs$Sample, theoretical_pairs$Experiment) ## Up to here with proofing
-  experimental_pairs = paste(data$Sample, data$Experiment)
+  experimental_pairs = paste(data$Sample, data$Experiment, sep = "#")
   
   missing_data = setdiff(theoretical_pairs, experimental_pairs)
   
@@ -81,7 +81,9 @@ ecis_test_design = function(data.df, verbose = FALSE)
   if(sd(pairs$n)>0) # All sample sizes are not the same
   {
     tests$balanced_replicates = FALSE
-    tests$nonmedian_samples = subset(pairs, n !=median(pairs$n))
+    tests$unbalanced_replicates = subset(pairs, n !=median(pairs$n))
+    tests$unbalanced_replicates = tests$unbalanced_replicates %>% separate(experimental_pairs, c("Sample", "Experiment"), sep = "[#]")
+    
   }
   else
   {
@@ -124,6 +126,18 @@ ecis_test_summary_level = function(data.df)
   {
   return("replicate")
   }
+  
+  
+}
+
+
+vascr_test_instrument = function(data.df)
+{
+  
+  # This will compare the test datasets to each of the values
+  
+  units = unique(data.df$Unit)
+
   
   
 }

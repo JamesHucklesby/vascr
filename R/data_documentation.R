@@ -14,6 +14,8 @@ utils::globalVariables(c("A","B","Label","Score","desc","geom_text","median","mo
 utils::globalVariables(c("Var1", "Var2", "Var3", "Var4", "Var5"))
 utils::globalVariables(c("Val1", "Val2", "Val3", "Val4", "Val5"))
 
+utils::globalVariables(c('Data','Instrument', '..density..','dnorm','.fitted','.resid', 'data.df', 'Var', 'Val', "sem", ".", "allNA", 'import_mdb_return_TEMP_object_from_32_bit_R', 'starts_with', 'TTimes', 'Layout'))
+
 
 #' Example data set from an ECIS growth experiment
 #'
@@ -26,6 +28,8 @@ utils::globalVariables(c("Val1", "Val2", "Val3", "Val4", "Val5"))
 #'   \item{Unit}{Unit that the value is measured in}
 #'   \item{Value}{Numerical value in units}
 #'   \item{Well}{Well of plate that was measured}
+#'   \item{cells}{Number of cells added to each well}
+#'   \item{line}{The cell line used in this experiment (all HCMEC/D3)}
 #'   ...
 #' }
 #' @description A dataset containing growth curves from a variety of experiments

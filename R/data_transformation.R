@@ -167,7 +167,14 @@ ecis_subsample = function(data.df, nth) {
 ecis_current_frequency = function (data.df)
 {
   times = unique (data.df$Time) # Make a list of unique datapoints 
-  return((max(times)-min(times))/(length(times)-1)) # Then divide the total time by the number of times to give the frequency
+  times = sort(times) # Sort them
+  difftimes = diff(times) # Calculate differences
+  
+  if (!(mean(difftimes) == getmode(difftimes)))
+  {
+    warning("Gaps in the dataset, use resampling with care")
+  }
+  return(getmode(difftimes))
 }
 
 
@@ -192,9 +199,8 @@ ecis_current_frequency = function (data.df)
 #'
 #' @examples
 #' 
-#' data = ecis_resample(ecisr::growth.df, 10, 50 ,100, 50)
+#' data = ecis_resample(growth.df, 10, 50 ,100, 50)
 #' head (data)
-#' data = ecis_resample(growth1.df, 5, 50 ,100, 0)
 #' 
 ecis_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
 {
@@ -307,7 +313,7 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, sampleco
   data.df$Well = ecis_standardise_wells(data.df$Well)
   
   
-  if(unit == "Rb" || unit == "Cm" || unit == "Alpha" || unit == "RMSE" || unit == "Drift") # Wipe out frequency if it is a modelled variable as that makes no sense
+  if(ecis_is_modeled_unit(unit)) # Wipe out frequency if it is a modelled variable as that makes no sense
   {
     frequency = 0
   }
@@ -340,9 +346,10 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, sampleco
     data.df = data.df %>% filter(Frequency == 0)
   }
   
-  else if(is.finite(frequency)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
+  else if(is.finite(frequency)) # Check that time finite. If so, trim down the dataset to the single finite frequency given, or the nearest rounded one.
   {
     frequency = as.numeric(frequency) # clean up the data type
+    frequency = ecis_find_frequency(data.df, frequency)
     data.df = data.df %>% filter(Frequency == frequency)
   }
   
@@ -361,6 +368,52 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, sampleco
   
   
 }
+
+ecis_is_modeled_unit = function(unit)
+{
+  if (unit == "Rb" || unit == "Cm" || unit == "Alpha" || unit == "RMSE" || unit == "Drift" || unit == "CPE_A" || unit == "CPE_n" || unit == "TER" || unit == "Ccl" || unit == "Rmed")
+  {
+    return(TRUE)
+  }
+  else
+  {
+    return(FALSE)
+  }
+}
+
+
+# Sub code for breaking out continuous datasets
+
+# subset = ecis_subset_continuous(xcell, c("ATP", "Adenosine"))
+# subset = ecis_implode(subset)
+# ecis_plot(subset, unit = "Z", frequency = "10000", replication = "experiments", normtime = 160)
+
+ecis_subset_continuous = function(data, continuous)
+{
+  
+  cols = colnames(data)
+  
+  # Add the standard ECIS cols
+  colstokeep = c()
+  
+  # Match the columns that are detected
+  for(grab in continuous)
+  {
+    colstokeep = c(colstokeep, (cols[str_detect(cols, grab)]))
+  }
+  
+  # Return only cols that match the criteria
+  
+  return = data[,c(ecis_cols(),colstokeep)]
+  return$allNA = rowSums(!(data[,colstokeep] == c("NA")))>0
+  return = subset(return, allNA)
+  return$allNA = NULL
+  
+  return(return)
+  
+}
+
+###############################################################
 
 
 #' Automatically strip badly connected wells from an ECIS dataset

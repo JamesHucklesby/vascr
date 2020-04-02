@@ -24,7 +24,7 @@
 #' @importFrom stats lm anova aov TukeyHSD residuals shapiro.test
 #' @importFrom s20x normcheck 
 #' @importFrom ggpubr ggqqplot
-#' @importFrom ggplot2 geom_density geom_rug position_jitter geom_histogram geom_vline geom_boxplot stat_smooth geom_hline ggtitle xlab ylab
+#' @importFrom ggplot2 geom_density geom_rug position_jitter geom_histogram geom_vline geom_boxplot stat_smooth geom_hline ggtitle xlab ylab position_stack
 #' @importFrom car leveneTest
 #' 
 #' @importFrom cowplot plot_grid
@@ -35,6 +35,7 @@
 #' @export
 #'
 #' @examples
+#' growth.df$Instrument = "ECIS"
 #' ecis_ANOVA(growth.df, 'R',4000,50)
 #' 
 ecis_ANOVA = function(data.df, unit, frequency, time) {
@@ -53,7 +54,7 @@ ecis_ANOVA = function(data.df, unit, frequency, time) {
     timeplot = timeplot + geom_vline(xintercept = timetouse, color = "blue")
     timeplot = timeplot + labs(title = "Timepoint selected")
     
-    # Not we get rid of all the data points we don't need, leaving only the one key     one
+    # Not we get rid of all the data points we don't need, leaving only the one key one
     filtered.df = subset(filtered.df, Time == timetouse)
     
     exploded = ecis_explode(filtered.df)
@@ -321,8 +322,4 @@ ecis_summarise <- function(data.df, level = "summary") {
   }
   
 }
-
-
-#ecis_plot_normal(ecis_subset(growth, unit = "R", time = 50))
-#ecis_ANOVA(growth, unit = "R", time = 50, frequency = 4000)
 
