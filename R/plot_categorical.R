@@ -13,6 +13,8 @@
 #' @param title The title
 #' @param cols The column names to display
 #' @param continuous The nominated continuous variable
+#' 
+#' @importFrom ggplot2 aes labs geom_point geom_line geom_errorbar geom_ribbon
 #'
 #' @return a ggplot 2 object
 #' @export

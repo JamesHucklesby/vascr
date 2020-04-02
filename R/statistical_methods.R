@@ -24,7 +24,7 @@
 #' @importFrom stats lm anova aov TukeyHSD residuals shapiro.test
 #' @importFrom s20x normcheck 
 #' @importFrom ggpubr ggqqplot
-#' @importFrom ggplot2 geom_density geom_rug position_jitter geom_histogram geom_vline geom_boxplot stat_smooth geom_hline ggtitle xlab ylab
+#' @importFrom ggplot2 geom_density geom_rug position_jitter geom_histogram geom_vline geom_boxplot stat_smooth geom_hline ggtitle xlab ylab position_stack
 #' @importFrom car leveneTest
 #' 
 #' @importFrom cowplot plot_grid
