@@ -243,6 +243,7 @@ ecis_collapse_hash = function(string)
 #' 
 ecis_implode = function(data, cols = NULL, stripidentical = FALSE)
 {
+  data$Instrument = "Machine"
   
   if(is.null(cols))  # If cols is not specified, use the lot
   {
@@ -328,7 +329,7 @@ ecis_exploded_cols = function(data)
 #' 
 ecis_cols  = function(set = "core")
 {
-  return(c("Time", "Unit", "Value", "Well", "Sample", "Frequency", "Experiment"))
+  return(c("Time", "Unit", "Value", "Well", "Sample", "Frequency", "Experiment", "Instrument"))
 }
 
 

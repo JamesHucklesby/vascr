@@ -12,8 +12,17 @@ cellzscope_import_model(model, key)
 \item{key}{Optional, a keyfile containing data on which well contains which sample}
 }
 \value{
-A vascar compatable dataset.
+An ecisr compatable dataset
 }
 \description{
 Imports modeled data previously exported from the cellZscope package. Will not assign names unless a keyfile or raw dataset is provided, as no well naming data is provided in this filetype.
+}
+\examples{
+model = system.file("extdata/mdckmodel.txt", package = "ecisr")
+key = system.file("extdata/mdckkey.csv", package = "ecisr")
+
+output = cellzscope_import_model(model, key)
+output = ecis_subset(output, time = c(0,50))
+ecis_plot(output, unit = "TER", frequency = 0,replication = "wells")
+
 }

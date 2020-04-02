@@ -35,6 +35,7 @@
 #' @export
 #'
 #' @examples
+#' growth.df$Instrument = "ECIS"
 #' ecis_ANOVA(growth.df, 'R',4000,50)
 #' 
 ecis_ANOVA = function(data.df, unit, frequency, time) {
@@ -53,7 +54,7 @@ ecis_ANOVA = function(data.df, unit, frequency, time) {
     timeplot = timeplot + geom_vline(xintercept = timetouse, color = "blue")
     timeplot = timeplot + labs(title = "Timepoint selected")
     
-    # Not we get rid of all the data points we don't need, leaving only the one key     one
+    # Not we get rid of all the data points we don't need, leaving only the one key one
     filtered.df = subset(filtered.df, Time == timetouse)
     
     exploded = ecis_explode(filtered.df)

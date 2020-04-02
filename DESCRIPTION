@@ -14,7 +14,7 @@ Depends: R (>= 3.6)
 Imports: ggplot2, 
         gganimate, 
         gridExtra, 
-        s20x,plyr,
+        s20x,
         dplyr,
         devtools, 
         tidyr, 
@@ -24,7 +24,7 @@ Imports: ggplot2,
         tibble, 
         gifski, png, graphics, 
         stats, utils, 
-        transformr, data.table, purrr, ggpubr, car, cowplot, textclean
+        transformr, data.table, purrr, ggpubr, car, cowplot, textclean, svSocket
 Suggests: 
     knitr,
     rmarkdown,

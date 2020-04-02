@@ -21,6 +21,17 @@ Data must first be exported in two parts from the cellZScope software. This can 
 }
 \examples{
 
+model = system.file("extdata/mdckmodel.txt", package = "ecisr")
+raw = system.file("extdata/mdckspectra.txt", package = "ecisr")
+key = system.file("extdata/mdckkey.csv", package = "ecisr")
 
+alldata = cellzscope_import(raw, model)
+ecis_plot(alldata, unit = "TER", preprocessed = TRUE, frequency = 0,
+ time = c(0,50), replication = "experiments")
+
+alldatakey = cellzscope_import(raw, model, key)
+alldatakey$Instrument = "CZSII"
+ecis_plot(alldatakey, unit = "TER", frequency = 0, time = c(0,50), 
+replication = "experiments", preprocessed = TRUE)
 
 }

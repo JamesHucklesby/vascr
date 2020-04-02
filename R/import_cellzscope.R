@@ -1,25 +1,3 @@
-# library("tidyverse")
-# library("ecisr")
-# 
-# 
-# # Grab the files from thier locations (to be incorporated into the function eventually)
-# modeldata = "excluded/mdckmodel.txt"
-# spectradata = "excluded/mdckspectra.txt"
-# 
-# output = cellzscope_import_raw(spectradata)
-# 
-# output = ecis_subset(output, time = c(0,50))
-# 
-# ecis_plot(output, unit = "I", frequency = 35938.14, preprocessed = TRUE, replication = "wells")
-# 
-# data = cellzscope_import_model(modeldata)
-# 
-# data = ecis_subset(data, time = c(0,50))
-# 
-# ecis_plot(data, unit = "Ccl", frequency = 0, preprocessed = TRUE, replication = "wells")
-
-
-
 #' Import modeled cellZScope data
 #' 
 #' Imports modeled data previously exported from the cellZscope package. Will not assign names unless a keyfile or raw dataset is provided, as no well naming data is provided in this filetype.
@@ -33,10 +11,17 @@
 #' @importFrom magrittr %>%
 #' @importFrom textclean replace_non_ascii
 #'
-#' @return A vascar compatable dataset.
+#' @return An ecisr compatable dataset
 #' @export
 #'
 #' @examples
+#' model = system.file("extdata/mdckmodel.txt", package = "ecisr")
+#' key = system.file("extdata/mdckkey.csv", package = "ecisr")
+#' 
+#' output = cellzscope_import_model(model, key)
+#' output = ecis_subset(output, time = c(0,50))
+#' ecis_plot(output, unit = "TER", frequency = 0,replication = "wells")
+#' 
 cellzscope_import_model  = function(model, key)
 {
   
@@ -80,11 +65,19 @@ separatedata = pivot_longer(separatedata, c(-Unit, -Time), names_to = "Well", va
 separatedata$Experiment = model
 separatedata$Sample = "NA"
 separatedata$Frequency = 0
+separatedata$Instrument = "cellZscope"
 
 # Fix data types
 separatedata$Time = as.numeric(separatedata$Time)
 separatedata$Value = as.numeric(separatedata$Value)
 separatedata$Well = ecis_standardise_wells(separatedata$Well)
+
+# Add keyfile
+if(!missing(key))
+{
+  separatedata$Sample = NULL
+  separatedata = ecis_assign_samples(separatedata, key)
+}
 
 return(separatedata)
 }
@@ -96,6 +89,7 @@ return(separatedata)
 #' Data must first be exported from the cellZscope software. 
 #'
 #' @param raw the locaiton of spectral data exported from the cellZscope software.
+#' @param key Optional, allows for sample names to be assigned to wells
 #'
 #' @return A vascar compatable dataset
 #' 
@@ -108,10 +102,13 @@ return(separatedata)
 #' @export
 #'
 #' @examples
+#' raw = system.file("extdata/mdckspectra.txt", package = "ecisr")
+#' key = system.file("extdata/mdckkey.csv", package = "ecisr")
 #' 
-#' 
-#' 
-cellzscope_import_raw = function(raw)
+#' output = cellzscope_import_raw(raw, key)
+#' output = ecis_subset(output, time = c(0,50))
+#' ecis_plot(output, unit = "R", frequency = 4000, replication = "wells")
+cellzscope_import_raw = function(raw, key)
 {
 
 # Read into a data frame and remove garbage
@@ -132,6 +129,7 @@ separatedata = separatedata %>% fill(names(separatedata), .direction = "down")
 
 #Cleanup the data
 separatedata = subset(separatedata, separatedata$F !="frequency (Hz)")
+separatedata = subset(separatedata, separatedata$Date !="")
 separatedata = subset(separatedata, separatedata$F !="")
 
 separatedata$Run = str_remove(separatedata$Run, " Run.")
@@ -144,7 +142,8 @@ dat = dat/60/60
 separatedata$Time = dat
 
 # Add experiment metadat
-separatedata$Experiment = spectra
+separatedata$Experiment = raw
+separatedata$Instrument = "cellZscope"
 
 # Make longer
 separatedata2 = pivot_longer(separatedata, cols = c("I", "P"), names_to = "Unit", values_to = "Value")
@@ -158,10 +157,43 @@ separatedata2$Well = ecis_standardise_wells(separatedata2$Well)
 separatedata2$Date = NULL
 separatedata2$Run = NULL
 
-return(separatedata2)
+output2 = separatedata2
+output2$Unit = str_replace(output2$Unit, "I", "Z")
 
+ecis_plot(output2, unit = "Z", frequency = 1, preprocessed = TRUE, replication = "wells", time = c(1,100))
+
+unique(output2$Unit)
+
+# Wrangle data so it is in columns
+child1.df = output2
+child1.df$Value = abs(child1.df$Value)
+
+widedata.df = pivot_wider(child1.df, names_from = "Unit", values_from = "Value")
+widedata.df$Frequency = as.numeric(widedata.df$Frequency)
+
+# Calculate new values
+widedata.df$Pr = widedata.df$P / 360 * pi
+widedata.df$X = sin(widedata.df$Pr) * widedata.df$Z
+widedata.df$R = sin(widedata.df$Pr) * widedata.df$Z
+widedata.df$C = 1/(2 * pi * widedata.df$Frequency * widedata.df$X) * 10^9
+
+longdata.df = tidyr::gather(widedata.df, Unit, Value, -Well, -Time, -Frequency, -Sample, -Instrument, -Experiment)
+
+# Fix data types
+longdata.df$Unit = factor(longdata.df$Unit)
+longdata.df$Well = as.character(longdata.df$Well)
+longdata.df$Time = as.numeric(longdata.df$Time)
+
+# Add keyfile
+if(!missing(key))
+{
+longdata.df$Sample = NULL
+longdata.df = ecis_assign_samples(longdata.df, key)
 }
 
+return(longdata.df)
+
+}
 
 #' Import cellSZcope data
 #' 
@@ -170,48 +202,57 @@ return(separatedata2)
 #' @param raw File location of the raw dataset
 #' @param model File locaiton of the modeled dataset
 #' @param key Location of a vascar standard lookup table. Optional, but can be used to import more granular data than possible with the built in row names
+#' 
+#' @importFrom dplyr select left_join 
 #'
 #' @return a standard vascar dataset
 #' @export
 #'
 #' @examples
 #' 
+#' model = system.file("extdata/mdckmodel.txt", package = "ecisr")
+#' raw = system.file("extdata/mdckspectra.txt", package = "ecisr")
+#' key = system.file("extdata/mdckkey.csv", package = "ecisr")
 #' 
+#' alldata = cellzscope_import(raw, model)
+#' ecis_plot(alldata, unit = "TER", preprocessed = TRUE, frequency = 0,
+#'  time = c(0,50), replication = "experiments")
+#' 
+#' alldatakey = cellzscope_import(raw, model, key)
+#' alldatakey$Instrument = "CZSII"
+#' ecis_plot(alldatakey, unit = "TER", frequency = 0, time = c(0,50), 
+#' replication = "experiments", preprocessed = TRUE)
 #' 
 cellzscope_import = function(raw, model, key)
 {
-# To Do - import keyfile and match to data. Steal this from the ECIS functions
   
-  
-# Import both files
+# Import both files. Don't specify a key as this will be applied globaly at the end
 modeleddata = cellzscope_import_model(model)
 rawdata = cellzscope_import_raw(raw)
 
-# Check timebases are the same, if not warn
-modeledtime = unique(modeleddata$Time)
-rawtime = unique(rawdata$Time)
+# Combine and run checks
+alldata = ecis_combine(modeleddata, rawdata)
 
-if(setequal(unique(modeleddata$Time), unique(rawdata$Time)))
+
+
+if(missing(key)) # If the keyfile is not set
 {
-  warning("Timebases are not identical. Subsetting or resampling may be required")
+  # Build a lookup table of sample names from the modeleddata imported and apply them to the rawdata imported
+  nametable = select(rawdata, "Well", "Sample")
+  nametable = unique(nametable)
+  alldata$Sample = NULL
+  alldatanamed = left_join(alldata, nametable, by = c("Well"))
 }
 
+else
+{
+  # Use the standard allocation code for this package
+  alldata$Sample = NULL
+  alldatanamed = ecis_assign_samples(alldata, key)
+}
 
-# Stick the files together
-alldata = rbind(modeleddata, rawdata)
-
-# Build a lookup table of sample names from the modeleddata imported (grab the lot and remove duplicates)
-nametable = select(rawdata, "Well", "Sample")
-nametable = unique(nametable)
-
-# Remove and replace well names with those from the lookup table
-alldata$Sample = NULL
-alldatanamed = left_join(alldata, nametable, by = c("Well"))
 
 return(alldatanamed)
 
 }
-
-#alldata = cellzscope_import(modeldata, spectradata)
-#ecis_plot(alldata, unit = "TER", preprocessed = TRUE, frequency = 0, time = c(0,50), replication = "experiments")
 

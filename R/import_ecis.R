@@ -1,20 +1,31 @@
-# Import Raw Data ---------------------------------------------------------
+# Import Raw ECIS data ---------------------------------------------------------
 
 
-#' Retitle
-#' 
-#' Recapitulation of the funciton in tidyR, allows the re-titling of a data frame from the top row of a dataset. Used in import funcitons to set titles from the content of ABP files. For internal use only.
-#'
-#' @param df A data frame containing the desired values in the top row
-#'
-#' @return A dataframe where the top row has been converted to titles.
-# 
-retitle = function(df) {
+ecis_calculate_quantaties = function(data.df)
+{
+  # Wrangle data so it is in columns
+  child1.df = data.df
+  child1.df$Value = abs(child1.df$Value)
+  widedata.df = tidyr::spread(child1.df, Unit, Value)
+  widedata.df$Frequency = as.numeric(widedata.df$Frequency)
   
-  names(df) = as.character(unlist(df[1, ]))
-  df = df[-1, ]
-  df
+  # Calculate the new derrivative values
+  widedata.df$Z = sqrt(widedata.df$X^2 + widedata.df$R^2)
+  widedata.df$C = 1/(2 * pi * widedata.df$Frequency * widedata.df$X) * 10^9
+  widedata.df$P = 90 - (atan(widedata.df$X/widedata.df$R)/(2 * pi) * 360)
+  
+  # Change format back
+  longdata.df = tidyr::gather(widedata.df, Unit, Value, -Well, -Time, -Frequency)
+  
+  # Fix data types
+  longdata.df$Unit = factor(longdata.df$Unit)
+  longdata.df$Well = as.character(longdata.df$Well)
+  longdata.df$Time = as.numeric(longdata.df$Time)
+  
+  return(longdata.df)
 }
+
+
 
 #' Internal function to assign sample names to a data frame
 #'
@@ -29,10 +40,11 @@ retitle = function(df) {
 #' 
 ecis_assign_samples = function (data, sampledefine)
 {
-  if(is.null(sampledefine)) # If samples are not defined, bypass this and just spit out well numbers as names
+  if(is.null(sampledefine)) # If samples are not defined, bypass this and just spit out well id's as names
   {
     data$Well = ecis_standardise_wells(data$Well)
     data$Sample = paste(data$Well, "Well", sep = "_")
+    warning("The argument 'sampledefine' is not set. Defaulting to using well ID's as sample names")
     return(data)
   }
   
@@ -43,8 +55,6 @@ ecis_assign_samples = function (data, sampledefine)
   names.df$Well = ecis_standardise_wells(names.df$Well)
   data$Well = ecis_standardise_wells(data$Well)
   
-  #Take a copy of the original exploded dataset for later
-  names2.df = names.df
   
   
   #Sanity check that the user has fed the right file
@@ -62,9 +72,6 @@ ecis_assign_samples = function (data, sampledefine)
   
   # Unite the columns with full names
   names.df = names.df %>% unite(col = Sample,colnames(names.df)[2:length(colnames(names.df))], sep = " + ")
-  #Stick this onto the exploded dataset
-  names.df = left_join(names.df, names2.df, by = "Well")
-  #Stick the whole thing onto the data
   combined.df = left_join(data, names.df, by = "Well")
   
   
@@ -85,7 +92,7 @@ ecis_assign_samples = function (data, sampledefine)
 #' 
 #' @importFrom utils read.delim
 #' @importFrom tidyr separate spread gather
-#' @importFrom stringr str_detect
+#' @importFrom stringr str_detect str_replace
 #' @importFrom dplyr left_join
 #' 
 #' 
@@ -99,31 +106,28 @@ ecis_assign_samples = function (data, sampledefine)
 #' #but you can use a path relative to the file you are working on. 
 #' #E.G 'Experiment1/Raw.abp'
 #' 
-#' # rawdata = system.file('Resample.abp', package = 'ecisr')
-#' # sampledefine = system.file('Samples.csv', package = 'ecisr')
+#' rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'ecisr')
+#' sampledefine = system.file('extdata/growth1_samples.csv', package = 'ecisr')
 #' 
 #' #Then run the import
 #' 
-#' #data2 = ecis_import_raw(rawdata, sampledefine, .1, 1, 1.4)
-#' #head(data)
+#' data1 = ecis_import_raw(rawdata, sampledefine)
+#' data1$Experiment = "Growth_1"
+#' head(data1)
+#' ecis_plot(data1, unit = "X")
 #' 
-#' #data2 = ecis_import_raw(rawdata, NULL, 1, 0, 70)
-#' #data3 = subset(data2, Value<20000)
-#' #ecis_plot(data3, replication = "plate")
-#' 
-ecis_import_raw = function(rawdata, sampledefine, by, from = Inf, to = Inf, zero_time = 0, verbose = TRUE, no_process = FALSE) {
+ecis_import_raw = function(rawdata, sampledefine) {
     
     # Grab all the rows of the file and dump them into a data frame
-    print("Importing raw data")  
   
     file.df = read.delim(rawdata, as.is = TRUE, sep = "\n", strip.white = TRUE)
     colnames(file.df) = "Data"
     
     # Generate a data frame containing the titles
-    titles.df = subset(file.df, stringr::str_detect(file.df$Data, "Index, Time,"))
+    titles.df = subset(file.df, str_detect(file.df$Data, "Index, Time,"))
     titlestring = titles.df[1, 1]
     titles = unlist(strsplit(titlestring, split = ","))
-    titles = base::trimws(titles)
+    titles = trimws(titles)
   
     
     # Import the meaty part of the data and clean up the dat types
@@ -165,10 +169,6 @@ ecis_import_raw = function(rawdata, sampledefine, by, from = Inf, to = Inf, zero
     
     fulldata.df$ID = as.integer(fulldata.df$ID)
     
-    #Cut out un-needed data for performance reasons
-    fulldata.df$Time = as.numeric(fulldata.df$Time)
-    fulldata.df = subset(fulldata.df, Time>from)
-    fulldata.df = subset(fulldata.df, Time<to)
     
     # Correlate the generated cell lookup table to ECIS's internal well id's
     fulldata.df = left_join(fulldata.df, id_to_well.df, by = "ID")
@@ -183,39 +183,15 @@ ecis_import_raw = function(rawdata, sampledefine, by, from = Inf, to = Inf, zero
     
     fulldata_long.df$ID = NULL
     
-    ############################### Generate the other physical quantaties
-    print("Generating physical quantaties from ABP data")
+    # Generate the other physical quantaties
     
-    # Wrangle data so it is in columns
-    child1.df = fulldata_long.df
-    child1.df$Value = abs(child1.df$Value)
-    widedata.df = tidyr::spread(child1.df, Unit, Value)
-    widedata.df$Frequency = as.numeric(widedata.df$Frequency)
+    longdata.df = ecis_calculate_quantaties(fulldata_long.df)
     
-    # Calculate the new derrivative values
-    widedata.df$Z = sqrt(widedata.df$X^2 + widedata.df$R^2)
-    widedata.df$C = 1/(2 * pi * widedata.df$Frequency * widedata.df$X) * 10^9
-    widedata.df$P = 90 - (atan(widedata.df$X/widedata.df$R)/(2 * pi) * 360)
-    
-    # Change format back
-    longdata.df = tidyr::gather(widedata.df, Unit, Value, -Well, -Time, -Frequency)
-    
-    # Fix data types
-    longdata.df$Unit = factor(longdata.df$Unit)
-    longdata.df$Well = as.character(longdata.df$Well)
-    longdata.df$Time = as.numeric(longdata.df$Time)
-    
-    ############################# End re-generation of phyisical measurements
-    
-    # Add the file name as the experiment ID
+    # Add constants, standardise well format and assign samples
     longdata.df$Experiment = rawdata
-    
+    longdata.df$Instrument = "ECIS"
     longdata.df$Well = ecis_standardise_wells(longdata.df$Well)
     combined.df = ecis_assign_samples(longdata.df, sampledefine)
-    
-    # Resample the data
-    print("resampling raw data")
-    combined.df = ecis_resample(combined.df, by = by, from = from, to = to, zero_time = zero_time)
     
     
     # Explicitly return
@@ -228,7 +204,7 @@ ecis_import_raw = function(rawdata, sampledefine, by, from = Inf, to = Inf, zero
 
 #' Import raw modeled data
 #'
-#' @param modeled.csv Raw modeled data in APB format
+#' @param modeleddata Raw modeled data in APB format
 #' @param sampledefine CSV file containing which wells correspond to which values
 #'
 #' @return Data frame containing modeled data
@@ -247,21 +223,21 @@ ecis_import_raw = function(rawdata, sampledefine, by, from = Inf, to = Inf, zero
 #'  #can use a path relative to the file you are working on. 
 #'  #E.G 'Experiment1/Raw.abp'
 #' 
-#' modeled.csv = system.file('Model.csv', package = 'ecisr')
-#' sampledefine = system.file('Samples.csv', package = 'ecisr')
+#' modeleddata = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'ecisr')
+#' sampledefine = system.file('extdata/growth1_samples.csv', package = 'ecisr')
 #' 
 #' #Then run the import
 #' 
-#' data = ecis_import_model(modeled.csv, sampledefine, 0.1, 0.1, 0.9)
+#' data = ecis_import_model(modeleddata, sampledefine)
 #' head(data)
+#' ecis_plot(data, unit = "Rb", replication = "wells")
 #' 
-ecis_import_model = function(modeled.csv, sampledefine, by, from = Inf, to = Inf, zero_time = 0, verbose = TRUE) {
+ecis_import_model = function(modeleddata, sampledefine) {
     
-    print("Importing modelled data")
-    rawdata = modeled.csv
+    rawdata = modeleddata
   
     file.df = read.delim(rawdata, as.is = TRUE, sep = "\n", strip.white = TRUE)
-    base::colnames(file.df) = "Data"
+    colnames(file.df) = "Data"
     
     # Import the dataset in segments so that you can get rid of the ECIS crap
     cells.df = subset(file.df, str_detect(file.df$Data, "Well ID"))
@@ -292,11 +268,6 @@ ecis_import_model = function(modeled.csv, sampledefine, by, from = Inf, to = Inf
     
     data.df = data.df %>% tidyr::separate("Data", uniquenamesvector, ",", extra = "drop")
     alldata.df = rbind(cells.df, data.df)
-    
-    # Remove unneeded data
-    data.df$Time = as.numeric(data.df$Time)
-    data2.df = subset(data.df, Time>from)
-    data2.df = subset(data.df, Time<to)
     
     # Save the timestamps and rename the first one something sensible
     timestamps.df = alldata.df$`Time (hrs)_Well ID`
@@ -360,12 +331,11 @@ ecis_import_model = function(modeled.csv, sampledefine, by, from = Inf, to = Inf
     combined2.df = ecis_assign_samples(combined.df, sampledefine)
     
     combined2.df$Frequency = 0
-    
+
+    # Add constants and fix data types
     combined2.df$Experiment = rawdata
+    combined2.df$Instrument = "ECIS"
     combined2.df$Time = as.numeric(combined2.df$Time)
-    
-    print("Resampling modelled data")
-    combined2.df = ecis_resample(combined2.df, by, from, to, zero_time)
     
     return(combined2.df)
 }
@@ -378,7 +348,7 @@ ecis_import_model = function(modeled.csv, sampledefine, by, from = Inf, to = Inf
 
 #' Import all ECIS values, a child of ecis_import_raw and ecis_import_model
 #'
-#' @param resample A resampled APB file for import
+#' @param rawdata A raw ABP file to import
 #' @param modeled  A modeled APB file for import
 #' @param key A CSV file containing each well and it's corresponding sample
 #'
@@ -387,163 +357,21 @@ ecis_import_model = function(modeled.csv, sampledefine, by, from = Inf, to = Inf
 #'
 #' @examples
 #' 
-#' location_of_resampled_data = system.file('Resample.abp', package = 'ecisr')
-#' location_of_modeled_data = system.file('Model.csv', package = 'ecisr')
-#' location_of_sample_defintions = system.file('Samples.csv', package = 'ecisr')
+#' rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'ecisr')
+#' modeled = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'ecisr')
+#' key = system.file('extdata/growth1_samples.csv', package = 'ecisr')
 #' 
 #' #Then run the import
 #' 
-#' data = ecis_import(location_of_resampled_data,location_of_modeled_data,location_of_sample_defintions, 5, 0, 200)
+#' data = ecis_import(rawdata,modeled,key)
 #' head(data)
-#' 
-ecis_import = function(resample, modeled, key, by, from = Inf, to = Inf, zero_time = 0, verbose = TRUE, experiment = NULL) {
+#' ecis_plot(data, unit = "Rb")
+#' ecis_plot(data, unit = "R")
+ecis_import = function(rawdata, modeled, key) {
     
-    raw.df = ecis_import_raw(resample, key, by, from = from, to = to, zero_time = zero_time, verbose = verbose)
-    combined.df = ecis_import_model(modeled, key, by, from = from, to = to, zero_time = zero_time, verbose = verbose)
-    
-    masterdata.df = rbind(combined.df, raw.df)
-    
-    if(!is.null(experiment))
-    {
-      masterdata.df$Experiment = experiment
-    }
+    raw.df = ecis_import_raw(rawdata, key)
+    combined.df = ecis_import_model(modeled, key)
+    masterdata.df = ecis_combine(combined.df, raw.df, resample = TRUE)
     
     return(masterdata.df)
-    
 }
-
-
-#' Exclude erronious data from an ECIS dataframe
-#'
-#' @param data.df The source dataset
-#' @param samples The sample(s) to exclude
-#' @param wells The well(s) to exclude
-#' @param experiments The experiment(s) to exclude
-#' @param times The time(s) to exclude
-#' @param values The value(s) to exclude
-#' @param vs The isolated variables-unit pairs to exclude
-#' @param vars The isolated variables to exclude
-#' @param vals The isolated values to exclude
-#'
-#' @return The altered dataset
-#' @export
-#' 
-#' @importFrom dplyr filter
-#' @importFrom magrittr "%>%"
-#'
-#' @examples
-#' 
-#' unique(growth.df$Sample)
-#' excludedgrowth.df = ecis_exclude(growth.df, samples = c("35,000 cells", "0 cells"))
-#' unique(excludedgrowth.df$Sample)
-#' 
-#' unique(growth.df$Well)
-#' excludedgrowth.df = ecis_exclude(growth.df, wells = c("A1", "B1", "C1"))
-#' unique(excludedgrowth.df$Well)
-#' 
-#' unique(growth.df$Experiment)
-#' excludedgrowth.df = ecis_exclude(growth.df, experiment = c(1,2))
-#' unique(excludedgrowth.df$Experiment)
-#' 
-
-
-ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = FALSE, times = FALSE, values = FALSE, vars = FALSE, vals = FALSE, vs = FALSE)
-{
-  
-  for (sample in samples)
-  {
-    data.df = data.df %>% filter(Sample != sample)
-  }
-  
-  for (well in wells)
-  {
-    data.df = data.df %>% filter(Well != well)
-  }
-  
-  for (experiment in experiments)
-  {
-    data.df = data.df %>% filter(Experiment != experiment)
-  }
-  
-  for (time in times)
-  {
-    data.df = data.df %>% filter(Time != time)
-  }
-  
-  for (value in values)
-  {
-    data.df = data.df %>% filter(Value != value)
-  }
-  
-  
-  return (data.df)
-}
-
-
-
-
-# Worker functions for importing files ------------------------------------
-
-
-#' Combine ECIS data frames end to end
-#' 
-#' This funciton will combine ECIS datasets end to end. Preferential to use over a simple rbind command as it runs additional checks to ensure that datapoints are correctly generated
-#'
-#' @param ... List of data frames to be combined
-#'
-#' @return A single data frame containing all the data imported, automaticaly incremented by experiment
-#' 
-#' @export
-#'
-#' @examples
-#' 
-#' #Make two fake experiments worth of data
-#' 
-#' experiment1.df = ecis_subset(growth.df, experiment = "1")
-#' experiment2.df = ecis_subset(growth.df, experiment = "2")
-#' experiment3.df = ecis_subset(growth.df, experiment = "3")
-#' 
-#' data = ecis_combine(experiment1.df, experiment2.df, experiment3.df)
-#' head(data)
-#' 
-ecis_combine = function(...) {
-    
-    dataframes = list(...)
-    
-    # Test filler variables dataframes = list(child1.df, child2.df, child3.df) i = 1
-    
-    # Generate an empty data frame with the correct columns to fill later
-    alldata = dataframes[[1]][0, ]
-    loops = 1
-    
-    # Check that both dataframes have the same timebase
-    for (i in dataframes)
-    {
-      if (!(exists("timepointstomerge")))
-      {
-        timepointstomerge = unique(i$Time)
-      }
-        
-        if (!identical(timepointstomerge,unique(i$Time)))
-      {
-        warning("Datasets have different non-identical timebases. Please resample one or more of these datasets before running this function again or graphs may not be properly generated.")
-      }
-    }
-    
-    # Mash all the dataframes together
-    
-    for (i in dataframes) {
-        indata = i
-        indata$Experiment = paste(loops, ":", indata$Experiment)
-        loops = loops + 1
-        alldata = rbind(alldata, indata)
-    }
-    
-    alldata$Experiment = as.factor(alldata$Experiment)
-    
-    
-    return(alldata)
-    
-}
-
-
