@@ -12,7 +12,8 @@
 #' @param file Path to the file to import
 #' @param table Name of the acess table to be imported
 #'
-#' @importFrom svSocket startSocketServer stopSocketServer
+#' @importFrom svSocket startSocketServer stopSocketServer evalServer
+#' @importFrom RODBC odbcDriverConnect odbcCloseAll
 #'
 #' @return A table, as outlined in the Access database
 #'
@@ -181,7 +182,6 @@ if(missing(key))
       labeleddata$Sample = "NS"
       
       finaldata = ecis_implode(labeleddata)
-      finaldata = ecis_explode(finaldata)
 } else # Code for assigning samples from a standard file
 {
       finaldata = ecis_assign_samples(TimeOrg,key)

@@ -4,8 +4,13 @@
 \alias{ecis_prism}
 \title{Export a prism-compatable data set}
 \usage{
-ecis_prism(data.df, unit, frequency = 0, replication = "summary",
-  experiment = "")
+ecis_prism(
+  data.df,
+  unit,
+  frequency = 0,
+  replication = "summary",
+  experiment = ""
+)
 }
 \arguments{
 \item{data.df}{ECIS dataframe}

@@ -4,8 +4,7 @@
 \alias{ecis_detect_badwells}
 \title{Automatically strip badly connected wells from an ECIS dataset}
 \usage{
-ecis_detect_badwells(data.df, threshold = 5, frequency = 4000,
-  unit = "R")
+ecis_detect_badwells(data.df, threshold = 5, frequency = 4000, unit = "R")
 }
 \arguments{
 \item{data.df}{A standard ECIS data frame}

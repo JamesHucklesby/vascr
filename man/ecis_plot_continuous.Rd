@@ -4,9 +4,20 @@
 \alias{ecis_plot_continuous}
 \title{Plot a categorical ECIS variable}
 \usage{
-ecis_plot_continuous(data, unit = "R", frequency = 4000,
-  replication = "summary", time, error = Inf, alphavalue = 0.5,
-  xlab = NULL, ylab = "Value", title = "", cols, continuous)
+ecis_plot_continuous(
+  data,
+  unit = "R",
+  frequency = 4000,
+  replication = "summary",
+  time,
+  error = Inf,
+  alphavalue = 0.5,
+  xlab = NULL,
+  ylab = "Value",
+  title = "",
+  cols,
+  continuous
+)
 }
 \arguments{
 \item{data}{A standard ECIS dataset}

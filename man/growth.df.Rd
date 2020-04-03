@@ -4,7 +4,8 @@
 \name{growth.df}
 \alias{growth.df}
 \title{Example data set from an ECIS growth experiment}
-\format{A data frame with 53940 rows and 10 variables:
+\format{
+A data frame with 53940 rows and 10 variables:
 \describe{
   \item{Experiment}{Date the experiment was conducted}
   \item{Frequency}{Frequency of colleciton, modeled units have a frequency of 0}
@@ -16,7 +17,8 @@
   \item{cells}{Number of cells added to each well}
   \item{line}{The cell line used in this experiment (all HCMEC/D3)}
   ...
-}}
+}
+}
 \source{
 James Hucklesby 2019
 }

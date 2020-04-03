@@ -4,8 +4,12 @@
 \alias{grid_arrange_shared_legend}
 \title{Internal funciton for aligning grids}
 \usage{
-grid_arrange_shared_legend(..., ncol = length(list(...)), nrow = 1,
-  position = c("bottom", "right"))
+grid_arrange_shared_legend(
+  ...,
+  ncol = length(list(...)),
+  nrow = 1,
+  position = c("bottom", "right")
+)
 }
 \arguments{
 \item{...}{GGPlot objects to combine}

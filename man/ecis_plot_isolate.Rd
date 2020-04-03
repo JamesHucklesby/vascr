@@ -4,8 +4,14 @@
 \alias{ecis_plot_isolate}
 \title{Animation removed due to compatabilty issues with CRAN. To be re-introduced later.}
 \usage{
-ecis_plot_isolate(data.df, well, title = "Well isolation plot",
-  unit = "R", frequency = 4000, ...)
+ecis_plot_isolate(
+  data.df,
+  well,
+  title = "Well isolation plot",
+  unit = "R",
+  frequency = 4000,
+  ...
+)
 }
 \arguments{
 \item{data.df}{The dataset the well is in}

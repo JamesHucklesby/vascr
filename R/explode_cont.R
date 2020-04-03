@@ -5,47 +5,51 @@
 #' @return The data frame to return
 #' @export 
 #' 
-#' @importFrom stringr str_count str_replace
-#' @importFrom tidyr separate pivot_wider
+#' @importFrom tidyr separate_rows pivot_wider separate pivot_wider
 #' @importFrom magrittr "%>%"
+#' @importFrom dplyr all_equal
 #'
 #' @examples
-#' library(stringr) # Needed to generate the dummy data
+#' # Stip out all the non-core columns in the dataset
+#' data.df = ecis_remove_metadata(growth.df)
 #' 
-#' data.df = growth.df
-#' data.df$Sample = str_replace(data.df$Sample, " ", "_")
-#' data.df$Sample = paste(data.df$Sample, "+ 10_nm nothing important")
-#' data.df$Sample = paste(data.df$Sample, "+ 4_nm Carpet + ECV_line")
+#' # Run the explosion to re-generate the non-core columns
 #' processed = ecis_explode(data.df)
+#' 
+#' # Show that the re-created data is identical to the original dataset
+#' all_equal(growth.df, processed)
+#' 
 ecis_explode = function(data)
 {
+  # Clean out any existing explosion data to give a clean slate
+  df1 = ecis_remove_metadata(data)
+  #Separate each condition at each data point into it's own row
+  df2 = df1 %>% separate_rows("Sample", sep = " \\+ ")
+  # Separate out the numbers and conditions into separate columns
+  df3 = separate(df2, "Sample", sep ="_", into = c("num", "col"))
+  # Pivot each individual row wider to make an exploded dataset
+  df4 = pivot_wider(df3, c("num","col"), names_from = "col", values_from = "num",  id_cols = -c("col", "num"), names_prefix = "")
   
-  data$plus = str_count(string = data$Sample, pattern = "[+]")
-  maxplus = max(data$plus) + 1
-  data$plus = NULL
-  maxlist =  c(1:maxplus)
-  dumpcols = paste("V",maxlist, sep = "")
+  # Warn if any data is lost in this transfer
+  # Pull out the core datasets, then check they're identical
+  originalcore = ecis_remove_metadata(data)
+  originalcore$Sample = NULL
+  newcore = df4
+  newcore$Sample = "NA"
+  newcore = ecis_remove_metadata(newcore)
+  newcore$Sample = NULL
   
-  data2.df  = separate(data, Sample,into = dumpcols, sep = "[+]", remove = FALSE, fill = "right")
+  if(!all_equal(originalcore, newcore, ignore_row_order = FALSE, ignore_col_order = FALSE))
+     {
+       errorCondition("Explosion match failed, check all rows are unique and repeat analyasis")
+     }
   
-  data3.df = data2.df
+  # Then patch the original samples that we destroyed back on
+  df4$Sample = data$Sample
   
-  for(dump in dumpcols)
-  {
-    data3.df[[dump]] = str_trim(data3.df[[dump]])
-    data3.df = separate(data3.df, dump, sep = "[_]", into = c("Val", "Var"), extra = "merge")
-    data3.df$Var = trimws(data3.df$Var)
-    data3.df$Val = trimws(data3.df$Val)
-    
-    data3.df$Val = gsub(",","",data3.df$Val)
-    
-    data3.df = data3.df %>% spread(key = Var, value = Val)
+  return(df4)
+  
   }
-  
-  return(data3.df)
-  
-}
-
 
 
 #' Test that the datset is correctly formatted for explosion

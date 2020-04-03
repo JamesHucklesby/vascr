@@ -4,8 +4,13 @@
 \alias{ecis_exclude_badwells}
 \title{Exclude automatically detected wells that have a connection issue from the dataset}
 \usage{
-ecis_exclude_badwells(data.df, threshold = 5, frequency = 4000,
-  unit = "R", verbose = TRUE)
+ecis_exclude_badwells(
+  data.df,
+  threshold = 5,
+  frequency = 4000,
+  unit = "R",
+  verbose = TRUE
+)
 }
 \arguments{
 \item{data.df}{The dataset to parse}

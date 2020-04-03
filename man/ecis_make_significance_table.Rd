@@ -4,8 +4,14 @@
 \alias{ecis_make_significance_table}
 \title{Make a dataframe of what is statistically significant}
 \usage{
-ecis_make_significance_table(data.df, time, unit, frequency,
-  confidence = 0.95, format = "toplot")
+ecis_make_significance_table(
+  data.df,
+  time,
+  unit,
+  frequency,
+  confidence = 0.95,
+  format = "toplot"
+)
 }
 \arguments{
 \item{data.df}{The dataframe to analyse}

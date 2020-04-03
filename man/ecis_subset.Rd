@@ -4,8 +4,15 @@
 \alias{ecis_subset}
 \title{Subset an ECIS dataset on multiple factors}
 \usage{
-ecis_subset(data.df, time = Inf, unit = "", frequency = Inf,
-  samplecontains = "", experiment = "", well = "")
+ecis_subset(
+  data.df,
+  time = Inf,
+  unit = "",
+  frequency = Inf,
+  samplecontains = "",
+  experiment = "",
+  well = ""
+)
 }
 \arguments{
 \item{data.df}{A standard ECIS dataset}
