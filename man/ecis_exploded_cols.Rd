@@ -17,6 +17,7 @@ Return the exploded cols in a dataset
 }
 \examples{
 
+growth.df$Instrument = "ECIS"
 ecis_explode(growth.df)
 
 }

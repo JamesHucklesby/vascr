@@ -10,6 +10,8 @@
 #' @importFrom dplyr all_equal
 #'
 #' @examples
+#' growth.df$Instrument ="ECIS"
+#' 
 #' # Stip out all the non-core columns in the dataset
 #' data.df = ecis_remove_metadata(growth.df)
 #' 
@@ -17,7 +19,7 @@
 #' processed = ecis_explode(data.df)
 #' 
 #' # Show that the re-created data is identical to the original dataset
-#' all_equal(growth.df, processed)
+#' all.equal(growth.df, processed)
 #' 
 ecis_explode = function(data)
 {
@@ -27,7 +29,8 @@ ecis_explode = function(data)
   df2 = df1 %>% separate_rows("Sample", sep = " \\+ ")
   # Separate out the numbers and conditions into separate columns
   df3 = separate(df2, "Sample", sep ="_", into = c("num", "col"))
-  # Pivot each individual row wider to make an exploded dataset
+  # # Pivot each individual row wider to make an exploded dataset
+  # df3$num = as.numeric(gsub(",","",df3$num))
   df4 = pivot_wider(df3, c("num","col"), names_from = "col", values_from = "num",  id_cols = -c("col", "num"), names_prefix = "")
   
   # Warn if any data is lost in this transfer

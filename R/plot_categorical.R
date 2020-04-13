@@ -1,4 +1,3 @@
-
 #' Plot a categorical ECIS variable
 #'
 #' @param data A standard ECIS dataset
@@ -20,10 +19,12 @@
 #' @export
 #'
 #' @examples
+#' 
+#' growth.df$Instrument = "ECIS"
 #'
 #'ecis_plot_continuous(growth.df, "R", 4000, "wells", 50, Inf, continuous = "cells")
-#'ecis_plot_continuous(growth.df, "R", 4000, "experiments", 50, continuous = "cells")
-#'ecis_plot_continuous(growth.df, "R", 4000, "summary", 50, continuous = "cells", error = Inf)
+#' # ecis_plot_continuous(growth.df, "R", 4000, "experiments", 50, continuous = "cells")
+#'# ecis_plot_continuous(growth.df, "R", 4000, "summary", 50, continuous = "cells", error = Inf)
 #'
 #' 
 ecis_plot_continuous = function(data, unit = "R", frequency = 4000, replication = "summary", time, error = Inf, alphavalue = 0.5, xlab  = NULL, ylab = "Value", title = "", cols, continuous)
@@ -141,7 +142,7 @@ ecis_check_categorical = function(data)
 
 #' Reconstitute incorrectly formed sample field
 #' 
-#' Uses string processing to guess what might be in an incorrectly formed string field to try and save things. It is generally better to go back and fix the import file than use this function. Legacy only.
+#' Uses string processing to guess what might be in an incorrectly formed string field to try and save things. It is generally better to go back and fix the import file than use this function. Legacy only as this is a very heavy function as it does tonnes of string maniuplations.
 #'
 #' @param string The string to be converted to a continuous vector
 #'
@@ -213,94 +214,6 @@ ecis_collapse_hash = function(string)
   
 }
 
-
-#' Implode a continuous dataset
-#' 
-#' This function implodes a coninuous dataset to re-create Sample names from only some (or all) of the exploded columns. Provides a better way to subset data for plotting (as it allows for exclusion of values that are always the same) and for the generation of continuous plots. 
-#'
-#' @param data A standard ECIS data frame
-#' @param cols The columns to plot. Default of null plots the whole lot.
-#' @param stripidentical Strip out columns that are identical in all samples. Tidies up graphs significantly (at the cost of being less explicit). Default is FALSE as the user must manually specify what has been removed in the graph title, or data is implicity lost. 
-#'
-#' @return the cleaned up data frame
-#' 
-#' @importFrom dplyr select
-#' @importFrom tidyr unite
-#' 
-#' @export
-#'
-#' @examples
-#' 
-#' # Make a test dataset
-#' library(stringr)
-#' data.df = growth.df
-#' data.df$Sample = str_replace(data.df$Sample, " ", "_")
-#' data.df$Sample = paste(data.df$Sample, "+ 10_nm nothing important")
-#' data.df$Sample = paste(data.df$Sample, "+ 4_nm Carpet + ECV_line")
-#' #exploded = ecis_explode(data.df)
-#' 
-#' #Check the function
-#' #imploded = ecis_implode(exploded, cols = c('cells', 'nm nothing important'))
-#' #imploded = ecis_implode(exploded, cols = c('cells', "nm nothing important"), stripidentical = TRUE)
-#' 
-ecis_implode = function(data, cols = NULL, stripidentical = FALSE)
-{
-  data$Instrument = "Machine"
-  
-  if(is.null(cols))  # If cols is not specified, use the lot
-  {
-    cols = ecis_exploded_cols(data)
-  }
-  
-  if(length(setdiff(cols, colnames(data)))>0) #If cols have been requested that are not in the dataset, remove them from cols and make a warning
-  {
-    warning(paste("Excluding columns requested that are not in the dataset:",setdiff(cols, colnames(data))))
-    cols = intersect(cols, colnames(data))
-    
-  }
-  
-  if(stripidentical) #If we're removing identical columns
-  {
-    for (col in cols)
-    {
-      if(length(unique(data[[col]]))==1)
-      {
-        cols <- cols[!cols %in% col]
-      }
-    }
-  }
-
-
-miniexploded = select(data, c(ecis_cols(),cols))
-miniexploded$Sample = NULL
-
-for(col in cols)
-{
-  numericcol = NA
-  oldw <- getOption("warn")
-  options(warn = -1)
-  
-  numericcol = as.numeric(miniexploded[[col]])
-  options(warn = oldw)
-  
-  if (!(all(is.na(numericcol))))
-  {
-  miniexploded[[col]] = numericcol
-  miniexploded[[col]] = format(miniexploded[[col]],big.mark=",",scientific=FALSE, trim = TRUE)
-  }
-  
-  miniexploded[[col]] = paste(miniexploded[[col]], col, sep ="_")
-}
-
-miniexploded$Sample = NULL
-miniexploded = unite(miniexploded, Sample, cols, sep = " + ")
-
-miniexploded$Sample = str_remove(miniexploded$Sample, "\\+ _Note")
-miniexploded$Sample = str_remove(miniexploded$Sample, "_Note")
-
-return(miniexploded)
-}
-
 #' Return the exploded cols in a dataset
 #'
 #' @param data The ECIS dataset with exploded columns
@@ -311,6 +224,7 @@ return(miniexploded)
 #'
 #' @examples
 #' 
+#' growth.df$Instrument = "ECIS"
 #' ecis_explode(growth.df)
 #' 
 ecis_exploded_cols = function(data)
@@ -319,7 +233,10 @@ ecis_exploded_cols = function(data)
 }
 
 #' Return the ECIS cols used in this package
+#' 
+#' Can return either the core set of columns required for an ECIS package, the continous or categorical variables, or the exploded variables. Set will return the lot as a list.
 #'
+#' @param data The dataset to work off. Only required if non-standard cols are requested
 #' @param set The set of columns to request. Default is core.
 #'
 #' @return A vector of the columns requested
@@ -327,11 +244,82 @@ ecis_exploded_cols = function(data)
 #'
 #' @examples
 #' 
-#' ecis_cols()
+#' #ecis_cols()
+#' #ecis_cols(growth.df, set = "exploded")
+#' #ecis_cols(growth.df, set = "continuous")
+#' #ecis_cols(growth.df, set = "categorical")
+#' #ecis_cols(growth.df, set = "set")
+#' #ecis_cols(growth.df, set = "is_continuous")
 #' 
-ecis_cols  = function(set = "core")
+#' 
+ecis_cols  = function(data, set = "core")
 {
+  if(set == "core")
+  {
   return(c("Time", "Unit", "Value", "Well", "Sample", "Frequency", "Experiment", "Instrument"))
+  }
+  
+  else if(set == "is_continuous")
+  {
+    # Apply a check function to all colums
+    is.numeric = lapply(data, function(cols) {
+      
+      #Check if all are numeric or the text "NA". Check numeric by converting everything to a character, stripping comma then trying to turn it into a numeric variable.
+      if (isTRUE(suppressWarnings(all(!is.na(as.numeric(gsub(",","",as.character(cols)))) || cols=="NA")))) {
+        # Return true or false for each column based on this data
+        return(TRUE)
+      } else {
+        return(FALSE)
+      }
+    })
+    
+    # Turn the previously generated vector, and the original names into a data frame
+    numeric2= data.frame(colnames(data), unlist(is.numeric))
+    names(numeric2) = c("Column", "IsNumeric")
+    rownames(numeric2) <- c()
+    return(numeric2)
+  }
+  
+  else if(set == "continuous")
+  {
+    numeric2 = ecis_cols(data, set = "is_continuous")
+    
+    # Delete everything that is not numeric from the list
+    numeric2 = subset(numeric2, numeric2$IsNumeric)
+    
+    # Then convert the list of remaining names to a vector, which is then returned
+    return(as.vector(numeric2$Column))
+  }
+  
+  else if(set == "categorical")
+  {
+    # Return all the cols that are in the dataset and not continuous
+    return(setdiff(colnames(data),ecis_cols(data, set = "continuous")))
+  }
+  
+  else if (set == "exploded")
+  {
+    # Return the non-core cols
+    return(setdiff(colnames(data), ecis_cols()))
+  }
+  else if (set == "set")
+  {
+    # Recursivley generate all the required cols. Some will then further use recursion to generate themselves.
+    returndata = list(
+        core = ecis_cols(data),
+        exploded = ecis_cols(data, "exploded"),
+        categorical = ecis_cols(data, "categorical"),
+        continuous = ecis_cols(data, "continuous")
+        )
+    return(returndata)
+  }
+  
+  else
+  {
+    warning("Inappropriate set selected, please use another")
+    return(NULL)
+  }
+  
 }
 
 

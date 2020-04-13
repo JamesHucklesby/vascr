@@ -52,9 +52,11 @@ Plot a categorical ECIS variable
 }
 \examples{
 
+growth.df$Instrument = "ECIS"
+
 ecis_plot_continuous(growth.df, "R", 4000, "wells", 50, Inf, continuous = "cells")
-ecis_plot_continuous(growth.df, "R", 4000, "experiments", 50, continuous = "cells")
-ecis_plot_continuous(growth.df, "R", 4000, "summary", 50, continuous = "cells", error = Inf)
+# ecis_plot_continuous(growth.df, "R", 4000, "experiments", 50, continuous = "cells")
+# ecis_plot_continuous(growth.df, "R", 4000, "summary", 50, continuous = "cells", error = Inf)
 
 
 }

@@ -1,7 +1,30 @@
+#' 
+#' library(RODBC)
+#' library(svSocket)
 # 
-# library(RODBC)
-# library(svSocket)
-# 
+
+#' Lengthen out an excelligence platemap
+#' 
+#' Switches the xcelligence format of having each column as a column and each row as a row, then stacking timepoints to a standardised tidy data format
+#'
+#' @param data The raw xcelligence dataset to deal with
+#'
+#' @return A slighlty tidier dataset
+#' 
+xcelligence_lengthen_platemap = function(data)
+{
+  # Pivot table longer, and merge cols together to give well ID. Standardise
+  lookuptable = pivot_longer(data, cols = starts_with("C"), names_to = "Cols", values_to = "Value")
+  lookuptable$Cols = str_remove(lookuptable$Cols, "C")
+  lookuptable$Well = paste(lookuptable$Row, lookuptable$Cols, sep = "")
+  lookuptable$Well = ecis_standardise_wells(lookuptable$Well)
+  # Clean up
+  lookuptable$Cols = NULL
+  lookuptable$Row = NULL
+  
+  return(lookuptable)
+}
+
 
 #' Internal Function to import MDB files from access
 #'
@@ -16,8 +39,6 @@
 #' @importFrom RODBC odbcDriverConnect odbcCloseAll
 #'
 #' @return A table, as outlined in the Access database
-#'
-#' @export
 #'
 #' @examples
 #' 
@@ -84,22 +105,42 @@ import_mdb = function(file, table)
 }
 
 
-
-# Import data in full -----------------------------------------------------
-
-
-# Arguments to push through the function
-# file = "inst/extdata/xcell.mdb"
-# xcell = import_xcelligence(file)
-# 
-# subset = ecis_subset_continuous(xcell, c("ATP", "Adenosine"))
-# subset = ecis_implode(subset)
-# ecis_plot(subset, unit = "Z", frequency = "10000", replication = "experiments", normtime = 160)
+#' Import an xcelligence file
+#'
+#' @param file The file to import
+#' @param key A keyfile to apply. Optional, as the xCELLigence internal definitions will be used if no file is specified
+#' 
+#' @importFrom tidyr separate pivot_wider
+#' @importFrom dplyr left_join
+#' @importFrom stringr str_replace
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' #' # Arguments to push through the function
+#' #' file = "inst/extdata/xcell.plt"
+#' #' key = "inst/extdata/xcell_lookup.csv"
+#' #' xcell = import_xcelligence(file, key)
+#' #' 
+#' #' xcell = ecis_explode(xcell)
+#' #' 
+#' #' #ecis_plot(xcell, unit = "Z", frequency = "10000", replication = "experiments", continuouscontains = "ATP", normtime = 0)
+#' #' 
+#' #' #ecis_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", replication = "wells")
+#' #'
+#'  
 
 import_xcelligence = function(file, key)
 {
-
-## Start function (once all plummed in)
+  # Make a temporary copy of the file, with the correct extension so Microsoft Access can open it
+  folder = dirname(file)
+  tempfile = paste(folder,"/","TEMPMDBFORIMPORT.mdb", sep = "")
+  if(!file.copy(from = file, to = tempfile))
+  {
+    errorCondition("ERROR - file could not be duplicated to be opened. Ensure you have write capabilities in the new folder, and the file TEMPMDBFORIMPORT.mdb does not exist. Also check that the plt file is not open when you run this command")
+  }
+  file = tempfile
 
 # Hard code in the list of tables we need to import from access. This will be pruned later to speed things up
 tables = c("Calibration","ENotes", "ErrLog", "ETimes", "Index1", "Index2", "Index3", "Layout", "Messages", "mIndex1", "Org10K", "Org25K", "Org50K", "ScanPlate", "ScanPlateData", "StepStatus", "TTimes", "WellColor")
@@ -110,6 +151,9 @@ for(table in tables)
   assign(table, import_mdb(file, table))
 }
 
+# Delete the temporary file now we have what we need in R
+file.remove(tempfile)
+
 # Where needed, set the appropriate frequencies into the org datafiles, then bind them together
 Org10K$Frequency = 10000
 Org25K$Frequency = 25000
@@ -117,15 +161,10 @@ Org50K$Frequency = 50000
 MasterOrg = rbind(Org10K, Org25K, Org50K)
 
 # Pivot the xcelligence columns into one row per data point, then remove the C's and attach them together to give well ID's
-LongOrg = pivot_longer(MasterOrg, cols = starts_with("C"), names_to = "Cols", values_to = "Value")
-LongOrg$Cols = str_remove(LongOrg$Cols, "C")
-LongOrg$Well = paste(LongOrg$Row, LongOrg$Cols, sep = "")
+LongOrg = xcelligence_lengthen_platemap(MasterOrg)
 
 # Clean up the mess created in making well ID's and standardise
-LongOrg$Row = NULL
-LongOrg$Cols = NULL
 LongOrg$StepID = NULL
-LongOrg$Well = ecis_standardise_wells(LongOrg$Well)
 
 
 # Add times (in hours) to each time point by looking them up in another sheet
@@ -145,21 +184,12 @@ TimeOrg$Unit = "Z" # Assign impedance (Z) as the unit for all time points. This 
 TimeOrg$Experiment = file # Assign file name as experiment name
 TimeOrg$Instrument = "xCELLigence" # Assign instrument name
 
-TimeOrg$Sample = "TEST" ########################################### Overwrite sample names. For testing only
-
 # Code for assigning samples from file
 
 if(missing(key))
 {
 
-      # Pivot table longer, and merge cols together to give well ID. Standardise
-      lookuptable = pivot_longer(Layout, cols = starts_with("C"), names_to = "Cols", values_to = "Value")
-      lookuptable$Cols = str_remove(lookuptable$Cols, "C")
-      lookuptable$Well = paste(lookuptable$Row, lookuptable$Cols, sep = "")
-      lookuptable$Well = ecis_standardise_wells(lookuptable$Well)
-      # Clean up
-      lookuptable$Cols = NULL
-      lookuptable$Row = NULL
+      lookuptable = xcelligence_lengthen_platemap(Layout)
       
       # Re-constitute the samples so they are in the correct format
       ingested = separate(lookuptable, Value, into =c("cell line", "cell number", "drug", "concentration", "unit", "other"), sep = "\n|\t")
@@ -175,7 +205,7 @@ if(missing(key))
       # Widen the data, for both all drugs and all cell lines
       ingested2 = pivot_wider(ingested, names_from = "title", values_from = "concentration")
       ingested2 = pivot_wider(ingested2, names_from = "cell line", values_from = "cell number")
-      ingested2$NS = NULL # Remove anything that claims that no Vehicle was added. Obveously.
+      ingested2$NS = NULL # Remove anything that claims that nothing was added
       
       
       labeleddata = left_join(TimeOrg, ingested2, by = "Well")
@@ -187,36 +217,95 @@ if(missing(key))
       finaldata = ecis_assign_samples(TimeOrg,key)
 }
 
-return(finaldata)
+# Normalise the data to the minimum timepoint in the dataset (should be 0). This satisfies the top of the CI equation
+xcellCI = ecis_normalise(finaldata, min(finaldata$Time), divide = FALSE)
+
+# Generate a divisor column, switch in the correct numbers, divide by each other and clean up
+xcellCI$divisor = xcellCI$Frequency
+xcellCI$divisor = as.character(xcellCI$divisor)
+xcellCI$divisor = str_replace(xcellCI$divisor, "10000", "15")
+xcellCI$divisor = str_replace(xcellCI$divisor, "25000", "12")
+xcellCI$divisor = str_replace(xcellCI$divisor, "50000", "10")
+xcellCI$divisor = as.numeric(xcellCI$divisor)
+xcellCI$Value = xcellCI$Value/xcellCI$divisor
+xcellCI$divisor = NULL
+
+# Fix up the unit, as they are now all CI
+xcellCI$Unit = "CI"
+
+returndata = ecis_combine(xcellCI, finaldata)
+
+return(returndata)
 }
 
+# #//////////////////////////////// Subtract background (needs validation)
+# 
+# file = "inst/extdata/xcell.mdb"
+# xcell = import_xcelligence(file)
+# 
+# filename = "inst/extdata/xcell.txt"
+# dataset = xcelligence_import_exported(filename)
+# 
+# xcell = ecis_explode(xcell)
+# xcell$Instrument = "XCELL"
 # 
 # 
-# # Calculate CI
-# tomatch = subset(TimeOrg, Time ==0)
-# tomatch = select(tomatch, Frequency, Value, Well)
+# # Data to subtract calibration data. Needs more work to check this is correct
+# background = xcelligence_lengthen_platemap(Calibration)
+# background = background %>% rename("Background" = "Value")
 # 
-# unifieddata = left_join(TimeOrg, tomatch, by = c("Frequency", "Well"))
-# unifieddata$Value = (unifieddata$Value.x-unifieddata$Value.y)/15
+# # Then we GUESS what CI should look like. Will compare this to the old CellZScope data yet to do a guess and check
+# # Change to strings, then replace, then convert back. Looks inefficent, but it's very explicit and better reflects the categorical nature of replacing arbitary numbers with meaningfull category names.
+# background = background %>% rename("Frequency" = "TimePoint")
+# background$Frequency = as.character(background$Frequency)
 # 
-# ecis_plot(unifieddata, preprocessed = TRUE, unit = "Z", frequency = "10000")
+# background$Frequency = str_replace(background$Frequency , "-1", "10000")
+# background$Frequency = str_replace(background$Frequency , "-2", "25000")
+# background$Frequency = str_replace(background$Frequency , "-3", "50000")
 # 
-# dataset$Sample = "TEST"
-# ecis_plot(dataset, preprocessed = TRUE, unit = "CI", frequency = "0")
+# background$Frequency = as.integer(background$Frequency)
+# 
+# xcellwithnormal = left_join(xcell, background)
+# 
+# xcellminusbackground = xcellwithnormal
+# xcellminusbackground$Value = xcellminusbackground$Value - xcellminusbackground$Background
+# xcellminusbackground$Background = NULL
+# 
+# xcellCI$Instrument.x = NULL
+# xcellCI$Instrument.y = NULL
+# 
+# old_xcell_compare = (ecis_subset(old_xcell, time = 10, well = "A1"))
+# new_xcell_compare = (ecis_subset(xcellCI, time = 10, well = "A1"))
+# 
+# old_xcell$Frequency = "9000"
+# old_xcell$Instrument = NULL
+# old_xcell$Time = as.numeric(old_xcell$Time)
+# 
+# master_xcell = ecis_combine(xcellCI, old_xcell)
+# master_xcell$Instrument = "THING"
+# master_xcelle = ecis_explode(master_xcell)
+# 
+# master_xcellf = ecis_subset_continuous(master_xcelle, "Nerifollin")
+# master_xcellf = ecis_implode(master_xcellf, stripidentical = TRUE)
+# master_xcellg = ecis_subset(old_xcell, samplecontains = "Nerifollin")
+# master_xcellf$Instrument = "THING"
+# master_xcellg$Instrument = "THING"
+# 
+# master_xcellh = ecis_combine(master_xcellg, master_xcellf)
 # 
 # 
-# ecis_plot(TimeOrg, unit = "Z", frequency = "10000", replication = "experiments", preprocessed = TRUE, normtime = 0)
-# ecis_plot(TimeOrg, unit = "Z", frequency = "25000", preprocessed = TRUE)
-# ecis_plot(TimeOrg, unit = "Z", frequency = "50000", preprocessed = TRUE)
+# master_xcellf$Unit = "CIT"
 # 
 # 
+# master_xcelli = ecis_subset(master_xcellh, time = c(150,200))
 # 
-# ecis_plot(dataset, unit ="CI", frequency = 0, replication = "experiments", preprocessed = TRUE)
+# toplot2.df = summarise(group_by(master_xcelli, Sample, Time, Frequency), sd = sd(Value),
+#                        n = n(), Value = mean(Value))
+# 
+# ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample, linetype = Frequency))+ ggplot2::geom_line(size = 1)
 
 
 # TODO
-# Add in CI generation data
-# Speed up ECIS_Explode
 # Test joining of a custom file
 # Test different xcelligence files from AA
 

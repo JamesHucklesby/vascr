@@ -16,11 +16,15 @@ The data frame to return
 Explode out continuous data from Sample
 }
 \examples{
-library(stringr) # Needed to generate the dummy data
+growth.df$Instrument ="ECIS"
 
-data.df = growth.df
-data.df$Sample = str_replace(data.df$Sample, " ", "_")
-data.df$Sample = paste(data.df$Sample, "+ 10_nm nothing important")
-data.df$Sample = paste(data.df$Sample, "+ 4_nm Carpet + ECV_line")
+# Stip out all the non-core columns in the dataset
+data.df = ecis_remove_metadata(growth.df)
+
+# Run the explosion to re-generate the non-core columns
 processed = ecis_explode(data.df)
+
+# Show that the re-created data is identical to the original dataset
+all.equal(growth.df, processed)
+
 }

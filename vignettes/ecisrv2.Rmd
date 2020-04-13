@@ -2,7 +2,11 @@
 title: "vascr - tools for processing vascular impedance data"
 author: "James Hucklesby"
 date: "03/04/2020"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vascar}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}

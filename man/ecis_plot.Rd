@@ -91,17 +91,6 @@ A ggplot2 object
 The master function for generating ggplot2 objects from ECIS data. Incorporates all the summarising, testing and graphing operations into a single function.
 }
 \examples{
-ecis_plot(growth.df, 'Rb', replication = 'summary', 
-error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-ecis_plot(growth.df, 'Rb', replication = 'wells',
- error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
- ecis_plot(growth.df, 'Rb', replication = 'experiments',
- error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
- , xlab = "Hours")
-ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
-ecis_plot(growth.df, "R", "4000", "summary", 50, confidence = 0.1)
+growth.df$Instrument = "ECIS"
 
-ecis_plot(growth.df)
-
-ecis_plot(growth.df, continuous = "cells", replication = "summary", time = 50)
 }

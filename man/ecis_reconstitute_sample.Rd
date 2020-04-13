@@ -13,7 +13,7 @@ ecis_reconstitute_sample(string)
 A CSV separated list of continuous variables
 }
 \description{
-Uses string processing to guess what might be in an incorrectly formed string field to try and save things. It is generally better to go back and fix the import file than use this function. Legacy only.
+Uses string processing to guess what might be in an incorrectly formed string field to try and save things. It is generally better to go back and fix the import file than use this function. Legacy only as this is a very heavy function as it does tonnes of string maniuplations.
 }
 \examples{
 

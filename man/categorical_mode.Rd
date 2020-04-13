@@ -2,7 +2,38 @@
 % Please edit documentation in R/helper_functions.R
 \name{categorical_mode}
 \alias{categorical_mode}
-\title{Find the mode of a categorical variable}
+\title{#' Fix typographical errors in an ECIS dataframe
+#' 
+#' This function will go through all the sample and experiment names and replace all the values that are incorrect. Usefull for fixing up typographical errors, or places where you have named things differently inadvertently.
+#'
+#' @param data.df the data to correct
+#' @param incorrect the error to be corrected
+#' @param correct the corrrect string
+#' @param limit can be set to "Sample or "Experiment" to limit the replacement to a single variable
+#'
+#' @return the repared dataframe
+#' @export
+#'
+#' @examples
+#' 
+#' #ecis_fix_error(growth.df, "cells", "cells plated")
+#' 
+ecis_fix_error = function (data.df, incorrect, correct, limit = "None")
+{
+  
+  if (limit == "None" || limit == "Sample")
+  {
+  data.df$Sample = gsub(incorrect, correct, data.df$Sample)
+  }
+  
+  if (limit == "None" || limit == "Experiment")
+  {
+  data.df$Experiment = gsub(incorrect, correct, data.df$Experiment)
+  }
+  
+  return(data.df)
+}
+Find the mode of a categorical variable}
 \usage{
 categorical_mode(x)
 }
@@ -13,6 +44,37 @@ categorical_mode(x)
 the most commonly occouring character
 }
 \description{
+#' Fix typographical errors in an ECIS dataframe
+#' 
+#' This function will go through all the sample and experiment names and replace all the values that are incorrect. Usefull for fixing up typographical errors, or places where you have named things differently inadvertently.
+#'
+#' @param data.df the data to correct
+#' @param incorrect the error to be corrected
+#' @param correct the corrrect string
+#' @param limit can be set to "Sample or "Experiment" to limit the replacement to a single variable
+#'
+#' @return the repared dataframe
+#' @export
+#'
+#' @examples
+#' 
+#' #ecis_fix_error(growth.df, "cells", "cells plated")
+#' 
+ecis_fix_error = function (data.df, incorrect, correct, limit = "None")
+{
+  
+  if (limit == "None" || limit == "Sample")
+  {
+  data.df$Sample = gsub(incorrect, correct, data.df$Sample)
+  }
+  
+  if (limit == "None" || limit == "Experiment")
+  {
+  data.df$Experiment = gsub(incorrect, correct, data.df$Experiment)
+  }
+  
+  return(data.df)
+}
 Find the mode of a categorical variable
 }
 \examples{

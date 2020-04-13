@@ -41,25 +41,26 @@
 #' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text geom_text geom_ribbon geom_point geom_errorbar
 #'
 #' @examples
-#' ecis_plot(growth.df, 'Rb', replication = 'summary', 
-#' error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-#' ecis_plot(growth.df, 'Rb', replication = 'wells',
-#'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-#'  ecis_plot(growth.df, 'Rb', replication = 'experiments',
-#'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
-#'  , xlab = "Hours")
-#' ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
-#' ecis_plot(growth.df, "R", "4000", "summary", 50, confidence = 0.1)
-#'
-#'ecis_plot(growth.df)
-#'
-#'ecis_plot(growth.df, continuous = "cells", replication = "summary", time = 50)
+#' growth.df$Instrument = "ECIS"
+#' 
+# ecis_plot(growth.df, 'Rb', replication = 'summary',
+# error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+# ecis_plot(growth.df, 'Rb', replication = 'wells',
+#  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+#  ecis_plot(growth.df, 'Rb', replication = 'experiments',
+#  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
+#  , xlab = "Hours")
+# ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
+# ecis_plot(growth.df, "R", "4000", "summary", 50, confidence = 0.1)
+# 
+# ecis_plot(growth.df)
+# 
+# ecis_plot(growth.df, continuous = "cells", replication = "summary", time = 50)
 
 
 ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = TRUE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE) 
   {
   
-  data$Instrument = NULL
   
   # Start by aligning key points or normalising (need the whole dataset)
   if(!is.null(alignkey))

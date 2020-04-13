@@ -1,6 +1,15 @@
 # Import Raw ECIS data ---------------------------------------------------------
 
 
+#' Calculate electrical properties of ECIS data
+#' 
+#' ECIS instrments capure phase and impedance data. This needs to be converted in software into resistance and capacatance values that are more directly interpretable. This function does that using trigonemetric functions. Validated against data produced by Applied Biophysics' ECIS software.
+#' 
+#' Function used by default as part of ecis_import_raw
+#'
+#' @param data.df The dataset to calculate from
+#'
+#' @return An ecis data frame, with calculated values included
 ecis_calculate_quantaties = function(data.df)
 {
   # Wrangle data so it is in columns

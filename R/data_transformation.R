@@ -28,7 +28,7 @@ ecis_normalise = function(data.df, normtime, divide = FALSE) {
     # Now use left_join to match this time point to every other time point.This creates a table with an additional column that everything needs to be    normalised to, allowing for the actual normalisation to be done via vector maths. Not the most memory efficent, but is explicit and clean.
     
     fulltable = left_join(data.df, mininormaltable, by = c('Well' = "Well", 'Frequency' = "Frequency", 
-        Experiment = "Experiment", Unit = "Unit", Sample = "Sample"))
+        Experiment = "Experiment", Unit = "Unit", Sample = "Sample", Instrument = "Instrument"))
     
     #Adjust naming so that the time variable is set to the time of each timepoint, not the time we are normalising to
     fulltable$Time = fulltable$Time.x
@@ -369,6 +369,14 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, sampleco
   
 }
 
+#' Check if a selected unit is modelled
+#'
+#' @param unit The ecisr symbol for the unit
+#'
+#' @return A boolean, true if it is modelled, false if it is raw electrical data
+#' @export
+#'
+#' @examples
 ecis_is_modeled_unit = function(unit)
 {
   if (unit == "Rb" || unit == "Cm" || unit == "Alpha" || unit == "RMSE" || unit == "Drift" || unit == "CPE_A" || unit == "CPE_n" || unit == "TER" || unit == "Ccl" || unit == "Rmed")
@@ -382,35 +390,84 @@ ecis_is_modeled_unit = function(unit)
 }
 
 
-# Sub code for breaking out continuous datasets
-
-# subset = ecis_subset_continuous(xcell, c("ATP", "Adenosine"))
-# subset = ecis_implode(subset)
-# ecis_plot(subset, unit = "Z", frequency = "10000", replication = "experiments", normtime = 160)
-
-ecis_subset_continuous = function(data, continuous)
+#' Subset a continuous variable
+#'
+#' Subset the columns that are exploded out of a continuous variable. Contains options to remove descriptors that are now defunct, so this will be repaired later.
+#'
+#' @param data A vascr dataset to subset
+#' @param continuous The continuous variable to subset
+#' @param exact_match Should the variables selected have an exact match to the column names input, or only contain the value input. Default is containing as otherwise you have to keep track of units.
+#' @param strip_empty Should columns in which none of the selected variables are present be removed
+#' @param implode Should the final data set be imploded, replacing the sample wells present
+#'
+#' @importFrom dplyr mutate_all
+#' @importFrom stringr str_detect
+#'
+#' @return
+#' @export
+#'
+#' @examples
+# # Sub code for breaking out continuous datasets
+# #exploded = ecis_explode(xcell)
+# #subset = ecis_subset_continuous(exploded, continuous = "ATP", strip_empty = FALSE)
+# #ecis_plot(exploded, unit = "CI", frequency = "10000", replication = "experiments", normtime = 160, continuouscontains = "ATP")
+#'
+#'
+ecis_subset_continuous = function(data, continuous, exact_match = FALSE, strip_empty = TRUE, implode = TRUE)
 {
-  
+
+  # We can only subset continuous data that is exploded, so fix this if it's not already done
+  if(isFALSE(ecis_test_exploded(data)))
+     {
+       data = ecis_explode(data)
+     }
+
   cols = colnames(data)
-  
+
   # Add the standard ECIS cols
   colstokeep = c()
-  
-  # Match the columns that are detected
+
+  # If exact match is specified
+  if(exact_match)
+  {
+    colstokeep = continuous
+  }
+
+  else  # Otherwise find other matches
+  {
+
   for(grab in continuous)
   {
     colstokeep = c(colstokeep, (cols[str_detect(cols, grab)]))
   }
-  
-  # Return only cols that match the criteria
-  
-  return = data[,c(ecis_cols(),colstokeep)]
-  return$allNA = rowSums(!(data[,colstokeep] == c("NA")))>0
+  }
+
+# Grab all the cols we want
+  eciscols = data[,ecis_cols()]
+  selectedcols = data[,colstokeep]
+
+
+  # Clean whitespace off each column
+  selectedcols = selectedcols %>% mutate_all(trimws)
+
+  return = cbind(eciscols,selectedcols)
+
+
+  # If removing remainging columns, check if all of the remaining columns are NA
+  if(strip_empty)
+  {
+  return$allNA = rowSums(!(return[,colstokeep] == c("NA")))>0
   return = subset(return, allNA)
   return$allNA = NULL
-  
+  }
+
+  # If requested, we implode to fix up the sample names
+  if(implode)
+  {
+  return = ecis_implode(return)
+  }
+
   return(return)
-  
 }
 
 ###############################################################

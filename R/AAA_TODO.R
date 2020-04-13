@@ -1,6 +1,5 @@
 #' TODO
 #'
-# Build excelligence combine function into ecis_combine (one that deals with only some being named, steal this out of the combined import function)
 # Go through and name all the inappropriate ECISR functions vascular
 #' 
 #' Impliment stringr's order (numeric = TRUE) into the ECIS plot function
@@ -16,5 +15,15 @@
 #' Fix resampling code so it works better for all import types
 #' 
 #' Add file integrity checks to all import functions
+#' 
 #' Add data integrity checks to ecis_plot
+#' 
+#' Think about how ecis_subset_continous deals with veichles
+#' 
+#' ecis_implode but only non-0 things are written out + some kind of graphical representation of this
+#' 
+#' Delete IsVehicleControl from graphics generation code
+#' 
+#' Line up data that I own and can include with the dataset
+#' 
 

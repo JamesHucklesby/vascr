@@ -122,7 +122,7 @@ ecis_find_frequency = function(data.df, frequency) {
 #' @export
 #'
 #' @examples
-#' 
+#' growth.df$Instrument = "ECIS"
 #' standard = growth.df
 #' normal = ecis_normalise(growth.df, 100)
 #' ecis_detect_normal(standard)
@@ -154,9 +154,10 @@ ecis_detect_normal = function(data.df)
 #' @export
 #'
 #' @examples
+#' growth.df$Instrument = "ECIS"
 #' exploded.df = ecis_explode(growth.df)
-#` cleaned.df = ecis_remove_metadata(exploded.df)
-#` identical(growth.df,cleaned.df)
+#' cleaned.df = ecis_remove_metadata(exploded.df)
+#' identical(growth.df,cleaned.df)
 ecis_remove_metadata = function(data.df, subset = "all")
 {
   
@@ -167,7 +168,7 @@ ecis_remove_metadata = function(data.df, subset = "all")
     warning("You are removing some summary statistics. These are not re-generatable using ecis_explode alone, and must be regenerated with ecis_summarise.")
   }
   
-  removed.df = data.df %>% select(Time, Unit, Well, Value, Sample, Frequency, Experiment)
+  removed.df = data.df %>% select(ecis_cols())
   
   return(removed.df)
 }
@@ -188,58 +189,68 @@ ecis_remove_metadata = function(data.df, subset = "all")
 #' 
 ecis_titles = function (unit, frequency = 0)
 {
-  
-  # Modeled paramater
-  if (unit == "Rb"){return (expression(paste("Rb (",Omega," cm"^2, ")")))}
-  if (unit == "Cm"){return (expression(paste("Cm (",mu,"F/cm"^2, ")")))}
-  if (unit == "Alpha"){return (expression(paste("Alpha (",ohm," cm"^2, ")")))}
-  if(unit == "RMSE") { return("Model Fit RMSE")}
-  if(unit == "Drift") { return("Drift (%)")}
-  
-  # Measured quantaties
+  # Electrical quantaties
   if(unit == "C") { return(expression(paste("Capacitance (",mu,"F)")))}
   if(unit == "R") { return("Resistance (ohm)")}
   if(unit == "P") { return("Phase (degrees)")}
+  if(unit == "Pr") { return("Phase (radians)")}
   if(unit == "X") { return("Reactance (ohm)")}
   if(unit == "Z") { return("Impedance (ohm)")}
   
-  # If not overriden, return what was input
+  # ECIS paramaters
+  if (unit == "Rb"){return (expression(paste("Rb (",Omega," cm"^2, ")")))}
+  if (unit == "Cm"){return (expression(paste("Cm (",mu,"F/cm"^2, ")")))}
+  if (unit == "Alpha"){return (expression(paste("Alpha (",ohm," cm"^2, ")")))}
+  if(unit == "RMSE") {return("Model Fit RMSE")}
+  if(unit == "Drift") {return("Drift (%)")}
+  
+  # xCELLigence
+  if(unit == "CI") {return("Cell Index")}
+  
+  # cellZscope
+  if(unit == "CPE_A") {return(expression(paste("CPE_A (s"^(n-1),mu,"F/cm"^2, ")")))}
+  if(unit == "CPE_n") {return("CPE_n")}
+  if(unit == "TER") {return (expression(paste("TER (",Omega," cm"^2, ")")))}
+  if(unit == "CcL") {return(expression(paste("CcL (",mu,"F/cm"^2, ")")))}
+  if(unit == "Rmed") { return("Rmed (ohm)")}
+  
+  # If not found, return what was input
   return(unit)
   
 }
 
 
-#' Fix typographical errors in an ECIS dataframe
-#' 
-#' This function will go through all the sample and experiment names and replace all the values that are incorrect. Usefull for fixing up typographical errors, or places where you have named things differently inadvertently.
-#'
-#' @param data.df the data to correct
-#' @param incorrect the error to be corrected
-#' @param correct the corrrect string
-#' @param limit can be set to "Sample or "Experiment" to limit the replacement to a single variable
-#'
-#' @return the repared dataframe
-#' @export
-#'
-#' @examples
-#' 
-#' ecis_fix_error(growth.df, "cells", "cells plated")
-#' 
-ecis_fix_error = function (data.df, incorrect, correct, limit = "None")
-{
-  
-  if (limit == "None" || limit == "Sample")
-  {
-  data.df$Sample = gsub(incorrect, correct, data.df$Sample)
-  }
-  
-  if (limit == "None" || limit == "Experiment")
-  {
-  data.df$Experiment = gsub(incorrect, correct, data.df$Experiment)
-  }
-  
-  return(data.df)
-}
+#' #' Fix typographical errors in an ECIS dataframe
+#' #' 
+#' #' This function will go through all the sample and experiment names and replace all the values that are incorrect. Usefull for fixing up typographical errors, or places where you have named things differently inadvertently.
+#' #'
+#' #' @param data.df the data to correct
+#' #' @param incorrect the error to be corrected
+#' #' @param correct the corrrect string
+#' #' @param limit can be set to "Sample or "Experiment" to limit the replacement to a single variable
+#' #'
+#' #' @return the repared dataframe
+#' #' @export
+#' #'
+#' #' @examples
+#' #' 
+#' #' #ecis_fix_error(growth.df, "cells", "cells plated")
+#' #' 
+#' ecis_fix_error = function (data.df, incorrect, correct, limit = "None")
+#' {
+#'   
+#'   if (limit == "None" || limit == "Sample")
+#'   {
+#'   data.df$Sample = gsub(incorrect, correct, data.df$Sample)
+#'   }
+#'   
+#'   if (limit == "None" || limit == "Experiment")
+#'   {
+#'   data.df$Experiment = gsub(incorrect, correct, data.df$Experiment)
+#'   }
+#'   
+#'   return(data.df)
+#' }
 
 
 #' Find the mode of a categorical variable
@@ -429,5 +440,77 @@ retitle = function(df) {
 }
 
 
+#' Convert comma containing values to numeric ones
+#' 
+#' This function converts numbers formatted with commas, such as those used in text variables to numbers. This process is lossy, so is used as late as possible before a continuous variable is needed. Preserves decimal places. Vectorised.
+#'
+#' @param comma_array The array (and hence column of a data frame also works) containing comma separated values to process
+#'
+#' @return An array containing numeric data. NA will be returned if not numeric, and a warning will be generated
+#'
+#' @examples
+#' 
+# # A working dataset
+# # comma_to_numeric(c("100.001", "10,839", "882,292,939"))
+# 
+# # And one with non-numeric and broken data
+# # comma_to_numeric(c("Foo", "77,00", "88.88.88"))
+#' 
+comma_to_numeric = function(comma_array)
+{
+  # Remove commas and convert to numeric, ignoring any errors
+  processed_array = suppressWarnings(as.numeric(gsub(",","",commaarray)))
+  
+  # Check if there were an problems. If so warn in plain english.
+  if(any(is.na(processed_array)))
+  {
+    warning("Some values processed are not numeric and have been converted to NA. Use with care.")
+  }
+  
+  return(processed_array)
+}
+
+#' Look up the default variable values for all supported instruments
+#' 
+#' Central source of lookup values for default graph settings for various instruments.
+#'
+#' @param data The dataset to derrive the instrument type from
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' ecis_default(growth.df)
+#' 
+ecis_default = function (data)
+{
+
+  instrument = categorical_mode(data$Instrument)
+  
+  if(instrument == "ECIS")
+  {
+    defaults = list(
+      "frequency" = 4000,
+      "unit" = "R"
+    )
+  }
+  else if (instrument == "xCELLigence")
+  {
+    defaults = list(
+      "frequency" = 10000,
+      "unit" = "CI"
+    )
+  }
+  else if (instrument == "cellZscope")
+  {
+    defaults = list(
+      "frequency"  = 4000,
+      "unit" = "R"
+    )
+  }
+  
+  return(defaults)
+  
+}
 
 
