@@ -31,6 +31,7 @@
 #' @param alignkey Aligns key points (max, min ect). See ecis_align_key for details
 #' @param continuouscontains Subset of samplecontains, only returns data where the continuous value contains this data
 #' @param returndata Return the dataset, rather than the graph. Default FALSE, usefull for debugging
+#' @param showpoints Show the time points on the graph
 #'
 #' @return A ggplot2 object
 #' 
@@ -51,72 +52,53 @@
 #  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
 #  , xlab = "Hours")
 # ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
-# ecis_plot(growth.df, "R", "4000", "summary", 50, confidence = 0.1)
+# ecis_plot(growth.df, "R", 4000, "summary", 50, confidence = 0.1, sortkeyincreasing = FALSE)
 # 
-# ecis_plot(growth.df)
+# ecis_plot(growth.df, sortkeyincreasing = TRUE)
 # 
 # ecis_plot(growth.df, continuous = "cells", replication = "summary", time = 50)
+#
+# ecis_plot(growth.df, replication = "plate", time = 100)
 
 
-ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = TRUE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE) 
+ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = TRUE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE, sortkeyincreasing = TRUE, showpoints = FALSE) 
   {
   
+
+# Subset data -------------------------------------------------------------
+  data = ecis_prep_graphdata(data, unit, frequency, time, samplecontains, experiment, error, alignkey, normtime, divide, preprocessed, continuouscontains, stripidentical)
   
-  # Start by aligning key points or normalising (need the whole dataset)
-  if(!is.null(alignkey))
-  {
-    data = ecis_align_key(data, alignkey)
-  }
+
+# Create labels -----------------------------------------------------------
   
-  if(!is.null(normtime))
-  {
-    data = ecis_normalise(data, normtime, divide)
-  }
-  
-  
-  # First we delete what we don't need for performance reasons
-  
-    data = ecis_subset(data, unit = unit, frequency = frequency, time = time, samplecontains = samplecontains, experiment = experiment)
-  
-  #ToDo add a check here
-    
-  if (!preprocessed)
-  {
-  data = ecis_explode(data)
-  data = ecis_implode(data, stripidentical = stripidentical)
-  data = ecis_explode(data)
-  }
-    
-  if(!is.null(continuouscontains))
-  {
-    data = ecis_subset_continuous(data, continuouscontains)
-  }
-  
-  if (error>1 && error<Inf)
-  {
-    data = ecis_subsample(data, error)
-  }
-  
-  # Keep a copy of the full dataset for later if need be
-  rawdata = data
-  
-  # If possible, adjust non-specific unit
+  # Use the default name of the unit on the Y axis
   if (ylab == "Value")
   {
     ylab = ecis_titles(unit)
   }
   
+  # Check frequency is a real value
+  frequency = ecis_find_frequency(data, frequency)
+  
+  # Generate a title, containing the Hz if the unit is not modeled
   if (title == "Title")
   {
-    title = unit
+    if(ecis_is_modeled_unit(unit))
+    {
+      title = unit
+    }
+    else
+    {
+    title = paste(unit, " (",frequency," Hz)", sep = "")
+    }
   }
+
+
+
+# Start calling subservient plotting functions ----------------------------
+
   
-  if(returndata)
-  {
-    return(data)
-  }
-  
-  
+  # Deal with if a continuous variable has been selected
   if(!is.null(continuous))
   {
     plot = ecis_plot_continuous(data = data, unit = unit, frequency = frequency, replication = replication, time = time, error = error,alphavalue  = alphavalue, xlab = xlab, ylab = ylab, title = title, cols = cols, continuous = continuous)
@@ -124,137 +106,33 @@ ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary"
     return(ecis_polish_plot(plot))
   }
   
+  # Deal with if a platemap has been requested
   
   if(replication == "plate")
   {
+    if(length(unique(data$Time))>1)
+    {
     return(ecis_polish_plot(ecis_plot_plate(data, unit, frequency, verbose)))
+    }
+    else
+    {
+    return(ecis_plot_heatmap(data, time, unit, frequency, title))
+    }
   }
   
-  # Then replace underscores back with spaces
-  data$Sample = str_replace(data$Sample, "_", " ")
     
   # First we deal with if the graph requested is a line graph
     
     if (length(unique(data$Time))>1) { # Check if we are plotting a single, or multiple, time points
         
-        if (replication == "wells") {
-              
-              plot = ggplot2::ggplot(data = data, ggplot2::aes(x = Time, y = Value, group = interaction(Well,                       Experiment), colour = Sample, size = linesize)) + ggplot2::labs(title = title, x=xlab, y=ylab) + ggplot2::geom_line(size = linesize)
-          
-          return(ecis_polish_plot(plot))
-        }
-      
-        else if (replication == "experiments") {
-          toplot2.df = summarise(group_by(data, Sample, Time, Experiment), sd = sd(Value), 
-                                 n = n(), Value = mean(Value))
-          
-          plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample, linetype =   Experiment)) + labs(title = title, x=xlab, y=ylab) + ggplot2::geom_line(size = linesize)
-          
-          if (error == Inf)
-          {
-            plot = plot + ggplot2::geom_ribbon(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n), fill = Sample), alpha = alphavalue)  
-          }
-          
-          if (error>0 && error < Inf)
-          {
-            plot = plot + ggplot2::geom_errorbar(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n)))  
-          }
-          
-          return(ecis_polish_plot(plot))
-          
-        }
-        else if (replication == "summary") {
-          # Average each experiment, working out the average alone
-          toplot2.df = dplyr::summarise(group_by(data, Sample, Time, Experiment), Value = mean(Value))
-          
-          # Now repeat the calculation, but work out the intra-experimental error and statistics
-          toplot2.df = summarise(group_by(toplot2.df, Sample, Time), sd = sd(Value), n = n(), Value = mean(Value))
-          
-          plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample)) + labs(title = title, x=xlab, y=ylab) + ggplot2::geom_line(size = linesize)
-          
-          if (error == Inf)
-          {
-          plot = plot + ggplot2::geom_ribbon(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n), fill = Sample), alpha = alphavalue) 
-          }
-          
-          if (0< error && error < Inf)
-          {
-            plot = plot + ggplot2::geom_errorbar(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n))) 
-          }
-          
-          return(ecis_polish_plot(plot))(plot)
-          
-        }
-        else
-        {
-          warning("Unrecognised level of replicaton selected. Please state either 'wells', 'experiments' or 'summary'")
-        }
+      {
+        return(ecis_plot_line(data, replication, error, title, xlab, ylab, linesize, alphavalue))
+      }
         
      # Then we deal with if a single time point has been requested
         
     } else {
-        if (replication == "wells") {
-          
-          filtered.df = data
-          
-          filtered.df$Sample = paste(filtered.df$Sample, filtered.df$Well)
-          
-
-          plot = ggplot(filtered.df, aes(x = Sample, y = Value, fill = Experiment))+
-            ggplot2::labs(title = title, x=xlab, y=ylab) 
-          if(error == Inf)
-          {
-          plot = plot + geom_bar(stat = "identity",  position = position_dodge()) + theme(axis.text.x = element_text(angle = 90))
-          }
-            
-          return(ecis_polish_plot(plot))(plot)
-        }
-
-      if (replication == "experiments")
-      {
-      filtered2.df = summarise(group_by(data, Experiment, Sample), sd = sd(Value), n = n(), 
-                               Value = mean(Value))
-      
-      plot = ggplot(filtered2.df, aes(x = Sample, y = Value, fill = Experiment)) + geom_bar(stat = "identity", position = position_dodge()) + ggplot2::labs(title = title, x=xlab, y=ylab)
-      
-      if(error == Inf)
-      {
-      plot = plot + geom_errorbar(aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.2, position = position_dodge(0.9))
-      }
-      
-      return(ecis_polish_plot(plot))
-      }
-      
-        if (replication == "summary") {
-          
-          # Then use two dplyr statements to prepare the data for graphing
-          filtered2.df = summarise(group_by(data, Experiment, Sample), Value = mean(Value))
-          filtered2.df = summarise(group_by(filtered2.df, Sample), sd = sd(Value), n = n(), Value = mean(Value))
-          if (confidence<1)
-          {
-            if(!(ecis_detect_normal(rawdata)==FALSE))
-            {
-              warning("Normalised dataset detected, ANOVA results will be invalid")
-            }
-            labeltable = ecis_make_significance_table(data, time, unit, frequency, confidence, format = "toplot")
-            filtered2.df = left_join(filtered2.df, labeltable, by = "Sample")
-            plot = ggplot(filtered2.df, aes(x = Sample, y = Value, label = Label)) + geom_bar(stat = "identity") +
-           geom_text(aes(label=Label),position=position_stack(0.8)) + ggplot2::labs(title = title, x=xlab, y=ylab)
-          }
-          
-          else
-          {
-          # Then graph the output
-          plot = ggplot(filtered2.df, aes(x = Sample, y = Value)) + geom_bar(stat = "identity") + ggplot2::labs(title = title, x=xlab, y=ylab)
-          }
-          
-          if(error == Inf)
-          {
-          plot = plot + geom_errorbar(aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.2)
-          }
-          
-          return(ecis_polish_plot(plot))
-        }
+      ecis_plot_column(data, replication, error = Inf, title, xlab, ylab, time, unit, frequency, confidence)
     }
 }
 
@@ -387,9 +265,31 @@ ecis_plot_model <- function(alldata.df, ...) {
 #' @examples
 #' # Automatically applied to ggplot, should not be required externaly
 #' 
-ecis_polish_plot = function(plot)
+#' plot = ecis_plot(growth.df)
+#' ecis_polish_plot(plot)
+#' ecis_polish_plot(plot, rotate_x = FALSE)
+#' 
+ecis_polish_plot = function(plot, rotate_x = TRUE, logscale = "")
 {
+  
+  if(str_detect(logscale, "x"))
+  {
+    plot = plot +scale_x_log10()
+  }
+  
+  if(str_detect(logscale, "y"))
+  {
+    plot = plot +scale_y_log10()
+  }
+  
+  if(rotate_x)
+  {
   return(plot + theme_bw() + rotate_x_text(angle = 45))
+  }
+  else
+  {
+    return( plot + theme_bw())
+  }
 }
 
 
@@ -516,3 +416,20 @@ ecis_plot_plate = function(data.df, unit = "R", frequency = 4000, verbose = TRUE
 }
 
 
+
+#' Factorise and sort a the column of a data frame for plotting
+#'
+#' @param data 
+#' @param sortkeyincreasing 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+ecis_factorise_and_sort = function(data, sortkeyincreasing = TRUE)
+{
+  allsamples = unique(data)
+  allsamples = str_sort(allsamples, numeric = TRUE, decreasing = !sortkeyincreasing)
+  data = factor(data, allsamples)
+  return(data)
+}

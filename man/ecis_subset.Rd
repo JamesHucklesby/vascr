@@ -44,4 +44,6 @@ data = ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R
 samplecontains = "05,000", experiment = "2")
 head(data)
 
+data = ecis_subset(growth.df, samplecontains = "5000")
+data.df = growth.df
 }

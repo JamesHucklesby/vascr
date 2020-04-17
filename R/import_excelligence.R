@@ -1,4 +1,8 @@
-#' Import excelligence data files
+#' Import excelligence data files that have previosly been exported
+#' 
+#' Is possible, use xcelligence_import. This function will import data exported as a text file from the xcelligence data. It will only contain CI at an undisclosed frequency, usually 10,000 Hz but can also be 25,000 Hz or 50,000 Hz. Also does not contain raw normalisation data, as this is lost in the CI generation process.
+#' 
+#' However, unlike excelligence_import this import process is not dependent on any 3rd party Microsoft software being installed, and is less prone to errors as the import from a text file is much less complex.
 #'
 #' @param file Path to the excelligence file to be imported
 #' @param key Optional, standard keyfile that will overwrite what is stored in the excelligence file
@@ -13,12 +17,23 @@
 #' @export
 #'
 #' @examples
-#' #filename = "inst/extdata/xcell.txt"
-#' #dataset = xcelligence_import_exported(filename)
-#' #ecis_plot(dataset, unit = "CI", frequency = 0 , replication = "experiments", time = c(170,220) , samplecontains = "Nerifollin", normtime = 185, preprocessed = TRUE)
-#'
+#' filename = "inst/extdata/xcell.txt"
+#' dataset = xcelligence_import_exported(filename)
+#' head(dataset)
+#' 
+#' key = "inst/extdata/xcell_lookup.csv"
+#' dataset = xcelligence_import_exported(filename,key)
+#' head(dataset)
+#' head(ecis_explode(dataset))
 xcelligence_import_exported = function(file, key)
 {
+
+  ecis_validate_file(file, "txt")
+  
+  if(!missing(key))
+  {
+  ecis_validate_file(key, "csv")
+  }
 
 # Import the raw excelligence file as a data frame
 data = readLines(file, warn = FALSE)
@@ -106,6 +121,12 @@ fulldata$Frequency = 0 # Set frequency to 0
 fulldata$Experiment =  file # Set experiment name equal to filename
 fulldata$Value = as.numeric(fulldata$Value) # make value names numeric
 fulldata$Well = ecis_standardise_wells(fulldata$Well)
+
+if(!missing(key))
+{
+  fulldata$Sample = NULL
+ fulldata = ecis_assign_samples(fulldata, key)
+}
 
 return(fulldata)
 

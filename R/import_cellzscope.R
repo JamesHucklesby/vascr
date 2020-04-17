@@ -25,7 +25,13 @@
 cellzscope_import_model  = function(model, key)
 {
   
-## TODO add the right match function from ECIS to apply names
+# Check that the file is correct
+  ecis_validate_file(model, "txt")
+  
+  if(!missing(key))
+  {
+  ecis_validate_file(key, "csv")
+  }
 
 # Read in the file to a data table
 spectrafile = readLines(model)
@@ -110,6 +116,13 @@ return(separatedata)
 #' ecis_plot(output, unit = "R", frequency = 4000, replication = "wells")
 cellzscope_import_raw = function(raw, key)
 {
+  
+ecis_validate_file(raw, "txt")
+  
+  if(!(missing(key)))
+  {
+    ecis_validate_file(key, "csv")
+  }
 
 # Read into a data frame and remove garbage
 spectrafile = readLines(raw)
@@ -159,10 +172,6 @@ separatedata2$Run = NULL
 
 output2 = separatedata2
 output2$Unit = str_replace(output2$Unit, "I", "Z")
-
-ecis_plot(output2, unit = "Z", frequency = 1, preprocessed = TRUE, replication = "wells", time = c(1,100))
-
-unique(output2$Unit)
 
 # Wrangle data so it is in columns
 child1.df = output2
@@ -226,6 +235,14 @@ return(longdata.df)
 cellzscope_import = function(raw, model, key)
 {
   
+ ecis_validate_file(raw, "txt")
+ ecis_validate_file(model, "txt")
+ 
+ if(!missing(key))
+ {
+ ecis_validate_file(key, "csv")
+ }
+ 
 # Import both files. Don't specify a key as this will be applied globaly at the end
 modeleddata = cellzscope_import_model(model)
 rawdata = cellzscope_import_raw(raw)

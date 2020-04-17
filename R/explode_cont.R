@@ -88,6 +88,8 @@ ecis_test_explosion_integrity = function(data)
 
 
 #' Test if an ECIS data frame is exploded
+#' 
+#' This function tests to see if exploded columns are present in a dataset. Does not check that all are present, or that they are corrrectly exploded as this would be much slower.
 #'
 #' @param data the data frame to test
 #'
@@ -101,9 +103,8 @@ ecis_test_explosion_integrity = function(data)
 #' 
 ecis_test_exploded = function(data)
 {
-  minidata = data[1,]
-  minidataexploded = ecis_explode(minidata)
-  return(identical(minidata, minidataexploded))
+ # If exploded cols exist, assume it's exploded
+ length(ecis_exploded_cols(data))>1
 }
 
 

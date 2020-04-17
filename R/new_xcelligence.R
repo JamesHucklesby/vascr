@@ -8,6 +8,9 @@
 #' Switches the xcelligence format of having each column as a column and each row as a row, then stacking timepoints to a standardised tidy data format
 #'
 #' @param data The raw xcelligence dataset to deal with
+#' 
+#' @importFrom tidyr pivot_longer
+#' @importFrom stringr str_remove
 #'
 #' @return A slighlty tidier dataset
 #' 
@@ -41,12 +44,13 @@ xcelligence_lengthen_platemap = function(data)
 #' @return A table, as outlined in the Access database
 #'
 #' @examples
+#' # This file is used in import_cellzScope exclisivley so can be tested with it
 #' 
-#' file = "inst/extdata/xcell.mdb"
-#' table = "Org10K"
 import_mdb = function(file, table)
 
 {
+  
+  ecis_validate_file(file, "mdb")
 
   # Set enviromental variables for the import
   sock_port <- 8642L
@@ -118,21 +122,29 @@ import_mdb = function(file, table)
 #' @export
 #'
 #' @examples
-#' #' # Arguments to push through the function
-#' #' file = "inst/extdata/xcell.plt"
-#' #' key = "inst/extdata/xcell_lookup.csv"
-#' #' xcell = import_xcelligence(file, key)
-#' #' 
-#' #' xcell = ecis_explode(xcell)
-#' #' 
-#' #' #ecis_plot(xcell, unit = "Z", frequency = "10000", replication = "experiments", continuouscontains = "ATP", normtime = 0)
-#' #' 
-#' #' #ecis_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", replication = "wells")
-#' #'
+#' # Arguments to push through the function
+#' file = "inst/extdata/xcell.plt"
+#' key = "inst/extdata/xcell_lookup.csv"
+#' xcell = import_xcelligence(file, key)
+#'
+#' xcell = ecis_explode(xcell)
+#'
+#' #ecis_plot(xcell, unit = "Z", frequency = "10000", replication = "experiments", continuouscontains = "ATP", normtime = 0)
+#'
+#' #ecis_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", replication = "wells")
+#'
 #'  
 
 import_xcelligence = function(file, key)
 {
+  ecis_validate_file(file, "plt")
+  
+  if(!missing(key))
+  {
+  ecis_validate_file(key, c("csv", "xlsx"))
+  }
+  
+  
   # Make a temporary copy of the file, with the correct extension so Microsoft Access can open it
   folder = dirname(file)
   tempfile = paste(folder,"/","TEMPMDBFORIMPORT.mdb", sep = "")

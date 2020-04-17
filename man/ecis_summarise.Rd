@@ -20,8 +20,8 @@ Creates and ECIS dataset that has had all samples of the same type averaged toge
 \examples{
 
 ecis_summarise(growth.df)
-ecis_summarise(growth.df, "experiment")
-ecis_summarise(growth.df, "replicate")
+ecis_summarise(growth.df, "experiments")
+ecis_summarise(growth.df, "wells")
 
 
 exploded.df = ecis_explode(growth.df)

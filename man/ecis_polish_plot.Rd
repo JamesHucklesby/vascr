@@ -4,7 +4,7 @@
 \alias{ecis_polish_plot}
 \title{Post-processing on ECIS plots to make them a bit more pretty}
 \usage{
-ecis_polish_plot(plot)
+ecis_polish_plot(plot, rotate_x = TRUE, logscale = "")
 }
 \arguments{
 \item{plot}{The plot to format}
@@ -17,5 +17,9 @@ Post-processing on ECIS plots to make them a bit more pretty
 }
 \examples{
 # Automatically applied to ggplot, should not be required externaly
+
+plot = ecis_plot(growth.df)
+ecis_polish_plot(plot)
+ecis_polish_plot(plot, rotate_x = FALSE)
 
 }

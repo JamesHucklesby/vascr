@@ -20,9 +20,17 @@
 #'
 #' exploded = ecis_explode(ecis_remove_metadata(growth.df))
 #' imploded = ecis_implode(exploded)
+#' 
+#' data = ecis_subset(growth.df, samplecontains = "35,000")
+#' imploded = ecis_implode(data)
 
 ecis_implode = function(data, select_columns = NULL, stripidentical = FALSE)
 {
+  if(length(unique(data$Sample))==1 & is.null(select_columns))
+  {
+    warning("Only one sample is present in the dataset, so no implosion was carried out. Specify columns if a particular subset are required")
+    return(data)
+  }
   
   if(is.null(select_columns))  # If cols is not specified, use the lot
   {

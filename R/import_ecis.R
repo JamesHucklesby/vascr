@@ -57,6 +57,8 @@ ecis_assign_samples = function (data, sampledefine)
     return(data)
   }
   
+  ecis_validate_file(sampledefine, c("csv"))
+  
   # Read in the data table created by the user
   names.df = read.csv(sampledefine, as.is = TRUE)
   
@@ -126,6 +128,9 @@ ecis_assign_samples = function (data, sampledefine)
 #' ecis_plot(data1, unit = "X")
 #' 
 ecis_import_raw = function(rawdata, sampledefine) {
+  
+  ecis_validate_file(rawdata, "abp")
+  ecis_validate_file(sampledefine, c("csv", "xlsx"))
     
     # Grab all the rows of the file and dump them into a data frame
   
@@ -242,6 +247,10 @@ ecis_import_raw = function(rawdata, sampledefine) {
 #' ecis_plot(data, unit = "Rb", replication = "wells")
 #' 
 ecis_import_model = function(modeleddata, sampledefine) {
+  
+   # Validate that the files are readable
+   ecis_validate_file(modeleddata, "csv")
+   ecis_validate_file(sampledefine, c("csv", "xlsx"))
     
     rawdata = modeleddata
   
@@ -377,9 +386,15 @@ ecis_import_model = function(modeleddata, sampledefine) {
 #' ecis_plot(data, unit = "Rb")
 #' ecis_plot(data, unit = "R")
 ecis_import = function(rawdata, modeled, key) {
-    
-    raw.df = ecis_import_raw(rawdata, key)
+  
+  # Validate files exist and are correct. Will be done in the internal functions, but doing it here saves time on failure
+  ecis_validate_file(rawdata, "abp")
+  ecis_validate_file(modeled, "csv")
+  ecis_validate_file(key, "csv")
+  
+  
     combined.df = ecis_import_model(modeled, key)
+    raw.df = ecis_import_raw(rawdata, key)
     masterdata.df = ecis_combine(combined.df, raw.df, resample = TRUE)
     
     return(masterdata.df)

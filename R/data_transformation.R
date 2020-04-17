@@ -301,14 +301,15 @@ ecis_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
 #' samplecontains = "05,000", experiment = "2")
 #' head(data)
 #' 
+#' data = ecis_subset(growth.df, samplecontains = "5000")
+#' data.df = growth.df
 
 ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplecontains = "", experiment = "", well = ""){
   
-  if (all(well != ""))
-      {
-        well = ecis_standardise_wells(well)
-      }
-  
+  if(!(is.data.frame(data.df)))
+  {
+    error("Data is not a data frame. This function can only be used on vascr data frames")
+  }
   
   data.df$Well = ecis_standardise_wells(data.df$Well)
   
@@ -362,6 +363,12 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, sampleco
   if (!all((well == "")))
   {
   data.df = data.df %>% filter(Well == well)
+  }
+  
+  # Check if there is still some data here, and if not sound a warning
+  if(nrow(data.df)==0)
+  {
+    warning("No data returned from dataset subset. Check your frequencies, times and units are present in the dataset")
   }
   
   return(data.df)
@@ -561,6 +568,83 @@ ecis_detect_badwells = function(data.df, threshold = 5, frequency = 4000, unit =
   
 }
 
+
+
+#' Title
+#'
+#' @param data 
+#' @param threshold 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' ecis_plot_badwell_scores(growth.df, 0.2)
+#' 
+ecis_plot_badwell_scores = function(data, threshold = 0)
+{
+
+# Calculate the scores for all wells
+scores = ecis_detect_badwells(data, threshold = 0)
+
+# Plot out the graph, sorting the Y axis by the score of each well to make a pretty waterfall
+plot = ggplot(scores, aes(x=reorder(Well,-Score), y=Score)) +
+  geom_bar(stat="identity") + xlab("Well")
+
+# Add a horosontal line if a threshold has been specified
+if(threshold>0)
+{
+  plot = plot + geom_hline(yintercept = threshold, color = "blue")
+}
+
+plot = ecis_polish_plot(plot, rotate_x = TRUE)
+return(plot)
+
+}
+
+
+
+#' Title
+#'
+#' @param data 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' ecis_plot_badwell_plate(growth.df)
+#' 
+ecis_plot_badwell_plate = function(data)
+{
+  # Needs a warning if multiple plates detected
+  
+data = ecis_detect_badwells(growth.df, threshold = 0)
+data = ecis_explode_wells(data)
+plot = ggplot(data, aes(col, row, fill= Score)) + 
+  geom_tile()  +
+  scale_fill_gradient(low="white", high="blue")+
+  xlab("Column") +
+  ylab("Row")+
+  scale_x_discrete(position = "top")
+
+return(ecis_polish_plot(plot, rotate_x = FALSE))
+}
+
+#' Title
+#'
+#' @param data 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+ecis_explode_wells = function(data)
+{
+  data$Well = ecis_standardise_wells(data$Well)
+  data$row = ecis_factorise_and_sort(substr(data$Well, 1,1), sortkeyincreasing = FALSE)
+  data$col = ecis_factorise_and_sort(as.numeric(substr(data$Well, 2,3)), sortkeyincreasing = TRUE)
+  return(data)
+}
 
 
 

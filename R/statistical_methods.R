@@ -263,16 +263,18 @@ ecis_make_significance_table = function(data.df, time, unit, frequency, confiden
 #' @examples
 #' 
 #' ecis_summarise(growth.df)
-#' ecis_summarise(growth.df, "experiment")
-#' ecis_summarise(growth.df, "replicate")
+#' ecis_summarise(growth.df, "experiments")
+#' ecis_summarise(growth.df, "wells")
 #' 
 #' 
 #' exploded.df = ecis_explode(growth.df)
 #' 
 ecis_summarise <- function(data.df, level = "summary") {
   
+  # Use a test to check what the current summary level of the data is
   summary_level = ecis_test_summary_level(data.df)
   
+  # Don't run the calculation if summary level is already reached
   if(level == summary_level)
   {
     warning("Function not required, the data frame is already at that level")
@@ -281,24 +283,23 @@ ecis_summarise <- function(data.df, level = "summary") {
   
   # If possible, make experimental resolution
   
-  if(summary_level == "replicate")
+  if(summary_level == "wells")
   {
   experiment.df = data.df %>%
-    group_by(Time, Unit, Frequency, Sample, Experiment) %>%
+    group_by(Time, Unit, Frequency, Sample, Experiment, Instrument) %>%
     summarise(sd = sd(Value), n = n(),sem = sd/sqrt(n), Well = "Z00",Value = mean(Value))
-  }
-  else if(summary_level == "experiment")
+  }else if(summary_level == "experiments")
   {
     experiment.df = data.df
   }
   
   # If possible, make summary resolution
   
-  if (summary_level == "experiment" || summary_level == "replicate")
+  if (summary_level == "experiments" || summary_level == "wells")
   {
     summary.df = experiment.df %>%
-      group_by(Time, Unit, Frequency, Sample) %>%
-      summarise(sd = sd(Value), totaln = sum(n), n = n(), sem = sd/sqrt(n), Value = mean(Value), Experiment = "Summary")
+      group_by(Time, Unit, Frequency, Sample, Instrument) %>%
+      summarise(sd = sd(Value), totaln = sum(n), n = n(), Well = "Z00", sem = sd/sqrt(n), Value = mean(Value), Experiment = "Summary")
   }
   else
   {
@@ -310,12 +311,10 @@ ecis_summarise <- function(data.df, level = "summary") {
   if(level == "summary" && exists ("summary.df"))
   {
     return(summary.df)
-  }
-  else if(level == "experiment" && exists ("experiment.df"))
+  }else if(level == "experiments" && exists ("experiment.df"))
   {
     return(experiment.df)
-  }
-  else
+  }else
   {
     warning("Invalid level requested. Please check level is valid and you have presented a data frame that has a higher resolution than the summary you have requested")
     return("NA")

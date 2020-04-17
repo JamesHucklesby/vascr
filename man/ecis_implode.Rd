@@ -26,4 +26,7 @@ imploded = ecis_implode(growth.df, stripidentical = TRUE)
 
 exploded = ecis_explode(ecis_remove_metadata(growth.df))
 imploded = ecis_implode(exploded)
+
+data = ecis_subset(growth.df, samplecontains = "35,000")
+imploded = ecis_implode(data)
 }

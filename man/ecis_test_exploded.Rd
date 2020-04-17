@@ -13,7 +13,7 @@ ecis_test_exploded(data)
 True (exploded) or false (not exploded)
 }
 \description{
-Test if an ECIS data frame is exploded
+This function tests to see if exploded columns are present in a dataset. Does not check that all are present, or that they are corrrectly exploded as this would be much slower.
 }
 \examples{
 ecis_test_exploded(growth.df)

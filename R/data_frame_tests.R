@@ -120,11 +120,11 @@ ecis_test_summary_level = function(data.df)
   
   else if(identical(unique(data.df$Well),"Z00"))
   {
-    return ("experiment")
+    return ("experiments")
   }
   else
   {
-  return("replicate")
+  return("wells")
   }
   
   

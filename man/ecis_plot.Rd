@@ -29,7 +29,9 @@ ecis_plot(
   continuous = NULL,
   alignkey = NULL,
   continuouscontains = NULL,
-  returndata = FALSE
+  returndata = FALSE,
+  sortkeyincreasing = TRUE,
+  showpoints = FALSE
 )
 }
 \arguments{
@@ -83,6 +85,8 @@ searches apply.}
 \item{continuouscontains}{Subset of samplecontains, only returns data where the continuous value contains this data}
 
 \item{returndata}{Return the dataset, rather than the graph. Default FALSE, usefull for debugging}
+
+\item{showpoints}{Show the time points on the graph}
 }
 \value{
 A ggplot2 object
