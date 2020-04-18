@@ -45,6 +45,76 @@ plot = ggplot(data, aes(col, row, fill= Value)) +
 return(ecis_polish_plot(plot, rotate_x = FALSE))
 }
 
+#' Title
+#'
+#' @param data 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+ecis_test_multi_plate = function(data)
+{
+  # Select distinct experiment:well pairs
+  sumdata = data %>% select(Well,Experiment)%>%  distinct(Well, Experiment)
+  # Count how many times each well comes up
+  sumdata = sumdata %>% group_by(Well) %>% summarise(number = n())
+  
+  # Warn and return false if any well is present in more than one experiment
+  if(max(sumdata$number)>1)
+  {
+    warning("More than one record per well. More than one plate may have been superimposed. Use plot with care.")
+    return(TRUE)
+  }
+  
+  return(FALSE)
+}
+
+
+#' ECIS plot samplemap
+#'
+#' @param data The datapoint to plot
+#' @param title Title to be placed on the graph
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+#' ecis_plot_samplemap(growth.df)
+#' 
+ecis_plot_samplemap = function(data, title ="Title", stripidentical = TRUE)
+{
+  
+  # Warn if trying to plot multiple plates
+  ecis_test_multi_plate(data)
+  
+  # Cut out everythign we don't care about, and remove remaining duplicates
+  data$Time = 0
+  data$Value = 0
+  data$Unit = 0
+  data$Frequency = 0
+  data = ecis_remove_metadata(data)
+  data = distinct(data)
+  
+  # Prep graphdata, IE, re-consitute names for plotting
+  data = ecis_prep_graphdata(data, stripidentical = stripidentical)
+  
+  # Explode out wells, then select only the distinct data we need for plotting
+  data = ecis_explode_wells(data)
+  data = data %>% select(col, row, Sample) %>% distinct()
+  data$Sample = as.factor(data$Sample)
+
+  plot = ggplot(data, aes(col, row)) + 
+    geom_tile(aes(fill = Sample), colour = "white")+
+    xlab("Column") +
+    ylab("Row")+
+    scale_x_discrete(position = "top")+
+    ggtitle(title)
+  
+  return(ecis_polish_plot(plot, rotate_x = FALSE))
+}
+
 #######################################################################################
 #
 #   Plot line data
@@ -145,13 +215,17 @@ if (replication == "wells") {
 #' @export
 #'
 #' @examples
-ecis_prep_graphdata = function(data, unit, frequency, time, samplecontains, experiment, error, alignkey, normtime, divide, preprocessed, continuouscontains, stripidentical)
+#' 
+#' ecis_prep_graphdata(growth.df)
+#' 
+#' 
+ecis_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, samplecontains = "", experiment = "", error = Inf, alignkey = NULL, normtime = NULL, divide = FALSE, preprocessed = FALSE, continuouscontains = NULL , stripidentical = TRUE, sortkeyincreasing = TRUE)
 {
   # First subset away what we don't need for normalising to a particular point (speeds up things a lot)
   data = ecis_subset(data, unit = unit, frequency = frequency, samplecontains = samplecontains, experiment = experiment)
   
   # Subsample the data if only some time points are required for error plotting
-  if (error>1 && error<Inf)
+  if (error>1 && !is.infinite(Inf))
   {
     data = ecis_subsample(data, error)
   }
@@ -186,10 +260,13 @@ ecis_prep_graphdata = function(data, unit, frequency, time, samplecontains, expe
   if(stripidentical)
   {
     data$Sample = (ecis_implode(data, stripidentical = TRUE))$Sample
-  }
+  } 
   
+  if(isFALSE(preprocessed))
+  {
   # Replace all the underscores in titles with spaces
   data$Sample = str_replace(data$Sample, "_", " ")
+  }
   
   # Sort the order of titles as numbers
   if(!is.null(sortkeyincreasing))

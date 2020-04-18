@@ -269,7 +269,7 @@ ecis_plot_model <- function(alldata.df, ...) {
 #' ecis_polish_plot(plot)
 #' ecis_polish_plot(plot, rotate_x = FALSE)
 #' 
-ecis_polish_plot = function(plot, rotate_x = TRUE, logscale = "")
+ecis_polish_plot = function(plot, rotate_x_angle = 45, logscale = "")
 {
   
   if(str_detect(logscale, "x"))
@@ -282,14 +282,12 @@ ecis_polish_plot = function(plot, rotate_x = TRUE, logscale = "")
     plot = plot +scale_y_log10()
   }
   
-  if(rotate_x)
+  if(!missing(rotate_x))
   {
-  return(plot + theme_bw() + rotate_x_text(angle = 45))
+  plot = plot + rotate_x_text(angle = 45)
   }
-  else
-  {
-    return( plot + theme_bw())
-  }
+
+  return(plot + theme_bw())
 }
 
 
@@ -419,10 +417,13 @@ ecis_plot_plate = function(data.df, unit = "R", frequency = 4000, verbose = TRUE
 
 #' Factorise and sort a the column of a data frame for plotting
 #'
-#' @param data 
-#' @param sortkeyincreasing 
+#' @param data A vector to sort and factorise. This uses stringr's numeric =TRUE to line up all numbers in order correctly
+#' @param sortkeyincreasing Should samples be returned increasing or decreasing. Default increasing.
+#' 
+#' @importFrom stringr str_sort
 #'
-#' @return
+#' @returnA A factorised vector that can be saved directly back to a data frame
+#' 
 #' @export
 #'
 #' @examples

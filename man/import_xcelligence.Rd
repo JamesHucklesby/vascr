@@ -18,16 +18,16 @@ import_xcelligence(file, key)
 Import an xcelligence file
 }
 \examples{
-#' # Arguments to push through the function
-#' file = "inst/extdata/xcell.plt"
-#' key = "inst/extdata/xcell_lookup.csv"
-#' xcell = import_xcelligence(file, key)
-#' 
-#' xcell = ecis_explode(xcell)
-#' 
-#' #ecis_plot(xcell, unit = "Z", frequency = "10000", replication = "experiments", continuouscontains = "ATP", normtime = 0)
-#' 
-#' #ecis_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", replication = "wells")
-#'
+# Arguments to push through the function
+file = "inst/extdata/xcell.plt"
+key = "inst/extdata/xcell_lookup.csv"
+xcell = import_xcelligence(file, key)
+
+xcell = ecis_explode(xcell)
+
+#ecis_plot(xcell, unit = "Z", frequency = "10000", replication = "experiments", continuouscontains = "ATP", normtime = 0)
+
+#ecis_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", replication = "wells")
+
  
 }

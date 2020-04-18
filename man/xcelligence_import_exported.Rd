@@ -2,7 +2,7 @@
 % Please edit documentation in R/import_excelligence.R
 \name{xcelligence_import_exported}
 \alias{xcelligence_import_exported}
-\title{Import excelligence data files}
+\title{Import excelligence data files that have previosly been exported}
 \usage{
 xcelligence_import_exported(file, key)
 }
@@ -15,11 +15,18 @@ xcelligence_import_exported(file, key)
 A standard impedr data frame
 }
 \description{
-Import excelligence data files
+Is possible, use xcelligence_import. This function will import data exported as a text file from the xcelligence data. It will only contain CI at an undisclosed frequency, usually 10,000 Hz but can also be 25,000 Hz or 50,000 Hz. Also does not contain raw normalisation data, as this is lost in the CI generation process.
+}
+\details{
+However, unlike excelligence_import this import process is not dependent on any 3rd party Microsoft software being installed, and is less prone to errors as the import from a text file is much less complex.
 }
 \examples{
-#filename = "inst/extdata/xcell.txt"
-#dataset = xcelligence_import_exported(filename)
-#ecis_plot(dataset, unit = "CI", frequency = 0 , replication = "experiments", time = c(170,220) , samplecontains = "Nerifollin", normtime = 185, preprocessed = TRUE)
+filename = "inst/extdata/xcell.txt"
+dataset = xcelligence_import_exported(filename)
+head(dataset)
 
+key = "inst/extdata/xcell_lookup.csv"
+dataset = xcelligence_import_exported(filename,key)
+head(dataset)
+head(ecis_explode(dataset))
 }

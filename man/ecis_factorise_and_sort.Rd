@@ -7,12 +7,9 @@
 ecis_factorise_and_sort(data, sortkeyincreasing = TRUE)
 }
 \arguments{
-\item{data}{}
+\item{data}{A vector to sort and factorise. This uses stringr's numeric =TRUE to line up all numbers in order correctly}
 
-\item{sortkeyincreasing}{}
-}
-\value{
-
+\item{sortkeyincreasing}{Should samples be returned increasing or decreasing. Default increasing.}
 }
 \description{
 Factorise and sort a the column of a data frame for plotting

@@ -21,7 +21,6 @@ xCELLigence files are stored in a proprietary Microsoft database format. This fu
 This funciton will only run if Microsoft Access is installed on the PC
 }
 \examples{
+# This file is used in import_cellzScope exclisivley so can be tested with it
 
-file = "inst/extdata/xcell.mdb"
-table = "Org10K"
 }

@@ -2,22 +2,23 @@
 % Please edit documentation in R/heatmap_plot.R
 \name{ecis_prep_graphdata}
 \alias{ecis_prep_graphdata}
-\title{Title}
+\title{Prepare a dataset to be graphed by vascar_graph_xxx}
 \usage{
 ecis_prep_graphdata(
   data,
-  unit,
-  frequency,
-  time,
-  samplecontains,
-  experiment,
-  error,
-  alignkey,
-  normtime,
-  divide,
-  preprocessed,
-  continuouscontains,
-  stripidentical
+  unit = "",
+  frequency = Inf,
+  time = Inf,
+  samplecontains = "",
+  experiment = "",
+  error = Inf,
+  alignkey = NULL,
+  normtime = NULL,
+  divide = FALSE,
+  preprocessed = FALSE,
+  continuouscontains = NULL,
+  stripidentical = TRUE,
+  sortkeyincreasing = TRUE
 )
 }
 \arguments{
@@ -51,5 +52,11 @@ ecis_prep_graphdata(
 
 }
 \description{
-Title
+Central data subset, cleanup and label prep function
+}
+\examples{
+
+ecis_prep_graphdata(growth.df)
+
+
 }

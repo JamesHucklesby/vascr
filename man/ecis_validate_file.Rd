@@ -9,16 +9,23 @@ ecis_validate_file(file_name, extension)
 \arguments{
 \item{file_name}{Character string specifying the file name}
 
-\item{extension}{Character string containing a file extension that will be matched against the file type of file_name}
+\item{extension}{Character string containing a file extension that will be matched against the file type of file_name. Case insensitive.}
 }
 \value{
 TRUE if it passes, FALSE if it does not. Also spits out warnings that will help the user correct the error
 }
 \description{
-Validates if a file exists, and if it has the correct file extension.
+Validates if a file exists, and if it has the correct file extension. This is used at the start of all import files to allow them to fail fast, rather than running intensive computations on files that are not found. Also prevents the generation of cryptic errors from downstream functions, that fail due to being presented with data in a strange format.
 }
 \examples{
+# check a file that does not exist fails
 ecis_validate_file("R/AAA_TODOOO.R", "P")
+# Check a file with the wrong extension fails
 ecis_validate_file("R/AAA_TODO.R", "P")
+# Check a file with the wrong extensions fail
+ecis_validate_file("R/AAA_TODO.R", c("P", "q"))
+# Check a file with the right extension passes
 ecis_validate_file("R/AAA_TODO.R", "R")
+# Check a file with one of two right extensions passes
+ecis_validate_file("R/AAA_TODO.R", extension = c("p", "r"))
 }

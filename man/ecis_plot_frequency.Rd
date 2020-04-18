@@ -2,7 +2,7 @@
 % Please edit documentation in R/ecis_plot_frequency.R
 \name{ecis_plot_frequency}
 \alias{ecis_plot_frequency}
-\title{Title}
+\title{Generate frequency plots}
 \usage{
 ecis_plot_frequency(
   data = growth.df,
@@ -23,15 +23,15 @@ ecis_plot_frequency(
 )
 }
 \arguments{
-\item{data}{}
+\item{data}{A vascr formatted datapoint}
 
-\item{unit}{}
+\item{unit}{The unit to plot}
 
-\item{time}{}
+\item{time}{The time to plot at}
 
-\item{frequency}{}
+\item{frequency}{The frequency to plot}
 
-\item{samplecontains}{}
+\item{samplecontains}{Subset by sample containing frequency}
 
 \item{experiment}{}
 
@@ -51,7 +51,7 @@ ecis_plot_frequency(
 
 }
 \description{
-Title
+Library of pre-formed ggplot functions that generate frequency vs value plots for a range of different combinations of instruments, samples and experimental replication levels. Indexed with conditioned data from vascr_plot.
 }
 \examples{
 
