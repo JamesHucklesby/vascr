@@ -22,12 +22,12 @@
 #' 
 #' growth.df$Instrument = "ECIS"
 #'
-#'ecis_plot_continuous(growth.df, "R", 4000, "wells", 50, Inf, continuous = "cells")
-#' # ecis_plot_continuous(growth.df, "R", 4000, "experiments", 50, continuous = "cells")
-#'# ecis_plot_continuous(growth.df, "R", 4000, "summary", 50, continuous = "cells", error = Inf)
+#'vascr_plot_continuous(growth.df, "R", 4000, "wells", 50, Inf, continuous = "cells")
+#' # vascr_plot_continuous(growth.df, "R", 4000, "experiments", 50, continuous = "cells")
+#'# vascr_plot_continuous(growth.df, "R", 4000, "summary", 50, continuous = "cells", error = Inf)
 #'
 #' 
-ecis_plot_continuous = function(data, unit = "R", frequency = 4000, replication = "summary", time, error = Inf, alphavalue = 0.5, xlab  = NULL, ylab = "Value", title = "", cols, continuous)
+vascr_plot_continuous = function(data, unit = "R", frequency = 4000, replication = "summary", time, error = Inf, alphavalue = 0.5, xlab  = NULL, ylab = "Value", title = "", cols, continuous)
 {
   
   if(is.null(xlab))
@@ -37,7 +37,7 @@ ecis_plot_continuous = function(data, unit = "R", frequency = 4000, replication 
 
 # Plot replicates
   
-data = ecis_subset(data, time = time, unit = unit, frequency = frequency)
+data = vascr_subset(data, time = time, unit = unit, frequency = frequency)
 
 data$Val1 = data[[continuous]]
 data$Val1 = as.numeric(data$Val1)
@@ -50,7 +50,7 @@ if(replication == "wells")
 plot = ggplot(data, aes(Val1, Value)) +
  geom_point(aes(color = Experiment)) + ggplot2::labs(title = title, x=xlab, y=ylab)
 
-return(ecis_polish_plot(plot))
+return(vascr_polish_plot(plot))
 }
 
 
@@ -58,8 +58,8 @@ return(ecis_polish_plot(plot))
 
 if (replication == "experiments")
 {
-experiment = ecis_summarise(data, "experiment")
-experiment = ecis_explode(experiment)
+experiment = vascr_summarise(data, "experiment")
+experiment = vascr_explode(experiment)
 
 experiment$Val1 = experiment[[continuous]]
 experiment$Val1 = as.numeric(experiment$Val1)
@@ -67,21 +67,21 @@ experiment$Val1 = as.numeric(experiment$Val1)
 
 if(error == 0)
 {
-    plot = ecis_subsample(summary, error)
+    plot = vascr_subsample(summary, error)
     plot = ggplot(summary, aes(Val1, Value)) +
       geom_line(aes(color = Experiment)) + ggplot2::labs(title = title, x=xlab, y=ylab)
     
-    return(ecis_polish_plot(plot))
+    return(vascr_polish_plot(plot))
 }
 
 if (error < Inf)
 {
-  ecis_subsample(experiment, error)
+  vascr_subsample(experiment, error)
 plot = ggplot(experiment, aes(Val1, Value)) +
   geom_line(aes(color = Experiment)) +
   geom_errorbar(aes(ymin = Value-sem, ymax = Value + sem, color = Experiment)) + ggplot2::labs(title = title, x=xlab, y=ylab)
 
-return(ecis_polish_plot(plot))
+return(vascr_polish_plot(plot))
 }
 
 if (error == Inf)
@@ -91,22 +91,22 @@ plot = ggplot(experiment, aes(Val1, Value)) +
   geom_ribbon(aes(ymin = Value-sem, ymax = Value + sem, fill =Experiment), alpha =   alphavalue) + ggplot2::labs(title = title, x=xlab, y=ylab)
 }
 
-return(ecis_polish_plot(plot))
+return(vascr_polish_plot(plot))
 }
 
 
 ### Now make the summary graphs
 if (replication == "summary")
 {
-summary = ecis_summarise(data, "summary")
-summary = ecis_explode(summary)
+summary = vascr_summarise(data, "summary")
+summary = vascr_explode(summary)
 
 summary$Val1 = summary[[continuous]]
 summary$Val1 = as.numeric(summary$Val1)
 
 if (error<Inf)
 {
-  summary = ecis_subsample(summary, error)
+  summary = vascr_subsample(summary, error)
 plot = ggplot(summary, aes(Val1, Value)) +
   geom_line() +
   geom_errorbar(aes(ymin = Value-sem, ymax = Value+sem)) + ggplot2::labs(title = title, x=xlab, y=ylab)
@@ -125,17 +125,25 @@ if(error == Inf)
   geom_ribbon(aes(ymin = Value-sem, ymax = Value + sem), alpha = alphavalue) + ggplot2::labs(title = title, x=xlab, y=ylab)
 }
 
-return(ecis_polish_plot(plot))
+return(vascr_polish_plot(plot))
 }
 
 }
 
 
-ecis_check_categorical = function(data)
+#' Title
+#'
+#' @param data 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_check_categorical = function(data)
 {
   minidata = select(data.df, Sample)
   minidata = unique(minidata)
-  minidata_exploded = ecis_explode(minidata)
+  minidata_exploded = vascr_explode(minidata)
   return(minidata_exploded)
 }
 
@@ -155,11 +163,11 @@ ecis_check_categorical = function(data)
 #'
 #' @examples
 #' 
-#' ecis_reconstitute_sample("1nm cheese + 1nm cars")
-#' ecis_reconstitute_sample("   5,000.939 nM Oranges")
-#' ecis_reconstitute_sample("35,000 cells")
+#' vascr_reconstitute_sample("1nm cheese + 1nm cars")
+#' vascr_reconstitute_sample("   5,000.939 nM Oranges")
+#' vascr_reconstitute_sample("35,000 cells")
 #' 
-ecis_reconstitute_sample = function(string)
+vascr_reconstitute_sample = function(string)
 {
   
   samples = str_split(string, "[+]")
@@ -175,7 +183,7 @@ ecis_reconstitute_sample = function(string)
   string2 = gsub(",", "", sample)     #Remove commas from numbers
   string3 = paste( "#", string2, "#") #Add protective filler so we can strip off end characters later
   string3.5 = gsub("[^0-9.-]", "#", string3) # Replace everything non-numeric with #'s 
-  string4 = ecis_collapse_hash(string3.5) # Remove duplicate #'s
+  string4 = vascr_collapse_hash(string3.5) # Remove duplicate #'s
   string5 = substr(string4, 2, str_length(string4)-1) # Remove the protective #'s we added earlier
   string6 = gsub("#", ",", string5) # Switch out the # for a , to be standard
   
@@ -190,7 +198,7 @@ ecis_reconstitute_sample = function(string)
   title4.7 = gsub(" #", "#", title4.6) # Finish the job hash space job
   title4.7 = gsub(" #", "#", title4.7) # Finish the job hash space job
   title4.7 = gsub(" #", "#", title4.7) # Finish the job hash space job
-  title5 = ecis_collapse_hash(title4.7) # Itterativley delete all the hashes
+  title5 = vascr_collapse_hash(title4.7) # Itterativley delete all the hashes
   title6 = substr(title5, 2, str_length(title5)-1) # Remove the protective #'s we added earlier
   title7 = gsub("#", ",", title6) # Switch out the # for a , to be standard
   
@@ -200,7 +208,15 @@ ecis_reconstitute_sample = function(string)
   return(paste(samplestack, collapse = " + "))
 }
 
-ecis_collapse_hash = function(string)
+#' Title
+#'
+#' @param string 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_collapse_hash = function(string)
 {
   tempstring = "" # setup a placeholer to keep track of if the optimisation is still doing something
   
@@ -225,11 +241,11 @@ ecis_collapse_hash = function(string)
 #' @examples
 #' 
 #' growth.df$Instrument = "ECIS"
-#' ecis_explode(growth.df)
+#' vascr_explode(growth.df)
 #' 
-ecis_exploded_cols = function(data)
+vascr_exploded_cols = function(data)
 {
-  setdiff(colnames(data), ecis_cols())
+  setdiff(colnames(data), vascr_cols())
 }
 
 #' Return the ECIS cols used in this package
@@ -244,15 +260,15 @@ ecis_exploded_cols = function(data)
 #'
 #' @examples
 #' 
-#' #ecis_cols()
-#' #ecis_cols(growth.df, set = "exploded")
-#' #ecis_cols(growth.df, set = "continuous")
-#' #ecis_cols(growth.df, set = "categorical")
-#' #ecis_cols(growth.df, set = "set")
-#' #ecis_cols(growth.df, set = "is_continuous")
+#' #vascr_cols()
+#' #vascr_cols(growth.df, set = "exploded")
+#' #vascr_cols(growth.df, set = "continuous")
+#' #vascr_cols(growth.df, set = "categorical")
+#' #vascr_cols(growth.df, set = "set")
+#' #vascr_cols(growth.df, set = "is_continuous")
 #' 
 #' 
-ecis_cols  = function(data, set = "core")
+vascr_cols  = function(data, set = "core")
 {
   if(set == "core")
   {
@@ -282,7 +298,7 @@ ecis_cols  = function(data, set = "core")
   
   else if(set == "continuous")
   {
-    numeric2 = ecis_cols(data, set = "is_continuous")
+    numeric2 = vascr_cols(data, set = "is_continuous")
     
     # Delete everything that is not numeric from the list
     numeric2 = subset(numeric2, numeric2$IsNumeric)
@@ -294,22 +310,22 @@ ecis_cols  = function(data, set = "core")
   else if(set == "categorical")
   {
     # Return all the cols that are in the dataset and not continuous
-    return(setdiff(colnames(data),ecis_cols(data, set = "continuous")))
+    return(setdiff(colnames(data),vascr_cols(data, set = "continuous")))
   }
   
   else if (set == "exploded")
   {
     # Return the non-core cols
-    return(setdiff(colnames(data), ecis_cols()))
+    return(setdiff(colnames(data), vascr_cols()))
   }
   else if (set == "set")
   {
     # Recursivley generate all the required cols. Some will then further use recursion to generate themselves.
     returndata = list(
-        core = ecis_cols(data),
-        exploded = ecis_cols(data, "exploded"),
-        categorical = ecis_cols(data, "categorical"),
-        continuous = ecis_cols(data, "continuous")
+        core = vascr_cols(data),
+        exploded = vascr_cols(data, "exploded"),
+        categorical = vascr_cols(data, "categorical"),
+        continuous = vascr_cols(data, "continuous")
         )
     return(returndata)
   }

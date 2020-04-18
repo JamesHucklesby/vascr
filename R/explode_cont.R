@@ -13,18 +13,18 @@
 #' growth.df$Instrument ="ECIS"
 #' 
 #' # Stip out all the non-core columns in the dataset
-#' data.df = ecis_remove_metadata(growth.df)
+#' data.df = vascr_remove_metadata(growth.df)
 #' 
 #' # Run the explosion to re-generate the non-core columns
-#' processed = ecis_explode(data.df)
+#' processed = vascr_explode(data.df)
 #' 
 #' # Show that the re-created data is identical to the original dataset
 #' all.equal(growth.df, processed)
 #' 
-ecis_explode = function(data)
+vascr_explode = function(data)
 {
   # Clean out any existing explosion data to give a clean slate
-  df1 = ecis_remove_metadata(data)
+  df1 = vascr_remove_metadata(data)
   #Separate each condition at each data point into it's own row
   df2 = df1 %>% separate_rows("Sample", sep = " \\+ ")
   # Separate out the numbers and conditions into separate columns
@@ -35,11 +35,11 @@ ecis_explode = function(data)
   
   # Warn if any data is lost in this transfer
   # Pull out the core datasets, then check they're identical
-  originalcore = ecis_remove_metadata(data)
+  originalcore = vascr_remove_metadata(data)
   originalcore$Sample = NULL
   newcore = df4
   newcore$Sample = "NA"
-  newcore = ecis_remove_metadata(newcore)
+  newcore = vascr_remove_metadata(newcore)
   newcore$Sample = NULL
   
   if(!all_equal(originalcore, newcore, ignore_row_order = FALSE, ignore_col_order = FALSE))
@@ -72,9 +72,9 @@ ecis_explode = function(data)
 #' data.df$Sample = paste(data.df$Sample, "+ 10_nm nothing important")
 #' data.df$Sample = paste(data.df$Sample, "+ 4_nm Carpet + ECV_line")
 #' 
-#' ecis_test_explosion_integrity(growth.df)
+#' vascr_test_explosion_integrity(growth.df)
 #' 
-ecis_test_explosion_integrity = function(data)
+vascr_test_explosion_integrity = function(data)
 {
   data$items = str_count(data$Sample, "[+]") + 1 #Count the number of items = +es, +1
   data$underscore = str_count(data$Sample, "[_]") #Count the number of underscores
@@ -97,14 +97,14 @@ ecis_test_explosion_integrity = function(data)
 #' @export
 #'
 #' @examples
-#' ecis_test_exploded(growth.df)
-#' imploded = ecis_implode(growth.df)
-#' ecis_test_exploded(imploded)
+#' vascr_test_exploded(growth.df)
+#' imploded = vascr_implode(growth.df)
+#' vascr_test_exploded(imploded)
 #' 
-ecis_test_exploded = function(data)
+vascr_test_exploded = function(data)
 {
  # If exploded cols exist, assume it's exploded
- length(ecis_exploded_cols(data))>1
+ length(vascr_exploded_cols(data))>1
 }
 
 

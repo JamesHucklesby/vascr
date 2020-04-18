@@ -1,5 +1,5 @@
 library(testthat)
-library(ecisr)
+library(vascr)
 #library(vdiffr)
 
-test_check("ecisr")
+test_check("vascr")

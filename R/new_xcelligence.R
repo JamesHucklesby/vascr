@@ -20,7 +20,7 @@ xcelligence_lengthen_platemap = function(data)
   lookuptable = pivot_longer(data, cols = starts_with("C"), names_to = "Cols", values_to = "Value")
   lookuptable$Cols = str_remove(lookuptable$Cols, "C")
   lookuptable$Well = paste(lookuptable$Row, lookuptable$Cols, sep = "")
-  lookuptable$Well = ecis_standardise_wells(lookuptable$Well)
+  lookuptable$Well = vascr_standardise_wells(lookuptable$Well)
   # Clean up
   lookuptable$Cols = NULL
   lookuptable$Row = NULL
@@ -50,7 +50,7 @@ import_mdb = function(file, table)
 
 {
   
-  ecis_validate_file(file, "mdb")
+  vascr_validate_file(file, "mdb")
 
   # Set enviromental variables for the import
   sock_port <- 8642L
@@ -127,21 +127,21 @@ import_mdb = function(file, table)
 #' key = "inst/extdata/xcell_lookup.csv"
 #' xcell = import_xcelligence(file, key)
 #'
-#' xcell = ecis_explode(xcell)
+#' xcell = vascr_explode(xcell)
 #'
-#' #ecis_plot(xcell, unit = "Z", frequency = "10000", replication = "experiments", continuouscontains = "ATP", normtime = 0)
+#' #vascr_plot(xcell, unit = "Z", frequency = "10000", replication = "experiments", continuouscontains = "ATP", normtime = 0)
 #'
-#' #ecis_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", replication = "wells")
+#' #vascr_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", replication = "wells")
 #'
 #'  
 
 import_xcelligence = function(file, key)
 {
-  ecis_validate_file(file, "plt")
+  vascr_validate_file(file, "plt")
   
   if(!missing(key))
   {
-  ecis_validate_file(key, c("csv", "xlsx"))
+  vascr_validate_file(key, c("csv", "xlsx"))
   }
   
   
@@ -223,14 +223,14 @@ if(missing(key))
       labeleddata = left_join(TimeOrg, ingested2, by = "Well")
       labeleddata$Sample = "NS"
       
-      finaldata = ecis_implode(labeleddata)
+      finaldata = vascr_implode(labeleddata)
 } else # Code for assigning samples from a standard file
 {
-      finaldata = ecis_assign_samples(TimeOrg,key)
+      finaldata = vascr_assign_samples(TimeOrg,key)
 }
 
 # Normalise the data to the minimum timepoint in the dataset (should be 0). This satisfies the top of the CI equation
-xcellCI = ecis_normalise(finaldata, min(finaldata$Time), divide = FALSE)
+xcellCI = vascr_normalise(finaldata, min(finaldata$Time), divide = FALSE)
 
 # Generate a divisor column, switch in the correct numbers, divide by each other and clean up
 xcellCI$divisor = xcellCI$Frequency
@@ -245,7 +245,7 @@ xcellCI$divisor = NULL
 # Fix up the unit, as they are now all CI
 xcellCI$Unit = "CI"
 
-returndata = ecis_combine(xcellCI, finaldata)
+returndata = vascr_combine(xcellCI, finaldata)
 
 return(returndata)
 }
@@ -258,7 +258,7 @@ return(returndata)
 # filename = "inst/extdata/xcell.txt"
 # dataset = xcelligence_import_exported(filename)
 # 
-# xcell = ecis_explode(xcell)
+# xcell = vascr_explode(xcell)
 # xcell$Instrument = "XCELL"
 # 
 # 
@@ -286,30 +286,30 @@ return(returndata)
 # xcellCI$Instrument.x = NULL
 # xcellCI$Instrument.y = NULL
 # 
-# old_xcell_compare = (ecis_subset(old_xcell, time = 10, well = "A1"))
-# new_xcell_compare = (ecis_subset(xcellCI, time = 10, well = "A1"))
+# old_xcell_compare = (vascr_subset(old_xcell, time = 10, well = "A1"))
+# new_xcell_compare = (vascr_subset(xcellCI, time = 10, well = "A1"))
 # 
 # old_xcell$Frequency = "9000"
 # old_xcell$Instrument = NULL
 # old_xcell$Time = as.numeric(old_xcell$Time)
 # 
-# master_xcell = ecis_combine(xcellCI, old_xcell)
+# master_xcell = vascr_combine(xcellCI, old_xcell)
 # master_xcell$Instrument = "THING"
-# master_xcelle = ecis_explode(master_xcell)
+# master_xcelle = vascr_explode(master_xcell)
 # 
-# master_xcellf = ecis_subset_continuous(master_xcelle, "Nerifollin")
-# master_xcellf = ecis_implode(master_xcellf, stripidentical = TRUE)
-# master_xcellg = ecis_subset(old_xcell, samplecontains = "Nerifollin")
+# master_xcellf = vascr_subset_continuous(master_xcelle, "Nerifollin")
+# master_xcellf = vascr_implode(master_xcellf, stripidentical = TRUE)
+# master_xcellg = vascr_subset(old_xcell, samplecontains = "Nerifollin")
 # master_xcellf$Instrument = "THING"
 # master_xcellg$Instrument = "THING"
 # 
-# master_xcellh = ecis_combine(master_xcellg, master_xcellf)
+# master_xcellh = vascr_combine(master_xcellg, master_xcellf)
 # 
 # 
 # master_xcellf$Unit = "CIT"
 # 
 # 
-# master_xcelli = ecis_subset(master_xcellh, time = c(150,200))
+# master_xcelli = vascr_subset(master_xcellh, time = c(150,200))
 # 
 # toplot2.df = summarise(group_by(master_xcelli, Sample, Time, Frequency), sd = sd(Value),
 #                        n = n(), Value = mean(Value))

@@ -15,16 +15,16 @@
 #'
 #' @examples
 #' # Check the function works
-#' imploded = ecis_implode(growth.df)
-#' imploded = ecis_implode(growth.df, stripidentical = TRUE)
+#' imploded = vascr_implode(growth.df)
+#' imploded = vascr_implode(growth.df, stripidentical = TRUE)
 #'
-#' exploded = ecis_explode(ecis_remove_metadata(growth.df))
-#' imploded = ecis_implode(exploded)
+#' exploded = vascr_explode(vascr_remove_metadata(growth.df))
+#' imploded = vascr_implode(exploded)
 #' 
-#' data = ecis_subset(growth.df, samplecontains = "35,000")
-#' imploded = ecis_implode(data)
+#' data = vascr_subset(growth.df, samplecontains = "35,000")
+#' imploded = vascr_implode(data)
 
-ecis_implode = function(data, select_columns = NULL, stripidentical = FALSE)
+vascr_implode = function(data, select_columns = NULL, stripidentical = FALSE)
 {
   if(length(unique(data$Sample))==1 & is.null(select_columns))
   {
@@ -34,7 +34,7 @@ ecis_implode = function(data, select_columns = NULL, stripidentical = FALSE)
   
   if(is.null(select_columns))  # If cols is not specified, use the lot
   {
-    select_columns = ecis_exploded_cols(data)
+    select_columns = vascr_exploded_cols(data)
   }
   
   if(length(setdiff(select_columns, colnames(data)))>0) #If cols have been requested that are not in the dataset, remove them from cols and make a warning
@@ -56,7 +56,7 @@ ecis_implode = function(data, select_columns = NULL, stripidentical = FALSE)
   }
   
   
-  miniexploded = select(data, c(all_of(ecis_cols()),select_columns))
+  miniexploded = select(data, c(all_of(vascr_cols()),select_columns))
   miniexploded$Sample = NULL # If present, Remove sample from what will become the output, as we're going to rebuild it.
   
   # Now we go through, format and copy out all the columns into the new data frame

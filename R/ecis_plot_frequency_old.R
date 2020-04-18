@@ -1,4 +1,4 @@
-#' if(ecis_test_summary_level(df) == "wells")
+#' if(vascr_test_summary_level(df) == "wells")
 #' {
 #'   
 #'   group = interaction(df$Well, df$Experiment)
@@ -16,9 +16,9 @@
 #' 
 #' 
 #' 
-#' # ecis_plot_frequency_ggcode(summarised, color = "Sample", errorbars = 0, errorcalc = "sem", alpha = 0.1)
+#' # vascr_plot_frequency_ggcode(summarised, color = "Sample", errorbars = 0, errorcalc = "sem", alpha = 0.1)
 #' 
-#' ecis_plot_frequency_ggcode = function(df, color = NULL, line, errorbars, errorcalc, alpha)
+#' vascr_plot_frequency_ggcode = function(df, color = NULL, line, errorbars, errorcalc, alpha)
 #' {
 #' 
 #'   x = "Frequency"
@@ -86,21 +86,21 @@
 #' #' @export
 #' #'
 #' #' @examples
-#' #' ecis_plot_frequency(growth.df, replication = "summary", unit = "C", errorbars = Inf)
-#' #' ecis_plot_frequency(growth.df, replication = "experiments", unit = "C", errorbars = 1)
-#' #' ecis_plot_frequency(growth.df, replication = "wells", unit = "C", errorbars = 1)
-#' #' ecis_plot(growth.df)
+#' #' vascr_plot_frequency(growth.df, replication = "summary", unit = "C", errorbars = Inf)
+#' #' vascr_plot_frequency(growth.df, replication = "experiments", unit = "C", errorbars = 1)
+#' #' vascr_plot_frequency(growth.df, replication = "wells", unit = "C", errorbars = 1)
+#' #' vascr_plot(growth.df)
 #' #'
-#' #' ecis_plot_frequency(time = 100)
+#' #' vascr_plot_frequency(time = 100)
 #' #'
-#' ecis_plot_frequency = function(data = growth.df, replication = "summary", unit = "R", time = 50, frequency = "raw", samplecontains = "", experiment = "", errorbars = Inf, errorcalc = "sem", alignkey = NULL, normtime = NULL, preprocessed = FALSE, continuouscontains = NULL, stripidentical = TRUE, alpha = 0.1)
+#' vascr_plot_frequency = function(data = growth.df, replication = "summary", unit = "R", time = 50, frequency = "raw", samplecontains = "", experiment = "", errorbars = Inf, errorcalc = "sem", alignkey = NULL, normtime = NULL, preprocessed = FALSE, continuouscontains = NULL, stripidentical = TRUE, alpha = 0.1)
 #' {
 #' 
-#'   data = ecis_prep_graphdata(data = data, unit = unit, time = time, frequency = frequency, samplecontains = samplecontains, experiment = experiment, error = errorbars, alignkey = alignkey, normtime = normtime, preprocessed = preprocessed, continuouscontains = continuouscontains, stripidentical = stripidentical)
+#'   data = vascr_prep_graphdata(data = data, unit = unit, time = time, frequency = frequency, samplecontains = samplecontains, experiment = experiment, error = errorbars, alignkey = alignkey, normtime = normtime, preprocessed = preprocessed, continuouscontains = continuouscontains, stripidentical = stripidentical)
 #' 
 #' 
 #'   # This should be in the above sample
-#'   summarised = ecis_summarise(data, level = replication)
+#'   summarised = vascr_summarise(data, level = replication)
 #' 
 #'   summarised$Frequency = as.numeric(summarised$Frequency)
 #' 
@@ -115,20 +115,20 @@
 #' 
 #'     if(multiplesamples & multipleinstruments)
 #'     {
-#'       plot = ecis_plot_frequency_ggcode(summarised, color = "Sample", line = "Instrument", errorbars = errorbars, errorcalc = errorcalc, "alpha" = alpha)
+#'       plot = vascr_plot_frequency_ggcode(summarised, color = "Sample", line = "Instrument", errorbars = errorbars, errorcalc = errorcalc, "alpha" = alpha)
 #' 
 #'     }else if(multiplesamples)
 #'     {
-#'       plot = ecis_plot_frequency_ggcode(summarised, color = "Sample", errorbars = errorbars, errorcalc = errorcalc, alpha = alpha)
+#'       plot = vascr_plot_frequency_ggcode(summarised, color = "Sample", errorbars = errorbars, errorcalc = errorcalc, alpha = alpha)
 #'     }else if (multipleinstruments)
 #' 
 #'     {
-#'       plot = ecis_plot_frequency_ggcode(summarised,color = "Instrument", errorbars = errorbars, errorcalc = errorcalc, alpha = alpha)
+#'       plot = vascr_plot_frequency_ggcode(summarised,color = "Instrument", errorbars = errorbars, errorcalc = errorcalc, alpha = alpha)
 #' 
 #'     } else # Only one frequency and one sample, plot in black and white
 #' 
 #'     {
-#'       plot = ecis_plot_frequency_ggcode(summarised, errorbars = errorbars, errorcalc = errorcalc, alpha = alpha)
+#'       plot = vascr_plot_frequency_ggcode(summarised, errorbars = errorbars, errorcalc = errorcalc, alpha = alpha)
 #'     }
 #' 
 #'   } else if (replication == "experiments")
@@ -140,31 +140,31 @@
 #'     }
 #'     else if(all(multiplesamples, multipleinstruments)) # one experiment
 #'     {
-#'       plot = ecis_plot_frequency_ggcode(summarised, color = "Sample", line = "Instrument", "errorbars" = errorbars, "errorcalc" = errorcalc, "alpha" = alpha)
+#'       plot = vascr_plot_frequency_ggcode(summarised, color = "Sample", line = "Instrument", "errorbars" = errorbars, "errorcalc" = errorcalc, "alpha" = alpha)
 #'     }
 #'     else if(all(multipleexperiments, multiplesamples))
 #'     {
-#'       plot = ecis_plot_frequency_ggcode(summarised, color = "Sample", line = "Experiment", "errorbars" = errorbars, "errorcalc" = errorcalc, "alpha" = alpha)
+#'       plot = vascr_plot_frequency_ggcode(summarised, color = "Sample", line = "Experiment", "errorbars" = errorbars, "errorcalc" = errorcalc, "alpha" = alpha)
 #'     }
 #'     else if(all(multipleinstruments, multiplesamples))
 #'     {
-#'       plot = ecis_plot_frequency_ggcode(summarised, color = "Sample", line = "Instrument", "errorbars" = errorbars, "errorcalc" = errorcalc, "alpha" = alpha)
+#'       plot = vascr_plot_frequency_ggcode(summarised, color = "Sample", line = "Instrument", "errorbars" = errorbars, "errorcalc" = errorcalc, "alpha" = alpha)
 #'     }
 #'     else if(mulitpleexperiments)
 #'     {
-#'       plot = ecis_plot_frequency_ggcode(summarised, color = "Experiment", "errorbars" = errorbars, "errorcalc" = errorcalc, "alpha" = alpha)
+#'       plot = vascr_plot_frequency_ggcode(summarised, color = "Experiment", "errorbars" = errorbars, "errorcalc" = errorcalc, "alpha" = alpha)
 #'     }
 #'     else if(mulitiplesamples)
 #'     {
-#'       plot = ecis_plot_frequency_ggcode(summarised, color = "Sample", "errorbars" = errorbars, "errorcalc" = errorcalc, "alpha" = alpha)
+#'       plot = vascr_plot_frequency_ggcode(summarised, color = "Sample", "errorbars" = errorbars, "errorcalc" = errorcalc, "alpha" = alpha)
 #'     }
 #'     else if(multipleinstruments)
 #'     {
-#'       plot = ecis_plot_frequency_ggcode(summarised, color = "Instrument","errorbars" = errorbars, "errorcalc" = errorcalc, "alpha" = alpha)
+#'       plot = vascr_plot_frequency_ggcode(summarised, color = "Instrument","errorbars" = errorbars, "errorcalc" = errorcalc, "alpha" = alpha)
 #' 
 #'     }else
 #'     {
-#'       plot = ecis_plot_frequency_ggcode(summarised, "errorbars" = errorbars, "errorcalc" = errorcalc, "alpha" = alpha)
+#'       plot = vascr_plot_frequency_ggcode(summarised, "errorbars" = errorbars, "errorcalc" = errorcalc, "alpha" = alpha)
 #'     }
 #'   }
 #' 
@@ -176,11 +176,11 @@
 #'     }
 #'     else if(all(multiplesamples, multipleinstruments))
 #'     {
-#'       plot = ecis_plot_frequency_ggcode(summarised, color = "Sample", line = "Instrument", "errorbars" = 0, "errorcalc" = errorcalc, "alpha" = alpha)
+#'       plot = vascr_plot_frequency_ggcode(summarised, color = "Sample", line = "Instrument", "errorbars" = 0, "errorcalc" = errorcalc, "alpha" = alpha)
 #'     }
 #'     else if(all(multipleexperiments, multiplesamples))
 #'     {
-#'       plot = ecis_plot_frequency_ggcode(summarised, color = "Sample", line = "Experiment", "errorbars" = 0, "errorcalc" = errorcalc, "alpha" = alpha)
+#'       plot = vascr_plot_frequency_ggcode(summarised, color = "Sample", line = "Experiment", "errorbars" = 0, "errorcalc" = errorcalc, "alpha" = alpha)
 #'     }
 #'     else if(mulitpleexperiments)
 #'     {

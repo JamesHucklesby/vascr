@@ -25,12 +25,12 @@ getmode <- function(v) {
 #' @export
 #'
 #' @examples 
-#' ecis_standardise_wells('A01')
-#' ecis_standardise_wells('A 1')
-#' ecis_standardise_wells('tortoise') # Non-standardisable becomes NA
-#' ecis_standardise_wells(growth.df$Well)
+#' vascr_standardise_wells('A01')
+#' vascr_standardise_wells('A 1')
+#' vascr_standardise_wells('tortoise') # Non-standardisable becomes NA
+#' vascr_standardise_wells(growth.df$Well)
 #' 
-ecis_standardise_wells = function(well) {
+vascr_standardise_wells = function(well) {
   
   # First try and fix the user input
   well = toupper(well) # Make it upper case
@@ -41,7 +41,7 @@ ecis_standardise_wells = function(well) {
   # Check that it now conforms
 
   
-  if(is.na(match(well[1],ecis_96_well_names())))
+  if(is.na(match(well[1],vascr_96_well_names())))
   {
     return ("NA")
   }
@@ -55,9 +55,9 @@ ecis_standardise_wells = function(well) {
 #' @export
 #'
 #' @examples
-#' ecis_96_well_names()
+#' vascr_96_well_names()
 #' 
-ecis_96_well_names = function()
+vascr_96_well_names = function()
 {
   
   wells = expand.grid(LETTERS[1:8],c(1:12))
@@ -81,9 +81,9 @@ ecis_96_well_names = function()
 #' @export
 #'
 #' @examples
-#' ecis_find_time(growth.df, 146.2)
+#' vascr_find_time(growth.df, 146.2)
 #' 
-ecis_find_time = function(data.df, time) {
+vascr_find_time = function(data.df, time) {
   times = unique(data.df$Time)
   numberinlist = which.min(abs(times - time))
   timetouse = times[numberinlist]
@@ -103,9 +103,9 @@ ecis_find_time = function(data.df, time) {
 #' @export
 #'
 #' @examples
-#' ecis_find_frequency(growth.df, 4382)
+#' vascr_find_frequency(growth.df, 4382)
 #' 
-ecis_find_frequency = function(data.df, frequency) {
+vascr_find_frequency = function(data.df, frequency) {
   data.df$Frequency = as.numeric(data.df$Frequency)
   times = unique(data.df$Frequency)
   numberinlist = which.min(abs(times - frequency))
@@ -124,11 +124,11 @@ ecis_find_frequency = function(data.df, frequency) {
 #' @examples
 #' growth.df$Instrument = "ECIS"
 #' standard = growth.df
-#' normal = ecis_normalise(growth.df, 100)
-#' ecis_detect_normal(standard)
-#' ecis_detect_normal(normal)
+#' normal = vascr_normalise(growth.df, 100)
+#' vascr_detect_normal(standard)
+#' vascr_detect_normal(normal)
 
-ecis_detect_normal = function(data.df)
+vascr_detect_normal = function(data.df)
 {
   timecrushed = data.df %>% group_by(Time) %>% 
     summarise(deviation = sd(Value))
@@ -155,20 +155,20 @@ ecis_detect_normal = function(data.df)
 #'
 #' @examples
 #' growth.df$Instrument = "ECIS"
-#' exploded.df = ecis_explode(growth.df)
-#' cleaned.df = ecis_remove_metadata(exploded.df)
+#' exploded.df = vascr_explode(growth.df)
+#' cleaned.df = vascr_remove_metadata(exploded.df)
 #' identical(growth.df,cleaned.df)
-ecis_remove_metadata = function(data.df, subset = "all")
+vascr_remove_metadata = function(data.df, subset = "all")
 {
   
-  summary_level = ecis_test_summary_level(data.df)
+  summary_level = vascr_test_summary_level(data.df)
   
   if(summary_level == "summary" || summary_level == "experiment")
   {
-    warning("You are removing some summary statistics. These are not re-generatable using ecis_explode alone, and must be regenerated with ecis_summarise.")
+    warning("You are removing some summary statistics. These are not re-generatable using vascr_explode alone, and must be regenerated with vascr_summarise.")
   }
   
-  removed.df = data.df %>% select(ecis_cols())
+  removed.df = data.df %>% select(vascr_cols())
   
   return(removed.df)
 }
@@ -185,9 +185,9 @@ ecis_remove_metadata = function(data.df, subset = "all")
 #'
 #' @examples
 #' 
-#' ecis_titles("Rb")
+#' vascr_titles("Rb")
 #' 
-ecis_titles = function (unit, frequency = 0)
+vascr_titles = function (unit, frequency = 0)
 {
   # Electrical quantaties
   if(unit == "C") { return(expression(paste("Capacitance (",mu,"F)")))}
@@ -234,9 +234,9 @@ ecis_titles = function (unit, frequency = 0)
 #' #'
 #' #' @examples
 #' #' 
-#' #' #ecis_fix_error(growth.df, "cells", "cells plated")
+#' #' #vascr_fix_error(growth.df, "cells", "cells plated")
 #' #' 
-#' ecis_fix_error = function (data.df, incorrect, correct, limit = "None")
+#' vascr_fix_error = function (data.df, incorrect, correct, limit = "None")
 #' {
 #'   
 #'   if (limit == "None" || limit == "Sample")
@@ -304,20 +304,20 @@ categorical_mode = function(x){
 #' @examples
 #' 
 #' unique(growth.df$Sample)
-#' excludedgrowth.df = ecis_exclude(growth.df, samples = c("35,000 cells", "0 cells"))
+#' excludedgrowth.df = vascr_exclude(growth.df, samples = c("35,000 cells", "0 cells"))
 #' unique(excludedgrowth.df$Sample)
 #' 
 #' unique(growth.df$Well)
-#' excludedgrowth.df = ecis_exclude(growth.df, wells = c("A1", "B1", "C1"))
+#' excludedgrowth.df = vascr_exclude(growth.df, wells = c("A1", "B1", "C1"))
 #' unique(excludedgrowth.df$Well)
 #' 
 #' unique(growth.df$Experiment)
-#' excludedgrowth.df = ecis_exclude(growth.df, experiment = c(1,2))
+#' excludedgrowth.df = vascr_exclude(growth.df, experiment = c(1,2))
 #' unique(excludedgrowth.df$Experiment)
 #' 
 
 
-ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = FALSE, times = FALSE, values = FALSE, vars = FALSE, vals = FALSE, vs = FALSE)
+vascr_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = FALSE, times = FALSE, values = FALSE, vars = FALSE, vals = FALSE, vs = FALSE)
 {
   
   for (sample in samples)
@@ -370,14 +370,14 @@ ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = F
 #' 
 #' #Make two fake experiments worth of data
 #' 
-#' experiment1.df = ecis_subset(growth.df, experiment = "1")
-#' experiment2.df = ecis_subset(growth.df, experiment = "2")
-#' experiment3.df = ecis_subset(growth.df, experiment = "3")
+#' experiment1.df = vascr_subset(growth.df, experiment = "1")
+#' experiment2.df = vascr_subset(growth.df, experiment = "2")
+#' experiment3.df = vascr_subset(growth.df, experiment = "3")
 #' 
-#' data = ecis_combine(experiment1.df, experiment2.df, experiment3.df)
+#' data = vascr_combine(experiment1.df, experiment2.df, experiment3.df)
 #' head(data)
 #' 
-ecis_combine = function(..., resample = FALSE) {
+vascr_combine = function(..., resample = FALSE) {
   
   dataframes = list(...)
   
@@ -414,7 +414,7 @@ ecis_combine = function(..., resample = FALSE) {
   
   if(isTRUE(resample))
   {
-    frequency = ecis_current_frequency(alldata)
+    frequency = vascr_current_frequency(alldata)
     
   }
   
@@ -480,9 +480,9 @@ comma_to_numeric = function(comma_array)
 #' @export
 #'
 #' @examples
-#' ecis_default(growth.df)
+#' vascr_default(growth.df)
 #' 
-ecis_default = function (data)
+vascr_default = function (data)
 {
 
   instrument = categorical_mode(data$Instrument)

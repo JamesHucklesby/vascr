@@ -20,20 +20,20 @@
 #'
 #' @examples
 #' 
-#' ecis_plot_frequency(growth.df, replication = "summary", unit = "C", errorbars = Inf, samplecontains = "35,000")
-#' ecis_plot_frequency(growth.df, replication = "experiments", unit = "C", errorbars = 1)
-#' ecis_plot_frequency(growth.df, replication = "wells", unit = "C", errorbars = 1)
-#' ecis_plot(growth.df)
+#' vascr_plot_frequency(growth.df, replication = "summary", unit = "C", errorbars = Inf, samplecontains = "35,000")
+#' vascr_plot_frequency(growth.df, replication = "experiments", unit = "C", errorbars = 1)
+#' vascr_plot_frequency(growth.df, replication = "wells", unit = "C", errorbars = 1)
+#' vascr_plot(growth.df)
 #' 
-#' ecis_plot_frequency(time = 100)
+#' vascr_plot_frequency(time = 100)
 #' 
 #' data = growth.df
 #' replication = "wells"
 #' 
-ecis_plot_frequency = function(data = growth.df, replication = "summary", unit = "R", time = 50, frequency = "raw", samplecontains = "", experiment = "", errorbars = Inf, errorcalc = "sem", alignkey = NULL, normtime = NULL, preprocessed = FALSE, continuouscontains = NULL, stripidentical = TRUE, alpha = 0.1)
+vascr_plot_frequency = function(data = growth.df, replication = "summary", unit = "R", time = 50, frequency = "raw", samplecontains = "", experiment = "", errorbars = Inf, errorcalc = "sem", alignkey = NULL, normtime = NULL, preprocessed = FALSE, continuouscontains = NULL, stripidentical = TRUE, alpha = 0.1)
 {
 
-replication = ecis_test_summary_level(data)
+replication = vascr_test_summary_level(data)
   
 summarised$Frequency = as.numeric(summarised$Frequency)
 

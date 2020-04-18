@@ -17,13 +17,13 @@
 #'
 #' @examples
 #' 
-#' data = ecis_normalise(growth.df, 100)
+#' data = vascr_normalise(growth.df, 100)
 #' head(data)
 #' 
-ecis_normalise = function(data.df, normtime, divide = FALSE) {
+vascr_normalise = function(data.df, normtime, divide = FALSE) {
     
     # Create a table that contains the full dataset at the time we are normalising to
-    mininormaltable = ecis_subset(data.df, time = normtime)
+    mininormaltable = vascr_subset(data.df, time = normtime)
     
     # Now use left_join to match this time point to every other time point.This creates a table with an additional column that everything needs to be    normalised to, allowing for the actual normalisation to be done via vector maths. Not the most memory efficent, but is explicit and clean.
     
@@ -82,12 +82,12 @@ ecis_normalise = function(data.df, normtime, divide = FALSE) {
 #'
 #' @examples
 #' 
-#' data = ecis_align_key(growth.df, 'max')
+#' data = vascr_align_key(growth.df, 'max')
 #' head(data)
-#' data = ecis_align_key(growth.df, 'min')
+#' data = vascr_align_key(growth.df, 'min')
 #' head(data)
 
-ecis_align_key = function(data.df, point, discrepancy = 5) {
+vascr_align_key = function(data.df, point, discrepancy = 5) {
     
     #These actions are implimented as big dplyr pipelines that group the datasets together, sort it by time     and then subtract the minimimum/maximum point in the dataset from each point. This leverages the            efficencies of dplyr making it faster than a raw implementation. 
   
@@ -132,10 +132,10 @@ ecis_align_key = function(data.df, point, discrepancy = 5) {
 #'
 #' @examples
 #' 
-#' data = ecis_subsample(growth.df, 50)
+#' data = vascr_subsample(growth.df, 50)
 #' head(data)
 #' 
-ecis_subsample = function(data.df, nth) {
+vascr_subsample = function(data.df, nth) {
     
     Time = unique(data.df$Time)
     TimeID = c(1:length(Time))
@@ -161,10 +161,10 @@ ecis_subsample = function(data.df, nth) {
 #'
 #' @examples
 #' 
-#' ecis_current_frequency(growth.df)
+#' vascr_current_frequency(growth.df)
 #' 
 #' 
-ecis_current_frequency = function (data.df)
+vascr_current_frequency = function (data.df)
 {
   times = unique (data.df$Time) # Make a list of unique datapoints 
   times = sort(times) # Sort them
@@ -199,10 +199,10 @@ ecis_current_frequency = function (data.df)
 #'
 #' @examples
 #' 
-#' data = ecis_resample(growth.df, 10, 50 ,100, 50)
+#' data = vascr_resample(growth.df, 10, 50 ,100, 50)
 #' head (data)
 #' 
-ecis_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
+vascr_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
 {
   
   if(from == Inf)
@@ -224,8 +224,8 @@ ecis_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
     warning(paste("To is greater than the maximum of the dataset. Please select a number below", max(data.df$Time)))
   }
   
-  movedata = ecis_remove_metadata(data.df)
-  movedata = ecis_subset(movedata, time = c(from,to))
+  movedata = vascr_remove_metadata(data.df)
+  movedata = vascr_subset(movedata, time = c(from,to))
   
   movedata$Time = movedata$Time - zero_time
   
@@ -265,8 +265,8 @@ ecis_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
     warning("You have oversampled your data, meaning that you now have more datapoints than you originally collected. This may be misleading, use with care.")
   }
   
-  movedata6 = ecis_remove_metadata(movedata5)
-  movedata6 = ecis_explode(movedata6)
+  movedata6 = vascr_remove_metadata(movedata5)
+  movedata6 = vascr_explode(movedata6)
   
   return(movedata6)
   
@@ -294,27 +294,27 @@ ecis_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
 #' @export 
 #'
 #' @examples
-#' data = ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
+#' data = vascr_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
 #' samplecontains = "05,000", experiment = "2", well = "G5")
 #' head(data)
-#' data = ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
+#' data = vascr_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
 #' samplecontains = "05,000", experiment = "2")
 #' head(data)
 #' 
-#' data = ecis_subset(growth.df, samplecontains = "5000")
+#' data = vascr_subset(growth.df, samplecontains = "5000")
 #' data.df = growth.df
 
-ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplecontains = "", experiment = "", well = ""){
+vascr_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplecontains = "", experiment = "", well = ""){
   
   if(!(is.data.frame(data.df)))
   {
     error("Data is not a data frame. This function can only be used on vascr data frames")
   }
   
-  data.df$Well = ecis_standardise_wells(data.df$Well)
+  data.df$Well = vascr_standardise_wells(data.df$Well)
   
   
-  if(ecis_is_modeled_unit(unit)) # Wipe out frequency if it is a modelled variable as that makes no sense
+  if(vascr_is_modeled_unit(unit)) # Wipe out frequency if it is a modelled variable as that makes no sense
   {
     frequency = 0
   }
@@ -328,7 +328,7 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, sampleco
   else if(is.finite(time)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
   {
     time = as.numeric(time) # Clean up the data type just in case the user is lazy
-    actualtime = ecis_find_time(data.df, time)
+    actualtime = vascr_find_time(data.df, time)
     data.df = data.df %>% filter(Time == actualtime)
   }
   else # The number is infinity, so return everything
@@ -350,7 +350,7 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, sampleco
   else if(is.finite(frequency)) # Check that time finite. If so, trim down the dataset to the single finite frequency given, or the nearest rounded one.
   {
     frequency = as.numeric(frequency) # clean up the data type
-    frequency = ecis_find_frequency(data.df, frequency)
+    frequency = vascr_find_frequency(data.df, frequency)
     data.df = data.df %>% filter(Frequency == frequency)
   }
   
@@ -378,13 +378,13 @@ ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, sampleco
 
 #' Check if a selected unit is modelled
 #'
-#' @param unit The ecisr symbol for the unit
+#' @param unit The vascr symbol for the unit
 #'
 #' @return A boolean, true if it is modelled, false if it is raw electrical data
 #' @export
 #'
 #' @examples
-ecis_is_modeled_unit = function(unit)
+vascr_is_modeled_unit = function(unit)
 {
   if (unit == "Rb" || unit == "Cm" || unit == "Alpha" || unit == "RMSE" || unit == "Drift" || unit == "CPE_A" || unit == "CPE_n" || unit == "TER" || unit == "Ccl" || unit == "Rmed")
   {
@@ -415,18 +415,18 @@ ecis_is_modeled_unit = function(unit)
 #'
 #' @examples
 # # Sub code for breaking out continuous datasets
-# #exploded = ecis_explode(xcell)
-# #subset = ecis_subset_continuous(exploded, continuous = "ATP", strip_empty = FALSE)
-# #ecis_plot(exploded, unit = "CI", frequency = "10000", replication = "experiments", normtime = 160, continuouscontains = "ATP")
+# #exploded = vascr_explode(xcell)
+# #subset = vascr_subset_continuous(exploded, continuous = "ATP", strip_empty = FALSE)
+# #vascr_plot(exploded, unit = "CI", frequency = "10000", replication = "experiments", normtime = 160, continuouscontains = "ATP")
 #'
 #'
-ecis_subset_continuous = function(data, continuous, exact_match = FALSE, strip_empty = TRUE, implode = TRUE)
+vascr_subset_continuous = function(data, continuous, exact_match = FALSE, strip_empty = TRUE, implode = TRUE)
 {
 
   # We can only subset continuous data that is exploded, so fix this if it's not already done
-  if(isFALSE(ecis_test_exploded(data)))
+  if(isFALSE(vascr_test_exploded(data)))
      {
-       data = ecis_explode(data)
+       data = vascr_explode(data)
      }
 
   cols = colnames(data)
@@ -450,7 +450,7 @@ ecis_subset_continuous = function(data, continuous, exact_match = FALSE, strip_e
   }
 
 # Grab all the cols we want
-  eciscols = data[,ecis_cols()]
+  eciscols = data[,vascr_cols()]
   selectedcols = data[,colstokeep]
 
 
@@ -471,7 +471,7 @@ ecis_subset_continuous = function(data, continuous, exact_match = FALSE, strip_e
   # If requested, we implode to fix up the sample names
   if(implode)
   {
-  return = ecis_implode(return)
+  return = vascr_implode(return)
   }
 
   return(return)
@@ -505,12 +505,12 @@ ecis_subset_continuous = function(data, continuous, exact_match = FALSE, strip_e
 #' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
 #' 
 #' # Plot out the well, and then try to detect it
-#' ecis_detect_badwells(baddata,1)
+#' vascr_detect_badwells(baddata,1)
 #' 
 #' # Check it works for a good dataset
-#' ecis_detect_badwells(growth.df,1)
+#' vascr_detect_badwells(growth.df,1)
 #' 
-ecis_detect_badwells = function(data.df, threshold = 5, frequency = 4000, unit = "R")
+vascr_detect_badwells = function(data.df, threshold = 5, frequency = 4000, unit = "R")
 {
   
   cycles = 0
@@ -518,7 +518,7 @@ ecis_detect_badwells = function(data.df, threshold = 5, frequency = 4000, unit =
   
   cleandata.df = subset(data.df, !is.na(Value)) # Exclude wells where there is no data available (IE connection lost)
   
-  cleandata.df = ecis_subset(cleandata.df, unit = unit, frequency = frequency) # Run the diagnosis on only one frequency to save time, at R4000
+  cleandata.df = vascr_subset(cleandata.df, unit = unit, frequency = frequency) # Run the diagnosis on only one frequency to save time, at R4000
   
   
   #Calculate the fractional difference between the sample mean and the value of the well in each experiment at each timepoint
@@ -537,7 +537,7 @@ ecis_detect_badwells = function(data.df, threshold = 5, frequency = 4000, unit =
       distinct(Well, Score, Experiment) %>%
       subset(Score>threshold)
     
-    cleandata.df = ecis_exclude(cleandata.df, wells = togo$Well[1]) # Remove the most offending well. Do this itterativley so the scores have less of an effect on each other (important if a spikey well hits one that is continuously highly raised)
+    cleandata.df = vascr_exclude(cleandata.df, wells = togo$Well[1]) # Remove the most offending well. Do this itterativley so the scores have less of an effect on each other (important if a spikey well hits one that is continuously highly raised)
     
     if(nrow(togo)==0 & cycles == 0)
     {
@@ -579,13 +579,13 @@ ecis_detect_badwells = function(data.df, threshold = 5, frequency = 4000, unit =
 #' @export
 #'
 #' @examples
-#' ecis_plot_badwell_scores(growth.df, 0.2)
+#' vascr_plot_badwell_scores(growth.df, 0.2)
 #' 
-ecis_plot_badwell_scores = function(data, threshold = 0)
+vascr_plot_badwell_scores = function(data, threshold = 0)
 {
 
 # Calculate the scores for all wells
-scores = ecis_detect_badwells(data, threshold = 0)
+scores = vascr_detect_badwells(data, threshold = 0)
 
 # Plot out the graph, sorting the Y axis by the score of each well to make a pretty waterfall
 plot = ggplot(scores, aes(x=reorder(Well,-Score), y=Score)) +
@@ -597,7 +597,7 @@ if(threshold>0)
   plot = plot + geom_hline(yintercept = threshold, color = "blue")
 }
 
-plot = ecis_polish_plot(plot, rotate_x = TRUE)
+plot = vascr_polish_plot(plot, rotate_x = TRUE)
 return(plot)
 
 }
@@ -612,14 +612,14 @@ return(plot)
 #' @export
 #'
 #' @examples
-#' ecis_plot_badwell_plate(growth.df)
+#' vascr_plot_badwell_plate(growth.df)
 #' 
-ecis_plot_badwell_plate = function(data)
+vascr_plot_badwell_plate = function(data)
 {
   # Needs a warning if multiple plates detected
   
-data = ecis_detect_badwells(growth.df, threshold = 0)
-data = ecis_explode_wells(data)
+data = vascr_detect_badwells(growth.df, threshold = 0)
+data = vascr_explode_wells(data)
 plot = ggplot(data, aes(col, row, fill= Score)) + 
   geom_tile()  +
   scale_fill_gradient(low="white", high="blue")+
@@ -627,7 +627,7 @@ plot = ggplot(data, aes(col, row, fill= Score)) +
   ylab("Row")+
   scale_x_discrete(position = "top")
 
-return(ecis_polish_plot(plot, rotate_x = FALSE))
+return(vascr_polish_plot(plot, rotate_x = FALSE))
 }
 
 #' Title
@@ -638,11 +638,11 @@ return(ecis_polish_plot(plot, rotate_x = FALSE))
 #' @export
 #'
 #' @examples
-ecis_explode_wells = function(data)
+vascr_explode_wells = function(data)
 {
-  data$Well = ecis_standardise_wells(data$Well)
-  data$row = ecis_factorise_and_sort(substr(data$Well, 1,1), sortkeyincreasing = FALSE)
-  data$col = ecis_factorise_and_sort(as.numeric(substr(data$Well, 2,3)), sortkeyincreasing = TRUE)
+  data$Well = vascr_standardise_wells(data$Well)
+  data$row = vascr_factorise_and_sort(substr(data$Well, 1,1), sortkeyincreasing = FALSE)
+  data$col = vascr_factorise_and_sort(as.numeric(substr(data$Well, 2,3)), sortkeyincreasing = TRUE)
   return(data)
 }
 
@@ -654,7 +654,7 @@ ecis_explode_wells = function(data)
 #' @param threshold The threshold stringency to use in detection. Default is 5, the range of 1-10 may be appropriate. Higher numbers are less stringent.
 #' @param frequency The frequency to use for detection, default is 4000 Hz
 #' @param unit  The unit to run the detection on, default is R
-#' @param verbose Prints which wells have been removed in the terminal. Should be used when first investigating data to allow for follow up plots with ecis_isolate_well to be conducted.
+#' @param verbose Prints which wells have been removed in the terminal. Should be used when first investigating data to allow for follow up plots with vascr_isolate_well to be conducted.
 #'
 #' @return A standard ECIS dataframe, minus the detected wells
 #' 
@@ -673,15 +673,15 @@ ecis_explode_wells = function(data)
 #' baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
 #' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
 #' 
-#' ecis_exclude_badwells(baddata, threshold = 1)
-#' ecis_exclude_badwells(growth.df, threshold = 1)
+#' vascr_exclude_badwells(baddata, threshold = 1)
+#' vascr_exclude_badwells(growth.df, threshold = 1)
 #' 
-ecis_exclude_badwells = function(data.df, threshold = 5, frequency = 4000, unit = "R", verbose = TRUE)
+vascr_exclude_badwells = function(data.df, threshold = 5, frequency = 4000, unit = "R", verbose = TRUE)
 {
 
  # Detect if any bad wells are present
   
- toremove = ecis_detect_badwells(data.df, threshold = threshold, frequency = frequency, unit = unit)
+ toremove = vascr_detect_badwells(data.df, threshold = threshold, frequency = frequency, unit = unit)
  
  if(nrow(toremove) ==0) # If nothing is bad, just return the data frame
  {

@@ -1,6 +1,6 @@
 
 
-# data = ecis_exclude(data, samples = "10,000 cells")
+# data = vascr_exclude(data, samples = "10,000 cells")
 # 
 # my_anova <- aov(Value ~ Sample * Experiment, data = data)
 # threeANOVA = Anova(my_anova, type = "III")
@@ -12,8 +12,8 @@
 # 
 # ## Mucking with different ANOVAS
 # 
-# data = ecisr::growth.df
-# data = ecis_subset(data, time = 50, unit = "R", frequency = 4000)
+# data = vascr::growth.df
+# data = vascr_subset(data, time = 50, unit = "R", frequency = 4000)
 # 
 # replicateaverage = data %>%
 #   group_by(Sample, Time, Unit, Frequency, Experiment) %>%
@@ -61,11 +61,11 @@
 
 
 
-# library(ecisr)
+# library(vascr)
 # library(data.table)
 # 
-# data.df = ecisr::growth.df
-# ecis_plot(growth.df, unit = "Rb")
+# data.df = vascr::growth.df
+# vascr_plot(growth.df, unit = "Rb")
 # time = 50
 # unit = "R"
 # frequency = 4000

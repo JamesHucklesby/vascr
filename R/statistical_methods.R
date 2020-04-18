@@ -36,29 +36,29 @@
 #'
 #' @examples
 #' growth.df$Instrument = "ECIS"
-#' ecis_ANOVA(growth.df, 'R',4000,50)
+#' vascr_ANOVA(growth.df, 'R',4000,50)
 #' 
-ecis_ANOVA = function(data.df, unit, frequency, time) {
+vascr_ANOVA = function(data.df, unit, frequency, time) {
     
     # Round the number given to the function to the nearest actual measurement
-    timetouse = ecis_find_time(data.df, time)
+    timetouse = vascr_find_time(data.df, time)
     
     # Cut the dataset down to a useable size (IE, only pull out the timepoint we want to analyse)
-    #FUTURE: Impliment this off the back of ecis_subset
+    #FUTURE: Impliment this off the back of vascr_subset
     
     filtered.df = data.df
     filtered.df = subset(filtered.df, Unit == unit)
     filtered.df = subset(filtered.df, Frequency == frequency)
     
-    timeplot = ecis_plot(data.df, unit = unit, frequency = frequency, title = "Time Selected")
+    timeplot = vascr_plot(data.df, unit = unit, frequency = frequency, title = "Time Selected")
     timeplot = timeplot + geom_vline(xintercept = timetouse, color = "blue")
     timeplot = timeplot + labs(title = "Timepoint selected")
     
     # Not we get rid of all the data points we don't need, leaving only the one key one
     filtered.df = subset(filtered.df, Time == timetouse)
     
-    exploded = ecis_explode(filtered.df)
-    imploded = ecis_implode(exploded, stripidentical = TRUE)
+    exploded = vascr_explode(filtered.df)
+    imploded = vascr_implode(exploded, stripidentical = TRUE)
     
     overallplot <- ggplot(imploded, aes(x=Sample, y=Value, color = Experiment)) + 
       geom_boxplot() + labs(title = "Replicate data")
@@ -111,8 +111,8 @@ ecis_ANOVA = function(data.df, unit, frequency, time) {
                               fill = "white") +
       ggplot2::stat_function(fun = dnorm, args = list(mean = mean(filteredplot.df$Value), sd = sd(filteredplot.df$Value))) + labs(title = "Normality of residuals check", subtitle = "Normal curve and histogram should align")
     
-    qqplot = ecis_polish_plot(qqplot)
-    normaloverlayplot = ecis_polish_plot(normaloverlayplot)
+    qqplot = vascr_polish_plot(qqplot)
+    normaloverlayplot = vascr_polish_plot(normaloverlayplot)
     
     p1<-ggplot(fit, aes(.fitted, .resid))+geom_point()
     p1<-p1+stat_smooth(method="loess")+geom_hline(yintercept=0, col="red", linetype="dashed")
@@ -121,16 +121,16 @@ ecis_ANOVA = function(data.df, unit, frequency, time) {
     p1 = p1 + labs(title = "Homogeneity of Variances test",
            subtitle = paste("Levene's Test, F=", f, ", P=", f, ",", pass))
     
-    overallplot = ecis_polish_plot(overallplot)
-    p = ecis_polish_plot(p)
-    timeplot = ecis_polish_plot(timeplot)
-    p1 = ecis_polish_plot(p1)
+    overallplot = vascr_polish_plot(overallplot)
+    p = vascr_polish_plot(p)
+    timeplot = vascr_polish_plot(timeplot)
+    p1 = vascr_polish_plot(p1)
     
-    differences = ecis_plot(data.df, unit = unit, frequency = frequency, time = time, replication = "summary", confidence = 0.949999)
+    differences = vascr_plot(data.df, unit = unit, frequency = frequency, time = time, replication = "summary", confidence = 0.949999)
     
     ##normcheck = grid.arrange(qqplot, normaloverlayplot, ncol = 2)
     
-    ##checks = grid.arrange(overallplot,timeplot,qqplot, normaloverlayplot, p1, ecis_polish_plot(differences), ncol = 2)
+    ##checks = grid.arrange(overallplot,timeplot,qqplot, normaloverlayplot, p1, vascr_polish_plot(differences), ncol = 2)
     
     ##overall = grid.arrange(checks, differences)
     
@@ -171,14 +171,14 @@ ecis_ANOVA = function(data.df, unit, frequency, time) {
 #'
 #' @examples
 #' 
-#' ecis_make_significance_table(growth.df, 50, "R", 4000, 0.95)
-#' ecis_make_significance_table(growth.df, 50, "R", 4000, 0.95, format = "Tukey_data")
+#' vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95)
+#' vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95, format = "Tukey_data")
 #' 
 #' 
-ecis_make_significance_table = function(data.df, time, unit, frequency, confidence = 0.95, format = "toplot")
+vascr_make_significance_table = function(data.df, time, unit, frequency, confidence = 0.95, format = "toplot")
 {
   
-  data = ecis_subset(data.df, time = time, unit = unit, frequency = frequency)
+  data = vascr_subset(data.df, time = time, unit = unit, frequency = frequency)
   
   
   
@@ -262,17 +262,17 @@ ecis_make_significance_table = function(data.df, time, unit, frequency, confiden
 #'
 #' @examples
 #' 
-#' ecis_summarise(growth.df)
-#' ecis_summarise(growth.df, "experiments")
-#' ecis_summarise(growth.df, "wells")
+#' vascr_summarise(growth.df)
+#' vascr_summarise(growth.df, "experiments")
+#' vascr_summarise(growth.df, "wells")
 #' 
 #' 
-#' exploded.df = ecis_explode(growth.df)
+#' exploded.df = vascr_explode(growth.df)
 #' 
-ecis_summarise <- function(data.df, level = "summary") {
+vascr_summarise <- function(data.df, level = "summary") {
   
   # Use a test to check what the current summary level of the data is
-  summary_level = ecis_test_summary_level(data.df)
+  summary_level = vascr_test_summary_level(data.df)
   
   # Don't run the calculation if summary level is already reached
   if(level == summary_level)
