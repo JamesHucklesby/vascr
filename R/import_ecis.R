@@ -127,7 +127,7 @@ vascr_assign_samples = function (data, sampledefine)
 #' head(data1)
 #' vascr_plot(data1, unit = "X")
 #' 
-ecis_import_raw = function(rawdata, sampledefine) {
+ecis_import_raw = function(rawdata, sampledefine, experimentname) {
   
   vascr_validate_file(rawdata, "abp")
   vascr_validate_file(sampledefine, c("csv", "xlsx"))
@@ -202,7 +202,17 @@ ecis_import_raw = function(rawdata, sampledefine) {
     longdata.df = ecis_calculate_quantaties(fulldata_long.df)
     
     # Add constants, standardise well format and assign samples
-    longdata.df$Experiment = rawdata
+    
+    if(!missing(experimentname))
+    {
+    longdata.df$Experiment = basename(rawdata)
+    }
+    else
+    {
+     longdata.df$Experiment = experimentname
+    }
+    
+    
     longdata.df$Instrument = "ECIS"
     longdata.df$Well = vascr_standardise_wells(longdata.df$Well)
     combined.df = vascr_assign_samples(longdata.df, sampledefine)
@@ -246,7 +256,7 @@ ecis_import_raw = function(rawdata, sampledefine) {
 #' head(data)
 #' vascr_plot(data, unit = "Rb", replication = "wells")
 #' 
-ecis_import_model = function(modeleddata, sampledefine) {
+ecis_import_model = function(modeleddata, sampledefine, experimentname) {
   
    # Validate that the files are readable
    vascr_validate_file(modeleddata, "csv")
@@ -351,7 +361,15 @@ ecis_import_model = function(modeleddata, sampledefine) {
     combined2.df$Frequency = 0
 
     # Add constants and fix data types
-    combined2.df$Experiment = rawdata
+    if(!missing(experimentname))
+    {
+      combined2.df$Experiment = basename(modeleddata)
+    }
+    else
+    {
+      combined2.df$Experiment = experimentname
+    }
+    
     combined2.df$Instrument = "ECIS"
     combined2.df$Time = as.numeric(combined2.df$Time)
     
@@ -385,7 +403,7 @@ ecis_import_model = function(modeleddata, sampledefine) {
 #' head(data)
 #' vascr_plot(data, unit = "Rb")
 #' vascr_plot(data, unit = "R")
-ecis_import = function(rawdata, modeled, key) {
+ecis_import = function(rawdata, modeled, key, experimentname) {
   
   # Validate files exist and are correct. Will be done in the internal functions, but doing it here saves time on failure
   vascr_validate_file(rawdata, "abp")
@@ -393,8 +411,8 @@ ecis_import = function(rawdata, modeled, key) {
   vascr_validate_file(key, "csv")
   
   
-    combined.df = ecis_import_model(modeled, key)
-    raw.df = ecis_import_raw(rawdata, key)
+    combined.df = ecis_import_model(modeled, key, experimentname)
+    raw.df = ecis_import_raw(rawdata, key, experimentname)
     masterdata.df = vascr_combine(combined.df, raw.df, resample = TRUE)
     
     return(masterdata.df)

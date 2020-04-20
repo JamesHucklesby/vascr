@@ -135,7 +135,7 @@ import_mdb = function(file, table)
 #'
 #'  
 
-import_xcelligence = function(file, key)
+import_xcelligence = function(file, key, experimentname)
 {
   vascr_validate_file(file, "plt")
   
@@ -193,7 +193,18 @@ TimeOrg$TimePoint = NULL
 TimeOrg$StepID = NULL
 
 TimeOrg$Unit = "Z" # Assign impedance (Z) as the unit for all time points. This is all the CellZScope can capture.
-TimeOrg$Experiment = file # Assign file name as experiment name
+
+# Assign experiment name
+if(!missing(experimentname))
+{
+  combined2.df$Experiment = basename(file)
+}
+else
+{
+  combined2.df$Experiment = experimentname
+}
+
+
 TimeOrg$Instrument = "xCELLigence" # Assign instrument name
 
 # Code for assigning samples from file

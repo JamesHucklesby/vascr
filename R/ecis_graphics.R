@@ -282,7 +282,7 @@ vascr_polish_plot = function(plot, rotate_x_angle = 45, logscale = "")
     plot = plot +scale_y_log10()
   }
   
-  if(!missing(rotate_x))
+  if(!missing(rotate_x_angle))
   {
   plot = plot + rotate_x_text(angle = 45)
   }

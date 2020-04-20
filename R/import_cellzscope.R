@@ -22,7 +22,7 @@
 #' output = vascr_subset(output, time = c(0,50))
 #' vascr_plot(output, unit = "TER", frequency = 0,replication = "wells")
 #' 
-cellzscope_import_model  = function(model, key)
+cellzscope_import_model  = function(model, key, experimentname)
 {
   
 # Check that the file is correct
@@ -68,7 +68,17 @@ separatedata = subset(separatedata, separatedata$Time !="")
 separatedata = pivot_longer(separatedata, c(-Unit, -Time), names_to = "Well", values_to = "Value")
 
 # Add variables fixed throughout the import
-separatedata$Experiment = model
+if(!missing(experimentname))
+{
+  separatedata$Experiment = basename(model)
+}
+else
+{
+  separatedata$Experiment = experimentname
+}
+
+
+
 separatedata$Sample = "NA"
 separatedata$Frequency = 0
 separatedata$Instrument = "cellZscope"
@@ -114,7 +124,7 @@ return(separatedata)
 #' output = cellzscope_import_raw(raw, key)
 #' output = vascr_subset(output, time = c(0,50))
 #' vascr_plot(output, unit = "R", frequency = 4000, replication = "wells")
-cellzscope_import_raw = function(raw, key)
+cellzscope_import_raw = function(raw, key, experimentname)
 {
   
 vascr_validate_file(raw, "txt")
@@ -155,7 +165,15 @@ dat = dat/60/60
 separatedata$Time = dat
 
 # Add experiment metadat
-separatedata$Experiment = raw
+if(!missing(experimentname))
+{
+  separatedata$Experiment = basename(raw)
+}
+else
+{
+  separatedata$Experiment = experimentname
+}
+
 separatedata$Instrument = "cellZscope"
 
 # Make longer
@@ -232,7 +250,7 @@ return(longdata.df)
 #' vascr_plot(alldatakey, unit = "TER", frequency = 0, time = c(0,50), 
 #' replication = "experiments", preprocessed = TRUE)
 #' 
-cellzscope_import = function(raw, model, key)
+cellzscope_import = function(raw, model, key, experimentname)
 {
   
  vascr_validate_file(raw, "txt")
@@ -244,8 +262,8 @@ cellzscope_import = function(raw, model, key)
  }
  
 # Import both files. Don't specify a key as this will be applied globaly at the end
-modeleddata = cellzscope_import_model(model)
-rawdata = cellzscope_import_raw(raw)
+modeleddata = cellzscope_import_model(model, experimentname = experimentname)
+rawdata = cellzscope_import_raw(raw, experimentname = experimentname)
 
 # Combine and run checks
 alldata = vascr_combine(modeleddata, rawdata)

@@ -70,4 +70,3 @@ vascr_validate_file = function(file_name, extension)
 
 
 
-

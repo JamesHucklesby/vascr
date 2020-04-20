@@ -25,7 +25,7 @@
 #' dataset = xcelligence_import_exported(filename,key)
 #' head(dataset)
 #' head(vascr_explode(dataset))
-xcelligence_import_exported = function(file, key)
+xcelligence_import_exported = function(file, key, experimentname)
 {
 
   vascr_validate_file(file, "txt")
@@ -118,7 +118,18 @@ fulldata$Sample = str_replace(fulldata$Sample, "_ +", "") # Remove hanging space
 fulldata$Unit = "CI" # Set all units equal to CI
 fulldata$Instrument = "xCELLigence"
 fulldata$Frequency = 0 # Set frequency to 0
-fulldata$Experiment =  file # Set experiment name equal to filename
+
+
+if(!missing(experimentname))
+{
+  combined2.df$Experiment = basename(file)
+}
+else
+{
+  combined2.df$Experiment = experimentname
+}
+
+
 fulldata$Value = as.numeric(fulldata$Value) # make value names numeric
 fulldata$Well = vascr_standardise_wells(fulldata$Well)
 
