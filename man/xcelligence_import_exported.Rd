@@ -4,7 +4,7 @@
 \alias{xcelligence_import_exported}
 \title{Import excelligence data files that have previosly been exported}
 \usage{
-xcelligence_import_exported(file, key)
+xcelligence_import_exported(file, key, experimentname)
 }
 \arguments{
 \item{file}{Path to the excelligence file to be imported}
@@ -28,5 +28,5 @@ head(dataset)
 key = "inst/extdata/xcell_lookup.csv"
 dataset = xcelligence_import_exported(filename,key)
 head(dataset)
-head(ecis_explode(dataset))
+head(vascr_explode(dataset))
 }

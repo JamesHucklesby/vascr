@@ -4,7 +4,7 @@
 \alias{ecis_import_raw}
 \title{ECIS raw data importer}
 \usage{
-ecis_import_raw(rawdata, sampledefine)
+ecis_import_raw(rawdata, sampledefine, experimentname)
 }
 \arguments{
 \item{rawdata}{A resampled ABP file containing the un-modeled data}
@@ -24,14 +24,14 @@ Raw data importer, generates a r dataframe from a raw ABP file
 #but you can use a path relative to the file you are working on. 
 #E.G 'Experiment1/Raw.abp'
 
-rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'ecisr')
-sampledefine = system.file('extdata/growth1_samples.csv', package = 'ecisr')
+rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'vascr')
+sampledefine = system.file('extdata/growth1_samples.csv', package = 'vascr')
 
 #Then run the import
 
 data1 = ecis_import_raw(rawdata, sampledefine)
 data1$Experiment = "Growth_1"
 head(data1)
-ecis_plot(data1, unit = "X")
+vascr_plot(data1, unit = "X")
 
 }

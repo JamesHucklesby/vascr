@@ -4,7 +4,7 @@
 \alias{import_xcelligence}
 \title{Import an xcelligence file}
 \usage{
-import_xcelligence(file, key)
+import_xcelligence(file, key, experimentname)
 }
 \arguments{
 \item{file}{The file to import}
@@ -23,11 +23,11 @@ file = "inst/extdata/xcell.plt"
 key = "inst/extdata/xcell_lookup.csv"
 xcell = import_xcelligence(file, key)
 
-xcell = ecis_explode(xcell)
+xcell = vascr_explode(xcell)
 
-#ecis_plot(xcell, unit = "Z", frequency = "10000", replication = "experiments", continuouscontains = "ATP", normtime = 0)
+#vascr_plot(xcell, unit = "Z", frequency = "10000", replication = "experiments", continuouscontains = "ATP", normtime = 0)
 
-#ecis_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", replication = "wells")
+#vascr_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", replication = "wells")
 
  
 }

@@ -4,7 +4,7 @@
 \alias{cellzscope_import_raw}
 \title{Import a raw cellZScope dataset}
 \usage{
-cellzscope_import_raw(raw, key)
+cellzscope_import_raw(raw, key, experimentname)
 }
 \arguments{
 \item{raw}{the locaiton of spectral data exported from the cellZscope software.}
@@ -18,10 +18,10 @@ A vascar compatable dataset
 Data must first be exported from the cellZscope software.
 }
 \examples{
-raw = system.file("extdata/mdckspectra.txt", package = "ecisr")
-key = system.file("extdata/mdckkey.csv", package = "ecisr")
+raw = system.file("extdata/mdckspectra.txt", package = "vascr")
+key = system.file("extdata/mdckkey.csv", package = "vascr")
 
 output = cellzscope_import_raw(raw, key)
-output = ecis_subset(output, time = c(0,50))
-ecis_plot(output, unit = "R", frequency = 4000, replication = "wells")
+output = vascr_subset(output, time = c(0,50))
+vascr_plot(output, unit = "R", frequency = 4000, replication = "wells")
 }

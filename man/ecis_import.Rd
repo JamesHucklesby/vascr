@@ -4,7 +4,7 @@
 \alias{ecis_import}
 \title{Import all ECIS values, a child of ecis_import_raw and ecis_import_model}
 \usage{
-ecis_import(rawdata, modeled, key)
+ecis_import(rawdata, modeled, key, experimentname)
 }
 \arguments{
 \item{rawdata}{A raw ABP file to import}
@@ -21,14 +21,14 @@ Import all ECIS values, a child of ecis_import_raw and ecis_import_model
 }
 \examples{
 
-rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'ecisr')
-modeled = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'ecisr')
-key = system.file('extdata/growth1_samples.csv', package = 'ecisr')
+rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'vascr')
+modeled = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'vascr')
+key = system.file('extdata/growth1_samples.csv', package = 'vascr')
 
 #Then run the import
 
 data = ecis_import(rawdata,modeled,key)
 head(data)
-ecis_plot(data, unit = "Rb")
-ecis_plot(data, unit = "R")
+vascr_plot(data, unit = "Rb")
+vascr_plot(data, unit = "R")
 }

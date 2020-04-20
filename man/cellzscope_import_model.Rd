@@ -4,7 +4,7 @@
 \alias{cellzscope_import_model}
 \title{Import modeled cellZScope data}
 \usage{
-cellzscope_import_model(model, key)
+cellzscope_import_model(model, key, experimentname)
 }
 \arguments{
 \item{model}{The location of modeled data exported from the cellZscope data}
@@ -12,17 +12,17 @@ cellzscope_import_model(model, key)
 \item{key}{Optional, a keyfile containing data on which well contains which sample}
 }
 \value{
-An ecisr compatable dataset
+An vascr compatable dataset
 }
 \description{
 Imports modeled data previously exported from the cellZscope package. Will not assign names unless a keyfile or raw dataset is provided, as no well naming data is provided in this filetype.
 }
 \examples{
-model = system.file("extdata/mdckmodel.txt", package = "ecisr")
-key = system.file("extdata/mdckkey.csv", package = "ecisr")
+model = system.file("extdata/mdckmodel.txt", package = "vascr")
+key = system.file("extdata/mdckkey.csv", package = "vascr")
 
 output = cellzscope_import_model(model, key)
-output = ecis_subset(output, time = c(0,50))
-ecis_plot(output, unit = "TER", frequency = 0,replication = "wells")
+output = vascr_subset(output, time = c(0,50))
+vascr_plot(output, unit = "TER", frequency = 0,replication = "wells")
 
 }

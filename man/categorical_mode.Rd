@@ -16,9 +16,9 @@
 #'
 #' @examples
 #' 
-#' #ecis_fix_error(growth.df, "cells", "cells plated")
+#' #vascr_fix_error(growth.df, "cells", "cells plated")
 #' 
-ecis_fix_error = function (data.df, incorrect, correct, limit = "None")
+vascr_fix_error = function (data.df, incorrect, correct, limit = "None")
 {
   
   if (limit == "None" || limit == "Sample")
@@ -58,9 +58,9 @@ the most commonly occouring character
 #'
 #' @examples
 #' 
-#' #ecis_fix_error(growth.df, "cells", "cells plated")
+#' #vascr_fix_error(growth.df, "cells", "cells plated")
 #' 
-ecis_fix_error = function (data.df, incorrect, correct, limit = "None")
+vascr_fix_error = function (data.df, incorrect, correct, limit = "None")
 {
   
   if (limit == "None" || limit == "Sample")
