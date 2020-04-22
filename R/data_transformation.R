@@ -376,25 +376,6 @@ vascr_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplec
   
 }
 
-#' Check if a selected unit is modelled
-#'
-#' @param unit The vascr symbol for the unit
-#'
-#' @return A boolean, true if it is modelled, false if it is raw electrical data
-#' @export
-#'
-#' @examples
-vascr_is_modeled_unit = function(unit)
-{
-  if (unit == "Rb" || unit == "Cm" || unit == "Alpha" || unit == "RMSE" || unit == "Drift" || unit == "CPE_A" || unit == "CPE_n" || unit == "TER" || unit == "Ccl" || unit == "Rmed")
-  {
-    return(TRUE)
-  }
-  else
-  {
-    return(FALSE)
-  }
-}
 
 
 #' Subset a continuous variable

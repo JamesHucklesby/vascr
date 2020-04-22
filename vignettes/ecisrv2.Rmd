@@ -29,31 +29,17 @@ devtools::install_github("JamesHucklesby/vascr")
 ```
 
 
+## File import
+Files can be imported using a variety of functions. ECIS and xcelligence data can be imported by directly specifying the native file produced by the instrument, whereas CellZScope data must be exported from the software before being imported. Please see the relevant help functions for specific details.
 
+ecis_import and cellzscope import can also have _raw or _modeled added to the end of their functions to import just the raw or modeled components of the dataset. This can be used for debugging, or to speed up execution where only one of the datasets are of interest to the experimenter. xcelligence_import is able to access the original data captured by the xcelligence instrument at all three resoltuions, giving better data access than the shipped software and allowing for more direct comparason with 
 
-
-
-
-
-
-
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+ecis_import()
+cellzscope_import()
+xcelligence_import()
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

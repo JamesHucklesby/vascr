@@ -200,6 +200,8 @@ vascr_remove_metadata = function(data.df, subset = "all")
 #' @examples
 #' 
 #' vascr_titles("Rb")
+#' vascr_titles("R")
+#' 
 #' 
 vascr_titles = function (unit, frequency = 0)
 {
@@ -231,6 +233,145 @@ vascr_titles = function (unit, frequency = 0)
   # If not found, return what was input
   return(unit)
   
+}
+
+
+vascr_titles_vector(c("Rb", "R", "Cm"))
+
+vascr_titles_vector = function(units)
+{
+return = c()
+
+for(uni in units)
+{
+  
+  if(uni == "Rb"){parsed = "Rb (chm cm squared)"}
+  else if(uni == "Cm"){parsed = "Cm (microfarad / cm squared)"}
+  else if(uni == "Alpha"){parsed = "Alpha (ohm cm squared)"}
+  else if(uni == "C"){parsed = "Capacatance (microfarad)"}
+else if(uni == "CPE_A"){parsed = "Capacatance (microfarad)"}
+else if(uni == "TER"){parsed = "TER (ohm cm squared)"}
+  
+  else {parsed = vascr_titles(uni)}
+
+  
+  return = c(return, parsed)
+}
+
+return(return)
+
+}
+
+
+
+#' Table of units used in the vascr package
+#'
+#' @return A data frame of units, their content and if they are modeled
+#' @export 
+#'
+#' @examples
+#' 
+#' vascr_units_table()
+#' 
+vascr_units_table = function()
+{
+allunits = vascr_instrument_units("all")
+vascr_unit_table = data.frame(allunits)
+colnames(vascr_unit_table) = "Unit"
+
+vascr_unit_table$Content = vascr_titles_vector(vascr_unit_table$Unit)
+
+vascr_unit_table$Modeled = vascr_is_modeled_unit(vascr_unit_table$Unit)
+
+vascr_unit_table$Instrument = vascr_instrument_from_unit(vascr_unit_table$Unit)
+
+
+return(vascr_unit_table)
+}
+
+
+
+#' Check if a selected unit is modelled
+#'
+#' @param unit The vascr symbol for the unit
+#'
+#' @return A boolean, true if it is modelled, false if it is raw electrical data
+#' @export
+#'
+#' @examples
+#' vascr_is_modeled_unit("R")
+#' vascr_is_modeled_unit(c("R", "Rb"))
+#' 
+vascr_is_modeled_unit = function(unit)
+{
+  return = c()
+  model_units = c("Rb","Cm","Alpha","RMSE","Drift","CPE_A" ,"CPE_n" ,"TER" , "Ccl", "Rmed")
+  
+  for(uni in unit)
+  {
+    print(uni)
+    return = c(return, uni %in% model_units)
+  }
+  
+  return(return)
+}
+
+#' Title
+#'
+#' @param instrument 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_instrument_units =  function(instrument)
+{
+  instrument = tolower(instrument)
+  
+  if(instrument =="ecis") {return (c("Alpha" ,"Cm"   , "Drift", "Rb"   , "RMSE" , "C"   ,  "P"     ,"R"   ,  "X"  ,   "Z"))}
+  if(instrument =="xcelligence") {return(xcelligence = c("Z", "CI"))}
+  if(instrument =="cellzscope") { return(c("CPE_A", "CPE_n", "TER", "Ccl", "Rmed", "C"   ,  "P"     ,"R"   ,  "X"  ,   "Z"))}
+  if(instrument =="all"){return(unique(c(vascr_instrument_units("ecis"), vascr_instrument_units("xcelligence"), vascr_instrument_units("cellzscope"))))}
+}
+
+#' Title
+#'
+#' @param unit 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_instrument_from_unit = function(unit)
+{
+  
+  ecis = vascr_instrument_units("ecis")
+  xcelligence = vascr_instrument_units("xcelligence")
+  cellzscope = vascr_instrument_units("cellzscope")
+  instruments = c()
+  return = c()
+  
+  
+for (uni in unit)
+  {
+  if (uni %in% ecis)
+  {
+    instruments = c(instruments, "ECIS")
+  }
+  if (uni %in% xcelligence)
+  {
+    instruments = c(instruments, "xCELLigence")
+  }
+  if (uni %in% cellzscope)
+  {
+    instruments = c(instruments, "cellZscope")
+  }
+
+  return = c(return,(paste(instruments, collapse = " + ")))
+  instruments = c()
+  }
+ 
+  return(return) 
 }
 
 
@@ -429,7 +570,7 @@ vascr_combine = function(..., resample = FALSE) {
   if(isTRUE(resample))
   {
     frequency = vascr_current_frequency(alldata)
-    
+    alldata = vascr_resample(alldata, frequency, min(alldata$Time), max(alldata$Time))
   }
   
   
