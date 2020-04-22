@@ -154,20 +154,22 @@ vascr_plot = function(data, unit = "R", frequency = 4000, replication = "summary
 #'
 #' @examples
 #' 
-#' #graph1 = vascr_plot(growth.df, 'Rb', 0, 'all')
-#' #graph2 = vascr_plot(growth.df, 'Rb', 0, 'experiment')
-#' #graph3 = vascr_plot(growth.df, 'Rb', 0, 'summary')
+#' graph1 = vascr_plot(growth.df, 'Rb', 0, 'wells')
+#' graph2 = vascr_plot(growth.df, 'Rb', 0, 'experiments')
+#' graph3 = vascr_plot(growth.df, 'Rb', 0, 'summary')
 #' 
-#' #grid_arrange_shared_legend(graph1, graph2, graph3, ncol = 1, nrow = 3)
+#' grid_arrange_shared_legend(graph1, graph2, graph3, ncol = 1, nrow = 3)
 #' 
 grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, position = c("bottom", 
     "right")) {
     
-    requireNamespace("gridExtra")
-    requireNamespace("grid")
-    
     plots <- list(...)
     position <- match.arg(position)
+    
+    blankPlot <- ggplot()+geom_blank(aes(1,1)) + 
+      cowplot::theme_nothing()
+    
+    
     g <- ggplot2::ggplotGrob(plots[[1]] + ggplot2::theme(legend.position = position))$grobs
     legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
     lheight <- sum(legend$height)
@@ -248,9 +250,138 @@ vascr_plot_model <- function(alldata.df, ...) {
     m4 = vascr_plot(alldata.df, "Alpha",title = "Alpha", ...)
     
     return(grid_arrange_shared_legend(m1, m2, m3, m4, ncol = 2, nrow = 2))
-    
 }
 
+
+
+#' Plot multiple ggplots
+#' 
+#' This function splits out multiple ggplots into a grid when more than one is requested.
+#'
+#' @param data A vascr dataset
+#' @param unit The unit to plot. "raw" will plot all raw units and "modeled" will plot all modeled units.
+#' @param frequency The frequency to plot
+#' @param time The time to plot. Multiple time plots can be plotted with list(1,2) and multiple ranges can be plotted with list(c(1,2), c(3,4))
+#'
+#' @return An array of requested ggplots
+#' @export
+#'
+#' @examples
+#' vascr_multiplot(data = growth.df, frequency = 4000, time = list(50, 100))
+#' 
+#' vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(0, 100)), replication = "wells")
+#' 
+vascr_multiplot = function(data, unit = "", frequency = 0, time = Inf, ...)
+{
+  
+  data = vascr_subset(data, unit = unit, frequency = frequency)
+  
+  frequencies = unique(data$Frequency)
+  units = unique(data$Unit)
+  
+  plots = list()
+  n = 1
+
+ for(tim in time)
+ {
+   
+  for(uni in units)
+  {
+    if(vascr_is_modeled_unit(uni))
+    {
+      p = vascr_plot(data, unit = uni, time = tim, ...)
+      plots[[n]]= p
+      n=n+1
+    }else
+    {
+    for(fre in frequencies)
+    {
+      if(as.numeric(fre>0))
+      {
+
+        p = vascr_plot(data, unit = uni, frequency = as.numeric(fre), time = tim, ...)
+        plots[[n]] = p
+        n=n+1
+      }
+      
+    }
+    }
+  }
+ }
+  panel = do.call(vascr_make_panel, plots)
+  return(panel)
+}
+
+
+#' Title
+#'
+#' @param ... 
+#' @param plots 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' plots = list()
+#' plots[[1]] = vascr_plot(growth.df, "Rb")
+#' plots[[2]] = vascr_plot(growth.df, "Cm")
+#' vascr_make_panel(plots = plots)
+#' 
+#' vascr_make_panel(vascr_plot(growth.df, unit = "Cm"), vascr_plot(growth.df, unit = "Rb"))
+#' 
+#' vascr_multiplot(data = growth.df, frequency = 4000, time = c(100, 50))
+#' 
+#' vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100), 10))
+#' 
+vascr_make_panel <- function(..., plots = NULL) {
+  
+  if(!is.null(plots))
+  {
+    plots = plots
+  }
+  else
+  {
+    plots = list(...)
+  }
+  
+  
+  g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs
+  
+  
+  if(any(sapply(g, function(x) x$name) == "guide-box"))
+  {
+    
+  legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
+  lheight <- sum(legend$height)
+  
+  final = grid.arrange(
+    
+    do.call(arrangeGrob, lapply(plots, function(x)
+      
+      x + theme(legend.position="none"))),
+    
+    legend,
+    
+    ncol = 1,
+    
+    heights = unit.c(unit(1, "npc") - lheight, lheight))
+  
+  }
+  else
+  {
+    legend = NULL
+   grid.arrange(
+      
+      do.call(arrangeGrob, lapply(plots, function(x)
+        
+        x + theme(legend.position="none"))),
+      
+      ncol = 1)
+  }
+  
+}
+  
+  
 
 #' Post-processing on ECIS plots to make them a bit more pretty
 #'

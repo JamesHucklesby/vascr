@@ -106,6 +106,20 @@ vascr_find_time = function(data.df, time) {
 #' vascr_find_frequency(growth.df, 4382)
 #' 
 vascr_find_frequency = function(data.df, frequency) {
+  if(!is.numeric(frequency))
+  {
+    allowedtext = c("raw", "model")
+    
+    if(frequency %in% allowedtext)
+    {
+      return(frequency)
+    }
+    else
+    {
+      warning("Frequency specified is not a number, 'raw' or 'model'. Please correct this argument")
+    }
+  }
+  
   data.df$Frequency = as.numeric(data.df$Frequency)
   times = unique(data.df$Frequency)
   numberinlist = which.min(abs(times - frequency))

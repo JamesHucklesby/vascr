@@ -28,10 +28,10 @@ Internal funciton for aligning grids
 }
 \examples{
 
-#graph1 = vascr_plot(growth.df, 'Rb', 0, 'all')
-#graph2 = vascr_plot(growth.df, 'Rb', 0, 'experiment')
-#graph3 = vascr_plot(growth.df, 'Rb', 0, 'summary')
+graph1 = vascr_plot(growth.df, 'Rb', 0, 'wells')
+graph2 = vascr_plot(growth.df, 'Rb', 0, 'experiments')
+graph3 = vascr_plot(growth.df, 'Rb', 0, 'summary')
 
-#grid_arrange_shared_legend(graph1, graph2, graph3, ncol = 1, nrow = 3)
+grid_arrange_shared_legend(graph1, graph2, graph3, ncol = 1, nrow = 3)
 
 }
