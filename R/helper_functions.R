@@ -290,6 +290,64 @@ return(vascr_unit_table)
 }
 
 
+vascr_modeled_in_data = function(data)
+{
+  allunits = unique(data$Unit)
+  return(allunits[vascr_is_modeled_unit(allunits)])
+}
+  
+vascr_raw_in_data = function(data)
+{
+  allunits = unique(data$Unit)
+  return(allunits[!vascr_is_modeled_unit(allunits)])
+}
+
+vascr_realise_frequencies = function(data, frequency)
+{
+  return = c(0)
+  
+  for(fre in frequency)
+  {
+    if(tolower(fre) == "all")
+    {
+      return = c(return, unique(data$Frequency))
+    } else
+    {
+      return = c(return, fre)
+    }
+  }
+  
+  
+  
+}
+
+vascr_realise_units(growth.df, list("Rb", "Cm"))
+
+vascr_realise_units = function (data, unit)
+{
+  return = c()
+  
+  for(uni in unit)
+  {
+  if(tolower(uni) == "raw")
+  {
+    return = c(return,(vascr_raw_in_data(data)))
+  } else if(tolower(uni) == "modeled")
+  {
+    return = c(return,(vascr_modeled_in_data(data)))
+  } else if (tolower(uni) == "all")
+  {
+    return = c(return,unique(data$Unit))
+  } else
+  {
+    return = c(return,uni)
+  }
+  
+  }
+  return = unique(return)
+  return(return)
+}
+
 
 #' Check if a selected unit is modelled
 #'
@@ -309,7 +367,6 @@ vascr_is_modeled_unit = function(unit)
   
   for(uni in unit)
   {
-    print(uni)
     return = c(return, uni %in% model_units)
   }
   

@@ -136,19 +136,20 @@ vascr_plot_samplemap = function(data, title ="Title", stripidentical = TRUE)
 #' @export
 #'
 #' @examples
-vascr_plot_line = function(data, replication, error = Inf, title, xlab, ylab, linesize, alphavalue)
+#' 
+#' data = vascr_prep_graphdata(growth.df, unit = "Rb")
+#' 
+#' 
+vascr_plot_line = function(data, replication)
 {
 
 if (replication == "wells") {
   
-  plot = ggplot2::ggplot(data = data, ggplot2::aes(x = Time, y = Value, group = interaction(Well,                       Experiment), colour = Sample, size = linesize)) + ggplot2::labs(title = title, x=xlab, y=ylab) + ggplot2::geom_line(size = linesize)
+  plot = ggplot2::ggplot(data = data, ggplot2::aes(x = Time, y = Value, group = interaction(Well, Experiment), colour = Sample, ))   + ggplot2::geom_line()
   
-  return(vascr_polish_plot(plot))
 }else if (replication == "experiments") {
-  toplot2.df = summarise(group_by(data, Sample, Time, Experiment), sd = sd(Value), 
-                         n = n(), Value = mean(Value))
-  
-  plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample, linetype =   Experiment)) + labs(title = title, x=xlab, y=ylab) + ggplot2::geom_line(size = linesize)
+
+  plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample, linetype =   Experiment)) + ggplot2::geom_line()
   
   if (error == Inf)
   {
@@ -219,7 +220,7 @@ if (replication == "wells") {
 #' vascr_prep_graphdata(growth.df)
 #' 
 #' 
-vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, samplecontains = "", experiment = "", error = Inf, alignkey = NULL, normtime = NULL, divide = FALSE, preprocessed = FALSE, continuouscontains = NULL , stripidentical = TRUE, sortkeyincreasing = TRUE)
+vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, samplecontains = "", experiment = "", error = Inf, alignkey = NULL, normtime = NULL, divide = FALSE, preprocessed = FALSE, continuouscontains = NULL , stripidentical = TRUE, sortkeyincreasing = TRUE, level = "")
 {
   # First subset away what we don't need for normalising to a particular point (speeds up things a lot)
   data = vascr_subset(data, unit = unit, frequency = frequency, samplecontains = samplecontains, experiment = experiment)
@@ -261,6 +262,8 @@ vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, sa
   {
     data$Sample = (vascr_implode(data, stripidentical = TRUE))$Sample
   } 
+  
+  data = vascr_summarise(data, level = level)
   
   if(isFALSE(preprocessed))
   {

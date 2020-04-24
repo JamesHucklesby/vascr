@@ -61,8 +61,18 @@
 # vascr_plot(growth.df, replication = "plate", time = 100)
 
 
+vascr_plot(growth.df, time = list(c(100,190)), unit = list("Rb", "Cm", "Alpha", "R"),  frequency = 4000)
+
+
 vascr_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = TRUE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE, sortkeyincreasing = TRUE, showpoints = FALSE) 
   {
+  
+  if(any(is.list(unit), is.list(frequency), is.list(time)))
+  {
+    allarguments = as.list(match.call())
+    multiplot = do.call(vascr_multiplot, allarguments)
+    return(multiplot)
+  }
   
 
 # Subset data -------------------------------------------------------------
@@ -269,24 +279,25 @@ vascr_plot_model <- function(alldata.df, ...) {
 #' @examples
 #' vascr_multiplot(data = growth.df, frequency = 4000, time = list(50, 100))
 #' 
-#' vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(0, 100)), replication = "wells")
+#' vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100),100), replication = "wells")
 #' 
-vascr_multiplot = function(data, unit = "", frequency = 0, time = Inf, ...)
+#' vascr_multiplot(growth.df, frequency = c(2000,4000), unit = "R")
+#' 
+vascr_multiplot = function(data, unit = "all", frequency = 0, time = Inf, ...)
 {
-  
-  data = vascr_subset(data, unit = unit, frequency = frequency)
-  
-  frequencies = unique(data$Frequency)
-  units = unique(data$Unit)
+
+  units =  vascr_realise_units(data, unit) 
+  frequencies = vascr_realise_frequencies(data, frequency)
   
   plots = list()
   n = 1
 
  for(tim in time)
  {
-   
+   tim = unlist(tim)
   for(uni in units)
   {
+    uni = unlist(uni)
     if(vascr_is_modeled_unit(uni))
     {
       p = vascr_plot(data, unit = uni, time = tim, ...)
@@ -296,7 +307,8 @@ vascr_multiplot = function(data, unit = "", frequency = 0, time = Inf, ...)
     {
     for(fre in frequencies)
     {
-      if(as.numeric(fre>0))
+      fre = unlist(fre)
+      if(as.numeric(fre)>0)
       {
 
         p = vascr_plot(data, unit = uni, frequency = as.numeric(fre), time = tim, ...)

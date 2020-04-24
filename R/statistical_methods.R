@@ -245,6 +245,24 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, confide
   
 }
 
+#' Title
+#'
+#' @param data 
+#'
+#' @return
+#' @export
+#' 
+#' @importFrom tidyr drop_na
+#' @importFrom tidyselect all_of
+#'
+#' @examples
+vascr_remove_if_any_na = function(data)
+{
+  allcols = colnames(data)
+  data = drop_na(data, all_of(allcols))
+}
+
+
 # Summary function --------------------------------------------------------
 
 #' Summarise ECIS datasets from a single experiment
@@ -262,7 +280,7 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, confide
 #'
 #' @examples
 #' 
-#' vascr_summarise(growth.df)
+#' data = vascr_summarise(growth.df)
 #' vascr_summarise(growth.df, "experiments")
 #' vascr_summarise(growth.df, "wells")
 #' 
@@ -274,10 +292,13 @@ vascr_summarise <- function(data.df, level = "summary") {
   # Use a test to check what the current summary level of the data is
   summary_level = vascr_test_summary_level(data.df)
   
-  # Don't run the calculation if summary level is already reached
-  if(level == summary_level)
+  if(level == "")
   {
-    warning("Function not required, the data frame is already at that level")
+    return(data.df)
+  }
+
+  if(level == summary_level)   # Return the same data if summary level is already in place
+  {
     return (data.df)
   }
   
