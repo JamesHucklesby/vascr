@@ -8,7 +8,7 @@ vascr_plot(
   data,
   unit = "R",
   frequency = 4000,
-  replication = "summary",
+  level = "summary",
   time = Inf,
   samplecontains = "",
   experiment = "",
@@ -31,7 +31,10 @@ vascr_plot(
   continuouscontains = NULL,
   returndata = FALSE,
   sortkeyincreasing = TRUE,
-  showpoints = FALSE
+  showpoints = FALSE,
+  singleplot = FALSE,
+  priority = NULL,
+  errortype = "sem"
 )
 }
 \arguments{
@@ -41,7 +44,7 @@ vascr_plot(
 
 \item{frequency}{The frequency of data to display. All modelled variables have a frequency of 0}
 
-\item{replication}{How much of the replicaiton to display. Options are 'all', 'experiment', 'summary" or "plate"}
+\item{level}{How much of the replicaiton to display. Options are 'all', 'experiment', 'summary" or "plate"}
 
 \item{time}{The time to subset if a slice is required. If set to Inf all data will be displayed}
 

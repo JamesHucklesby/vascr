@@ -20,5 +20,7 @@ Generate human readable versions of the unit variable for graphing
 \examples{
 
 vascr_titles("Rb")
+vascr_titles("R")
+
 
 }

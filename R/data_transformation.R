@@ -301,6 +301,12 @@ vascr_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
 #' samplecontains = "05,000", experiment = "2")
 #' head(data)
 #' 
+#' data = vascr_subset(growth.df, time = list(50,100))
+#' unique(data$Time)
+#' 
+#' data = vascr_subset(growth.df, time = c(50,70))
+#' unique(data$Time)
+#' 
 #' data = vascr_subset(growth.df, samplecontains = "5000")
 #' data.df = growth.df
 
@@ -319,10 +325,25 @@ vascr_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplec
     frequency = 0
   }
   
-  if (length(time) == 2) # If a vector of length 2 was submitted (ie two times) then we subset to that
+  
+  
+  # Deal with time
+  
+  if(is.list(time))
   {
-    data.df = data.df %>% filter(Time > time[1])
-    data.df = data.df %>% filter(Time < time[2])
+    subsetdata = data.df[0, ]
+    for(tim in time)
+    {
+      localdata = vascr_subset(data.df, time = tim)
+      subsetdata = rbind(subsetdata, localdata)
+    }
+    data.df = subsetdata
+  }
+  
+  else if (length(time) == 2) # If a vector of length 2 was submitted (ie two times) then we subset to that
+  {
+    data.df = data.df %>% filter(Time >= time[1])
+    data.df = data.df %>% filter(Time <= time[2])
   }
   
   else if(is.finite(time)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
@@ -331,9 +352,12 @@ vascr_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplec
     actualtime = vascr_find_time(data.df, time)
     data.df = data.df %>% filter(Time == actualtime)
   }
-  else # The number is infinity, so return everything
+  else if(is.infinite(time)) # The number is infinity, so return everything (IE do nothing)
   {
     
+  } else
+  {
+    warning("Time argument could not be parsed. No time subsetting completed")
   }
   
   #Then we deal with the frequency

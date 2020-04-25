@@ -154,6 +154,30 @@ vascr_detect_normal = function(data.df)
   return(timecrushed$Time)
 }
 
+#' Title
+#'
+#' @param data 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_detect_level = function(data)
+{
+  if("totaln" %in% colnames(data))
+  {
+    return("summary")
+  }
+  else if ("n" %in% colnames(data))
+  {
+    return("experiments")
+  }
+  else
+  {
+    return("wells")
+  }
+}
+
 
 #' Remove all non-core ECIS data from a data frame
 #' 
@@ -187,6 +211,58 @@ vascr_remove_metadata = function(data.df, subset = "all")
   return(removed.df)
 }
 
+
+
+#' Title
+#'
+#' @param data 
+#' @param explicit 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+#' 
+vascr_priority = function(data, explicit = NULL, priority = NULL)
+{
+  
+  builtin = c("Value", "Sample", "Time", "Experiment", "Instrument", "Frequency", "Unit", "Well")
+  
+  if(is.null(priority))
+  {
+    defaultstack = builtin
+  }
+  else
+  {
+    defaultstack = c(priority,builtin)
+    defaultstack = unique(defaultstack)
+  }
+  
+  if(is.null(explicit))
+  {
+    explicit = c()
+  }
+  
+  stack = defaultstack[!defaultstack %in% explicit]
+  
+  unique = c()
+  
+  for(val in stack){
+    unique = c(unique, as.vector(unique(data[val])))
+  }
+  
+  lengths = c()
+  
+  for (val in unique){
+    lengths = c(lengths,(length(val))>1)
+  }
+  
+  priorities = stack[lengths]
+  
+  return(priorities)
+  
+}
 
 
 #' Generate human readable versions of the unit variable for graphing
@@ -236,8 +312,17 @@ vascr_titles = function (unit, frequency = 0)
 }
 
 
-vascr_titles_vector(c("Rb", "R", "Cm"))
 
+#' Title
+#'
+#' @param units 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' vascr_titles_vector(c("Rb", "R", "Cm"))
+#' 
 vascr_titles_vector = function(units)
 {
 return = c()
@@ -290,18 +375,43 @@ return(vascr_unit_table)
 }
 
 
+#' Title
+#'
+#' @param data 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 vascr_modeled_in_data = function(data)
 {
   allunits = unique(data$Unit)
   return(allunits[vascr_is_modeled_unit(allunits)])
 }
   
+#' Title
+#'
+#' @param data 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 vascr_raw_in_data = function(data)
 {
   allunits = unique(data$Unit)
   return(allunits[!vascr_is_modeled_unit(allunits)])
 }
 
+#' Title
+#'
+#' @param data 
+#' @param frequency 
+#'
+#' @return
+#' @export
+#'
+#' @examples
 vascr_realise_frequencies = function(data, frequency)
 {
   return = c(0)
@@ -321,8 +431,18 @@ vascr_realise_frequencies = function(data, frequency)
   
 }
 
-vascr_realise_units(growth.df, list("Rb", "Cm"))
 
+#' Title
+#'
+#' @param data 
+#' @param unit 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' vascr_titles_vector(c("Rb", "R", "Cm"))
+#' 
 vascr_realise_units = function (data, unit)
 {
   return = c()

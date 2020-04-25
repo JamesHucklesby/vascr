@@ -18,9 +18,15 @@ vascr_make_panel(..., plots = NULL)
 Title
 }
 \examples{
+plots = list()
 plots[[1]] = vascr_plot(growth.df, "Rb")
 plots[[2]] = vascr_plot(growth.df, "Cm")
 vascr_make_panel(plots = plots)
+
 vascr_make_panel(vascr_plot(growth.df, unit = "Cm"), vascr_plot(growth.df, unit = "Rb"))
+
+vascr_multiplot(data = growth.df, frequency = 4000, time = c(100, 50))
+
+vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100), 10))
 
 }

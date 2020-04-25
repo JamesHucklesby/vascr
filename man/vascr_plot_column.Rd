@@ -4,21 +4,12 @@
 \alias{vascr_plot_column}
 \title{Title}
 \usage{
-vascr_plot_column(
-  data,
-  replication,
-  error = Inf,
-  title,
-  xlab,
-  ylab,
-  time,
-  unit,
-  frequency,
-  confidence
-)
+vascr_plot_column(data, confidence = 0.049, priority = NULL)
 }
 \arguments{
 \item{data}{}
+
+\item{confidence}{}
 
 \item{replication}{}
 
@@ -35,12 +26,24 @@ vascr_plot_column(
 \item{unit}{}
 
 \item{frequency}{}
-
-\item{confidence}{}
 }
 \value{
 
 }
 \description{
 Title
+}
+\examples{
+
+data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary", time = list(50))
+vascr_plot_column(data)
+
+data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments", time = list(50,100))
+vascr_plot_column(data)
+
+data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells", samplecontains = c("35,000", "30,000"), time = list(50,100,150))
+vascr_plot_column(data, priority = c("Experiment","Time", "Sample", "Experiment"))
+
+unique(data$Well) 
+
 }

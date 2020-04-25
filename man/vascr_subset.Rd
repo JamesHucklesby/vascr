@@ -44,6 +44,12 @@ data = vascr_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "
 samplecontains = "05,000", experiment = "2")
 head(data)
 
+data = vascr_subset(growth.df, time = list(50,100))
+unique(data$Time)
+
+data = vascr_subset(growth.df, time = c(50,70))
+unique(data$Time)
+
 data = vascr_subset(growth.df, samplecontains = "5000")
 data.df = growth.df
 }

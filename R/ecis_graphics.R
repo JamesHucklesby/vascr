@@ -8,7 +8,7 @@
 #' @param data A standard ECIS data frame to plot
 #' @param unit Unit to plot
 #' @param frequency The frequency of data to display. All modelled variables have a frequency of 0
-#' @param replication How much of the replicaiton to display. Options are 'all', 'experiment', 'summary" or "plate"
+#' @param level How much of the replicaiton to display. Options are 'all', 'experiment', 'summary" or "plate"
 #' @param time The time to subset if a slice is required. If set to Inf all data will be displayed
 #' @param samplecontains Optional, only samples that contain this string will be plotted. Standard search and wildcard
 #' @param experiment Optional, allows you to limit the experiment plotted. Experiment names should be separated with |
@@ -44,11 +44,11 @@
 #' @examples
 #' growth.df$Instrument = "ECIS"
 #' 
-# vascr_plot(growth.df, 'Rb', replication = 'summary',
+# vascr_plot(growth.df, 'Rb', level = 'summary',
 # error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-# vascr_plot(growth.df, 'Rb', replication = 'wells',
+# vascr_plot(growth.df, 'Rb', level = 'wells',
 #  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-#  vascr_plot(growth.df, 'Rb', replication = 'experiments',
+#  vascr_plot(growth.df, 'Rb', level = 'experiments',
 #  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
 #  , xlab = "Hours")
 # vascr_plot(growth.df, 'R', 4000, 'summary', time = 75)
@@ -56,27 +56,32 @@
 # 
 # vascr_plot(growth.df, sortkeyincreasing = TRUE)
 # 
-# vascr_plot(growth.df, continuous = "cells", replication = "summary", time = 50)
+# vascr_plot(growth.df, continuous = "cells", level = "summary", time = 50)
 #
-# vascr_plot(growth.df, replication = "plate", time = 100)
+# vascr_plot(growth.df, level = "plate", time = 100)
 
 
-vascr_plot(growth.df, time = list(c(100,190)), unit = list("Rb", "Cm", "Alpha", "R"),  frequency = 4000)
+#vascr_plot(growth.df, time = list(c(100,190)), unit = list("Rb", "Cm", "Alpha", "R"),  frequency = 4000)
+
+#vascr_plot(growth.df, time = 100, unit = "Cm",  frequency = 4000, level = "summary")
 
 
-vascr_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = TRUE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE, sortkeyincreasing = TRUE, showpoints = FALSE) 
+
+vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = FALSE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE, sortkeyincreasing = TRUE, showpoints = FALSE, singleplot = FALSE, priority = NULL, errortype = "sem", forcetype = NULL) 
   {
   
-  if(any(is.list(unit), is.list(frequency), is.list(time)))
+  if(any(is.list(unit), is.list(frequency), is.list(time)) & !singleplot)
   {
     allarguments = as.list(match.call())
+    allarguments["singleplot"] = TRUE # Block more than one loop, allowing for only single level stacked data structures
+    print(allarguments)
     multiplot = do.call(vascr_multiplot, allarguments)
     return(multiplot)
   }
   
 
 # Subset data -------------------------------------------------------------
-  data = vascr_prep_graphdata(data, unit, frequency, time, samplecontains, experiment, error, alignkey, normtime, divide, preprocessed, continuouscontains, stripidentical)
+  data = vascr_prep_graphdata(data, unit, frequency, time, samplecontains, experiment, error, alignkey, normtime, divide, preprocessed, continuouscontains, stripidentical, sortkeyincreasing, level, errortype)
   
 
 # Create labels -----------------------------------------------------------
@@ -111,14 +116,14 @@ vascr_plot = function(data, unit = "R", frequency = 4000, replication = "summary
   # Deal with if a continuous variable has been selected
   if(!is.null(continuous))
   {
-    plot = vascr_plot_continuous(data = data, unit = unit, frequency = frequency, replication = replication, time = time, error = error,alphavalue  = alphavalue, xlab = xlab, ylab = ylab, title = title, cols = cols, continuous = continuous)
+    plot = vascr_plot_continuous(data = data, unit = unit, frequency = frequency, level = level, time = time, error = error,alphavalue  = alphavalue, xlab = xlab, ylab = ylab, title = title, cols = cols, continuous = continuous)
     
     return(vascr_polish_plot(plot))
   }
   
   # Deal with if a platemap has been requested
   
-  if(replication == "plate")
+  if(level == "plate")
   {
     if(length(unique(data$Time))>1)
     {
@@ -136,13 +141,13 @@ vascr_plot = function(data, unit = "R", frequency = 4000, replication = "summary
     if (length(unique(data$Time))>1) { # Check if we are plotting a single, or multiple, time points
         
       {
-        return(vascr_plot_line(data, replication, error, title, xlab, ylab, linesize, alphavalue))
+        return(vascr_plot_line(data, priority))
       }
         
      # Then we deal with if a single time point has been requested
         
     } else {
-      vascr_plot_column(data, replication, error = Inf, title, xlab, ylab, time, unit, frequency, confidence)
+      vascr_plot_column(data, priority)
     }
 }
 
@@ -162,7 +167,7 @@ vascr_plot = function(data, unit = "R", frequency = 4000, replication = "summary
 #' @examples
 #' vascr_multiplot(data = growth.df, frequency = 4000, time = list(50, 100))
 #' 
-#' vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100),100), replication = "wells")
+#' vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100),100), level = "wells")
 #' 
 #' vascr_multiplot(growth.df, frequency = c(2000,4000), unit = "R")
 #' 

@@ -147,8 +147,6 @@ vascr_ANOVA = function(data.df, unit, frequency, time) {
     print(TukeyHSD(fit))
     
     return(grid)
-    #multiplot = grid_arrange_shared_legend(plot, plot2)
-    #return(multiplot)
 }
 
 #' Make a dataframe of what is statistically significant
@@ -245,24 +243,6 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, confide
   
 }
 
-#' Title
-#'
-#' @param data 
-#'
-#' @return
-#' @export
-#' 
-#' @importFrom tidyr drop_na
-#' @importFrom tidyselect all_of
-#'
-#' @examples
-vascr_remove_if_any_na = function(data)
-{
-  allcols = colnames(data)
-  data = drop_na(data, all_of(allcols))
-}
-
-
 # Summary function --------------------------------------------------------
 
 #' Summarise ECIS datasets from a single experiment
@@ -283,9 +263,6 @@ vascr_remove_if_any_na = function(data)
 #' data = vascr_summarise(growth.df)
 #' vascr_summarise(growth.df, "experiments")
 #' vascr_summarise(growth.df, "wells")
-#' 
-#' 
-#' exploded.df = vascr_explode(growth.df)
 #' 
 vascr_summarise <- function(data.df, level = "summary") {
   
@@ -308,7 +285,7 @@ vascr_summarise <- function(data.df, level = "summary") {
   {
   experiment.df = data.df %>%
     group_by(Time, Unit, Frequency, Sample, Experiment, Instrument) %>%
-    summarise(sd = sd(Value), n = n(),sem = sd/sqrt(n), Well = "Z00",Value = mean(Value))
+    summarise(sd = sd(Value), n = n(),min = min(Value), max = max(Value), Well = "Z00",Value = mean(Value))
   }else if(summary_level == "experiments")
   {
     experiment.df = data.df
@@ -320,7 +297,7 @@ vascr_summarise <- function(data.df, level = "summary") {
   {
     summary.df = experiment.df %>%
       group_by(Time, Unit, Frequency, Sample, Instrument) %>%
-      summarise(sd = sd(Value), totaln = sum(n), n = n(), Well = "Z00", sem = sd/sqrt(n), Value = mean(Value), Experiment = "Summary")
+      summarise(sd = sd(Value), totaln = sum(n), n = n(), min = min(Value), max = max(Value), Well = "Z00", Value = mean(Value), Experiment = "Summary")
   }
   else
   {

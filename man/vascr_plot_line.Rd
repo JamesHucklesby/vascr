@@ -4,16 +4,7 @@
 \alias{vascr_plot_line}
 \title{Title}
 \usage{
-vascr_plot_line(
-  data,
-  replication,
-  error = Inf,
-  title,
-  xlab,
-  ylab,
-  linesize,
-  alphavalue
-)
+vascr_plot_line(data, priority = NULL)
 }
 \arguments{
 \item{data}{}
@@ -37,4 +28,14 @@ vascr_plot_line(
 }
 \description{
 Title
+}
+\examples{
+data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells")
+vascr_plot_line(data)
+vascr_plot_line(data, priority = c("Experiment", "Sample"))
+
+data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments")
+data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary")
+
+
 }

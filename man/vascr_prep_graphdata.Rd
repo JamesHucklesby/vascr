@@ -18,7 +18,9 @@ vascr_prep_graphdata(
   preprocessed = FALSE,
   continuouscontains = NULL,
   stripidentical = TRUE,
-  sortkeyincreasing = TRUE
+  sortkeyincreasing = TRUE,
+  level = "",
+  errortype = "sem"
 )
 }
 \arguments{
@@ -56,7 +58,9 @@ Central data subset, cleanup and label prep function
 }
 \examples{
 
-vascr_prep_graphdata(growth.df)
+data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary")
+data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments")
+data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells")
 
 
 }

@@ -102,7 +102,7 @@ growth3resample = ecis_resample(growth3.df, 5, 0,200)
 ecis_plot(resampled)
 ```
 ```{r}
-head(ecisr::growth.df)
+head(growth.df)
 ```
 
 

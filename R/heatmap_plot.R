@@ -136,59 +136,68 @@ vascr_plot_samplemap = function(data, title ="Title", stripidentical = TRUE)
 #' @export
 #'
 #' @examples
+#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells")
+#' vascr_plot_line(data)
+#' vascr_plot_line(data, priority = c("Experiment", "Sample"))
 #' 
-#' data = vascr_prep_graphdata(growth.df, unit = "Rb")
+#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments")
+#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary")
 #' 
 #' 
-vascr_plot_line = function(data, replication)
+vascr_plot_line = function(data, priority = NULL)
 {
 
+  # Search for priority if it's not found
+  priority = vascr_priority(data, c("Time", "Value"), priority = priority)
+  
+  xaxis = "Time"
+  yaxis = "Value"
+  well = "Well"
+  ymax = "ymax"
+  ymin = "ymin"
+  
+# First we deal with plotting single wells, as these pan out quite differently to the other levels of replication
+replication = vascr_detect_level(data)
+  
 if (replication == "wells") {
   
-  plot = ggplot2::ggplot(data = data, ggplot2::aes(x = Time, y = Value, group = interaction(Well, Experiment), colour = Sample, ))   + ggplot2::geom_line()
+  priority = priority[!priority == "Well"] # Remove well from the priority as it's no longer required
   
-}else if (replication == "experiments") {
-
-  plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample, linetype =   Experiment)) + ggplot2::geom_line()
-  
-  if (error == Inf)
+  if(length(priority) ==1)
   {
-    plot = plot + ggplot2::geom_ribbon(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n), fill = Sample), alpha = alphavalue)  
+  plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = interaction(data$Well, priority[1]), colour = priority[1])) + geom_line()
+  return(plot)
+  }
+  else if (length(priority) == 2)
+  {
+    plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = interaction(data$Well, priority[2]), colour = priority[1], linetype = priority[2]))    + geom_line()
+    return(plot)
+  }
+  else
+  {
+    error("Supported number of variables exceeded. Please don't attemtpt to plot more than two more variables on top of time and value at once")
+    stop()
   }
   
-  if (error>0 && error < Inf)
-  {
-    plot = plot + ggplot2::geom_errorbar(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n)))  
-  }
-  
-  return(vascr_polish_plot(plot))
-  
-}else if (replication == "summary") {
-  # Average each experiment, working out the average alone
-  toplot2.df = dplyr::summarise(group_by(data, Sample, Time, Experiment), Value = mean(Value))
-  
-  # Now repeat the calculation, but work out the intra-experimental error and statistics
-  toplot2.df = summarise(group_by(toplot2.df, Sample, Time), sd = sd(Value), n = n(), Value = mean(Value))
-  
-  plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample)) + labs(title = title, x=xlab, y=ylab) + ggplot2::geom_line(size = linesize)
-  
-  if (error == Inf)
-  {
-    plot = plot + ggplot2::geom_ribbon(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n), fill = Sample), alpha = alphavalue) 
-  }
-  
-  if (0< error && error < Inf)
-  {
-    plot = plot + ggplot2::geom_errorbar(ggplot2::aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n))) 
-  }
-  
-  return(vascr_polish_plot(plot))(plot)
-  
-} else
-{
-  warning("Unrecognised level of replicaton selected. Please state either 'wells', 'experiments' or 'summary'")
 }
   
+  
+if (length(priority) == 1) {
+  
+  plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, colour = priority[1], ymin = ymin, ymax = ymax, fill = priority[1])) + geom_line()
+  return(plot)
+  
+}else if (length(priority)==2) {
+  
+  plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, colour = priority[1], linetype = priority[2], fill = priority[1], ymin = "ymin", ymax = "ymax")) + geom_line()
+  plot
+} else
+{
+  error("Supported number of variables exceeded. Please don't attempt to plot more than two variables on top of time and value at once")
+  stop()
+}
+  
+
 }
 
 
@@ -217,10 +226,12 @@ if (replication == "wells") {
 #'
 #' @examples
 #' 
-#' vascr_prep_graphdata(growth.df)
+#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary")
+#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments")
+#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells")
 #' 
 #' 
-vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, samplecontains = "", experiment = "", error = Inf, alignkey = NULL, normtime = NULL, divide = FALSE, preprocessed = FALSE, continuouscontains = NULL , stripidentical = TRUE, sortkeyincreasing = TRUE, level = "")
+vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, samplecontains = "", experiment = "", error = Inf, alignkey = NULL, normtime = NULL, divide = FALSE, preprocessed = FALSE, continuouscontains = NULL , stripidentical = TRUE, sortkeyincreasing = TRUE, level = "", errortype = "sem")
 {
   # First subset away what we don't need for normalising to a particular point (speeds up things a lot)
   data = vascr_subset(data, unit = unit, frequency = frequency, samplecontains = samplecontains, experiment = experiment)
@@ -277,6 +288,42 @@ vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, sa
     data$Sample = vascr_factorise_and_sort(data$Sample, sortkeyincreasing)
   }
   
+  # Remove any values that are unplottable, IE generation of SD or SEM failed, likely due to missing values from modeling failures
+  data = drop_na(data, Value)
+  
+  
+  if(level == "summary" || level =="experiments")
+  {
+  
+  if(errortype == "sem")
+  {
+    data$sem = data$sd/sqrt(data$n)
+    data$ymax = data$Value + data$sem
+    data$ymin = data$Value - data$sem
+  }
+  else if (errortype == "sd")
+  {
+    data$ymax = data$Value + data$sd
+    data$ymin = data$Value  - data$sd
+  }
+  else if(errortype == "range")
+  {
+    data$ymax = data$max
+    data$ymin = data$min
+  }
+  else
+  {
+    warning("No error specified,  and hence won't be generated")
+  }
+  
+  
+    
+  # Remove impossible error bars for the avoidance of errors. Replaces both max and min with the      actual value.
+  data = mutate(data, ymax = coalesce(ymax, Value))
+  data = mutate(data, ymin = coalesce(ymin, Value))
+      
+}
+  
   return(data)
   
 }
@@ -301,70 +348,115 @@ vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, sa
 #' @export
 #'
 #' @examples
-vascr_plot_column = function(data, replication, error = Inf, title, xlab, ylab, time, unit, frequency, confidence)
+#' 
+#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary", time = list(50))
+#' vascr_plot_column(data)
+#' 
+#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments", time = list(50,100))
+#' vascr_plot_column(data)
+#' 
+#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells", samplecontains = c("35,000", "30,000"), time = list(50,100,150))
+#' vascr_plot_column(data, priority = c("Experiment","Time", "Sample", "Experiment"))
+#' 
+#' unique(data$Well) 
+#' 
+vascr_plot_column = function(data, priority = NULL)
 {
+  
+  priority = vascr_priority(data, c("Value", "Well"), priority)
+  data$Sample = as.character(data$Sample)
+  data$Experiment = as.character(data$Experiment)
+  data$Time = as.character(data$Time)
+  
+  replication = vascr_test_summary_level(data)
+  
   if (replication == "wells") {
-    
-    filtered.df = data
-    
-    filtered.df$Sample = paste(filtered.df$Sample, filtered.df$Well)
-    
-    
-    plot = ggplot(filtered.df, aes(x = Sample, y = Value, fill = Experiment))+
-      ggplot2::labs(title = title, x=xlab, y=ylab) 
-    if(error == Inf)
-    {
-      plot = plot + geom_bar(stat = "identity",  position = position_dodge()) + theme(axis.text.x = element_text(angle = 90))
-    }
-    
-    return(vascr_polish_plot(plot))(plot)
-  }
   
-  if (replication == "experiments")
+    # Remove well from the priority as it's no longer required
+    
+  if(length(priority)==1)
   {
-    filtered2.df = summarise(group_by(data, Experiment, Sample), sd = sd(Value), n = n(), 
-                             Value = mean(Value))
     
-    plot = ggplot(filtered2.df, aes(x = Sample, y = Value, fill = Experiment)) + geom_bar(stat = "identity", position = position_dodge()) + ggplot2::labs(title = title, x=xlab, y=ylab)
+    plot =  ggplot(data, aes_string(x = priority[1], y = "Value", group = interaction(data$Well, data[,priority[1]]))) + geom_bar(stat = "identity", position = position_dodge())
     
-    if(error == Inf)
+    plot = plot + geom_text(aes(label=Well), vjust=1.6,
+                            position = position_dodge(0.9), size=2)
+    
+    return(plot)
+    
+  }
+    
+  if(length(priority)==2)
+  {
+    
+    data[priority[2]] = lapply(data[priority[2]],as.character)
+    
+    plot =  ggplot(data, aes_string(x = priority[1], y = "Value", fill = priority[2], group = interaction(data$Well, data[,priority[1]]))) + geom_bar(stat = "identity", position = position_dodge())
+    
+    plot = plot + geom_text(aes(label=Well), vjust=1.6,
+                     position = position_dodge(0.9), size=2)
+    
+    return(plot)
+  }
+    
+    if(length(priority)==3)
     {
-      plot = plot + geom_errorbar(aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.2, position = position_dodge(0.9))
+      
+      data[priority[2]] = lapply(data[priority[2]],as.character)
+      data[priority[3]] = lapply(data[priority[3]],as.character)
+      
+      plot =  ggplot(data, aes_string(x = priority[1], y = "Value", fill = priority[2], colour = priority[3], group = interaction(data$Well, data[,priority[1]], data[,priority[2]], data[,priority[3]]))) + geom_bar(stat = "identity", position = position_dodge())
+      
+      plot = plot + geom_bar(stat = "identity", size = 1, position = position_dodge()) + scale_colour_grey(start = 0, end = 1)
+      
+      plot = plot + geom_text(aes(label=Well), vjust=1.6,position = position_dodge(0.9), size=2)
+      
+      return(plot)
     }
     
-    return(vascr_polish_plot(plot))
+    if(length(priority)>3)
+    {
+      stop("No more than 3 variables is supported for this graph type. Please subset your data more rigourously")      
+    }
+    
   }
   
-  if (replication == "summary") {
-    
-    # Then use two dplyr statements to prepare the data for graphing
-    filtered2.df = summarise(group_by(data, Experiment, Sample), Value = mean(Value))
-    filtered2.df = summarise(group_by(filtered2.df, Sample), sd = sd(Value), n = n(), Value = mean(Value))
-    if (confidence<1)
+  if (any(replication == "experiments", replication == "summary"))
+  {
+
+    if(length(priority)==1)
     {
-      if(!(vascr_detect_normal(data)==FALSE))
-      {
-        warning("Normalised dataset detected, ANOVA results will be invalid")
-      }
-      labeltable = vascr_make_significance_table(data, time, unit, frequency, confidence, format = "toplot")
-      filtered2.df = left_join(filtered2.df, labeltable, by = "Sample")
-      plot = ggplot(filtered2.df, aes(x = Sample, y = Value, label = Label)) + geom_bar(stat = "identity") +
-        geom_text(aes(label=Label),position=position_stack(0.8)) + ggplot2::labs(title = title, x=xlab, y=ylab)
+    plot = ggplot(growth.df, aes_string(x = priority[1], y = "Value")) + geom_bar(stat = "identity", position = position_dodge())
+    
+    return(plot)
     }
     
-    else
+    else if(length(priority)==2)
     {
-      # Then graph the output
-      plot = ggplot(filtered2.df, aes(x = Sample, y = Value)) + geom_bar(stat = "identity") + ggplot2::labs(title = title, x=xlab, y=ylab)
+      plot = ggplot(data, aes_string(x = priority[1], y = "Value", fill = priority[2], group = interaction(data[,priority[1]], data[,priority[2]]))) + geom_bar(stat = "identity", position = position_dodge(),group = interaction(data[,priority[1]], data[,priority[2]]))
+      
+      return(plot)
     }
     
-    if(error == Inf)
+    else if(length(priority)==3)
     {
-      plot = plot + geom_errorbar(aes(ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.2)
+
+        plot = ggplot(data, aes_string(x = priority[1], y = "Value", fill = priority[2], color = priority[3], group = interaction(data[,priority[1]], data[,priority[2]], data[,priority[3]])))
+      
+      plot = plot + geom_bar(stat = "identity", size = 1, position = position_dodge(), group = interaction(data[,priority[1]], data[,priority[2]], data[,priority[3]])) + scale_colour_grey(start = 0, end = 1)
+      
+      return(plot)
+
+    }
+    else if(length(priority)>3)
+    {
+      stop("Only up to a stack of 3 variables is supported. Please try again.")
     }
     
-    return(vascr_polish_plot(plot))
   }
+  
+  stop("Graph not classed. Please try again")
+  
 }
 
 

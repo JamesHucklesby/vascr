@@ -7,6 +7,10 @@
 #' Trace down why cells.x and cells.y is cropping up. Suspect it's in implode???
 #' Fix ordering in ecis_anova
 #' 
+#' Include heatmap resolution into vascr_plot
+#' 
+#' Fix geom_path errors in plotting
+#' 
 #' vascar_mulitplot impliment multiple continuous samples
 #'
 #' Re-organise what's in what file
@@ -38,6 +42,7 @@
 #' * Import CellZScope direct from file rather than through an intermediary
 #' * Resurect ecis_animate
 #' * Allow excell to be used for lookup files
+#' * More advanced ANOVA
 #' 
 #' 
 #' 

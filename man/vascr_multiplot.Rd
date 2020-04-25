@@ -2,26 +2,30 @@
 % Please edit documentation in R/ecis_graphics.R
 \name{vascr_multiplot}
 \alias{vascr_multiplot}
-\title{Title}
+\title{Plot multiple ggplots}
 \usage{
-vascr_multiplot(data, unit, frequency = 0, time)
+vascr_multiplot(data, unit = "all", frequency = 0, time = Inf, ...)
 }
 \arguments{
-\item{data}{}
+\item{data}{A vascr dataset}
 
-\item{unit}{}
+\item{unit}{The unit to plot. "raw" will plot all raw units and "modeled" will plot all modeled units.}
 
-\item{frequency}{}
+\item{frequency}{The frequency to plot}
 
-\item{time}{}
+\item{time}{The time to plot. Multiple time plots can be plotted with list(1,2) and multiple ranges can be plotted with list(c(1,2), c(3,4))}
 }
 \value{
-
+An array of requested ggplots
 }
 \description{
-Title
+This function splits out multiple ggplots into a grid when more than one is requested.
 }
 \examples{
-vascr_multiplot(data = growth.df, unit = "raw", time = 100)
+vascr_multiplot(data = growth.df, frequency = 4000, time = list(50, 100))
+
+vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100),100), level = "wells")
+
+vascr_multiplot(growth.df, frequency = c(2000,4000), unit = "R")
 
 }
