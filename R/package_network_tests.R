@@ -17,12 +17,19 @@
 # 
 # 
 # 
-# gg = makeCallGraph("package:vascr")
+# gg = makeCallGraph("function:vascr_plot")
 # if(require(Rgraphviz)) {
 #   gg = layoutGraph(gg, layoutType = "circo")
 #   graph.par(list(nodes = list(fontsize=55)))
 #   renderGraph(gg) ## could also call plot directly
-# } 
+# }
+# 
+# f = system.file("samples", "R/heatmap_plot.R", package = "vascr")
+# sc = readScript(f)
+# g = makeVariableGraph( info = getInputs(sc))
+# if(require(Rgraphviz))
+#   plot(g)
+# 
 # 
 # 
 # devtools::install_github("datastorm-open/DependenciesGraphs")
