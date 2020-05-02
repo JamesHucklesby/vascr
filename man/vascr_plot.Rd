@@ -24,7 +24,7 @@ vascr_plot(
   title = "Title",
   stripidentical = TRUE,
   cols = NULL,
-  verbose = TRUE,
+  verbose = FALSE,
   preprocessed = FALSE,
   continuous = NULL,
   alignkey = NULL,
@@ -34,7 +34,9 @@ vascr_plot(
   showpoints = FALSE,
   singleplot = FALSE,
   priority = NULL,
-  errortype = "sem"
+  errortype = "sem",
+  visualisation = NULL,
+  threshold = 0
 )
 }
 \arguments{

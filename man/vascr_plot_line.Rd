@@ -4,7 +4,7 @@
 \alias{vascr_plot_line}
 \title{Title}
 \usage{
-vascr_plot_line(data, priority = NULL)
+vascr_plot_line(data, priority = NULL, ...)
 }
 \arguments{
 \item{data}{}

@@ -27,8 +27,12 @@
 #'# vascr_plot_continuous(growth.df, "R", 4000, "summary", 50, continuous = "cells", error = Inf)
 #'
 #' 
-vascr_plot_continuous = function(data, unit = "R", frequency = 4000, replication = "summary", time, error = Inf, alphavalue = 0.5, xlab  = NULL, ylab = "Value", title = "", cols, continuous)
+vascr_plot_continuous = function(data, cols, continuous, ...)
 {
+  
+  # Gather graph data based on the ...
+  dots = list(...)
+  data = do.call_relevant("vascr_prep_graphdata", data, dots)
   
   if(is.null(xlab))
   {

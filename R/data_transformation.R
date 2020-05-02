@@ -309,13 +309,18 @@ vascr_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
 #' 
 #' data = vascr_subset(growth.df, samplecontains = "5000")
 #' data.df = growth.df
+#' 
+#' unique(vascr_subset(growth.df, max_deviation = 0.3)$Well)
 
-vascr_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplecontains = "", experiment = "", well = ""){
+vascr_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplecontains = "", experiment = "", well = "", deviation = 0, max_deviation = 0){
   
   if(!(is.data.frame(data.df)))
   {
-    error("Data is not a data frame. This function can only be used on vascr data frames")
+    stop("Data is not a data frame. This function can only be used on vascr data frames")
   }
+  
+  defaultfrequency = frequency
+  defaultunit = unit
   
   data.df$Well = vascr_standardise_wells(data.df$Well)
   
@@ -323,6 +328,7 @@ vascr_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplec
   if(vascr_is_modeled_unit(unit)) # Wipe out frequency if it is a modelled variable as that makes no sense
   {
     frequency = 0
+    defaultfrequency = 0
   }
   
   
@@ -388,6 +394,19 @@ vascr_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplec
   {
   data.df = data.df %>% filter(Well == well)
   }
+  
+  
+  if(deviation>0 || max_deviation>0)
+  {
+    if(length(frequency>0) || length(unit)>0)
+    {
+      warning("Mulitple units selected, deviation calculations will be inaccurate due to comparing non-like units")
+    }
+    
+    data.df = vascr_exclude_deviation(data = data.df, deviation = deviation, frequency = frequency, unit = unit)
+    
+  }
+  
   
   # Check if there is still some data here, and if not sound a warning
   if(nrow(data.df)==0)
@@ -482,158 +501,6 @@ vascr_subset_continuous = function(data, continuous, exact_match = FALSE, strip_
   return(return)
 }
 
-###############################################################
-
-
-#' Automatically strip badly connected wells from an ECIS dataset
-#'
-#' @param data.df A standard ECIS data frame
-#' @param threshold How stringent to be in excluding wells. Higher is less stringent. Default is 5.
-#' @param frequency Frequency to run numbers on, default is 4000
-#' @param unit Unit to use in detection, default is R
-#'
-#' @return  A tibble containing the offending wells, which experiment they are from and the score they were removed with
-#' @export
-#' 
-#' @importFrom dplyr group_by mutate summarise arrange distinct left_join
-#' @importFrom magrittr "%>%"
-#'
-#' @examples
-#' # Make a defective well in the dataset
-#' baddata = growth.df
-#' welltobreak = "B1"
-#' baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
-#' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
-#' 
-#' welltobreak = "H4"
-#' baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
-#' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
-#' 
-#' # Plot out the well, and then try to detect it
-#' vascr_detect_badwells(baddata,1)
-#' 
-#' # Check it works for a good dataset
-#' vascr_detect_badwells(growth.df,1)
-#' 
-vascr_detect_badwells = function(data.df, threshold = 5, frequency = 4000, unit = "R")
-{
-  
-  cycles = 0
-  runagain = TRUE
-  
-  cleandata.df = subset(data.df, !is.na(Value)) # Exclude wells where there is no data available (IE connection lost)
-  
-  cleandata.df = vascr_subset(cleandata.df, unit = unit, frequency = frequency) # Run the diagnosis on only one frequency to save time, at R4000
-  
-  
-  #Calculate the fractional difference between the sample mean and the value of the well in each experiment at each timepoint
-  while(runagain == TRUE)
-  {
-    
-    metadata =  cleandata.df %>%
-      group_by(Experiment, Sample, Time) %>%
-      mutate(movementfrommean = abs(Value - mean(Value))/mean(Value)) %>%
-      group_by(Well, Experiment) %>%
-      summarise(Score = max(movementfrommean)) %>%
-      arrange(desc(Score)) %>%
-      left_join(cleandata.df, by = c("Well", "Experiment"))
-    
-    togo = metadata %>%
-      distinct(Well, Score, Experiment) %>%
-      subset(Score>threshold)
-    
-    cleandata.df = vascr_exclude(cleandata.df, wells = togo$Well[1]) # Remove the most offending well. Do this itterativley so the scores have less of an effect on each other (important if a spikey well hits one that is continuously highly raised)
-    
-    if(nrow(togo)==0 & cycles == 0)
-    {
-      runagain = FALSE
-      strippedwells = togo
-    }
-    
-    else if(nrow(togo)==0)
-    {
-      runagain = FALSE
-    }
-    else if (cycles == 0)
-    {
-      strippedwells = togo[1,]
-      cycles = cycles + 1
-    }
-    else
-    {
-      strippedwells = rbind(strippedwells, togo[1,])
-      cycles = cycles+1
-    }
-    
-    
-  }
-  
-  
-  return(strippedwells)
-  
-}
-
-
-
-#' Title
-#'
-#' @param data 
-#' @param threshold 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' vascr_plot_badwell_scores(growth.df, 0.2)
-#' 
-vascr_plot_badwell_scores = function(data, threshold = 0)
-{
-
-# Calculate the scores for all wells
-scores = vascr_detect_badwells(data, threshold = 0)
-
-# Plot out the graph, sorting the Y axis by the score of each well to make a pretty waterfall
-plot = ggplot(scores, aes(x=reorder(Well,-Score), y=Score)) +
-  geom_bar(stat="identity") + xlab("Well")
-
-# Add a horosontal line if a threshold has been specified
-if(threshold>0)
-{
-  plot = plot + geom_hline(yintercept = threshold, color = "blue")
-}
-
-plot = vascr_polish_plot(plot, rotate_x = TRUE)
-return(plot)
-
-}
-
-
-
-#' Title
-#'
-#' @param data 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' vascr_plot_badwell_plate(growth.df)
-#' 
-vascr_plot_badwell_plate = function(data)
-{
-  # Needs a warning if multiple plates detected
-  
-data = vascr_detect_badwells(growth.df, threshold = 0)
-data = vascr_explode_wells(data)
-plot = ggplot(data, aes(col, row, fill= Score)) + 
-  geom_tile()  +
-  scale_fill_gradient(low="white", high="blue")+
-  xlab("Column") +
-  ylab("Row")+
-  scale_x_discrete(position = "top")
-
-return(vascr_polish_plot(plot, rotate_x = FALSE))
-}
 
 #' Title
 #'
@@ -651,68 +518,3 @@ vascr_explode_wells = function(data)
   return(data)
 }
 
-
-
-#' Exclude automatically detected wells that have a connection issue from the dataset
-#'
-#' @param data.df The dataset to parse
-#' @param threshold The threshold stringency to use in detection. Default is 5, the range of 1-10 may be appropriate. Higher numbers are less stringent.
-#' @param frequency The frequency to use for detection, default is 4000 Hz
-#' @param unit  The unit to run the detection on, default is R
-#' @param verbose Prints which wells have been removed in the terminal. Should be used when first investigating data to allow for follow up plots with vascr_isolate_well to be conducted.
-#'
-#' @return A standard ECIS dataframe, minus the detected wells
-#' 
-#' @importFrom dplyr filter select
-#' 
-#' @export
-#'
-#' @examples
-#' # Make a defective well in the dataset
-#' baddata = growth.df
-#' welltobreak = "B1"
-#' baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
-#' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
-#' 
-#' welltobreak = "H4"
-#' baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
-#' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
-#' 
-#' vascr_exclude_badwells(baddata, threshold = 1)
-#' vascr_exclude_badwells(growth.df, threshold = 1)
-#' 
-vascr_exclude_badwells = function(data.df, threshold = 5, frequency = 4000, unit = "R", verbose = TRUE)
-{
-
- # Detect if any bad wells are present
-  
- toremove = vascr_detect_badwells(data.df, threshold = threshold, frequency = frequency, unit = unit)
- 
- if(nrow(toremove) ==0) # If nothing is bad, just return the data frame
- {
-   if (verbose)
-   {
-   print("No bad wells detected")
-   }
-   return(data.df)
- }
- 
- 
- toremove$expwells = paste(toremove$Experiment, ":", toremove$Well, sep="")
- data.df$expwells = paste(data.df$Experiment, ":", data.df$Well, sep="")
- 
- expwellstogo = toremove$expwells
- 
- if(verbose)
- {
- print("Wells Removed:")
- print(expwellstogo)
- }
- 
- toreturn = dplyr::filter(data.df,!expwells %in% expwellstogo)
- toreturn = dplyr::select(toreturn, -c("expwells"))
- 
- return(toreturn)
- 
-  
-}

@@ -4,7 +4,7 @@
 \alias{vascr_plot_plate}
 \title{Plot the wells of a 96 well plate}
 \usage{
-vascr_plot_plate(data.df, unit = "R", frequency = 4000, verbose = TRUE)
+vascr_plot_plate(data.df, unit = "R", frequency = 4000, ...)
 }
 \arguments{
 \item{data.df}{A standard ECIS dataframe. Ideally this will contain only one experiment, but multiple experiments are supported.}

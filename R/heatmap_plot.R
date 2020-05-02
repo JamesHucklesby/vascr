@@ -13,10 +13,12 @@
 #' vascr_plot_heatmap(growth.df, 100, "Rb")
 #' vascr_plot_heatmap(growth.df, 100, "R", 4000)
 #' 
-vascr_plot_heatmap = function(data, time, unit, frequency, title ="Title")
+vascr_plot_heatmap = function(data, ...)
 {
 
-data = vascr_subset(data, time = time, unit = unit, frequency = frequency)
+  # Gather graph data based on the ...
+  dots = list(...)
+  data = do.call_relevant("vascr_prep_graphdata", data, dots)
 
 sumdata = group_by(data, Well)
 sumdata = summarise(sumdata, number = n())
@@ -144,8 +146,12 @@ vascr_plot_samplemap = function(data, title ="Title", stripidentical = TRUE)
 #' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary")
 #' 
 #' 
-vascr_plot_line = function(data, priority = NULL)
+vascr_plot_line = function(data, priority = NULL, ...)
 {
+  
+  # Gather graph data based on the ...
+  dots = list(...)
+  data = do.call_relevant("vascr_prep_graphdata", data, dots)
 
   # Search for priority if it's not found
   priority = vascr_priority(data, c("Time", "Value"), priority = priority)
@@ -360,8 +366,11 @@ vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, sa
 #' 
 #' unique(data$Well) 
 #' 
-vascr_plot_column = function(data, priority = NULL)
+vascr_plot_column = function(data, priority = NULL, ...)
 {
+  # Gather graph data based on the ...
+  dots = list(...)
+  data = do.call_relevant("vascr_prep_graphdata", data, dots)
   
   priority = vascr_priority(data, c("Value", "Well"), priority)
   data$Sample = as.character(data$Sample)
@@ -460,8 +469,89 @@ vascr_plot_column = function(data, priority = NULL)
 }
 
 
+#' Title
+#'
+#' @param name 
+#' @param payload 
+#' @param arguments 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+do.call_relevant = function(name, payload, arguments)
+{
+  function_args = formals(name)
+  
+  toforward = names(function_args) %in% names(arguments)
+  
+  toforwardnames = as.vector(names(function_args))[toforward]
+  
+  present_args = arguments[toforwardnames]
+
+  if(is.data.frame(payload))
+  {
+   present_args[["data"]] = payload
+  }
+  else if(is.ggplot(payload))
+  {
+    present_args[["plot"]] = payload
+  }
+  
+  return(do.call(name, present_args))
+}
+  
 
 
+#' Title
+#'
+#' @param data 
+#' @param priority
+#' @param confidence 
+#' @param ... Any arguement to vascr_prep_graphdata or vascr_polish_plot
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' vascr_plot_anova(growth.df, confidence = 0.04999, unit = "Rb", time = 100, rotate_x_angle = 45)
+#' 
+vascr_plot_anova = function(data,priority,confidence, ...)
+{
+  
+  # Gather graph data based on the ...
+  dots = list(...)
+  data = do.call_relevant("vascr_prep_graphdata", data, dots)
+  
+  if(!length(unique(c(data$Time, data$Unit, data$Frequency, data$Instrument)))==4)
+  {
+    stop("vascr_plot_anova only supports a single time, unit, frequency and instrument at the moment. Please manually create an ANOVA if you need ot ask other  statistical quesitons.")
+  }
+  
+  # Add structure checks in here
+  
+  if(!(vascr_detect_normal(data)==FALSE))
+  {
+    warning("Normalised dataset detected, ANOVA results may be invalid")
+  }
+  
+  time = data$Time[1]
+  unit = data$Unit[1]
+  frequency = data$Frequency[1]
+  
+  summary = vascr_summarise(data, level = "summary")
+  
+  labeltable = vascr_make_significance_table(data, time, unit, frequency, confidence, format = "toplot")
+  
+  filtered2.df = left_join(summary, labeltable, by = "Sample")
+  
+  plot = ggplot(filtered2.df, aes(x = Sample, y = Value, label = Label)) + geom_bar(stat = "identity") +
+    geom_text(aes(label=Label),position=position_stack(0.8))
+  
+  plot = do.call_relevant("vascr_polish_plot", payload = plot, arguments = dots)
+  
+  return(plot)
+}
 
 
 

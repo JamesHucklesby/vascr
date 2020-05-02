@@ -30,8 +30,12 @@
 #' data = growth.df
 #' replication = "wells"
 #' 
-vascr_plot_frequency = function(data = growth.df, replication = "summary", unit = "R", time = 50, frequency = "raw", samplecontains = "", experiment = "", errorbars = Inf, errorcalc = "sem", alignkey = NULL, normtime = NULL, preprocessed = FALSE, continuouscontains = NULL, stripidentical = TRUE, alpha = 0.1)
+vascr_plot_frequency = function(data, priority, ...)
 {
+  
+  # Gather graph data based on the ...
+  dots = list(...)
+  data = do.call_relevant("vascr_prep_graphdata", data, dots)
 
 replication = vascr_test_summary_level(data)
   

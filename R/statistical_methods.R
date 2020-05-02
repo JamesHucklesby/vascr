@@ -269,7 +269,7 @@ vascr_summarise <- function(data.df, level = "summary") {
   # Use a test to check what the current summary level of the data is
   summary_level = vascr_test_summary_level(data.df)
   
-  if(level == "")
+  if(level == "" || level == "quality")
   {
     return(data.df)
   }

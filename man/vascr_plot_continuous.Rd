@@ -4,23 +4,14 @@
 \alias{vascr_plot_continuous}
 \title{Plot a categorical ECIS variable}
 \usage{
-vascr_plot_continuous(
-  data,
-  unit = "R",
-  frequency = 4000,
-  replication = "summary",
-  time,
-  error = Inf,
-  alphavalue = 0.5,
-  xlab = NULL,
-  ylab = "Value",
-  title = "",
-  cols,
-  continuous
-)
+vascr_plot_continuous(data, cols, continuous, ...)
 }
 \arguments{
 \item{data}{A standard ECIS dataset}
+
+\item{cols}{The column names to display}
+
+\item{continuous}{The nominated continuous variable}
 
 \item{unit}{The unit to plot}
 
@@ -39,10 +30,6 @@ vascr_plot_continuous(
 \item{ylab}{Label on the Y axis}
 
 \item{title}{The title}
-
-\item{cols}{The column names to display}
-
-\item{continuous}{The nominated continuous variable}
 }
 \value{
 a ggplot 2 object

@@ -4,7 +4,7 @@
 \alias{vascr_plot_heatmap}
 \title{Title}
 \usage{
-vascr_plot_heatmap(data, time, unit, frequency, title = "Title")
+vascr_plot_heatmap(data, ...)
 }
 \arguments{
 \item{data}{}

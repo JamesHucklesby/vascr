@@ -4,27 +4,20 @@
 \alias{vascr_plot_isolate}
 \title{Animation removed due to compatabilty issues with CRAN. To be re-introduced later.}
 \usage{
-vascr_plot_isolate(
-  data.df,
-  well,
-  title = "Well isolation plot",
-  unit = "R",
-  frequency = 4000,
-  ...
-)
+vascr_plot_isolate(data.df, well, ...)
 }
 \arguments{
 \item{data.df}{The dataset the well is in}
 
 \item{well}{The well to be isolated}
 
+\item{...}{Other conditions to pass on to the vascr_plot command that generates the graph}
+
 \item{title}{The title of the plot}
 
 \item{unit}{The unit to plot. Default is R}
 
 \item{frequency}{The frequency to plot. Default is 4000}
-
-\item{...}{Other conditions to pass on to the vascr_plot command that generates the graph}
 }
 \value{
 A ggplot graph showing the isoated well and the experimental median well

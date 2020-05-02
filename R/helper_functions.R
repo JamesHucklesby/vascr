@@ -212,7 +212,6 @@ vascr_remove_metadata = function(data.df, subset = "all")
 }
 
 
-
 #' Title
 #'
 #' @param data 
@@ -227,6 +226,11 @@ vascr_remove_metadata = function(data.df, subset = "all")
 vascr_priority = function(data, explicit = NULL, priority = NULL)
 {
   
+  if(vascr_detect_level(data)=="summary" || vascr_detect_level(data)=="well")
+  {
+    explicit = c(explicit, "Well")
+  }
+  
   builtin = c("Value", "Sample", "Time", "Experiment", "Instrument", "Frequency", "Unit", "Well")
   
   if(is.null(priority))
@@ -235,8 +239,7 @@ vascr_priority = function(data, explicit = NULL, priority = NULL)
   }
   else
   {
-    defaultstack = c(priority,builtin)
-    defaultstack = unique(defaultstack)
+    defaultstack = priority
   }
   
   if(is.null(explicit))

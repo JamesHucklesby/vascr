@@ -11,7 +11,9 @@ vascr_subset(
   frequency = Inf,
   samplecontains = "",
   experiment = "",
-  well = ""
+  well = "",
+  deviation = 0,
+  max_deviation = 0
 )
 }
 \arguments{
@@ -52,4 +54,6 @@ unique(data$Time)
 
 data = vascr_subset(growth.df, samplecontains = "5000")
 data.df = growth.df
+
+unique(vascr_subset(growth.df, max_deviation = 0.3)$Well)
 }

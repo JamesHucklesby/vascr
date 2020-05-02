@@ -4,7 +4,7 @@
 \alias{vascr_polish_plot}
 \title{Post-processing on ECIS plots to make them a bit more pretty}
 \usage{
-vascr_polish_plot(plot, rotate_x_angle = 45, logscale = "")
+vascr_polish_plot(plot, rotate_x_angle = 45, logscale = "", title = NULL)
 }
 \arguments{
 \item{plot}{The plot to format}

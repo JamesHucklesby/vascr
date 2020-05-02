@@ -4,23 +4,7 @@
 \alias{vascr_plot_frequency}
 \title{Generate frequency plots}
 \usage{
-vascr_plot_frequency(
-  data = growth.df,
-  replication = "summary",
-  unit = "R",
-  time = 50,
-  frequency = "raw",
-  samplecontains = "",
-  experiment = "",
-  errorbars = Inf,
-  errorcalc = "sem",
-  alignkey = NULL,
-  normtime = NULL,
-  preprocessed = FALSE,
-  continuouscontains = NULL,
-  stripidentical = TRUE,
-  alpha = 0.1
-)
+vascr_plot_frequency(data, priority, ...)
 }
 \arguments{
 \item{data}{A vascr formatted datapoint}
@@ -35,6 +19,8 @@ vascr_plot_frequency(
 
 \item{experiment}{}
 
+\item{error}{}
+
 \item{alignkey}{}
 
 \item{normtime}{}
@@ -44,8 +30,6 @@ vascr_plot_frequency(
 \item{continuouscontains}{}
 
 \item{stripidentical}{}
-
-\item{error}{}
 }
 \value{
 

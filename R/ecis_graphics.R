@@ -65,48 +65,27 @@
 
 #vascr_plot(growth.df, time = 100, unit = "Cm",  frequency = 4000, level = "summary")
 
+#vascr_plot(growth.df, level = "quality", type = "plate)
 
 
-vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = FALSE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE, sortkeyincreasing = TRUE, showpoints = FALSE, singleplot = FALSE, priority = NULL, errortype = "sem", forcetype = NULL) 
+vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = FALSE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE, sortkeyincreasing = TRUE, showpoints = FALSE, singleplot = FALSE, priority = NULL, errortype = "sem", visualisation = NULL, threshold = 0) 
   {
+  
   
   if(any(is.list(unit), is.list(frequency), is.list(time)) & !singleplot)
   {
-    allarguments = as.list(match.call())
-    allarguments["singleplot"] = TRUE # Block more than one loop, allowing for only single level stacked data structures
-    print(allarguments)
+    singleplot = TRUE
+    allarguements = as.list(environment())
     multiplot = do.call(vascr_multiplot, allarguments)
     return(multiplot)
   }
   
-
-# Subset data -------------------------------------------------------------
-  data = vascr_prep_graphdata(data, unit, frequency, time, samplecontains, experiment, error, alignkey, normtime, divide, preprocessed, continuouscontains, stripidentical, sortkeyincreasing, level, errortype)
-  
-
-# Create labels -----------------------------------------------------------
-  
-  # Use the default name of the unit on the Y axis
-  if (ylab == "Value")
+  if(level == "quality")
   {
-    ylab = vascr_titles(unit)
+    print(as.list(environment()))
+    do.call("vascr_plot_quality", as.list(environment()))
   }
   
-  # Check frequency is a real value
-  frequency = vascr_find_frequency(data, frequency)
-  
-  # Generate a title, containing the Hz if the unit is not modeled
-  if (title == "Title")
-  {
-    if(vascr_is_modeled_unit(unit))
-    {
-      title = unit
-    }
-    else
-    {
-    title = paste(unit, " (",frequency," Hz)", sep = "")
-    }
-  }
 
 
 
@@ -170,6 +149,7 @@ vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", tim
 #' vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100),100), level = "wells")
 #' 
 #' vascr_multiplot(growth.df, frequency = c(2000,4000), unit = "R")
+#' 
 #' 
 vascr_multiplot = function(data, unit = "all", frequency = 0, time = Inf, ...)
 {
@@ -300,8 +280,38 @@ vascr_make_panel <- function(..., plots = NULL) {
 #' vascr_polish_plot(plot)
 #' vascr_polish_plot(plot, rotate_x = FALSE)
 #' 
-vascr_polish_plot = function(plot, rotate_x_angle = 45, logscale = "")
+vascr_polish_plot = function(plot, rotate_x_angle = 45, logscale = "", title = NULL)
 {
+  
+  # # Create labels -----------------------------------------------------------
+  # 
+  # # Use the default name of the unit on the Y axis
+  # if (ylab == "Value")
+  # {
+  #   ylab = vascr_titles(unit)
+  # }
+  # 
+  # # Check frequency is a real value
+  # frequency = vascr_find_frequency(data, frequency)
+  # 
+  # # Generate a title, containing the Hz if the unit is not modeled
+  # if (title == "Title")
+  # {
+  #   if(vascr_is_modeled_unit(unit))
+  #   {
+  #     title = unit
+  #   }
+  #   else
+  #   {
+  #     title = paste(unit, " (",frequency," Hz)", sep = "")
+  #   }
+  # }
+  
+  
+  if(!(is.null(title)))
+  {
+    plot = plot + ggtitle(title)
+  }
   
   if(str_detect(logscale, "x"))
   {
@@ -315,10 +325,10 @@ vascr_polish_plot = function(plot, rotate_x_angle = 45, logscale = "")
   
   if(!missing(rotate_x_angle))
   {
-  plot = plot + rotate_x_text(angle = 45)
+  plot = plot + theme(axis.text.x = element_text(angle = rotate_x_angle))
   }
 
-  return(plot + theme_bw())
+  return(plot)
 }
 
 
@@ -385,27 +395,26 @@ vascr_polish_plot = function(plot, rotate_x_angle = 45, logscale = "")
 #' 
 #' vascr_plot_isolate(growth.df, well = "A3")
 #' 
-vascr_plot_isolate= function(data.df, well, title = "Well isolation plot", unit = "R", frequency = 4000, ...)
+vascr_plot_isolate= function(data.df, well, ...)
 {
   
-  if(title=="Title")
-  {
-    title = "Well Isolation Plot"
-  }
+  # Gather graph data based on the ...
+  dots = list(...)
+  data = do.call_relevant("vascr_prep_graphdata", data, dots)
   
   well = vascr_standardise_wells(well)
   data.df$Well = vascr_standardise_wells(data.df$Well)
   cleandata.df = vascr_subset(data.df, unit = unit, frequency = frequency)
   
-  badwell = vascr_subset(cleandata.df, well = well)
-  badwell$Sample = paste(badwell$Well, badwell$Sample,badwell$Experiment)
+  quality = vascr_subset(cleandata.df, well = well)
+  quality$Sample = paste(quality$Well, quality$Sample,quality$Experiment)
   
   medianwell = cleandata.df %>%
     group_by(Time) %>%
     mutate(Value = median(Value), Sample = "Experimental Mean Well", Well = "Z00") %>%
     ungroup
   
-  toplot.df = rbind(badwell, medianwell)
+  toplot.df = rbind(quality, medianwell)
   
   plot = vascr_plot(toplot.df, unit, frequency, "wells", title = title, preprocessed = TRUE, ...)
   
@@ -428,18 +437,18 @@ vascr_plot_isolate= function(data.df, well, title = "Well isolation plot", unit 
 #' @examples
 #' vascr_plot_plate(growth.df, unit = "Rb")
 #' 
-vascr_plot_plate = function(data.df, unit = "R", frequency = 4000, verbose = TRUE)
+vascr_plot_plate = function(data.df, unit = "R", frequency = 4000, ...)
 {
-  # Cut the data down to what is needed
-  data = vascr_subset(data.df, unit = unit, frequency = frequency)
+  # Gather graph data based on the ...
+  dots = as.list(environment())
+  data = do.call_relevant("vascr_prep_graphdata", data, dots)
+  
   
   # Grab the column and row components from each well to allow plate separation
   data$col = substr(data$Well,1,1)
   data$row = substr(data$Well,2,3)
   
   plot =  ggplot(data=data, aes(x=Time, y = Value, colour = Sample, linetype = Experiment)) + geom_line() + facet_grid(col~row) + labs(x = "Time(hours)", y=vascr_titles(unit,frequency))
-  
-  print(vascr_detect_badwells(data.df, threshold = 0))
   
   return (plot)
 }

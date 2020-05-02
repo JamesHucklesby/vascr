@@ -4,12 +4,10 @@
 \alias{vascr_plot_column}
 \title{Title}
 \usage{
-vascr_plot_column(data, confidence = 0.049, priority = NULL)
+vascr_plot_column(data, priority = NULL, ...)
 }
 \arguments{
 \item{data}{}
-
-\item{confidence}{}
 
 \item{replication}{}
 
@@ -26,6 +24,8 @@ vascr_plot_column(data, confidence = 0.049, priority = NULL)
 \item{unit}{}
 
 \item{frequency}{}
+
+\item{confidence}{}
 }
 \value{
 
