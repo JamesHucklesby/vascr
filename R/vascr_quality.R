@@ -80,19 +80,21 @@ vascr_detect_deviation = function(data, deviation = 0, frequency = 4000, unit = 
 vascr_detect_max_deviation = function(data, max_deviation = 0, frequency = 4000, unit = "R")
 {
   
-  
+    # First we use a related funciton to detect the deviation for each data point. Do not strip out any data at this point, as any high values need the whole well removed when this funciton is called
      deviation =  vascr_detect_deviation(data = data, deviation = 0, frequency = frequency, unit = unit)
   
+    # Then we ungroup, and find the maximum well for each well:experiment pair
       metadata = deviation%>%
       ungroup() %>%
-      group_by(Well, Experiment, Sample) %>%
+      group_by(Well, Experiment) %>%
       summarise(Max_Deviation = max(Deviation)) %>%
       arrange(desc(Max_Deviation))
     
+    # Then we generate a lookup for the remaining data, ignoring Time, Value and Deviation as these are no longer relevant
     mergedata = deviation %>% ungroup() %>% select(-Time, -Value, -Deviation) %>% distinct()
+    metadata = left_join(metadata, mergedata, by = c("Well", "Experiment"))
     
-    metadata = left_join(metadata, mergedata, by = c("Well", "Experiment", "Sample"))
-    
+    # Subset out any wells where the max deviation is greater than the max deviation specified
     metadata = subset(metadata, metadata$Max_Deviation >= max_deviation)
     
     return(metadata)
@@ -121,28 +123,33 @@ vascr_detect_max_deviation = function(data, max_deviation = 0, frequency = 4000,
 #' @importFrom gridExtra grid.arrange
 #'
 #' @examples
-#' vascr_plot_deviation(growth.df)
+#' grid = vascr_plot_deviation(growth.df)
 #' vascr_plot_deviation(growth.df, visualisation = "bar")
 #' vascr_plot_deviation(growth.df, visualisation = "plate")
 #' vascr_plot_deviation(growth.df, visualisation = "line")
 #' vascr_plot_deviation(growth.df, max_deviation = 0.2)
 #' 
-vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority = NULL, unit = "R", frequency = 4000, visualisation = NULL, ...)
+vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority = NULL, unit = "R", frequency = 4000, visualisation = NULL, title = "",  ...)
 {
   
-  # Gather graph data based on the ...
+  # Gather graph data based on the ... and pass it all through to vascr_prep_graphdata
   dots = list(...)
   dots$frequency = frequency
   dots$unit = unit
   data = do.call_relevant("vascr_prep_graphdata", data, dots) 
   
+  # If there is no deviation set, set this equal to max_deviation. Will ensure plotting is consistent.
   if(deviation == 0)
   {
     deviation = max_deviation
   }
-
   
+  # Calculate priorities for plotting variables
   priority = vascr_priority(data, explicit = c("Well", "Value", "Time"), priority = priority)
+  
+  
+  
+  # Generate the line visualisation ##########################################################
   
   
   if(visualisation == "line" || is.null(visualisation))
@@ -151,6 +158,7 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
     # Run the deviation calculation
     
     deviationdata = vascr_detect_deviation(data, deviation = 0, frequency = frequency, unit = unit)
+    
     
     
     if(length(priority)==1)
@@ -163,26 +171,30 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
     {
       grouping = interaction(deviationdata$Well, priority[[1]], priority[[2]])
       
-      if(priority[[2]]=="Experiment" & is.null(visualisation))
+      if(is.null(visualisation))
       {
-        plot = ggplot(deviationdata, aes_string(x = "Time", y = "Deviation", group = grouping, color = priority[[1]]))+ geom_line()
+        plot = ggplot(deviationdata, aes_string(x = "Time", y = "Deviation", ymax = "Deviation", ymin = "Deviation", group = grouping, color = priority[[1]], linetype = priority[[2]], fill = priority[[1]]))+
+          geom_line() + geom_ribbon(alpha = 0.5)+ggtitle(title)
       }
-      else
+      else # Make line style represent the second priority
       {
         plot = ggplot(deviationdata, aes_string(x = "Time", y = "Deviation", group = grouping, color = priority[[1]], linetype = priority[[2]]))+
           geom_line()
       }
     }
     
+    # If deviation is specified, plot it on the graph (this will be equal to max_deviation if only that was specified)
     if(deviation>0)
     {
       plot = plot + geom_hline(yintercept = deviation, color = "red")
     }
     
-    if(priority[[1]] != "Experiment" & is.null(visualisation))
-    {
-      plot = plot + facet_wrap(vars(Experiment))
-    }
+    # If experiment is priority 1, and we're in a matrix, facet out the different experiments. This maintains the separation in the whole experiment matrix, and keeps things tidy. However, we don't facet outside of this, as comparasins on failure time may become important. This could be up for debate in future revisions.
+    
+    #if(priority[[1]] != "Experiment" & is.null(visualisation))
+    #{
+    #  plot = plot + facet_wrap(vars(Experiment))
+    #}
     
     p0 = do.call_relevant("vascr_polish_plot", plot, dots)
     
@@ -271,7 +283,10 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
   }
   else
   {
-    return(grid.arrange(p2, p1, p0))
+    
+    grid = vascr_make_panel(p0, p1, p2)
+    
+    return(grid)
   }
   
   
@@ -304,12 +319,13 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
 vascr_exclude_deviation = function(data, deviation = 0.5, max_deviation = 0, frequency = 4000, unit = "R", verbose = TRUE)
 {
   
+  # Calculate both sets of deviation data
   toremovedeviation = vascr_detect_deviation(data, deviation = deviation, frequency = frequency, unit = unit)
   toremovemaxdeviation = vascr_detect_max_deviation(data, max_deviation = max_deviation, frequency = frequency, unit = unit)
   
   
-  
-  if((nrow(toremovedeviation) + nrow(toremovemaxdeviation)) ==0) # If nothing is bad, just return the data frame
+  # If nothing is bad, just return the data frame
+  if((nrow(toremovedeviation) + nrow(toremovemaxdeviation)) ==0) 
   {
     print("No wells with an unacceptably high deviation detected")
     return(data.df)
@@ -349,5 +365,3 @@ vascr_exclude_deviation = function(data, deviation = 0.5, max_deviation = 0, fre
   
   
 }
-
-

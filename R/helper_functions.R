@@ -14,6 +14,57 @@ getmode <- function(v) {
 }
 
 
+#' Calculate the median well in a set of wells
+#' 
+#' This function finds the well that is the median of a set. This will be the most spacially central well on a plate. Using median eliminates the risk of well locations clashing, as the returned well will always be one of the set input. This also eliminates the noise associated with single replicates that need to be moved to the edge of a plate for technical reasons, however it will also mask that this movement has happened.
+#' 
+#' Works for both vertical, horrosontal and diffuse well configurations
+#'
+#' @param wells A vector of wells to find the median of
+#'
+#' @return The name of the median well
+#' @export
+#'
+#' @examples
+#' vascr_median_well (c("A1", "B2", "C3"))
+#' vascr_median_well(c("A1", "NA", "NA", "NA"))
+vascr_median_well = function(wells)
+{
+  
+  # First we create a temporary data frame to hold the transformations. Each well entered is a row
+  Well = vascr_standardise_wells(wells)
+  Well = as.data.frame(Well)
+  
+  if(any("NA" %in% Well$Well))
+  {
+    warning("NA's in averaged wells, these will be removed")
+    Well = subset(Well, Well != "NA")
+  }
+  
+  # Explode out rows and columns
+  explodedwells = vascr_explode_wells(Well)
+  
+  # Convert row letters on the plate into numbers for finding the median
+  letternums <- letters[1:26]
+  explodedwells$lowerrow = casefold(explodedwells$row, upper = FALSE)
+  explodedwells$numberrow = match(explodedwells$lowerrow, letternums)
+  
+  # Check everything is numeric to avoid errors
+  explodedwells$numberrow = as.numeric(explodedwells$numberrow)
+  explodedwells$numbercol = as.numeric(explodedwells$col)
+  
+  medianrow = median(explodedwells$numberrow)
+  mediancol = median(explodedwells$numbercol)
+  
+  medianrow = letternums[medianrow]
+  
+  finalwell = paste(medianrow, mediancol)
+  finalwell = vascr_standardise_wells(finalwell)
+  
+  return(finalwell)
+}
+
+
 #' Standardise well names accross import types
 #' 
 #' Replaces A1 in strings with A01. Important for importing ABP files which may use either notation. Returns NA if the string could not be normalised, which can be configured to throw a warning in import code.

@@ -128,30 +128,24 @@ vascr_plot_samplemap = function(data, title ="Title", stripidentical = TRUE)
 #' @param data 
 #' @param replication 
 #' @param error 
-#' @param title 
-#' @param xlab 
-#' @param ylab 
-#' @param linesize 
-#' @param alphavalue 
+#' @param alpha
 #'
 #' @return
 #' @export
 #'
 #' @examples
-#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells")
-#' vascr_plot_line(data)
-#' vascr_plot_line(data, priority = c("Experiment", "Sample"))
+#' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", title = "AAA")
+#' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "experiments", title = "AAA")
+#' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "wells", title = "AAA")
 #' 
-#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments")
-#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary")
-#' 
-#' 
-vascr_plot_line = function(data, priority = NULL, ...)
+vascr_plot_line = function(data, priority = NULL, error = Inf, alpha = 0.1, ...)
 {
   
   # Gather graph data based on the ...
   dots = list(...)
+  dots["error"] = error
   data = do.call_relevant("vascr_prep_graphdata", data, dots)
+
 
   # Search for priority if it's not found
   priority = vascr_priority(data, c("Time", "Value"), priority = priority)
@@ -167,42 +161,45 @@ replication = vascr_detect_level(data)
   
 if (replication == "wells") {
   
+  error = 0
+  
   priority = priority[!priority == "Well"] # Remove well from the priority as it's no longer required
   
   if(length(priority) ==1)
   {
   plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = interaction(data$Well, priority[1]), colour = priority[1])) + geom_line()
-  return(plot)
   }
   else if (length(priority) == 2)
   {
     plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = interaction(data$Well, priority[2]), colour = priority[1], linetype = priority[2]))    + geom_line()
-    return(plot)
-  }
-  else
-  {
-    error("Supported number of variables exceeded. Please don't attemtpt to plot more than two more variables on top of time and value at once")
-    stop()
   }
   
 }
+
+else{  
   
+if (length(priority) == 0) {
   
-if (length(priority) == 1) {
+  plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, ymin = ymin, ymax = ymax)) + geom_line()
+  
+}else if (length(priority) == 1) {
   
   plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, colour = priority[1], ymin = ymin, ymax = ymax, fill = priority[1])) + geom_line()
-  return(plot)
   
-}else if (length(priority)==2) {
+}else if (length(priority)>1) {
   
   plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, colour = priority[1], linetype = priority[2], fill = priority[1], ymin = "ymin", ymax = "ymax")) + geom_line()
-  plot
-} else
+}
+}
+
+if(is.infinite(error))
 {
-  error("Supported number of variables exceeded. Please don't attempt to plot more than two variables on top of time and value at once")
-  stop()
+  plot = plot + geom_ribbon(alpha = alpha)
 }
   
+plot = do.call_relevant("vascr_polish_plot", plot, dots)
+
+return(plot)
 
 }
 

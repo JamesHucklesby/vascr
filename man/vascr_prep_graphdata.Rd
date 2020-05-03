@@ -20,7 +20,8 @@ vascr_prep_graphdata(
   stripidentical = TRUE,
   sortkeyincreasing = TRUE,
   level = "",
-  errortype = "sem"
+  errortype = "sem",
+  replication = "summary"
 )
 }
 \arguments{

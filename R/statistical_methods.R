@@ -26,7 +26,6 @@
 #' @importFrom ggpubr ggqqplot
 #' @importFrom ggplot2 geom_density geom_rug position_jitter geom_histogram geom_vline geom_boxplot stat_smooth geom_hline ggtitle xlab ylab position_stack
 #' @importFrom car leveneTest
-#' 
 #' @importFrom cowplot plot_grid
 #' @importFrom gridExtra arrangeGrob
 #' 
@@ -35,7 +34,6 @@
 #' @export
 #'
 #' @examples
-#' growth.df$Instrument = "ECIS"
 #' vascr_ANOVA(growth.df, 'R',4000,50)
 #' 
 vascr_ANOVA = function(data.df, unit, frequency, time) {
@@ -50,7 +48,7 @@ vascr_ANOVA = function(data.df, unit, frequency, time) {
     filtered.df = subset(filtered.df, Unit == unit)
     filtered.df = subset(filtered.df, Frequency == frequency)
     
-    timeplot = vascr_plot(data.df, unit = unit, frequency = frequency, title = "Time Selected")
+    timeplot = vascr_plot(data.df, unit = unit, frequency = frequency, title = "Time Selected", priority = "Sample")
     timeplot = timeplot + geom_vline(xintercept = timetouse, color = "blue")
     timeplot = timeplot + labs(title = "Timepoint selected")
     
@@ -126,7 +124,7 @@ vascr_ANOVA = function(data.df, unit, frequency, time) {
     timeplot = vascr_polish_plot(timeplot)
     p1 = vascr_polish_plot(p1)
     
-    differences = vascr_plot(data.df, unit = unit, frequency = frequency, time = time, replication = "summary", confidence = 0.949999)
+    differences = vascr_plot(data.df, unit = unit, frequency = frequency, time = time, confidence = 0.949999, priority = "Sample")
     
     ##normcheck = grid.arrange(qqplot, normaloverlayplot, ncol = 2)
     
@@ -260,7 +258,7 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, confide
 #'
 #' @examples
 #' 
-#' data = vascr_summarise(growth.df)
+#' vascr_summarise(growth.df, level = "summary")
 #' vascr_summarise(growth.df, "experiments")
 #' vascr_summarise(growth.df, "wells")
 #' 

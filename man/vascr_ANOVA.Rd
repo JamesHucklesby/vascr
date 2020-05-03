@@ -31,7 +31,6 @@ To interpret the data first check that the data is roughly linear on the Shapiro
 Finally look at the Analysis of Variance Table. This will tell you if you had any differences between
 }
 \examples{
-growth.df$Instrument = "ECIS"
 vascr_ANOVA(growth.df, 'R',4000,50)
 
 }
