@@ -22,21 +22,18 @@
 #' 
 #' @importFrom graphics hist
 #' @importFrom stats lm anova aov TukeyHSD residuals shapiro.test
-#' @importFrom s20x normcheck 
 #' @importFrom ggpubr ggqqplot
 #' @importFrom ggplot2 geom_density geom_rug position_jitter geom_histogram geom_vline geom_boxplot stat_smooth geom_hline ggtitle xlab ylab position_stack
 #' @importFrom car leveneTest
 #' @importFrom cowplot plot_grid
 #' @importFrom gridExtra arrangeGrob
 #' 
-#' 
-#' 
 #' @export
 #'
 #' @examples
-#' vascr_ANOVA(growth.df, 'R',4000,50)
+#' vascr_plot_anova(growth.df, 'R',4000,50)
 #' 
-vascr_ANOVA = function(data.df, unit, frequency, time) {
+vascr_plot_anova = function(data.df, unit, frequency, time) {
     
     # Round the number given to the function to the nearest actual measurement
     timetouse = vascr_find_time(data.df, time)
@@ -48,7 +45,7 @@ vascr_ANOVA = function(data.df, unit, frequency, time) {
     filtered.df = subset(filtered.df, Unit == unit)
     filtered.df = subset(filtered.df, Frequency == frequency)
     
-    timeplot = vascr_plot(data.df, unit = unit, frequency = frequency, title = "Time Selected", priority = "Sample")
+    timeplot = vascr_plot_line(data.df, unit = unit, frequency = frequency, title = "Time Selected", priority = "Sample", level = "summary")
     timeplot = timeplot + geom_vline(xintercept = timetouse, color = "blue")
     timeplot = timeplot + labs(title = "Timepoint selected")
     
@@ -124,13 +121,8 @@ vascr_ANOVA = function(data.df, unit, frequency, time) {
     timeplot = vascr_polish_plot(timeplot)
     p1 = vascr_polish_plot(p1)
     
-    differences = vascr_plot(data.df, unit = unit, frequency = frequency, time = time, confidence = 0.949999, priority = "Sample")
+    differences = vascr_plot_bar_anova(data.df, unit = "R", time = 100, frequency = 4000, confidence = 0.0499)
     
-    ##normcheck = grid.arrange(qqplot, normaloverlayplot, ncol = 2)
-    
-    ##checks = grid.arrange(overallplot,timeplot,qqplot, normaloverlayplot, p1, vascr_polish_plot(differences), ncol = 2)
-    
-    ##overall = grid.arrange(checks, differences)
     
    grid =  plot_grid(arrangeGrob(timeplot, overallplot, ncol = 2),
              arrangeGrob(qqplot, normaloverlayplot, p1, ncol = 3),
@@ -267,7 +259,7 @@ vascr_summarise <- function(data.df, level = "summary") {
   # Use a test to check what the current summary level of the data is
   summary_level = vascr_test_summary_level(data.df)
   
-  if(level == "" || level == "quality")
+  if(level == "")
   {
     return(data.df)
   }

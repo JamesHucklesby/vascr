@@ -23,7 +23,7 @@ Title
 }
 \examples{
 
-vascr_plot_heatmap(growth.df, 100, "Rb")
+vascr_plot_heatmap(growth.df, time = 100, unit = "Rb")
 vascr_plot_heatmap(growth.df, 100, "R", 4000)
 
 }

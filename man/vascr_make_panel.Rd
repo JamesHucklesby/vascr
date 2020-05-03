@@ -4,7 +4,7 @@
 \alias{vascr_make_panel}
 \title{Title}
 \usage{
-vascr_make_panel(..., plots = NULL)
+vascr_make_panel(..., plots = NULL, legend_from_index = 1)
 }
 \arguments{
 \item{...}{}

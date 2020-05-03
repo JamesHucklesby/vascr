@@ -276,8 +276,8 @@ vascr_plot_model(growth, error = 1) # You can also pass vascr_plot arguements th
 vascr_plot(growth, time = 50, replication = "summary", confidence = .05)
 
 # Run ANOVA analyasis
-vascr_ANOVA(growth, time = 50, unit = "R", frequency = 4000)
-vascr_ANOVA(growth, time = 100, unit = "R", frequency = 4000)
+vascr_plot_anova(growth.df, time = 50, unit = "R", frequency = 4000)
+vascr_plot_anova(growth.df, time = 100, unit = "R", frequency = 4000)
 ```
 
 

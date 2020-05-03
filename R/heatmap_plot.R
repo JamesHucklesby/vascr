@@ -1,4 +1,4 @@
-#' Title
+#' Plot a heatmap of a particular timepoint
 #'
 #' @param data 
 #' @param time 
@@ -10,7 +10,7 @@
 #'
 #' @examples
 #' 
-#' vascr_plot_heatmap(growth.df, 100, "Rb")
+#' vascr_plot_heatmap(growth.df, time = 100, unit = "Rb")
 #' vascr_plot_heatmap(growth.df, 100, "R", 4000)
 #' 
 vascr_plot_heatmap = function(data, ...)
@@ -20,19 +20,12 @@ vascr_plot_heatmap = function(data, ...)
   dots = list(...)
   data = do.call_relevant("vascr_prep_graphdata", data, dots)
 
-sumdata = group_by(data, Well)
-sumdata = summarise(sumdata, number = n())
-
-if(max(sumdata$number)>1)
-{
-  warning("More than one record per well. More than one plate may have been superimposed. Use plot with care.")
-}
-
-if(var(data$Time)>0)
-{
-  warning("More than one time point selected. Plotting mean time point in range")
-  time = vascr_find_time(data,mean(time))
-}
+ # Warn and fix if more than one time is selected
+  if(var(data$Time)>0)
+  {
+    warning("More than one time point selected. Plotting mean time point in range")
+    time = vascr_find_time(data,mean(time))
+  }
 
 data = vascr_explode_wells(data)
 
@@ -42,10 +35,14 @@ plot = ggplot(data, aes(col, row, fill= Value)) +
   xlab("Column") +
   ylab("Row")+
   scale_x_discrete(position = "top")+
-  ggtitle(title)
+  facet_wrap(vars(Experiment), scales = "free_x")
 
-return(vascr_polish_plot(plot, rotate_x = FALSE))
+plot = do.call_relevant("vascr_polish_plot", plot, dots)
+
+return(plot)
 }
+
+
 
 #' Title
 #'
@@ -321,7 +318,7 @@ vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, sa
   
   
     
-  # Remove impossible error bars for the avoidance of errors. Replaces both max and min with the      actual value.
+  # Remove impossible error bars for the avoidance of errors. Replaces both max and min with the actual value.
   data = mutate(data, ymax = coalesce(ymax, Value))
   data = mutate(data, ymin = coalesce(ymin, Value))
       
@@ -359,6 +356,7 @@ vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, sa
 #' vascr_plot_column(data)
 #' 
 #' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells", samplecontains = c("35,000", "30,000"), time = list(50,100,150))
+#' 
 #' vascr_plot_column(data, priority = c("Experiment","Time", "Sample", "Experiment"))
 #' 
 #' unique(data$Well) 
@@ -405,7 +403,7 @@ vascr_plot_column = function(data, priority = NULL, ...)
     return(plot)
   }
     
-    if(length(priority)==3)
+    if(length(priority)>=3)
     {
       
       data[priority[2]] = lapply(data[priority[2]],as.character)
@@ -418,11 +416,6 @@ vascr_plot_column = function(data, priority = NULL, ...)
       plot = plot + geom_text(aes(label=Well), vjust=1.6,position = position_dodge(0.9), size=2)
       
       return(plot)
-    }
-    
-    if(length(priority)>3)
-    {
-      stop("No more than 3 variables is supported for this graph type. Please subset your data more rigourously")      
     }
     
   }
@@ -444,7 +437,7 @@ vascr_plot_column = function(data, priority = NULL, ...)
       return(plot)
     }
     
-    else if(length(priority)==3)
+    else if(length(priority)>=3)
     {
 
         plot = ggplot(data, aes_string(x = priority[1], y = "Value", fill = priority[2], color = priority[3], group = interaction(data[,priority[1]], data[,priority[2]], data[,priority[3]])))
@@ -453,10 +446,6 @@ vascr_plot_column = function(data, priority = NULL, ...)
       
       return(plot)
 
-    }
-    else if(length(priority)>3)
-    {
-      stop("Only up to a stack of 3 variables is supported. Please try again.")
     }
     
   }
@@ -511,9 +500,9 @@ do.call_relevant = function(name, payload, arguments)
 #' @export
 #'
 #' @examples
-#' vascr_plot_anova(growth.df, confidence = 0.04999, unit = "Rb", time = 100, rotate_x_angle = 45)
+#' vascr_plot_bar_anova(growth.df, confidence = 0.95, unit = "Rb", time = 100, rotate_x_angle = 45)
 #' 
-vascr_plot_anova = function(data,priority,confidence, ...)
+vascr_plot_bar_anova = function(data,priority,confidence, ...)
 {
   
   # Gather graph data based on the ...
@@ -522,7 +511,7 @@ vascr_plot_anova = function(data,priority,confidence, ...)
   
   if(!length(unique(c(data$Time, data$Unit, data$Frequency, data$Instrument)))==4)
   {
-    stop("vascr_plot_anova only supports a single time, unit, frequency and instrument at the moment. Please manually create an ANOVA if you need ot ask other  statistical quesitons.")
+    stop("vascr_plot_bar_anova only supports a single time, unit, frequency and instrument at the moment. Please manually create an ANOVA if you need ot ask other  statistical quesitons.")
   }
   
   # Add structure checks in here
@@ -540,7 +529,10 @@ vascr_plot_anova = function(data,priority,confidence, ...)
   
   labeltable = vascr_make_significance_table(data, time, unit, frequency, confidence, format = "toplot")
   
-  filtered2.df = left_join(summary, labeltable, by = "Sample")
+  summary$Sample = as.character(summary$Sample)
+  labeltable$Sample = as.character(labeltable$Sample)
+  
+  filtered2.df = left_join(labeltable, summary, by = "Sample")
   
   plot = ggplot(filtered2.df, aes(x = Sample, y = Value, label = Label)) + geom_bar(stat = "identity") +
     geom_text(aes(label=Label),position=position_stack(0.8))

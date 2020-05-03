@@ -4,24 +4,16 @@
 \alias{vascr_plot_line}
 \title{Title}
 \usage{
-vascr_plot_line(data, priority = NULL, ...)
+vascr_plot_line(data, priority = NULL, error = Inf, alpha = 0.1, ...)
 }
 \arguments{
 \item{data}{}
 
-\item{replication}{}
-
 \item{error}{}
 
-\item{title}{}
+\item{alpha}{}
 
-\item{xlab}{}
-
-\item{ylab}{}
-
-\item{linesize}{}
-
-\item{alphavalue}{}
+\item{replication}{}
 }
 \value{
 
@@ -30,7 +22,8 @@ vascr_plot_line(data, priority = NULL, ...)
 Title
 }
 \examples{
-vascr_plot_line(growth.df, priority = "Sample", unit = "R", frequency = 4000, replication = "summary")
-
+vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", title = "AAA")
+vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "experiments", title = "AAA")
+vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "wells", title = "AAA")
 
 }

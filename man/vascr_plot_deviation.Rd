@@ -12,6 +12,7 @@ vascr_plot_deviation(
   unit = "R",
   frequency = 4000,
   visualisation = NULL,
+  title = "",
   ...
 )
 }
@@ -39,7 +40,7 @@ A ggplot object, or matrix of ggplot objects
 This function by default outputs three sets of diagnostic plots that describe where, by how much and when a well has drifted from the median for that dataset. Individual visualisations from this set can also be requested using the visualisation paramater. The max_deviation and deviation paramaters can be used to annotate these plots, allowing acceptable variation.
 }
 \examples{
-vascr_plot_deviation(growth.df)
+grid = vascr_plot_deviation(growth.df)
 vascr_plot_deviation(growth.df, visualisation = "bar")
 vascr_plot_deviation(growth.df, visualisation = "plate")
 vascr_plot_deviation(growth.df, visualisation = "line")

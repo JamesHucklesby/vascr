@@ -213,7 +213,7 @@ vascr_multiplot = function(data, unit = "all", frequency = 0, time = Inf, ...)
 #' 
 #' vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100), 10))
 #' 
-vascr_make_panel <- function(..., plots = NULL) {
+vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1) {
   
   if(!is.null(plots))
   {
@@ -225,7 +225,7 @@ vascr_make_panel <- function(..., plots = NULL) {
   }
   
   
-  g <- ggplotGrob(plots[[1]] + theme(legend.position="bottom"))$grobs
+  g <- ggplotGrob(plots[[legend_from_index]] + theme(legend.position="bottom"))$grobs
   
   
   if(any(sapply(g, function(x) x$name) == "guide-box"))
