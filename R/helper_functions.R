@@ -265,56 +265,103 @@ vascr_remove_metadata = function(data.df, subset = "all")
 
 #' Title
 #'
-#' @param data 
+#' @param data The dataset to generate priorities for
 #' @param explicit 
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#' vascr_priority()
+#' vascr_priority(growth.df)
+#' vascr_priority(growth.df, priority = c("cells", "...", "Well"))
 #' 
 #' 
-vascr_priority = function(data, explicit = NULL, priority = NULL)
+vascr_priority = function(data = NULL, explicit = NULL, priority = NULL)
 {
   
-  if(vascr_detect_level(data)=="summary" || vascr_detect_level(data)=="well")
-  {
-    explicit = c(explicit, "Well")
-  }
-  
+  # Load in the default built-in priority order
   builtin = c("Value","Time","Frequency", "Sample",  "Experiment", "Instrument", "Unit", "Well")
   
+  # Return this list if no data was provided to compare against, or that data is an inappropriate format
+  if(!is.data.frame(data))
+  {
+
+    if(is.null(data))
+    {
+      builtin = builtin
+    }else
+    {
+      warning("Data is not a data frame, the whole priority vector has been returned")
+      bulitin = builtin
+    }
+  } else # If there is a data frame, select the bits in the default data set that change
+  
+    {
+    
+    # Make a vector of unique values contained in each column
+    unique = c()
+    for(val in stack){
+      unique = c(unique, as.vector(unique(data[val])))
+    }
+    
+    # Then calculate if the length of each one is greater than 1 (IE it's worth plotting as they're not all the same)
+    lengths = c()
+    for (val in unique){
+      lengths = c(lengths,(length(val))>1)
+    }
+    
+    #Filter out the columns that are relevant
+    bulitin = stack[lengths]
+    
+  }
+  
+  
+
+  
+  # Modify the default list to suit the request
   if(is.null(priority))
   {
-    defaultstack = builtin
+    defaultstack = builtin # Use default, as no priority given
+  } else
+  {
+    
+   #We must use what the user gave us, adding in the default where "..." is seen
+    
+   dot = match("...",priority)
+   dot = as.numeric(min(dot))
+   
+   if(dot == 0)
+   {
+     defaultstack = priority
+   }else if(dot == length(priority))
+   {
+     defaultstack = c(priority,builtin)
+   }
+   else if(dot == 1)
+   {
+     defaultstack = c(builtin, priority)
+   }else
+   {
+     defaultstack = c(priority[1:(dot-1)], builtin, priority[(dot+1):length(priority)])
+   }
+   
+   # Check that each priority is only in there once
+   defaultstack = unique(defaultstack)
+   
+  }
+  
+  # Remove explicit variables, if not specified use the defaultstack
+  if(!is.null(explicit))
+  {
+    stack = defaultstack[!defaultstack %in% explicit]
   }
   else
   {
-    defaultstack = priority
+    stack = defaultstack
   }
   
-  if(is.null(explicit))
-  {
-    explicit = c()
-  }
-  
-  stack = defaultstack[!defaultstack %in% explicit]
-  
-  unique = c()
-  
-  for(val in stack){
-    unique = c(unique, as.vector(unique(data[val])))
-  }
-  
-  lengths = c()
-  
-  for (val in unique){
-    lengths = c(lengths,(length(val))>1)
-  }
-  
-  priorities = stack[lengths]
-  
-  return(priorities)
+  return(stack)
   
 }
 

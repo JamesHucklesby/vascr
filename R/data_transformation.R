@@ -707,6 +707,7 @@ vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, sa
   if(!is.null(sortkeyincreasing))
   {
     data$Sample = vascr_factorise_and_sort(data$Sample, sortkeyincreasing)
+    data$Sample = vascr_factorise_and_sort(data$Frequency, sortkeyincreasing)
   }
   
   # Remove any values that are unplottable, IE generation of SD or SEM failed, likely due to missing values from modeling failures
