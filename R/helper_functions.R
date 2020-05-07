@@ -263,12 +263,16 @@ vascr_remove_metadata = function(data.df, subset = "all")
 }
 
 
-#' Title
-#'
+#' Calculate the variable priority for a vascr dataset
+#' 
+#' This function calculates the order of priority of variables in a vascr dataset so they can be plotted in the most meaningfull way
+#' 
 #' @param data The dataset to generate priorities for
-#' @param explicit 
+#' @param explicit Any varaibles that are explicity used in graph generation, and therefore are removed from the priority vector
+#' @param priority Non-standard priority order. All values in this will be returned, and supplimented with the default set if "..." is inserted into the list
 #'
-#' @return
+#' @return A vector of priorities to plot
+#' 
 #' @export
 #'
 #' @examples
