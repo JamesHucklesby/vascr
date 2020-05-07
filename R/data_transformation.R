@@ -1,3 +1,97 @@
+# Summary function --------------------------------------------------------
+
+#' Summarise ECIS datasets from a single experiment
+#' 
+#' Creates and ECIS dataset that has had all samples of the same type averaged together. Assumes that each sample is independent, IE that this function has already been run on individual experiments
+#'
+#' @param data.df An ECIS dataset in standard format
+#' @param level The level of replication to generate the summary at. Options are "experiment" or "summary"
+#'
+#' @return An ECIS dataset supplimented with summary statistics
+#' 
+#' @export
+#' @importFrom dplyr summarise group_by n
+#' @importFrom magrittr "%>%"
+#'
+#' @examples
+#' 
+#' vascr_summarise(growth.df, "summary")
+#' vascr_summarise(growth.df, "experiments")
+#' vascr_summarise(growth.df, "wells")
+#' 
+#' data = vascr_summarise(growth.df, "summary")
+#' 
+#' 
+#' 
+vascr_summarise <- function(data.df, level = "summary") {
+  
+  # Use a test to check what the current summary level of the data is
+  summary_level = vascr_test_summary_level(data.df)
+  
+  if(level == "" || level == "deviation")
+  {
+    return(data.df)
+  }
+  
+  if(level == summary_level)   # Return the same data if summary level is already in place
+  {
+    return (data.df)
+  }
+  
+  # If possible, make experimental resolution
+  
+  if(summary_level == "wells")
+  {
+    experiment.df = data.df %>%
+      group_by(Time, Unit, Frequency, Sample, Experiment, Instrument) %>%
+      summarise(sd = sd(Value), n = n(),min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","),Value = mean(Value))
+    
+    othervars.df = select(data.df, -Value, -Well) %>% distinct()
+    
+    experiment.df = experiment.df %>% ungroup() %>% left_join(othervars.df, by = c("Time", "Unit", "Frequency", "Sample", "Experiment", "Instrument"))
+  }else if(summary_level == "experiments")
+  {
+    experiment.df = data.df
+  }
+  
+  # If possible, make summary resolution
+  
+  if (summary_level == "experiments" || summary_level == "wells")
+  {
+    summary.df = experiment.df %>%
+      group_by(Time, Unit, Frequency, Sample, Instrument) %>%
+      summarise(sd = sd(Value), totaln = sum(n), n = n(), min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","), Value = mean(Value), Experiment = "Summary")
+    
+    othervars.df = select(experiment.df, -'Value', -'Well', -'Experiment', -'n', -'sd', -'min', -'max') %>% distinct()
+    
+    summary.df = left_join(summary.df, othervars.df, by = c("Time", "Unit", "Frequency", "Sample", "Instrument"))
+  }
+  else
+  {
+    warning ("Can't determine summary level, check data frame integrity")
+    return ("NA")
+  }
+  
+  
+  if(level == "summary" && exists ("summary.df"))
+  {
+    summary.df = ungroup(summary.df)
+    return(summary.df)
+  }else if(level == "experiments" && exists ("experiment.df"))
+  {
+    experiment.df = ungroup(experiment.df)
+    return(experiment.df)
+  }else
+  {
+    warning("Invalid level requested. Please check level is valid and you have presented a data frame that has a higher resolution than the summary you have requested")
+    return("NA")
+  }
+  
+}
+
+
+
+
 
 # Normalisation function --------------------------------------------------
 
@@ -527,5 +621,131 @@ vascr_explode_wells = function(data, separate_rows = FALSE)
   data$row = vascr_factorise_and_sort(substr(data$Well, 1,1), sortkeyincreasing = FALSE)
   data$col = vascr_factorise_and_sort(as.numeric(substr(data$Well, 2,3)), sortkeyincreasing = TRUE)
   return(data)
+}
+
+
+#' Prepare a dataset to be graphed by vascar_graph_xxx
+#' 
+#' Central data subset, cleanup and label prep function
+#'
+#' @param data 
+#' @param unit 
+#' @param frequency 
+#' @param time 
+#' @param samplecontains 
+#' @param experiment 
+#' @param error 
+#' @param alignkey 
+#' @param normtime 
+#' @param divide 
+#' @param preprocessed 
+#' @param continuouscontains 
+#' @param stripidentical 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary")
+#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments")
+#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells")
+#' 
+#' 
+vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, samplecontains = "", experiment = "", error = Inf, alignkey = NULL, normtime = NULL, divide = FALSE, preprocessed = FALSE, continuouscontains = NULL , stripidentical = TRUE, sortkeyincreasing = TRUE, level = "", errortype = "sem")
+{
+  # First subset away what we don't need for normalising to a particular point (speeds up things a lot)
+  data = vascr_subset(data, unit = unit, frequency = frequency, samplecontains = samplecontains, experiment = experiment)
+  
+  # Subsample the data if only some time points are required for error plotting
+  if (error>1 && !is.infinite(Inf))
+  {
+    data = vascr_subsample(data, error)
+  }
+  
+  # Then normalise or align key points, if required. Alignment then normalisation are preformed, as the final data, not the transposed data is usually what is requested. This behaviour can be changed by manually formulating the data ahead of time.
+  if(!is.null(alignkey))
+  {
+    data = vascr_align_key(data, alignkey)
+  }
+  
+  if(!is.null(normtime))
+  {
+    data = vascr_normalise(data, normtime, divide)
+  }
+  
+  # Then subset down to the timepoints that are required
+  data = vascr_subset(data, time = time)
+  
+  
+  # If data is not preprocessed and data is not exploded already, explode the dataset
+  if (isFALSE(preprocessed) & isFALSE(vascr_test_exploded(data)))
+  {
+    data = vascr_explode(data)
+  }
+  
+  # If  data is being subset based on a continuous column, run that now
+  if(!is.null(continuouscontains))
+  {
+    data = vascr_subset_continuous(data, continuouscontains)
+  }
+  
+  if(stripidentical)
+  {
+    data$Sample = (vascr_implode(data, stripidentical = TRUE))$Sample
+  } 
+  
+  data = vascr_summarise(data, level = level)
+  
+  if(isFALSE(preprocessed))
+  {
+    # Replace all the underscores in titles with spaces
+    data$Sample = str_replace(data$Sample, "_", " ")
+  }
+  
+  # Sort the order of titles as numbers
+  if(!is.null(sortkeyincreasing))
+  {
+    data$Sample = vascr_factorise_and_sort(data$Sample, sortkeyincreasing)
+  }
+  
+  # Remove any values that are unplottable, IE generation of SD or SEM failed, likely due to missing values from modeling failures
+  data = drop_na(data, Value)
+  
+  
+  if(level == "summary" || level =="experiments")
+  {
+    
+    if(errortype == "sem")
+    {
+      data$sem = data$sd/sqrt(data$n)
+      data$ymax = data$Value + data$sem
+      data$ymin = data$Value - data$sem
+    }
+    else if (errortype == "sd")
+    {
+      data$ymax = data$Value + data$sd
+      data$ymin = data$Value  - data$sd
+    }
+    else if(errortype == "range")
+    {
+      data$ymax = data$max
+      data$ymin = data$min
+    }
+    else
+    {
+      warning("No error specified,  and hence won't be generated")
+    }
+    
+    
+    
+    # Remove impossible error bars for the avoidance of errors. Replaces both max and min with the actual value.
+    data = mutate(data, ymax = coalesce(ymax, Value))
+    data = mutate(data, ymin = coalesce(ymin, Value))
+    
+  }
+  
+  return(data)
+  
 }
 

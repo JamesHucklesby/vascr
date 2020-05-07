@@ -282,7 +282,7 @@ vascr_priority = function(data, explicit = NULL, priority = NULL)
     explicit = c(explicit, "Well")
   }
   
-  builtin = c("Value", "Sample", "Time", "Experiment", "Instrument", "Frequency", "Unit", "Well")
+  builtin = c("Value","Time","Frequency", "Sample",  "Experiment", "Instrument", "Unit", "Well")
   
   if(is.null(priority))
   {
@@ -899,4 +899,36 @@ vascr_default = function (data)
   
 }
 
+
+#' Title
+#'
+#' @param name 
+#' @param payload 
+#' @param arguments 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+do.call_relevant = function(name, payload, arguments)
+{
+  function_args = formals(name)
+  
+  toforward = names(function_args) %in% names(arguments)
+  
+  toforwardnames = as.vector(names(function_args))[toforward]
+  
+  present_args = arguments[toforwardnames]
+  
+  if(is.data.frame(payload))
+  {
+    present_args[["data"]] = payload
+  }
+  else if(is.ggplot(payload))
+  {
+    present_args[["plot"]] = payload
+  }
+  
+  return(do.call(name, present_args))
+}
 
