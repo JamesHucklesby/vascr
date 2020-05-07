@@ -148,7 +148,6 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
   priority = vascr_priority(data, explicit = c("Well", "Value", "Time"), priority = priority)
   
   
-  
   # Generate the line visualisation ##########################################################
   
   

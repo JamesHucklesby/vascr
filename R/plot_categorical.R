@@ -22,16 +22,26 @@
 #' 
 #' growth.df$Instrument = "ECIS"
 #'
-#'vascr_plot_continuous(growth.df, "R", 4000, "wells", 50, Inf, continuous = "cells")
-#' # vascr_plot_continuous(growth.df, "R", 4000, "experiments", 50, continuous = "cells")
-#'# vascr_plot_continuous(growth.df, "R", 4000, "summary", 50, continuous = "cells", error = Inf)
+#'vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary")
+#'
+#'vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "wells", time = 50, error = Inf, priority = c("cells", "Experiment"))
+#' vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "experiments", time = 50, priority = c("cells", "Experiment"), error = 1)
+#' vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "summary", time = 100, continuous = "cells", error = Inf, priority = c("cells", "Experiment"))
+#'
+#'
+#'data = growth.df
 #'
 #' 
-vascr_plot_continuous = function(data, cols, continuous, ...)
+vascr_plot_continuous = function(data, cols, priority, level, error, ...)
 {
   
   # Gather graph data based on the ...
   dots = list(...)
+  
+  dots[["priority"]] = priority
+  dots[["level"]] = level
+  dots[["error"]] = error
+  
   data = do.call_relevant("vascr_prep_graphdata", data, dots)
   
   if(is.null(xlab))
@@ -39,98 +49,51 @@ vascr_plot_continuous = function(data, cols, continuous, ...)
     xlab = continuous
   }
 
-# Plot replicates
-  
-data = vascr_subset(data, time = time, unit = unit, frequency = frequency)
+# Fix that the first variable must be numeric
 
-data$Val1 = data[[continuous]]
-data$Val1 = as.numeric(data$Val1)
+data[,priority[[1]]] = as.numeric(unlist(data[,priority[[1]]]))
 
 # Plot out individual wells
 
-if(replication == "wells")
+if(level == "wells")
 {
+  
+plot = ggplot(data, aes_string(priority[[1]], "Value")) +
+ geom_point(aes_string(color = priority[[2]]))
 
-plot = ggplot(data, aes(Val1, Value)) +
- geom_point(aes(color = Experiment)) + ggplot2::labs(title = title, x=xlab, y=ylab)
+plot = do.call_relevant("vascr_polish_plot", plot, dots)
 
-return(vascr_polish_plot(plot))
+return(plot)
+
 }
 
 
 # Plot out experimetal wells
 
-if (replication == "experiments")
+if (level == "experiments")
 {
-experiment = vascr_summarise(data, "experiment")
-experiment = vascr_explode(experiment)
 
-experiment$Val1 = experiment[[continuous]]
-experiment$Val1 = as.numeric(experiment$Val1)
+plot = ggplot(data, aes_string(x = priority[[1]], y = "Value", ymax = "ymax", ymin = "ymin", fill = priority[[2]], color = priority[[2]])) +
+    geom_line()
 
-
-if(error == 0)
-{
-    plot = vascr_subsample(summary, error)
-    plot = ggplot(summary, aes(Val1, Value)) +
-      geom_line(aes(color = Experiment)) + ggplot2::labs(title = title, x=xlab, y=ylab)
-    
-    return(vascr_polish_plot(plot))
 }
-
-if (error < Inf)
-{
-  vascr_subsample(experiment, error)
-plot = ggplot(experiment, aes(Val1, Value)) +
-  geom_line(aes(color = Experiment)) +
-  geom_errorbar(aes(ymin = Value-sem, ymax = Value + sem, color = Experiment)) + ggplot2::labs(title = title, x=xlab, y=ylab)
-
-return(vascr_polish_plot(plot))
-}
-
-if (error == Inf)
-{
-plot = ggplot(experiment, aes(Val1, Value)) +
-  geom_line(aes(color = Experiment)) +
-  geom_ribbon(aes(ymin = Value-sem, ymax = Value + sem, fill =Experiment), alpha =   alphavalue) + ggplot2::labs(title = title, x=xlab, y=ylab)
-}
-
-return(vascr_polish_plot(plot))
-}
-
 
 ### Now make the summary graphs
-if (replication == "summary")
+if (level == "summary")
 {
-summary = vascr_summarise(data, "summary")
-summary = vascr_explode(summary)
-
-summary$Val1 = summary[[continuous]]
-summary$Val1 = as.numeric(summary$Val1)
-
-if (error<Inf)
+  plot = ggplot(data, aes_string(x = priority[[1]], y = "Value", ymax = "ymax", ymin = "ymin")) +
+    geom_line()
+}
+ 
+if (is.infinite(error))
 {
-  summary = vascr_subsample(summary, error)
-plot = ggplot(summary, aes(Val1, Value)) +
-  geom_line() +
-  geom_errorbar(aes(ymin = Value-sem, ymax = Value+sem)) + ggplot2::labs(title = title, x=xlab, y=ylab)
+plot = plot + geom_ribbon(alpha = 0.1) 
+} else if (error>0)
+{
+  plot = plot+ geom_errorbar()
 }
 
-if (error ==0 )
-{
-  plot = ggplot(summary, aes(Val1, Value)) +
-    geom_line() + ggplot2::labs(title = title, x=xlab, y=ylab)
-}
-
-if(error == Inf)
-{
-  plot = ggplot(summary, aes(Val1, Value)) +
-    geom_line() +
-  geom_ribbon(aes(ymin = Value-sem, ymax = Value + sem), alpha = alphavalue) + ggplot2::labs(title = title, x=xlab, y=ylab)
-}
-
-return(vascr_polish_plot(plot))
-}
+return(plot)
 
 }
 

@@ -25,5 +25,6 @@ Title
 vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", title = "AAA")
 vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "experiments", title = "AAA")
 vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "wells", title = "AAA")
+vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "deviation", title = "AAA")
 
 }

@@ -4,7 +4,7 @@
 \alias{vascr_plot_anova}
 \title{ANOVA analyasis of a single ECIS timepoint}
 \usage{
-vascr_plot_anova(data.df, unit, frequency, time)
+vascr_plot_anova(data.df, unit, frequency, time, ...)
 }
 \arguments{
 \item{data.df}{A standard ECIS dataset.}

@@ -4,14 +4,14 @@
 \alias{vascr_plot_continuous}
 \title{Plot a categorical ECIS variable}
 \usage{
-vascr_plot_continuous(data, cols, continuous, ...)
+vascr_plot_continuous(data, cols, priority, level, error, ...)
 }
 \arguments{
 \item{data}{A standard ECIS dataset}
 
 \item{cols}{The column names to display}
 
-\item{continuous}{The nominated continuous variable}
+\item{error}{How much error to display}
 
 \item{unit}{The unit to plot}
 
@@ -21,8 +21,6 @@ vascr_plot_continuous(data, cols, continuous, ...)
 
 \item{time}{The time to run this analyasis at}
 
-\item{error}{How much error to display}
-
 \item{alphavalue}{The alpha of the error bars (how clear they are so you can see the overlap)}
 
 \item{xlab}{Label on the X axis}
@@ -30,6 +28,8 @@ vascr_plot_continuous(data, cols, continuous, ...)
 \item{ylab}{Label on the Y axis}
 
 \item{title}{The title}
+
+\item{continuous}{The nominated continuous variable}
 }
 \value{
 a ggplot 2 object
@@ -41,9 +41,14 @@ Plot a categorical ECIS variable
 
 growth.df$Instrument = "ECIS"
 
-vascr_plot_continuous(growth.df, "R", 4000, "wells", 50, Inf, continuous = "cells")
-# vascr_plot_continuous(growth.df, "R", 4000, "experiments", 50, continuous = "cells")
-# vascr_plot_continuous(growth.df, "R", 4000, "summary", 50, continuous = "cells", error = Inf)
+vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary")
+
+vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "wells", time = 50, error = Inf, priority = c("cells", "Experiment"))
+vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "experiments", time = 50, priority = c("cells", "Experiment"), error = 1)
+vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "summary", time = 100, continuous = "cells", error = Inf, priority = c("cells", "Experiment"))
+
+
+data = growth.df
 
 
 }

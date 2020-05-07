@@ -102,4 +102,30 @@ The master function for generating ggplot2 objects from ECIS data. Incorporates 
 \examples{
 growth.df$Instrument = "ECIS"
 
+vascr_plot(growth.df, 'Rb', level = 'summary',
+error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+vascr_plot(growth.df, 'Rb', level = 'wells',
+ error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+ vascr_plot(growth.df, 'Rb', level = 'experiments',
+ error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
+ , xlab = "Hours")
+vascr_plot(growth.df, 'R', 4000, 'summary', time = 75)
+vascr_plot(growth.df, "R", 4000, "summary", 50, confidence = 0.1, sortkeyincreasing = FALSE)
+
+vascr_plot(growth.df, sortkeyincreasing = TRUE)
+
+vascr_plot(growth.df, continuous = "cells", level = "summary", time = 50)
+
+vascr_plot(growth.df, level = "plate", time = 100)
+
+vascr_plot(growth.df, time = list(c(100,190)), unit = list("Rb", "Cm", "Alpha", "R"),  frequency = 4000)
+
+vascr_plot(growth.df, time = 100, unit = "Cm",  frequency = 4000, level = "summary")
+
+vascr_plot(growth.df, level = "deviation")
+vascr_plot(growth.df, level = "anova")
+
+vascr_plot(growth.df, visualisation = "line", level = "summary")
+
+
 }

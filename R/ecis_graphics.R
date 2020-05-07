@@ -36,42 +36,43 @@
 #' @return A ggplot2 object
 #' 
 #' @export
-#' 
-#' @importFrom stats sd
-#' @importFrom dplyr filter group_by summarise
-#' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text geom_text geom_ribbon geom_point geom_errorbar
-#'
 #' @examples
 #' growth.df$Instrument = "ECIS"
 #' 
-# vascr_plot(growth.df, 'Rb', level = 'summary',
-# error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-# vascr_plot(growth.df, 'Rb', level = 'wells',
-#  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-#  vascr_plot(growth.df, 'Rb', level = 'experiments',
-#  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
-#  , xlab = "Hours")
-# vascr_plot(growth.df, 'R', 4000, 'summary', time = 75)
-# vascr_plot(growth.df, "R", 4000, "summary", 50, confidence = 0.1, sortkeyincreasing = FALSE)
-# 
-# vascr_plot(growth.df, sortkeyincreasing = TRUE)
-# 
-# vascr_plot(growth.df, continuous = "cells", level = "summary", time = 50)
-#
-# vascr_plot(growth.df, level = "plate", time = 100)
-
-
-#vascr_plot(growth.df, time = list(c(100,190)), unit = list("Rb", "Cm", "Alpha", "R"),  frequency = 4000)
-
-#vascr_plot(growth.df, time = 100, unit = "Cm",  frequency = 4000, level = "summary")
-
-#vascr_plot(growth.df, level = "quality", type = "plate)
+#' vascr_plot(growth.df, 'Rb', level = 'summary',
+#' error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+#' vascr_plot(growth.df, 'Rb', level = 'wells',
+#'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+#'  vascr_plot(growth.df, 'Rb', level = 'experiments',
+#'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
+#'  , xlab = "Hours")
+#' vascr_plot(growth.df, 'R', 4000, 'summary', time = 75)
+#' vascr_plot(growth.df, "R", 4000, "summary", 50, confidence = 0.1, sortkeyincreasing = FALSE)
+#' 
+#' vascr_plot(growth.df, sortkeyincreasing = TRUE)
+#' 
+#' vascr_plot(growth.df, continuous = "cells", level = "summary", time = 50)
+#'
+#' vascr_plot(growth.df, level = "plate", time = 100)
+#' 
+#'vascr_plot(growth.df, time = list(c(100,190)), unit = list("Rb", "Cm", "Alpha", "R"),  frequency = 4000)
+#'
+#' vascr_plot(growth.df, time = 100, unit = "Cm",  frequency = 4000, level = "summary")
+#' 
+#' vascr_plot(growth.df, level = "deviation")
+#' vascr_plot(growth.df, level = "anova")
+#' 
+#' vascr_plot(growth.df, visualisation = "line", level = "summary")
+#' 
+#' 
 
 
 vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = FALSE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE, sortkeyincreasing = TRUE, showpoints = FALSE, singleplot = FALSE, priority = NULL, errortype = "sem", visualisation = NULL, threshold = 0) 
   {
   
-  
+
+   # Use recursion to plot anything that is a list
+
   if(any(is.list(unit), is.list(frequency), is.list(time)) & !singleplot)
   {
     singleplot = TRUE
@@ -80,54 +81,40 @@ vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", tim
     return(multiplot)
   }
   
-  if(level == "quality")
+  # Start calling subservient plotting functions ----------------------------
+  
+  # Deal with level is a special way
+
+  if(level == "deviation")
   {
-    print(as.list(environment()))
-    do.call("vascr_plot_quality", as.list(environment()))
+    plot = do.call("vascr_plot_deviation", as.list(environment()))
+    return(plot)
+  }
+
+  if(level == "anova")
+  {
+    plot = do.call("vascr_plot_anova", as.list(environment()))
+    return(plot)
+  }
+  
+  if(visualisation == "line")
+  {
+    plot = do.call("vascr_plot_line", as.list(environment()))
+    return(plot)
+  }
+  
+  if(visualisation == "bar")
+  {
+      plot = do.call("vascr_plot_bar", as.list(environment()))
+      return(plot)
+  }
+
+  if(visualisation == "heatmap")
+  {
+    plot = do.call("vascr_plot_heatmap", as.list(environment()))
   }
   
 
-
-
-# Start calling subservient plotting functions ----------------------------
-
-  
-  # Deal with if a continuous variable has been selected
-  if(!is.null(continuous))
-  {
-    plot = vascr_plot_continuous(data = data, unit = unit, frequency = frequency, level = level, time = time, error = error,alphavalue  = alphavalue, xlab = xlab, ylab = ylab, title = title, cols = cols, continuous = continuous)
-    
-    return(vascr_polish_plot(plot))
-  }
-  
-  # Deal with if a platemap has been requested
-  
-  if(level == "plate")
-  {
-    if(length(unique(data$Time))>1)
-    {
-    return(vascr_polish_plot(vascr_plot_plate(data, unit, frequency, verbose)))
-    }
-    else
-    {
-    return(vascr_plot_heatmap(data, time, unit, frequency, title))
-    }
-  }
-  
-    
-  # First we deal with if the graph requested is a line graph
-    
-    if (length(unique(data$Time))>1) { # Check if we are plotting a single, or multiple, time points
-        
-      {
-        return(vascr_plot_line(data, priority))
-      }
-        
-     # Then we deal with if a single time point has been requested
-        
-    } else {
-      vascr_plot_column(data, priority)
-    }
 }
 
 
@@ -435,9 +422,9 @@ vascr_plot_isolate= function(data.df, well, ...)
 #' @export 
 #'
 #' @examples
-#' vascr_plot_plate(growth.df, unit = "Rb")
+#' vascr_plot_matrix(growth.df, unit = "Rb")
 #' 
-vascr_plot_plate = function(data.df, unit = "R", frequency = 4000, ...)
+vascr_plot_matrix = function(data.df, unit = "R", frequency = 4000, ...)
 {
   # Gather graph data based on the ...
   dots = as.list(environment())

@@ -502,7 +502,7 @@ vascr_subset_continuous = function(data, continuous, exact_match = FALSE, strip_
 }
 
 
-#' Title
+#' Explode the wells in a VASCR dataset
 #'
 #' @param data 
 #'
@@ -510,8 +510,19 @@ vascr_subset_continuous = function(data, continuous, exact_match = FALSE, strip_
 #' @export
 #'
 #' @examples
-vascr_explode_wells = function(data)
+#' vascr_explode_wells(growth.df)
+#' 
+#' data = vascr_summarise(growth.df)
+#' vascr_explode_wells(data)
+#' vascr_explode_wells(data, separate_rows = TRUE)
+#' 
+vascr_explode_wells = function(data, separate_rows = FALSE)
 {
+   if(separate_rows & max(str_count(unique(data$Well), ","))>0)
+   {
+   data = separate_rows(growth.df, Well, sep = ",")
+   }
+  
   data$Well = vascr_standardise_wells(data$Well)
   data$row = vascr_factorise_and_sort(substr(data$Well, 1,1), sortkeyincreasing = FALSE)
   data$col = vascr_factorise_and_sort(as.numeric(substr(data$Well, 2,3)), sortkeyincreasing = TRUE)

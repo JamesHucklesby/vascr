@@ -1,118 +1,4 @@
-#' Plot a heatmap of a particular timepoint
-#'
-#' @param data 
-#' @param time 
-#' @param unit 
-#' @param frequency 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' 
-#' vascr_plot_heatmap(growth.df, time = 100, unit = "Rb")
-#' vascr_plot_heatmap(growth.df, 100, "R", 4000)
-#' 
-vascr_plot_heatmap = function(data, ...)
-{
 
-  # Gather graph data based on the ...
-  dots = list(...)
-  data = do.call_relevant("vascr_prep_graphdata", data, dots)
-
- # Warn and fix if more than one time is selected
-  if(var(data$Time)>0)
-  {
-    warning("More than one time point selected. Plotting mean time point in range")
-    time = vascr_find_time(data,mean(time))
-  }
-
-data = vascr_explode_wells(data)
-
-plot = ggplot(data, aes(col, row, fill= Value)) + 
-  geom_tile()  +
-  scale_fill_gradient(low="white", high="blue")+
-  xlab("Column") +
-  ylab("Row")+
-  scale_x_discrete(position = "top")+
-  facet_wrap(vars(Experiment), scales = "free_x")
-
-plot = do.call_relevant("vascr_polish_plot", plot, dots)
-
-return(plot)
-}
-
-
-
-#' Title
-#'
-#' @param data 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-vascr_test_multi_plate = function(data)
-{
-  # Select distinct experiment:well pairs
-  sumdata = data %>% select(Well,Experiment)%>%  distinct(Well, Experiment)
-  # Count how many times each well comes up
-  sumdata = sumdata %>% group_by(Well) %>% summarise(number = n())
-  
-  # Warn and return false if any well is present in more than one experiment
-  if(max(sumdata$number)>1)
-  {
-    warning("More than one record per well. More than one plate may have been superimposed. Use plot with care.")
-    return(TRUE)
-  }
-  
-  return(FALSE)
-}
-
-
-#' ECIS plot samplemap
-#'
-#' @param data The datapoint to plot
-#' @param title Title to be placed on the graph
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' 
-#' vascr_plot_samplemap(growth.df)
-#' 
-vascr_plot_samplemap = function(data, title ="Title", stripidentical = TRUE)
-{
-  
-  # Warn if trying to plot multiple plates
-  vascr_test_multi_plate(data)
-  
-  # Cut out everythign we don't care about, and remove remaining duplicates
-  data$Time = 0
-  data$Value = 0
-  data$Unit = 0
-  data$Frequency = 0
-  data = vascr_remove_metadata(data)
-  data = distinct(data)
-  
-  # Prep graphdata, IE, re-consitute names for plotting
-  data = vascr_prep_graphdata(data, stripidentical = stripidentical)
-  
-  # Explode out wells, then select only the distinct data we need for plotting
-  data = vascr_explode_wells(data)
-  data = data %>% select(col, row, Sample) %>% distinct()
-  data$Sample = as.factor(data$Sample)
-
-  plot = ggplot(data, aes(col, row)) + 
-    geom_tile(aes(fill = Sample), colour = "white")+
-    xlab("Column") +
-    ylab("Row")+
-    scale_x_discrete(position = "top")+
-    ggtitle(title)
-  
-  return(vascr_polish_plot(plot, rotate_x = FALSE))
-}
 
 #######################################################################################
 #
@@ -134,9 +20,19 @@ vascr_plot_samplemap = function(data, title ="Title", stripidentical = TRUE)
 #' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", title = "AAA")
 #' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "experiments", title = "AAA")
 #' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "wells", title = "AAA")
+#' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "deviation", title = "AAA")
 #' 
 vascr_plot_line = function(data, priority = NULL, error = Inf, alpha = 0.1, ...)
 {
+  
+  dots = list(...)
+  if(dots["level"] == "deviation")
+  {
+    plot = vascr_plot_deviation(data, visualisation = "line", priority = priority, ...)
+    plot = do.call_relevant("vascr_polish_plot", plot, dots)
+    return(plot)
+  }
+  
   
   # Gather graph data based on the ...
   dots = list(...)
@@ -331,44 +227,43 @@ vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, sa
 
 
 
-#' Title
+#' Plot a vascr data set as a bar
 #'
 #' @param data 
-#' @param replication 
-#' @param error 
-#' @param title 
-#' @param xlab 
-#' @param ylab 
-#' @param time 
-#' @param unit 
-#' @param frequency 
-#' @param confidence 
+#' @param priority
+#' @param error
+#' @param ... Any argument to be passed to vascr_polish_plot or vascr_prep_graphdata
 #'
 #' @return
 #' @export
 #'
 #' @examples
 #' 
-#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary", time = list(50))
-#' vascr_plot_column(data)
+#' vascr_plot_bar(growth.df, level = "experiments", frequency = 4000, unit = "R", time = list(50,100), error = Inf)
 #' 
-#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments", time = list(50,100))
-#' vascr_plot_column(data)
+#' vascr_plot_bar(growth.df, level = "wells", frequency = 4000, unit = "R", time = 50, error = Inf)
+#' vascr_plot_bar(growth.df, level = "experiments", frequency = 4000, unit = "R", time = 50, error = Inf)
+#' vascr_plot_bar(growth.df, level = "summary", frequency = 4000, unit = "R", time = 50, error = Inf)
+#' vascr_plot_bar(growth.df, level = "deviation", frequency = 4000, unit = "R")
 #' 
-#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells", samplecontains = c("35,000", "30,000"), time = list(50,100,150))
-#' 
-#' vascr_plot_column(data, priority = c("Experiment","Time", "Sample", "Experiment"))
-#' 
-#' unique(data$Well) 
-#' 
-vascr_plot_column = function(data, priority = NULL, ...)
+
+vascr_plot_bar = function(data, priority = NULL, error = Inf, ...)
 {
   # Gather graph data based on the ...
   dots = list(...)
+  dots["error"] = error
+  dots["priority"] = priority
+  
+  if(dots["level"] == "deviation")
+  {
+    plot = vascr_plot_deviation(data, visualisation = "bar", priority = priority, ...)
+    return(plot)
+  }
+  
   data = do.call_relevant("vascr_prep_graphdata", data, dots)
   
   priority = vascr_priority(data, c("Value", "Well"), priority)
-  data$Sample = as.character(data$Sample)
+  data$Sample = as.factor(data$Sample)
   data$Experiment = as.character(data$Experiment)
   data$Time = as.character(data$Time)
   
@@ -386,24 +281,21 @@ vascr_plot_column = function(data, priority = NULL, ...)
     plot = plot + geom_text(aes(label=Well), vjust=1.6,
                             position = position_dodge(0.9), size=2)
     
-    return(plot)
     
   }
     
-  if(length(priority)==2)
+  else if(length(priority)==2)
   {
-    
-    data[priority[2]] = lapply(data[priority[2]],as.character)
     
     plot =  ggplot(data, aes_string(x = priority[1], y = "Value", fill = priority[2], group = interaction(data$Well, data[,priority[1]]))) + geom_bar(stat = "identity", position = position_dodge())
     
     plot = plot + geom_text(aes(label=Well), vjust=1.6,
                      position = position_dodge(0.9), size=2)
     
-    return(plot)
+
   }
     
-    if(length(priority)>=3)
+    else if(length(priority)>=3)
     {
       
       data[priority[2]] = lapply(data[priority[2]],as.character)
@@ -415,26 +307,25 @@ vascr_plot_column = function(data, priority = NULL, ...)
       
       plot = plot + geom_text(aes(label=Well), vjust=1.6,position = position_dodge(0.9), size=2)
       
-      return(plot)
     }
     
   }
   
-  if (any(replication == "experiments", replication == "summary"))
+  else if (any(replication == "experiments", replication == "summary"))
   {
+    print(data)
+    print(priority)
+    print(length(priority))
 
     if(length(priority)==1)
     {
-    plot = ggplot(growth.df, aes_string(x = priority[1], y = "Value")) + geom_bar(stat = "identity", position = position_dodge())
-    
-    return(plot)
+    plot = ggplot(data, aes_string(x = priority[1], y = "Value", ymin = "ymin", ymax = "ymax")) + geom_bar(stat = "identity", position = position_dodge(), orientation = "vertical")
     }
     
     else if(length(priority)==2)
     {
-      plot = ggplot(data, aes_string(x = priority[1], y = "Value", fill = priority[2], group = interaction(data[,priority[1]], data[,priority[2]]))) + geom_bar(stat = "identity", position = position_dodge(),group = interaction(data[,priority[1]], data[,priority[2]]))
-      
-      return(plot)
+      plot = ggplot(data, aes_string(x = "Sample", y = "Value", fill = "Experiment", color = "Experiment")) + geom_bar(stat = "identity", position = position_dodge()) 
+
     }
     
     else if(length(priority)>=3)
@@ -444,13 +335,20 @@ vascr_plot_column = function(data, priority = NULL, ...)
       
       plot = plot + geom_bar(stat = "identity", size = 1, position = position_dodge(), group = interaction(data[,priority[1]], data[,priority[2]], data[,priority[3]])) + scale_colour_grey(start = 0, end = 1)
       
-      return(plot)
 
     }
     
+  } else
+  {
+  stop("Graph not classed. Please try again")
   }
   
-  stop("Graph not classed. Please try again")
+  if(error>0 & replication != "wells")
+  {
+    plot = plot + geom_errorbar(aes(ymin = ymin, ymax = ymax), color = "black", position = position_dodge())
+  }
+  
+  return(plot)
   
 }
 

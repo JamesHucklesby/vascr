@@ -20,6 +20,6 @@ vascr_plot_bar_anova(data, priority, confidence, ...)
 Title
 }
 \examples{
-vascr_plot_bar_anova(growth.df, confidence = 0.04999, unit = "Rb", time = 100, rotate_x_angle = 45)
+vascr_plot_bar_anova(growth.df, confidence = 0.95, unit = "Rb", time = 100, rotate_x_angle = 45)
 
 }

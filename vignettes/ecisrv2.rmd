@@ -258,14 +258,14 @@ vascr_plot(growth, time = c(50,100))
 ```{r}
 
 # Demonstrate that arguements are cumulative
-vascr_plot(growth, replication = "wells", linesize = 3, error = 5, normtime = 100)
+vascr_plot(growth.df, level = "wells", linesize = 3, error = 5, normtime = 100)
 
 ```
 
 
 ```{r}
 # Show some of the pre-prepared matrices for lots of data
-vascr_plot_spectra(growth, "R")
+vascr_plot(growth.df, "R")
 vascr_plot_model(growth)
 vascr_plot_model(growth, error = 1) # You can also pass vascr_plot arguements through if you want to affect how the plot looks
 ```

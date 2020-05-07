@@ -33,7 +33,9 @@
 #' @examples
 #' vascr_plot_anova(growth.df, 'R',4000,50)
 #' 
-vascr_plot_anova = function(data.df, unit, frequency, time) {
+vascr_plot_anova = function(data.df, unit, frequency, time, ...) {
+  
+   dots = list()
     
     # Round the number given to the function to the nearest actual measurement
     timetouse = vascr_find_time(data.df, time)
@@ -250,16 +252,20 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, confide
 #'
 #' @examples
 #' 
-#' vascr_summarise(growth.df, level = "summary")
+#' vascr_summarise(growth.df, "summary")
 #' vascr_summarise(growth.df, "experiments")
 #' vascr_summarise(growth.df, "wells")
+#' 
+#' data = vascr_summarise(growth.df, "summary")
+#' 
+#' 
 #' 
 vascr_summarise <- function(data.df, level = "summary") {
   
   # Use a test to check what the current summary level of the data is
   summary_level = vascr_test_summary_level(data.df)
   
-  if(level == "")
+  if(level == "" || level == "deviation")
   {
     return(data.df)
   }
@@ -275,7 +281,11 @@ vascr_summarise <- function(data.df, level = "summary") {
   {
   experiment.df = data.df %>%
     group_by(Time, Unit, Frequency, Sample, Experiment, Instrument) %>%
-    summarise(sd = sd(Value), n = n(),min = min(Value), max = max(Value), Well = "Z00",Value = mean(Value))
+    summarise(sd = sd(Value), n = n(),min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","),Value = mean(Value))
+  
+  othervars.df = select(data.df, -Value, -Well) %>% distinct()
+  
+  experiment.df = experiment.df %>% ungroup() %>% left_join(othervars.df, by = c("Time", "Unit", "Frequency", "Sample", "Experiment", "Instrument"))
   }else if(summary_level == "experiments")
   {
     experiment.df = data.df
@@ -287,7 +297,11 @@ vascr_summarise <- function(data.df, level = "summary") {
   {
     summary.df = experiment.df %>%
       group_by(Time, Unit, Frequency, Sample, Instrument) %>%
-      summarise(sd = sd(Value), totaln = sum(n), n = n(), min = min(Value), max = max(Value), Well = "Z00", Value = mean(Value), Experiment = "Summary")
+      summarise(sd = sd(Value), totaln = sum(n), n = n(), min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","), Value = mean(Value), Experiment = "Summary")
+    
+    othervars.df = select(experiment.df, -'Value', -'Well', -'Experiment', -'n', -'sd', -'min', -'max') %>% distinct()
+    
+    summary.df = left_join(summary.df, othervars.df, by = c("Time", "Unit", "Frequency", "Sample", "Instrument"))
   }
   else
   {
@@ -298,9 +312,11 @@ vascr_summarise <- function(data.df, level = "summary") {
   
   if(level == "summary" && exists ("summary.df"))
   {
+    summary.df = ungroup(summary.df)
     return(summary.df)
   }else if(level == "experiments" && exists ("experiment.df"))
   {
+    experiment.df = ungroup(experiment.df)
     return(experiment.df)
   }else
   {

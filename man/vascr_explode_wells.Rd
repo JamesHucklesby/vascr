@@ -15,3 +15,9 @@ vascr_explode_wells(data)
 \description{
 Title
 }
+\examples{
+data = vascr_summarise(growth.df)
+
+vascr_explode_wells(data)
+
+}
