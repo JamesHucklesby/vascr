@@ -108,13 +108,10 @@ vascr_test_multi_plate = function(data)
 #'
 #' @examples
 #' 
-#' vascr_plot_samplemap(growth.df)
+#' vascr_plot_structure(growth.df)
 #' 
-vascr_plot_samplemap = function(data, title ="Title", stripidentical = TRUE)
+vascr_plot_structure = function(data, title ="Title", stripidentical = TRUE, ...)
 {
-  
-  # Warn if trying to plot multiple plates
-  vascr_test_multi_plate(data)
   
   # Cut out everythign we don't care about, and remove remaining duplicates
   data$Time = 0

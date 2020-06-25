@@ -20,4 +20,8 @@ When running analyasis, you can only subset or plot a time that exists in the da
 \examples{
 vascr_find_frequency(growth.df, 4382)
 
+vascr_find_frequency(data, frequency = 4000)
+
+data.df = data
+
 }

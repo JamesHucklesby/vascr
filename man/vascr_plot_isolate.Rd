@@ -4,14 +4,14 @@
 \alias{vascr_plot_isolate}
 \title{Animation removed due to compatabilty issues with CRAN. To be re-introduced later.}
 \usage{
-vascr_plot_isolate(data.df, well, ...)
+vascr_plot_isolate(data, well, ...)
 }
 \arguments{
-\item{data.df}{The dataset the well is in}
-
 \item{well}{The well to be isolated}
 
 \item{...}{Other conditions to pass on to the vascr_plot command that generates the graph}
+
+\item{data.df}{The dataset the well is in}
 
 \item{title}{The title of the plot}
 
@@ -66,6 +66,8 @@ Graph a single well that is misbehaving
 }
 \examples{
 
-vascr_plot_isolate(growth.df, well = "A3")
+datum = vascr_plot_isolate(growth.df, well = "A3", unit = "R", frequency = 4000, error = Inf, priority = NULL)
+
+vascr_plot_line(datum, preprocessed = TRUE, priority = c("Time", "Sample"))
 
 }

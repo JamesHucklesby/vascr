@@ -14,8 +14,9 @@
 #' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "wells", title = "AAA")
 #' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "deviation", title = "AAA")
 #' 
-#' 
-#' 
+#' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", title = "AAA")
+#' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", title = "AAA", error = 1)
+#' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", title = "AAA", error = 5)
 #' 
 #' vascr_plot_line(growth.df, unit = "R", frequency = "raw", time = 50, level = "experiments", title = "AAA", error = 0, logscale = "x")
 #' 
@@ -33,13 +34,21 @@ vascr_plot_line = function(data, priority = NULL, error = Inf, alpha = 0.1, ...)
   
   # Gather graph data based on the ...
   dots = list(...)
-  dots["error"] = error
+  if(error>1 && error<Inf)
+  {
+  data = vascr_subsample(data, error)
+  }
+  
   data = do.call_relevant("vascr_prep_graphdata", data, dots)
   
   
   # Search for priority if it's not found
   priority = vascr_priority(data, c("Value"), priority = priority)
-  print(priority)
+  
+  if(!(priority[1]=="Time" || priority[1]=="Frequency"))
+  {
+    warning("Priority 1 is not Time or Frequency. This may cause issues")
+  }
   
   xaxis = priority[1]
   yaxis = "Value"
@@ -87,6 +96,10 @@ vascr_plot_line = function(data, priority = NULL, error = Inf, alpha = 0.1, ...)
   if(is.infinite(error))
   {
     plot = plot + geom_ribbon(alpha = alpha)
+  }
+  else if(error>0)
+  {
+    plot = plot + geom_errorbar()
   }
   
   plot = do.call_relevant("vascr_polish_plot", plot, dots)

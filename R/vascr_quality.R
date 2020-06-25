@@ -134,6 +134,7 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
   
   # Gather graph data based on the ... and pass it all through to vascr_prep_graphdata
   dots = list(...)
+  dots$replication = "wells"
   dots$frequency = frequency
   dots$unit = unit
   data = do.call_relevant("vascr_prep_graphdata", data, dots) 
@@ -145,7 +146,8 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
   }
   
   # Calculate priorities for plotting variables
-  priority = vascr_priority(data, explicit = c("Well", "Value", "Time"), priority = priority)
+  priority = c("Deviation",priority,"...")
+  priority = vascr_priority(data, priority = priority, explicit = c("Time","Value"))
   
   
   # Generate the line visualisation ##########################################################
@@ -156,9 +158,7 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
     
     # Run the deviation calculation
     
-    deviationdata = vascr_detect_deviation(data, deviation = 0, frequency = frequency, unit = unit)
-    
-    
+    deviationdata = vascr_detect_deviation(data, deviation = 0, frequency = 4000, unit = "R")
     
     if(length(priority)==1)
     {
@@ -172,8 +172,7 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
       
       if(is.null(visualisation))
       {
-        plot = ggplot(deviationdata, aes_string(x = "Time", y = "Deviation", ymax = "Deviation", ymin = "Deviation", group = grouping, color = priority[[1]], linetype = priority[[2]], fill = priority[[1]]))+
-          geom_line() + geom_ribbon(alpha = 0.5)+ggtitle(title)
+        plot = ggplot(deviationdata, aes_string(x = "Time", y = "Deviation", ymax = "Deviation", ymin = "Deviation", group = "grouping", color = priority[[1]], linetype = priority[[2]], fill = priority[[1]]))+ geom_line() + geom_ribbon(alpha = 0.5) + ggtitle(title)
       }
       else # Make line style represent the second priority
       {

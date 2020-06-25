@@ -65,6 +65,8 @@
 #' vascr_plot(growth.df, visualisation = "line", level = "summary")
 #' 
 #' 
+#' vascr_plot(growth.df)
+#' 
 
 
 vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = FALSE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE, sortkeyincreasing = TRUE, showpoints = FALSE, singleplot = FALSE, priority = NULL, errortype = "sem", visualisation = NULL, threshold = 0) 
@@ -81,19 +83,48 @@ vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", tim
     return(multiplot)
   }
   
-  # Start calling subservient plotting functions ----------------------------
-  
-  # Deal with level is a special way
-
   if(level == "deviation")
   {
     plot = do.call("vascr_plot_deviation", as.list(environment()))
     return(plot)
   }
+  
+  # Start calling subservient plotting functions ----------------------------
+  if(is.null(visualisation))
+  {
+    if(level == "plate")
+    {
+      plot = do.call("vascr_plot_plate", as.list(environment()))
+    }
+    
+    else if(level == "structure")
+    {
+      plot = do.call("vascr_plot_structure", as.list(environment()))
+    }
+    
+    else if(length(time)>0)
+    {
+      plot = do.call("vascr_plot_line", as.list(environment()))
+      return(plot)
+    }
+    else
+    {
+    plot = do.call("vascr_plot_bar", as.list(environment()))
+    return(plot)
+    }
+  }
+  
+  # Deal with level is a special way
 
   if(level == "anova")
   {
     plot = do.call("vascr_plot_anova", as.list(environment()))
+    return(plot)
+  }
+  
+  if(level == "structure" || visualisation == "structure")
+  {
+    plot = do.call("vascr_plot_structure", as.list(environment()))
     return(plot)
   }
   
@@ -109,14 +140,14 @@ vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", tim
       return(plot)
   }
 
-  if(visualisation == "heatmap")
+  if(visualisation == "plate")
   {
-    plot = do.call("vascr_plot_heatmap", as.list(environment()))
+    plot = do.call("vascr_plot_plate", as.list(environment()))
+    return(plot)
   }
   
-
+  
 }
-
 
 #' Plot multiple ggplots
 #' 
@@ -199,6 +230,8 @@ vascr_multiplot = function(data, unit = "all", frequency = 0, time = Inf, ...)
 #' vascr_multiplot(data = growth.df, frequency = 4000, time = c(100, 50))
 #' 
 #' vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100), 10))
+#' 
+#' vascr_make_panel(wells, experiments, summary)
 #' 
 vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1) {
   
@@ -380,30 +413,45 @@ vascr_polish_plot = function(plot, rotate_x_angle = 45, logscale = "", title = N
 #'
 #' @examples
 #' 
-#' vascr_plot_isolate(growth.df, well = "A3")
+#' datum = vascr_plot_isolate(growth.df, well = "A3", unit = "R", frequency = 4000, error = Inf, priority = NULL)
 #' 
-vascr_plot_isolate= function(data.df, well, ...)
+#' vascr_plot_line(datum, preprocessed = TRUE, priority = c("Time", "Sample"))
+#' 
+vascr_plot_isolate= function(data, well, ...)
 {
   
-  # Gather graph data based on the ...
+  # Run the preparation command for a standard well
   dots = list(...)
   data = do.call_relevant("vascr_prep_graphdata", data, dots)
   
-  well = vascr_standardise_wells(well)
-  data.df$Well = vascr_standardise_wells(data.df$Well)
-  cleandata.df = vascr_subset(data.df, unit = unit, frequency = frequency)
+  if(unique(data$Frequency)>1)
+  {
+    warning("More than 1 frequency detected, use with care")
+  }
   
-  quality = vascr_subset(cleandata.df, well = well)
+  if(unique(data$Unit)>1)
+  {
+    warning("More than 1 unit detected, use with care")
+  }
+  
+  # Standardise all wells
+  well = vascr_standardise_wells(well)
+  data$Well = vascr_standardise_wells(data$Well)
+
+  # Generate a data frame 
+  quality = vascr_subset(data, well = well)
   quality$Sample = paste(quality$Well, quality$Sample,quality$Experiment)
   
-  medianwell = cleandata.df %>%
+  medianwell = data %>%
     group_by(Time) %>%
     mutate(Value = median(Value), Sample = "Experimental Mean Well", Well = "Z00") %>%
     ungroup
   
   toplot.df = rbind(quality, medianwell)
   
-  plot = vascr_plot(toplot.df, unit, frequency, "wells", title = title, preprocessed = TRUE, ...)
+  return(toplot.df)
+  
+  plot = vascr_plot_line(toplot.df, unit, frequency, "wells", title = title, ...)
   
   return (plot)
 }
@@ -447,15 +495,18 @@ vascr_plot_matrix = function(data.df, unit = "R", frequency = 4000, ...)
 #' @param data A vector to sort and factorise. This uses stringr's numeric =TRUE to line up all numbers in order correctly
 #' @param sortkeyincreasing Should samples be returned increasing or decreasing. Default increasing.
 #' 
-#' @importFrom stringr str_sort
+#' @importFrom stringr str_sort str_replace
 #'
-#' @returnA A factorised vector that can be saved directly back to a data frame
+#' @return A factorised vector that can be saved directly back to a data frame
 #' 
 #' @export
 #'
 #' @examples
+#' vascr_factorise_and_sort(growth.df$Sample)
+#' 
 vascr_factorise_and_sort = function(data, sortkeyincreasing = TRUE)
 {
+  data  = str_replace(data, "_", " ")
   allsamples = unique(data)
   allsamples = str_sort(allsamples, numeric = TRUE, decreasing = !sortkeyincreasing)
   data = factor(data, allsamples)

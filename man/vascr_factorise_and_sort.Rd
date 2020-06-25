@@ -11,6 +11,9 @@ vascr_factorise_and_sort(data, sortkeyincreasing = TRUE)
 
 \item{sortkeyincreasing}{Should samples be returned increasing or decreasing. Default increasing.}
 }
+\value{
+A factorised vector that can be saved directly back to a data frame
+}
 \description{
 Factorise and sort a the column of a data frame for plotting
 }

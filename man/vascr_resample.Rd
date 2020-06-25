@@ -4,7 +4,7 @@
 \alias{vascr_resample}
 \title{Resample ECIS data onto a constant time base}
 \usage{
-vascr_resample(data.df, by, from = Inf, to = Inf, zero_time = 0)
+vascr_resample(data.df, by, from = -Inf, to = Inf, zero_time = 0)
 }
 \arguments{
 \item{data.df}{A standard ECIS data frame}

@@ -2,9 +2,9 @@
 % Please edit documentation in R/data_transformation.R
 \name{vascr_explode_wells}
 \alias{vascr_explode_wells}
-\title{Title}
+\title{Explode the wells in a VASCR dataset}
 \usage{
-vascr_explode_wells(data)
+vascr_explode_wells(data, separate_rows = FALSE)
 }
 \arguments{
 \item{data}{}
@@ -13,11 +13,13 @@ vascr_explode_wells(data)
 
 }
 \description{
-Title
+Explode the wells in a VASCR dataset
 }
 \examples{
-data = vascr_summarise(growth.df)
+vascr_explode_wells(growth.df)
 
+data = vascr_summarise(growth.df)
 vascr_explode_wells(data)
+vascr_explode_wells(data, separate_rows = TRUE)
 
 }

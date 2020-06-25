@@ -28,7 +28,7 @@ vascr_summarise <- function(data.df, level = "summary") {
   # Use a test to check what the current summary level of the data is
   summary_level = vascr_test_summary_level(data.df)
   
-  if(level == "" || level == "deviation")
+  if(level == "" || level == "deviation" || level == "plate" || level == "structure")
   {
     return(data.df)
   }
@@ -238,10 +238,9 @@ vascr_subsample = function(data.df, nth) {
     withid.df = dplyr::left_join(data.df, time.df, by = "Time")
     subset.df = subset(withid.df, (TimeID%%nth) == 1)
     
-    data.df = subset.df
     subset.df$TimeID = NULL
     
-    return(data.df)
+    return(subset.df)
     
 }
 
@@ -296,10 +295,10 @@ vascr_current_frequency = function (data.df)
 #' data = vascr_resample(growth.df, 10, 50 ,100, 50)
 #' head (data)
 #' 
-vascr_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
+vascr_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 {
   
-  if(from == Inf)
+  if(from == -Inf)
   {
     from = min(data.df$Time)
   }
@@ -338,15 +337,20 @@ vascr_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
   
   # Construct an empty data frame to take the new data
   movedata3 <- movedata2[0,]
+  movedata3 = as.data.frame(movedata3)
   movedata3[nrow(movedata3)+length(newtimepoints),] <- NA
   movedata3$Time = newtimepoints
   
   currentcol = 2
   totalcols = length(colnames(movedata2))
   
+  movedata2 = as.data.frame(movedata2)
+  
   while(currentcol<(totalcols+1))
   {
-    replot = approxfun(oldtimepoints, movedata2[,currentcol])
+    oldtp = as.vector(oldtimepoints)
+    oldval = as.vector(movedata2[,currentcol])
+    replot = approxfun(oldtp, oldval)
     movedata3[,currentcol] = replot(newtimepoints)
     currentcol = currentcol + 1
   }
@@ -626,7 +630,7 @@ vascr_explode_wells = function(data, separate_rows = FALSE)
 
 #' Prepare a dataset to be graphed by vascar_graph_xxx
 #' 
-#' Central data subset, cleanup and label prep function
+#' Central data subset, cleanup and label prep function for generation of graphics
 #'
 #' @param data 
 #' @param unit 
@@ -641,8 +645,12 @@ vascr_explode_wells = function(data, separate_rows = FALSE)
 #' @param preprocessed 
 #' @param continuouscontains 
 #' @param stripidentical 
+#' 
+#' @importFrom dplyr coalesce mutate
+#' @importFrom tidyr drop_na
+#' @importFrom stats sd
 #'
-#' @return
+#' @return 
 #' @export
 #'
 #' @examples
@@ -654,6 +662,12 @@ vascr_explode_wells = function(data, separate_rows = FALSE)
 #' 
 vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, samplecontains = "", experiment = "", error = Inf, alignkey = NULL, normtime = NULL, divide = FALSE, preprocessed = FALSE, continuouscontains = NULL , stripidentical = TRUE, sortkeyincreasing = TRUE, level = "", errortype = "sem")
 {
+  
+  if(preprocessed)
+  {
+    return(data)
+  }
+  
   # First subset away what we don't need for normalising to a particular point (speeds up things a lot)
   data = vascr_subset(data, unit = unit, frequency = frequency, samplecontains = samplecontains, experiment = experiment)
   
@@ -707,7 +721,7 @@ vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, sa
   if(!is.null(sortkeyincreasing))
   {
     data$Sample = vascr_factorise_and_sort(data$Sample, sortkeyincreasing)
-    data$Sample = vascr_factorise_and_sort(data$Frequency, sortkeyincreasing)
+    data$Frequency = vascr_factorise_and_sort(data$Frequency, sortkeyincreasing)
   }
   
   # Remove any values that are unplottable, IE generation of SD or SEM failed, likely due to missing values from modeling failures
@@ -737,7 +751,6 @@ vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, sa
     {
       warning("No error specified,  and hence won't be generated")
     }
-    
     
     
     # Remove impossible error bars for the avoidance of errors. Replaces both max and min with the actual value.

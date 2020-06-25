@@ -128,4 +128,6 @@ vascr_plot(growth.df, level = "anova")
 vascr_plot(growth.df, visualisation = "line", level = "summary")
 
 
+vascr_plot(growth.df)
+
 }

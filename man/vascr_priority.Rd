@@ -2,22 +2,38 @@
 % Please edit documentation in R/helper_functions.R
 \name{vascr_priority}
 \alias{vascr_priority}
-\title{Title}
+\title{Calculate the variable priority for a vascr dataset}
 \usage{
-vascr_priority(data, explicit = NULL, priority = NULL)
+vascr_priority(data = NULL, explicit = NULL, priority = NULL)
 }
 \arguments{
-\item{data}{}
+\item{data}{The dataset to generate priorities for}
 
-\item{explicit}{}
+\item{explicit}{Any varaibles that are explicity used in graph generation, and therefore are removed from the priority vector}
+
+\item{priority}{Non-standard priority order. All values in this will be returned, and supplimented with the default set if "..." is inserted into the list}
 }
 \value{
-
+A vector of priorities to plot
 }
 \description{
-Title
+This function calculates the order of priority of variables in a vascr dataset so they can be plotted in the most meaningfull way
 }
 \examples{
+vascr_priority()
+vascr_priority(growth.df)
+vascr_priority(growth.df, priority = c("cells", "...", "Well"))
 
+vascr_priority(data = growth.df, priority = c("Sample"))
 
+vascr_priority(data = growth.df)
+
+missing.df = growth.df
+missing.df$Value = NULL
+
+vascr_priority(missing.df)
+
+# vascr_priority(filtered.df)
+
+vascr_priority(data)
 }

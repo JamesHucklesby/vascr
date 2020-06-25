@@ -156,6 +156,10 @@ vascr_find_time = function(data.df, time) {
 #' @examples
 #' vascr_find_frequency(growth.df, 4382)
 #' 
+#' vascr_find_frequency(data, frequency = 4000)
+#' 
+#' data.df = data
+#' 
 vascr_find_frequency = function(data.df, frequency) {
   if(!is.numeric(frequency))
   {
@@ -171,7 +175,7 @@ vascr_find_frequency = function(data.df, frequency) {
     }
   }
   
-  data.df$Frequency = as.numeric(data.df$Frequency)
+  data.df$Frequency = as.numeric(as.character(data.df$Frequency))
   times = unique(data.df$Frequency)
   numberinlist = which.min(abs(times - frequency))
   timetouse = times[numberinlist]
@@ -280,17 +284,34 @@ vascr_remove_metadata = function(data.df, subset = "all")
 #' vascr_priority(growth.df)
 #' vascr_priority(growth.df, priority = c("cells", "...", "Well"))
 #' 
+#' vascr_priority(data = growth.df, priority = c("Sample"))
 #' 
+#' vascr_priority(data = growth.df)
+#' 
+#' missing.df = growth.df
+#' missing.df$Value = NULL
+#' 
+#' vascr_priority(missing.df)
+#' 
+#' # vascr_priority(filtered.df)
+#' 
+#' vascr_priority(data)
 vascr_priority = function(data = NULL, explicit = NULL, priority = NULL)
 {
   
   # Load in the default built-in priority order
   builtin = c("Value","Time","Frequency", "Sample",  "Experiment", "Instrument", "Unit", "Well")
   
+  level = vascr_detect_level(data)
+  
+  if(level == "experiments" || level=="summary")
+  {
+    data$Well = "NA"
+  }
+  
   # Return this list if no data was provided to compare against, or that data is an inappropriate format
   if(!is.data.frame(data))
   {
-
     if(is.null(data))
     {
       builtin = builtin
@@ -299,29 +320,9 @@ vascr_priority = function(data = NULL, explicit = NULL, priority = NULL)
       warning("Data is not a data frame, the whole priority vector has been returned")
       bulitin = builtin
     }
-  } else # If there is a data frame, select the bits in the default data set that change
-  
-    {
-    
-    # Make a vector of unique values contained in each column
-    unique = c()
-    for(val in stack){
-      unique = c(unique, as.vector(unique(data[val])))
-    }
-    
-    # Then calculate if the length of each one is greater than 1 (IE it's worth plotting as they're not all the same)
-    lengths = c()
-    for (val in unique){
-      lengths = c(lengths,(length(val))>1)
-    }
-    
-    #Filter out the columns that are relevant
-    bulitin = stack[lengths]
-    
-  }
+  } 
   
   
-
   
   # Modify the default list to suit the request
   if(is.null(priority))
@@ -335,7 +336,7 @@ vascr_priority = function(data = NULL, explicit = NULL, priority = NULL)
    dot = match("...",priority)
    dot = as.numeric(min(dot))
    
-   if(dot == 0)
+   if(is.na(dot))
    {
      defaultstack = priority
    }else if(dot == length(priority))
@@ -359,14 +360,52 @@ vascr_priority = function(data = NULL, explicit = NULL, priority = NULL)
   if(!is.null(explicit))
   {
     stack = defaultstack[!defaultstack %in% explicit]
-  }
-  else
+  }else
   {
     stack = defaultstack
   }
   
+  
+  # Stop here if not a data frame
+  if(!is.data.frame(data))
+  {
+    return (stack)
+  }
+  
+  # Strip out anything from the stack that is not actually in the data
+  datacols = colnames(data)
+  cols = stack[stack %in% datacols]
+  unique = c()
+  
+  for(val in cols)
+  { # Stack not generated yet
+    unique = c(unique, as.vector(unique(data[val])))
+  }
+  
+  # Then calculate if the length of each one is greater than 1 (IE it's worth plotting as they're not all the same)
+  lengths = c()
+  for (val in unique){
+    lengths = c(lengths,(length(val))>1)
+  }
+  
+  #Filter out the columns that are relevant
+  stack = cols[lengths]
+  
   return(stack)
   
+}
+
+#' Title
+#'
+#' @param data 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_remove_stats = function(data)
+{
+  dat = select(data, -sd, -min, -max, -sem, -ymax, -ymin)
 }
 
 

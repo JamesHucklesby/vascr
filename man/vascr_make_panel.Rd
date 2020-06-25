@@ -29,4 +29,6 @@ vascr_multiplot(data = growth.df, frequency = 4000, time = c(100, 50))
 
 vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100), 10))
 
+vascr_make_panel(wells, experiments, summary)
+
 }
