@@ -2,16 +2,20 @@
 % Please edit documentation in R/helper_functions.R
 \name{vascr_remove_stats}
 \alias{vascr_remove_stats}
-\title{Title}
+\title{Clean the statistics off a vascr dataset}
 \usage{
-vascr_remove_stats(data)
+vascr_remove_stats(data.df)
 }
 \arguments{
-\item{data}{}
+\item{data.df}{The dataset to clean}
 }
 \value{
 
 }
 \description{
-Title
+Clean the statistics off a vascr dataset
+}
+\examples{
+vascr_remove_stats(vascr_summarise(growth.df,level = "summary"))
+
 }

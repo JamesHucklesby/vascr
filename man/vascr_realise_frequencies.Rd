@@ -2,18 +2,23 @@
 % Please edit documentation in R/helper_functions.R
 \name{vascr_realise_frequencies}
 \alias{vascr_realise_frequencies}
-\title{Title}
+\title{Split out all the frequenices if all is presented}
 \usage{
-vascr_realise_frequencies(data, frequency)
+vascr_realise_frequencies(data.df, frequency)
 }
 \arguments{
-\item{data}{}
+\item{data.df}{The dataet to analyse}
 
-\item{frequency}{}
+\item{frequency}{The frequency to analyse}
 }
 \value{
-
+A number of a frequency in the dataset
 }
 \description{
-Title
+Split out all the frequenices if all is presented
+}
+\examples{
+
+vascr_realise_frequencies(growth.df, c(4594, 3000, "all"))
+
 }

@@ -2,16 +2,22 @@
 % Please edit documentation in R/helper_functions.R
 \name{vascr_instrument_units}
 \alias{vascr_instrument_units}
-\title{Title}
+\title{Return the units created by a certain instrument}
 \usage{
 vascr_instrument_units(instrument)
 }
 \arguments{
-\item{instrument}{}
+\item{instrument}{The instrument to find the units for}
 }
 \value{
-
+a vector of units provided by an instrument
 }
 \description{
-Title
+Return the units created by a certain instrument
+}
+\examples{
+vascr_instrument_units("ECIS")
+vascr_instrument_units("xCELLigence")
+vascr_instrument_units("cellZscope")
+
 }

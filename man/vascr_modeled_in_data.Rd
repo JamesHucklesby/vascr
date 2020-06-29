@@ -2,16 +2,21 @@
 % Please edit documentation in R/helper_functions.R
 \name{vascr_modeled_in_data}
 \alias{vascr_modeled_in_data}
-\title{Title}
+\title{Find which modeled units in the dataset}
 \usage{
 vascr_modeled_in_data(data)
 }
 \arguments{
-\item{data}{}
+\item{data}{The dataset to analyse}
 }
 \value{
-
+A vector of the modeled units in the dataset
 }
 \description{
-Title
+Find which modeled units in the dataset
+}
+\examples{
+vascr_modeled_in_data(growth.df)
+
+
 }

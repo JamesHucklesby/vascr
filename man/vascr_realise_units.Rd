@@ -2,22 +2,25 @@
 % Please edit documentation in R/helper_functions.R
 \name{vascr_realise_units}
 \alias{vascr_realise_units}
-\title{Title}
+\title{Realise vascr units}
 \usage{
 vascr_realise_units(data, unit)
 }
 \arguments{
-\item{data}{}
+\item{data}{The dataset to process}
 
-\item{unit}{}
+\item{unit}{The unit(s) to return}
 }
 \value{
-
+A vector of vascr units
 }
 \description{
-Title
+Realise vascr units
 }
 \examples{
-vascr_titles_vector(c("Rb", "R", "Cm"))
+vascr_realise_units(growth.df, c("Rb", "R", "Cm"))
+vascr_realise_units(growth.df, "all")
+vascr_realise_units(growth.df, "modeled")
+vascr_realise_units(growth.df, "raw")
 
 }

@@ -6,7 +6,6 @@
 #' @export
 #'
 #' @examples
-#' 
 #' getmode(c(1,3,3,4,7))
 getmode <- function(v) {
   uniqv <- unique(v)
@@ -209,14 +208,16 @@ vascr_detect_normal = function(data.df)
   return(timecrushed$Time)
 }
 
-#' Title
+#' Check the level of a vascr data frame
 #'
-#' @param data 
+#' @param data The data frame to analyse
 #'
 #' @return
-#' @export
 #'
 #' @examples
+#' vascr_detect_level(growth.df)
+#' vascr_detect_level(vascr_summarise(growth.df, level = "experiments"))
+#' vascr_detect_level(vascr_summarise(growth.df, level = "summary"))
 vascr_detect_level = function(data)
 {
   if("totaln" %in% colnames(data))
@@ -395,17 +396,44 @@ vascr_priority = function(data = NULL, explicit = NULL, priority = NULL)
   
 }
 
-#' Title
+
+#' Remove columns if they exist in a dataset, otherwise do nothing
 #'
-#' @param data 
+#' @param data.df The dataset to remove
+#' @param cols The name, or names, of cols to remove
 #'
-#' @return
-#' @export
+#' @return The truncated data set
 #'
 #' @examples
-vascr_remove_stats = function(data)
+#' remove_cols_if_exists(data.df, c("Unit", "Sample", "Donkey"))
+remove_cols_if_exists = function(data.df, cols)
 {
-  dat = select(data, -sd, -min, -max, -sem, -ymax, -ymin)
+  
+  for(col in cols)
+  {
+    if(col %in% colnames(data.df))
+    {
+      data.df = select(data.df, -col)
+    }
+  }
+  
+  return(data.df)
+}
+
+
+#' Clean the statistics off a vascr dataset
+#'
+#' @param data.df The dataset to clean
+#'
+#' @return
+#'
+#' @examples
+#' vascr_remove_stats(vascr_summarise(growth.df,level = "summary"))
+#' 
+vascr_remove_stats = function(data.df)
+{
+  data.df = remove_cols_if_exists(data.df, cols = c("sd", "sem", "min", "max", "ymin", "ymax", "sd", "n", "totaln"))
+  return(data.df)
 }
 
 
@@ -519,73 +547,90 @@ return(vascr_unit_table)
 }
 
 
-#' Title
+#' Find which modeled units in the dataset
 #'
-#' @param data 
+#' @param data The dataset to analyse
 #'
-#' @return
-#' @export
+#' @return A vector of the modeled units in the dataset
 #'
 #' @examples
+#' vascr_modeled_in_data(growth.df)
+#' 
+#' 
 vascr_modeled_in_data = function(data)
 {
   allunits = unique(data$Unit)
   return(allunits[vascr_is_modeled_unit(allunits)])
 }
   
-#' Title
+#' Return the raw units in the dataset
 #'
-#' @param data 
+#' @param data The dataset to search
 #'
-#' @return
-#' @export
+#' @return A vector containing the raw units present in the data
 #'
 #' @examples
+#' vascr_raw_in_data(growth.df)
+#' 
 vascr_raw_in_data = function(data)
 {
   allunits = unique(data$Unit)
   return(allunits[!vascr_is_modeled_unit(allunits)])
 }
 
-#' Title
+#' Split out all the frequenices if all is presented
 #'
-#' @param data 
-#' @param frequency 
+#' @param data.df The dataet to analyse
+#' @param frequency The frequency to analyse
 #'
-#' @return
-#' @export
+#' @return A number of a frequency in the dataset
 #'
 #' @examples
-vascr_realise_frequencies = function(data, frequency)
+#' 
+#' vascr_realise_frequencies(growth.df, c(4594, 3000, "all"))
+#' 
+vascr_realise_frequencies = function(data.df, frequency)
 {
-  return = c(0)
+  units = c()
   
   for(fre in frequency)
   {
     if(tolower(fre) == "all")
     {
-      return = c(return, unique(data$Frequency))
+      units = c(units, unique(data.df$Frequency))
     } else
     {
-      return = c(return, fre)
+      units = c(units, fre)
     }
   }
   
+ returndata = c()
   
+ for(uni in units)
+ {
+   
+   returndata = c(returndata, vascr_find_frequency(data.df, as.numeric(uni)))
+ }
+  
+ returndata = unique(returndata) 
+ 
+  return(returndata)
   
 }
 
 
-#' Title
+#' Realise vascr units
 #'
-#' @param data 
-#' @param unit 
+#' @param data The dataset to process
+#' @param unit The unit(s) to return
 #'
-#' @return
-#' @export
+#' @return A vector of vascr units
 #'
 #' @examples
-#' vascr_titles_vector(c("Rb", "R", "Cm"))
+#' vascr_realise_units(growth.df, c("Rb", "R", "Cm"))
+#' vascr_realise_units(growth.df, "all")
+#' vascr_realise_units(growth.df, "modeled")
+#' vascr_realise_units(growth.df, "raw")
 #' 
 vascr_realise_units = function (data, unit)
 {
@@ -593,21 +638,23 @@ vascr_realise_units = function (data, unit)
   
   for(uni in unit)
   {
-  if(tolower(uni) == "raw")
-  {
-    return = c(return,(vascr_raw_in_data(data)))
-  } else if(tolower(uni) == "modeled")
-  {
-    return = c(return,(vascr_modeled_in_data(data)))
-  } else if (tolower(uni) == "all")
-  {
-    return = c(return,unique(data$Unit))
-  } else
-  {
-    return = c(return,uni)
-  }
+      if(tolower(uni) == "raw")
+      {
+        return = c(return,(vascr_raw_in_data(data)))
+      } else if(tolower(uni) == "modeled")
+      {
+        return = c(return,(vascr_modeled_in_data(data)))
+      } else if (tolower(uni) == "all")
+      {
+        return = c(return,unique(data$Unit))
+      } else
+      {
+        return = c(return,uni)
+       }
   
   }
+  
+  # Weed out any duplicates, if present
   return = unique(return)
   return(return)
 }
@@ -622,6 +669,7 @@ vascr_realise_units = function (data, unit)
 #'
 #' @examples
 #' vascr_is_modeled_unit("R")
+#' vascr_is_modeled_unit("Rb")
 #' vascr_is_modeled_unit(c("R", "Rb"))
 #' 
 vascr_is_modeled_unit = function(unit)
@@ -637,14 +685,17 @@ vascr_is_modeled_unit = function(unit)
   return(return)
 }
 
-#' Title
+#' Return the units created by a certain instrument
 #'
-#' @param instrument 
+#' @param instrument The instrument to find the units for
 #'
-#' @return
-#' @export
+#' @return a vector of units provided by an instrument
 #'
 #' @examples
+#' vascr_instrument_units("ECIS")
+#' vascr_instrument_units("xCELLigence")
+#' vascr_instrument_units("cellZscope")
+#' 
 vascr_instrument_units =  function(instrument)
 {
   instrument = tolower(instrument)
@@ -652,17 +703,26 @@ vascr_instrument_units =  function(instrument)
   if(instrument =="ecis") {return (c("Alpha" ,"Cm"   , "Drift", "Rb"   , "RMSE" , "C"   ,  "P"     ,"R"   ,  "X"  ,   "Z"))}
   if(instrument =="xcelligence") {return(xcelligence = c("Z", "CI"))}
   if(instrument =="cellzscope") { return(c("CPE_A", "CPE_n", "TER", "Ccl", "Rmed", "C"   ,  "P"     ,"R"   ,  "X"  ,   "Z"))}
+  
+  # If all are selected, build the full list by calling this same funciton recusivley
   if(instrument =="all"){return(unique(c(vascr_instrument_units("ecis"), vascr_instrument_units("xcelligence"), vascr_instrument_units("cellzscope"))))}
 }
 
-#' Title
+#' Work out which instrument(s) generated a unit
 #'
-#' @param unit 
+#' @param unit The unit(s) to test
 #'
-#' @return
-#' @export
+#' @return The instrument(s) separated by "+" that could have generated that value. If more than one unit was entered a stirng will be generated for each unit.
 #'
 #' @examples
+#' 
+#' vascr_instrument_from_unit("Rb")
+#' vascr_instrument_from_unit("CI")
+#' vascr_instrument_from_unit("TER")
+#' 
+#' vascr_instrument_from_unit(c("Rb", "TER"))
+#' 
+#' vascr_instrument_from_unit("NA")
 vascr_instrument_from_unit = function(unit)
 {
   
@@ -671,7 +731,6 @@ vascr_instrument_from_unit = function(unit)
   cellzscope = vascr_instrument_units("cellzscope")
   instruments = c()
   return = c()
-  
   
 for (uni in unit)
   {
@@ -990,16 +1049,17 @@ vascr_default = function (data)
 }
 
 
-#' Title
+#' Execute do.call for all variables that exist in the funciton being called
 #'
-#' @param name 
-#' @param payload 
-#' @param arguments 
+#' @param name Name of the funciton to call
+#' @param payload The key data frame or graph to be passed on
+#' @param arguments Any arguements to apply
 #'
-#' @return
-#' @export
+#' @return The returned value from the function applied
 #'
 #' @examples
+#' # Not relevant here
+#' 
 do.call_relevant = function(name, payload, arguments)
 {
   function_args = formals(name)

@@ -16,6 +16,5 @@ The mode of the vector
 Calculate mode of a dataset
 }
 \examples{
-
 getmode(c(1,3,3,4,7))
 }

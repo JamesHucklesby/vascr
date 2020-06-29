@@ -2,20 +2,24 @@
 % Please edit documentation in R/helper_functions.R
 \name{do.call_relevant}
 \alias{do.call_relevant}
-\title{Title}
+\title{Execute do.call for all variables that exist in the funciton being called}
 \usage{
 do.call_relevant(name, payload, arguments)
 }
 \arguments{
-\item{name}{}
+\item{name}{Name of the funciton to call}
 
-\item{payload}{}
+\item{payload}{The key data frame or graph to be passed on}
 
-\item{arguments}{}
+\item{arguments}{Any arguements to apply}
 }
 \value{
-
+The returned value from the function applied
 }
 \description{
-Title
+Execute do.call for all variables that exist in the funciton being called
+}
+\examples{
+# Not relevant here
+
 }

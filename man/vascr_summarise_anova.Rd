@@ -18,7 +18,7 @@ vascr_summarise_anova(data.df, unit, frequency, time, priority = NULL)
 \item{priority}{}
 }
 \value{
-
+Prints out the summary data for an ANOVA analysis
 }
 \description{
 Run a standard panel of ANOVA tests and return the results in text format

@@ -2,16 +2,20 @@
 % Please edit documentation in R/helper_functions.R
 \name{vascr_raw_in_data}
 \alias{vascr_raw_in_data}
-\title{Title}
+\title{Return the raw units in the dataset}
 \usage{
 vascr_raw_in_data(data)
 }
 \arguments{
-\item{data}{}
+\item{data}{The dataset to search}
 }
 \value{
-
+A vector containing the raw units present in the data
 }
 \description{
-Title
+Return the raw units in the dataset
+}
+\examples{
+vascr_raw_in_data(growth.df)
+
 }

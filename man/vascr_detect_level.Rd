@@ -2,16 +2,21 @@
 % Please edit documentation in R/helper_functions.R
 \name{vascr_detect_level}
 \alias{vascr_detect_level}
-\title{Title}
+\title{Check the level of a vascr data frame}
 \usage{
 vascr_detect_level(data)
 }
 \arguments{
-\item{data}{}
+\item{data}{The data frame to analyse}
 }
 \value{
 
 }
 \description{
-Title
+Check the level of a vascr data frame
+}
+\examples{
+vascr_detect_level(growth.df)
+vascr_detect_level(vascr_summarise(growth.df, level = "experiments"))
+vascr_detect_level(vascr_summarise(growth.df, level = "summary"))
 }

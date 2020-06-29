@@ -2,16 +2,26 @@
 % Please edit documentation in R/helper_functions.R
 \name{vascr_instrument_from_unit}
 \alias{vascr_instrument_from_unit}
-\title{Title}
+\title{Work out which instrument(s) generated a unit}
 \usage{
 vascr_instrument_from_unit(unit)
 }
 \arguments{
-\item{unit}{}
+\item{unit}{The unit(s) to test}
 }
 \value{
-
+The instrument(s) separated by "+" that could have generated that value. If more than one unit was entered a stirng will be generated for each unit.
 }
 \description{
-Title
+Work out which instrument(s) generated a unit
+}
+\examples{
+
+vascr_instrument_from_unit("Rb")
+vascr_instrument_from_unit("CI")
+vascr_instrument_from_unit("TER")
+
+vascr_instrument_from_unit(c("Rb", "TER"))
+
+vascr_instrument_from_unit("NA")
 }
