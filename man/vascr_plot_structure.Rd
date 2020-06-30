@@ -2,7 +2,7 @@
 % Please edit documentation in R/vascr_plot_plate.R
 \name{vascr_plot_structure}
 \alias{vascr_plot_structure}
-\title{ECIS plot samplemap}
+\title{Plot the plate structure of a datset}
 \usage{
 vascr_plot_structure(data, title = "Title", stripidentical = TRUE, ...)
 }
@@ -12,10 +12,10 @@ vascr_plot_structure(data, title = "Title", stripidentical = TRUE, ...)
 \item{title}{Title to be placed on the graph}
 }
 \value{
-
+A map of the data sampled
 }
 \description{
-ECIS plot samplemap
+Plot the plate structure of a datset
 }
 \examples{
 

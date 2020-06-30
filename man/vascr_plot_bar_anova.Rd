@@ -2,7 +2,7 @@
 % Please edit documentation in R/vascr_plot_bar.R
 \name{vascr_plot_bar_anova}
 \alias{vascr_plot_bar_anova}
-\title{Title}
+\title{Plot a bar chart with ANOVA statistics superimposed on it}
 \usage{
 vascr_plot_bar_anova(
   data,
@@ -17,17 +17,19 @@ vascr_plot_bar_anova(
 )
 }
 \arguments{
-\item{data}{}
+\item{data}{A vascr dataset}
 
-\item{confidence}{}
+\item{priority}{The priority of values to export}
 
-\item{...}{Any arguement to vascr_prep_graphdata or vascr_polish_plot}
+\item{confidence}{The minmum confidence level to display}
+
+\item{...}{Any arguement to vascr_prep_graphdata or vascr_polish_plot. Use this to select values ect.}
 }
 \value{
-
+A vascr bar plot with statistics attached to it
 }
 \description{
-Title
+Plot a bar chart with ANOVA statistics superimposed on it
 }
 \examples{
 vascr_plot_bar(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45)

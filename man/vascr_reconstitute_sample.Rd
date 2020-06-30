@@ -16,7 +16,6 @@ A CSV separated list of continuous variables
 Uses string processing to guess what might be in an incorrectly formed string field to try and save things. It is generally better to go back and fix the import file than use this function. Legacy only as this is a very heavy function as it does tonnes of string maniuplations.
 }
 \examples{
-
 vascr_reconstitute_sample("1nm cheese + 1nm cars")
 vascr_reconstitute_sample("   5,000.939 nM Oranges")
 vascr_reconstitute_sample("35,000 cells")

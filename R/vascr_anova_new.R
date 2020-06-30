@@ -70,12 +70,13 @@ vascr_prep_stat_priority = function(data.df,priority = NULL)
 #' @param priority The priority to use
 #'
 #' @return An ANOVA formula
-#' @export
 #'
 #' @examples
+#' vascr_formula(c("cells","well"))
 vascr_formula = function(priority)
 {
   formula = paste("Value ~ ",priority[[1]]," + ", priority[[2]])
+  return(formula)
 }
 
 #' Generate a linear model of vascr data

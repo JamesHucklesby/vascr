@@ -97,24 +97,6 @@ return(plot)
 
 }
 
-
-#' Title
-#'
-#' @param data 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-vascr_check_categorical = function(data)
-{
-  minidata = select(data.df, Sample)
-  minidata = unique(minidata)
-  minidata_exploded = vascr_explode(minidata)
-  return(minidata_exploded)
-}
-
-
 #' Reconstitute incorrectly formed sample field
 #' 
 #' Uses string processing to guess what might be in an incorrectly formed string field to try and save things. It is generally better to go back and fix the import file than use this function. Legacy only as this is a very heavy function as it does tonnes of string maniuplations.
@@ -129,7 +111,6 @@ vascr_check_categorical = function(data)
 #' @export 
 #'
 #' @examples
-#' 
 #' vascr_reconstitute_sample("1nm cheese + 1nm cars")
 #' vascr_reconstitute_sample("   5,000.939 nM Oranges")
 #' vascr_reconstitute_sample("35,000 cells")
@@ -175,14 +156,15 @@ vascr_reconstitute_sample = function(string)
   return(paste(samplestack, collapse = " + "))
 }
 
-#' Title
+#' Collapse multiple hashes in a string down to a single hash
 #'
-#' @param string 
+#' @param string The string to collapse the hashes in
 #'
-#' @return
-#' @export
+#' @return A string with hashes collapsed
 #'
 #' @examples
+#' vascr_collapse_hash("###cat###andthe##hat####")
+#' 
 vascr_collapse_hash = function(string)
 {
   tempstring = "" # setup a placeholer to keep track of if the optimisation is still doing something
@@ -202,13 +184,9 @@ vascr_collapse_hash = function(string)
 #' @param data The ECIS dataset with exploded columns
 #'
 #' @return A vector of the returned columns
-#' 
-#' @export
 #'
 #' @examples
-#' 
-#' growth.df$Instrument = "ECIS"
-#' vascr_explode(growth.df)
+#' vascr_exploded_cols(growth.df)
 #' 
 vascr_exploded_cols = function(data)
 {

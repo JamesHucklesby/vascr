@@ -7,18 +7,21 @@
 vascr_plot_bar(data, priority = NULL, error = Inf, confidence = NULL, ...)
 }
 \arguments{
-\item{data}{}
+\item{data}{Vascr dataset to plot}
+
+\item{priority}{Priority of values to plot (blank uses the system default)}
+
+\item{error}{The level of error to display}
 
 \item{...}{Any argument to be passed to vascr_polish_plot or vascr_prep_graphdata}
 }
 \value{
-
+A ggplot bar plot
 }
 \description{
 Plot a vascr data set as a bar
 }
 \examples{
-
 vascr_plot_bar(growth.df, level = "experiments", frequency = 4000, unit = "R", time = list(50,100), error = Inf)
 
 vascr_plot_bar(growth.df, level = "wells", frequency = 4000, unit = "R", time = 50, error = Inf)

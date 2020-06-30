@@ -2,16 +2,21 @@
 % Please edit documentation in R/vascr_plot_plate.R
 \name{vascr_test_multi_plate}
 \alias{vascr_test_multi_plate}
-\title{Title}
+\title{Test if multiple plates are present in a dataset}
 \usage{
 vascr_test_multi_plate(data)
 }
 \arguments{
-\item{data}{}
+\item{data}{Dataset to test}
 }
 \value{
-
+Boolean, true if multiple plates are present. Also returns an error if true.
 }
 \description{
-Title
+Test if multiple plates are present in a dataset
+}
+\examples{
+vascr_test_multi_plate(growth.df)
+vascr_test_multi_plate(vascr_combine(growth.df, growth.df)
+
 }

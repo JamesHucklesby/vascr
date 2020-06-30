@@ -16,8 +16,6 @@ A vector of the returned columns
 Return the exploded cols in a dataset
 }
 \examples{
-
-growth.df$Instrument = "ECIS"
-vascr_explode(growth.df)
+vascr_exploded_cols(growth.df)
 
 }

@@ -1,15 +1,13 @@
 #' Plot a vascr data set as a bar
 #'
-#' @param data 
-#' @param priority
-#' @param error
+#' @param data Vascr dataset to plot
+#' @param priority Priority of values to plot (blank uses the system default)
+#' @param error The level of error to display
 #' @param ... Any argument to be passed to vascr_polish_plot or vascr_prep_graphdata
 #'
-#' @return
-#' @export
+#' @return A ggplot bar plot
 #'
 #' @examples
-#' 
 #' vascr_plot_bar(growth.df, level = "experiments", frequency = 4000, unit = "R", time = list(50,100), error = Inf)
 #' 
 #' vascr_plot_bar(growth.df, level = "wells", frequency = 4000, unit = "R", time = 50, error = Inf)
@@ -142,15 +140,14 @@ vascr_plot_bar = function(data, priority = NULL, error = Inf, confidence = NULL,
   
 
 
-#' Title
+#' Plot a bar chart with ANOVA statistics superimposed on it
 #'
-#' @param data 
-#' @param priority
-#' @param confidence 
-#' @param ... Any arguement to vascr_prep_graphdata or vascr_polish_plot
+#' @param data A vascr dataset
+#' @param priority The priority of values to export
+#' @param confidence The minmum confidence level to display
+#' @param ... Any arguement to vascr_prep_graphdata or vascr_polish_plot. Use this to select values ect.
 #'
-#' @return
-#' @export
+#' @return A vascr bar plot with statistics attached to it
 #'
 #' @examples
 #' vascr_plot_bar(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45)

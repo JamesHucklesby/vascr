@@ -7,16 +7,14 @@
 vascr_plot_plate(data, priority = NULL, ...)
 }
 \arguments{
-\item{data}{}
+\item{data}{Vascr dataset to plot}
 
-\item{time}{}
+\item{priority}{Vascr priority to plot}
 
-\item{unit}{}
-
-\item{frequency}{}
+\item{...}{Other values to pass on to data conditioning funcions}
 }
 \value{
-
+A vascr platemap of the selected data
 }
 \description{
 Plot a heatmap of a particular timepoint

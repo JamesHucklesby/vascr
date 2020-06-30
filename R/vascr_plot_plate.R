@@ -1,12 +1,10 @@
 #' Plot a heatmap of a particular timepoint
 #'
-#' @param data 
-#' @param time 
-#' @param unit 
-#' @param frequency 
+#' @param data Vascr dataset to plot
+#' @param priority Vascr priority to plot
+#' @param ... Other values to pass on to data conditioning funcions
 #'
-#' @return
-#' @export
+#' @return A vascr platemap of the selected data
 #'
 #' @examples
 #' 
@@ -68,14 +66,16 @@ vascr_plot_plate= function(data, priority = NULL,  ...)
 
 
 
-#' Title
+#' Test if multiple plates are present in a dataset
 #'
-#' @param data 
+#' @param data Dataset to test
 #'
-#' @return
-#' @export
+#' @return Boolean, true if multiple plates are present. Also returns an error if true.
 #'
 #' @examples
+#' vascr_test_multi_plate(growth.df)
+#' vascr_test_multi_plate(vascr_combine(growth.df, growth.df)
+#' 
 vascr_test_multi_plate = function(data)
 {
   # Select distinct experiment:well pairs
@@ -94,13 +94,12 @@ vascr_test_multi_plate = function(data)
 }
 
 
-#' ECIS plot samplemap
+#' Plot the plate structure of a datset
 #'
 #' @param data The datapoint to plot
 #' @param title Title to be placed on the graph
 #'
-#' @return
-#' @export
+#' @return A map of the data sampled
 #' 
 #' @importFrom magrittr '%>%'
 #' @importFrom dplyr select

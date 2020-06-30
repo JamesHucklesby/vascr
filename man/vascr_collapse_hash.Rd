@@ -2,16 +2,20 @@
 % Please edit documentation in R/plot_categorical.R
 \name{vascr_collapse_hash}
 \alias{vascr_collapse_hash}
-\title{Title}
+\title{Collapse multiple hashes in a string down to a single hash}
 \usage{
 vascr_collapse_hash(string)
 }
 \arguments{
-\item{string}{}
+\item{string}{The string to collapse the hashes in}
 }
 \value{
-
+A string with hashes collapsed
 }
 \description{
-Title
+Collapse multiple hashes in a string down to a single hash
+}
+\examples{
+vascr_collapse_hash("###cat###andthe##hat####")
+
 }
