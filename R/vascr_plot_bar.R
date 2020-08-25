@@ -3,20 +3,28 @@
 #' @param data Vascr dataset to plot
 #' @param priority Priority of values to plot (blank uses the system default)
 #' @param error The level of error to display
+#' @param confidence Minimum confidence level of results to show on the graph
 #' @param ... Any argument to be passed to vascr_polish_plot or vascr_prep_graphdata
 #'
 #' @return A ggplot bar plot
+#' 
+#' @importFrom ggplot2 position_dodge scale_colour_grey ggplot geom_text aes_string aes geom_bar
+#' 
 #'
 #' @examples
-#' vascr_plot_bar(growth.df, level = "experiments", frequency = 4000, unit = "R", time = list(50,100), error = Inf)
+#' #vascr_plot_bar(growth.df, level = "experiments", frequency = 4000, unit = "R"
+#' #, time = list(50,100), error = Inf)
 #' 
-#' vascr_plot_bar(growth.df, level = "wells", frequency = 4000, unit = "R", time = 50, error = Inf)
-#' vascr_plot_bar(data = growth.df, level = "experiments", frequency = 4000, unit = "R", time = 50, error = Inf)
-#' vascr_plot_bar(growth.df, level = "summary", frequency = 4000, unit = "R", time = 50, error = Inf)
+#' #vascr_plot_bar(growth.df, level = "wells", frequency = 4000, unit = "R", 
+#' #time = 50, error = Inf)
+#' #vascr_plot_bar(data = growth.df, level = "experiments", frequency = 4000, 
+#' #unit = "R", time = 50, error = Inf)
+#' #vascr_plot_bar(growth.df, level = "summary", frequency = 4000, unit = "R", 
+#' #time = 50, error = Inf)
 #' 
-#' vascr_plot_bar(growth.df, level = "deviation", frequency = 4000, unit = "R")
+#' #vascr_plot_bar(growth.df, level = "deviation", frequency = 4000, unit = "R")
 #' 
-#' vascr_plot_bar(growth.df, frequency = 4000, unit = "R", time = 50, confidence = 0.5)
+#' #vascr_plot_bar(growth.df, frequency = 4000, unit = "R", time = 50, confidence = 0.5)
 
 vascr_plot_bar = function(data, priority = NULL, error = Inf, confidence = NULL, ...)
 {
@@ -145,13 +153,22 @@ vascr_plot_bar = function(data, priority = NULL, error = Inf, confidence = NULL,
 #' @param data A vascr dataset
 #' @param priority The priority of values to export
 #' @param confidence The minmum confidence level to display
+#' @param time Timepoint to plot
+#' @param unit Unit to plot
+#' @param frequency Frequency to plot
+#' @param format Statistics format to return
+#' @param error The style of eror bars to plot
 #' @param ... Any arguement to vascr_prep_graphdata or vascr_polish_plot. Use this to select values ect.
 #'
 #' @return A vascr bar plot with statistics attached to it
+#' 
+#' @importFrom ggplot2 geom_errorbar aes ggplot geom_text geom_bar
 #'
 #' @examples
-#' vascr_plot_bar(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45)
-#' vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45)
+#' #vascr_plot_bar(data = growth.df, confidence = 0.95, unit = "R",
+#' # time = 100, frequency = 4000, rotate_x_angle = 45)
+#' #vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R",
+#' #  time = 100, frequency = 4000, rotate_x_angle = 45)
 #' 
 vascr_plot_bar_anova = function(data,priority,confidence, time, unit, frequency, format = toplot, error = Inf, ...)
 {

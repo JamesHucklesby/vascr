@@ -16,8 +16,8 @@ a vector of units provided by an instrument
 Return the units created by a certain instrument
 }
 \examples{
-vascr_instrument_units("ECIS")
-vascr_instrument_units("xCELLigence")
-vascr_instrument_units("cellZscope")
+#vascr_instrument_units("ECIS")
+#vascr_instrument_units("xCELLigence")
+#vascr_instrument_units("cellZscope")
 
 }

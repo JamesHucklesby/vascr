@@ -10,8 +10,7 @@
 #' @export
 #'
 #' @examples
-#' # data = xcell
-#' # vascr_detect_vehicle(data)
+#' #vascr_detect_vehicle(growth.df)
 #' 
 vascr_detect_vehicle = function (data, force_replace = FALSE)
 {
@@ -66,11 +65,10 @@ vascr_detect_vehicle = function (data, force_replace = FALSE)
 #' 
 #' @importFrom dplyr select
 #'
-#' @return
-#' @export
+#' @return A vector of vehicle control wells
 #'
 #' @examples
-#' #vascr_detect_vehicle_control_wells(data)
+#' #vascr_detect_vehicle_control_wells(xcell)
 #' 
 vascr_detect_vehicle_control_wells = function(data, force_replace = FALSE)
 {
@@ -99,8 +97,8 @@ vascr_detect_vehicle_control_wells = function(data, force_replace = FALSE)
 #' @export
 #'
 #' @examples
-#' col_exists(growth.df, "Vector")
-#' col_exists(growth.df, "Unit")
+#' #col_exists(growth.df, "Vector")
+#' #col_exists(growth.df, "Unit")
 col_exists = function (data, col)
 {
   if(col %in% colnames(data))

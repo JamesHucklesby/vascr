@@ -10,6 +10,8 @@ cellzscope_import_model(model, key, experimentname)
 \item{model}{The location of modeled data exported from the cellZscope data}
 
 \item{key}{Optional, a keyfile containing data on which well contains which sample}
+
+\item{experimentname}{Name of the experiment to be built into the dataset}
 }
 \value{
 An vascr compatable dataset
@@ -18,11 +20,11 @@ An vascr compatable dataset
 Imports modeled data previously exported from the cellZscope package. Will not assign names unless a keyfile or raw dataset is provided, as no well naming data is provided in this filetype.
 }
 \examples{
-model = system.file("extdata/mdckmodel.txt", package = "vascr")
-key = system.file("extdata/mdckkey.csv", package = "vascr")
+#model = system.file("extdata/mdckmodel.txt", package = "vascr")
+#key = system.file("extdata/mdckkey.csv", package = "vascr")
 
-output = cellzscope_import_model(model, key)
-output = vascr_subset(output, time = c(0,50))
-vascr_plot(output, unit = "TER", frequency = 0,replication = "wells")
+#output = cellzscope_import_model(model, key)
+#output = vascr_subset(output, time = c(0,50))
+#vascr_plot(output, unit = "TER", frequency = 0,replication = "wells")
 
 }

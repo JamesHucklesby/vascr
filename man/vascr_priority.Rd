@@ -20,20 +20,20 @@ A vector of priorities to plot
 This function calculates the order of priority of variables in a vascr dataset so they can be plotted in the most meaningfull way
 }
 \examples{
-vascr_priority()
-vascr_priority(growth.df)
-vascr_priority(growth.df, priority = c("cells", "...", "Well"))
+#vascr_priority()
+#vascr_priority(growth.df)
+#vascr_priority(growth.df, priority = c("cells", "...", "Well"))
 
-vascr_priority(data = growth.df, priority = c("Sample"))
+#vascr_priority(data = growth.df, priority = c("Sample"))
 
-vascr_priority(data = growth.df)
+#vascr_priority(data = growth.df)
 
-missing.df = growth.df
-missing.df$Value = NULL
+#missing.df = growth.df
+#missing.df$Value = NULL
 
-vascr_priority(missing.df)
+#vascr_priority(missing.df)
 
 # vascr_priority(filtered.df)
 
-vascr_priority(data)
+# vascr_priority(data)
 }

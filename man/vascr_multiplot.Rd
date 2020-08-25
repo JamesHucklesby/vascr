@@ -14,6 +14,8 @@ vascr_multiplot(data, unit = "all", frequency = 0, time = Inf, ...)
 \item{frequency}{The frequency to plot}
 
 \item{time}{The time to plot. Multiple time plots can be plotted with list(1,2) and multiple ranges can be plotted with list(c(1,2), c(3,4))}
+
+\item{...}{Other conditions to be passed into data conditioning and graph preparing steps}
 }
 \value{
 An array of requested ggplots
@@ -22,11 +24,11 @@ An array of requested ggplots
 This function splits out multiple ggplots into a grid when more than one is requested.
 }
 \examples{
-vascr_multiplot(data = growth.df, frequency = 4000, time = list(50, 100))
+#vascr_multiplot(data = growth.df, frequency = 4000, time = list(50, 100))
 
-vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100),100), level = "wells")
+#vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100),100), level = "wells")
 
-vascr_multiplot(growth.df, frequency = c(2000,4000), unit = "R")
+#vascr_multiplot(growth.df, frequency = c(2000,4000), unit = "R")
 
 
 }

@@ -78,6 +78,6 @@ vascr_fix_error = function (data.df, incorrect, correct, limit = "None")
 Find the mode of a categorical variable
 }
 \examples{
-categorical_mode(c("Cat", "Cat", "Monkey"))
+#categorical_mode(c("Cat", "Cat", "Monkey"))
 
 }

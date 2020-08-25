@@ -18,8 +18,8 @@ A dataset containing only the core ECIS columns
 Usefull if you want to to further data manipluation, without having to worry about tracking multiple, unknown columns.
 }
 \examples{
-growth.df$Instrument = "ECIS"
-exploded.df = vascr_explode(growth.df)
-cleaned.df = vascr_remove_metadata(exploded.df)
-identical(growth.df,cleaned.df)
+#growth.df$Instrument = "ECIS"
+#exploded.df = vascr_explode(growth.df)
+#cleaned.df = vascr_remove_metadata(exploded.df)
+#identical(growth.df,cleaned.df)
 }

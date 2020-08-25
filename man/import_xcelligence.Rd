@@ -4,30 +4,39 @@
 \alias{import_xcelligence}
 \title{Import an xcelligence file}
 \usage{
-import_xcelligence(file, key, experimentname)
+import_xcelligence(file, key, experimentname = "NA")
 }
 \arguments{
 \item{file}{The file to import}
 
 \item{key}{A keyfile to apply. Optional, as the xCELLigence internal definitions will be used if no file is specified}
+
+\item{experimentname}{Name of the experiment to be built into the dataset}
 }
 \value{
-
+A vascr datafile
 }
 \description{
 Import an xcelligence file
 }
 \examples{
 # Arguments to push through the function
-file = "inst/extdata/xcell.plt"
-key = "inst/extdata/xcell_lookup.csv"
-xcell = import_xcelligence(file, key)
+# file = "inst/extdata/xcell.plt"
+# key = "inst/extdata/xcell_lookup.csv"
 
-xcell = vascr_explode(xcell)
+#xcell = import_xcelligence(file, key)
 
-#vascr_plot(xcell, unit = "Z", frequency = "10000", replication = "experiments", continuouscontains = "ATP", normtime = 0)
+#xcell = vascr_explode(xcell)
 
-#vascr_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", replication = "wells")
+#vascr_plot(xcell, unit = "Z", frequency = "10000")
+
+#vascr_plot_line(xcell, unit ="CI", frequency = "10000")
+
+# xplot = vascr_subset_continuous(xcelle, continuous = "ATP")
+
+#  vascr_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", level = "wells")
+
+#vascr_plot(growth.df)
 
  
 }

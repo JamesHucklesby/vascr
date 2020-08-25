@@ -30,7 +30,7 @@ A data frame that can be copied and pasted into prism
 This function will automatically average the wells in each experiment, to give a prism-compatable dataset at the experiment level. This allows prism to generate appropriate error bars.
 }
 \examples{
-vascr_prism(growth.df, 'Rb', replication = "summary")
-prism = vascr_prism(growth.df, 'Rb', replication = "wells")
+#vascr_prism(growth.df, 'Rb', replication = "summary")
+#prism = vascr_prism(growth.df, 'Rb', replication = "wells")
 
 }

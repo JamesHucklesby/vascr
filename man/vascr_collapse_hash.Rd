@@ -16,6 +16,7 @@ A string with hashes collapsed
 Collapse multiple hashes in a string down to a single hash
 }
 \examples{
-vascr_collapse_hash("###cat###andthe##hat####")
+#vascr_collapse_hash("###cat###andthe##hat####")
+
 
 }

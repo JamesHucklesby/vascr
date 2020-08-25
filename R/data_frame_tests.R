@@ -1,3 +1,22 @@
+#' Test if an ECIS data frame is exploded
+#'
+#' This function tests to see if exploded columns are present in a dataset. Does not check that all are present, or that they are corrrectly exploded as this would be much slower.
+#'
+#' @param data the data frame to test
+#'
+#' @return True (exploded) or false (not exploded)
+#' 
+#' @examples
+#' #vascr_test_exploded(growth.df)
+#' #imploded = vascr_implode(growth.df)
+#' #vascr_test_exploded(imploded)
+#'
+vascr_test_exploded = function(data.df)
+{
+  # If exploded cols exist, assume it's exploded
+  return(length(vascr_exploded_cols(data.df))>1)
+}
+
 #' Test the integrity of an ECIS dataframe
 #' 
 #' This function will run a whole suite of tests on an ECIS dataframe, to check that it is both well designed for statistical analysis as well as technically intact
@@ -94,12 +113,7 @@ vascr_test_design = function(data.df, verbose = FALSE)
 #' @export
 #'
 #' @examples
-#' experiment.df = vascr_summarise(growth.df, "experiment")
-#' summary.df = vascr_summarise(growth.df, "summary")
-#' 
 #' vascr_test_summary_level(growth.df)
-#' vascr_test_summary_level(experiment.df)
-#' vascr_test_summary_level(summary.df)
 #' 
 vascr_test_summary_level = function(data.df)
 {
@@ -116,18 +130,6 @@ vascr_test_summary_level = function(data.df)
   {
   return("wells")
   }
-  
-  
-}
-
-
-vascr_test_instrument = function(data.df)
-{
-  
-  # This will compare the test datasets to each of the values
-  
-  units = unique(data.df$Unit)
-
   
   
 }

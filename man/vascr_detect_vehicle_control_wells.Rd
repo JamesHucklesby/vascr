@@ -12,12 +12,12 @@ vascr_detect_vehicle_control_wells(data, force_replace = FALSE)
 \item{force_replace}{Should existing IsVehicleControl wells be replaced (if present)?}
 }
 \value{
-
+A vector of vehicle control wells
 }
 \description{
 Convenience function. This first runs vascr_detect_vehicle on the dataset, then provides a summary table of which wells are associated with which vehicle. Provides a usefull check that vehicle detection has been preformed correctly.
 }
 \examples{
-#vascr_detect_vehicle_control_wells(data)
+#vascr_detect_vehicle_control_wells(xcell)
 
 }

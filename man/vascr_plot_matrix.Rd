@@ -13,7 +13,7 @@ vascr_plot_matrix(data.df, unit = "R", frequency = 4000, ...)
 
 \item{frequency}{The frequency to plot. Default is 4000}
 
-\item{verbose}{Prints out the scores for each well. On by default.}
+\item{...}{Values to be passed onto prep_graphdata and polish_plot}
 }
 \value{
 A GGplot2 matrix
@@ -22,6 +22,6 @@ A GGplot2 matrix
 Plot the wells of a 96 well plate
 }
 \examples{
-vascr_plot_matrix(growth.df, unit = "Rb")
+#vascr_plot_matrix(growth.df, unit = "Rb")
 
 }

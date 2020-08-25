@@ -16,6 +16,10 @@ An array containing numeric data. NA will be returned if not numeric, and a warn
 This function converts numbers formatted with commas, such as those used in text variables to numbers. This process is lossy, so is used as late as possible before a continuous variable is needed. Preserves decimal places. Vectorised.
 }
 \examples{
+# A working dataset
+# comma_to_numeric(c("100.001", "10,839", "882,292,939"))
 
+# And one with non-numeric and broken data
+# comma_to_numeric(c("Foo", "77,00", "88.88.88"))
 
 }

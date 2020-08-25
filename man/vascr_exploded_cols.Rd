@@ -16,6 +16,6 @@ A vector of the returned columns
 Return the exploded cols in a dataset
 }
 \examples{
-vascr_exploded_cols(growth.df)
+#vascr_exploded_cols(growth.df)
 
 }

@@ -5,20 +5,20 @@
 \title{Automatically detect erronious wells in a vascr dataset}
 \usage{
 vascr_detect_max_deviation(
-  data,
+  data.df,
   max_deviation = 0,
   frequency = 4000,
   unit = "R"
 )
 }
 \arguments{
+\item{data.df}{A standard ECIS data frame}
+
+\item{max_deviation}{Maximum deviation that is acceptable, lower is more stringent}
+
 \item{frequency}{Frequency to run numbers on, default is 4000}
 
 \item{unit}{Unit to use in detection, default is R}
-
-\item{data.df}{A standard ECIS data frame}
-
-\item{threshold}{How stringent to be in excluding wells. Higher is less stringent. Default is 5.}
 }
 \value{
 A tibble containing the offending wells, which experiment they are from and the score they were removed with
@@ -35,7 +35,7 @@ A dataframe is returned with a score for each well, fully labeled minus Time and
 }
 \examples{
 # Return the results as a table
-vascr_detect_max_deviation(growth.df)
+#vascr_detect_max_deviation(growth.df)
 # Then return a graphical representaiton
-vascr_plot_deviation(growth.df)
+#vascr_plot_deviation(growth.df)
 }

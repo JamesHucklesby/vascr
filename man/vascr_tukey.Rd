@@ -7,26 +7,26 @@
 vascr_tukey(data.df, unit, frequency, time, priority = NULL, raw = FALSE)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The dataset to analyse}
 
-\item{unit}{}
+\item{unit}{Unit to analyse}
 
-\item{frequency}{}
+\item{frequency}{Frequency to analyse}
 
-\item{time}{}
+\item{time}{Time to analyse}
 
-\item{priority}{}
+\item{priority}{Priority of units for statistical analyasis}
 
-\item{raw}{}
+\item{raw}{If true, a non-processed form of the tukey results will be returned}
 }
 \value{
-
+A table or Tukey HSD test result
 }
 \description{
 Generate a tukey analyasis of vascr data
 }
 \examples{
-vascr_tukey(growth.df, "R", 4000, 100)
-vascr_tukey(growth.df, "R", 4000, 100, raw = TRUE)
+# vascr_tukey(growth.df, "R", 4000, 100)
+# vascr_tukey(growth.df, "R", 4000, 100, raw = TRUE)
 
 }

@@ -16,11 +16,6 @@ A summarised standard ECIS dataframe
 Test the summary level of an ECIS dataframe
 }
 \examples{
-experiment.df = vascr_summarise(growth.df, "experiment")
-summary.df = vascr_summarise(growth.df, "summary")
-
 vascr_test_summary_level(growth.df)
-vascr_test_summary_level(experiment.df)
-vascr_test_summary_level(summary.df)
 
 }

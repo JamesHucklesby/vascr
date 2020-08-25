@@ -22,6 +22,6 @@ A conditioned vascr dataset
 Prep data for statistical analyasis
 }
 \examples{
-vascr_prep_statdata(growth.df, "R", 4000, 100)
+#vascr_prep_statdata(growth.df, "R", 4000, 100)
 
 }

@@ -25,7 +25,7 @@ This will currently over-sample data, use with care
 }
 \examples{
 
-data = vascr_resample(growth.df, 10, 50 ,100, 50)
-head (data)
+#data = vascr_resample(data.df = growth.df, by = 10)
+#head (data)
 
 }

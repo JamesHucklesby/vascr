@@ -19,13 +19,13 @@ Validates if a file exists, and if it has the correct file extension. This is us
 }
 \examples{
 # check a file that does not exist fails
-vascr_validate_file("R/AAA_TODOOO.R", "P")
+#vascr_validate_file("R/AAA_TODOOO.R", "P")
 # Check a file with the wrong extension fails
-vascr_validate_file("R/AAA_TODO.R", "P")
+#vascr_validate_file("R/AAA_TODO.R", "P")
 # Check a file with the wrong extensions fail
-vascr_validate_file("R/AAA_TODO.R", c("P", "q"))
+#vascr_validate_file("R/AAA_TODO.R", c("P", "q"))
 # Check a file with the right extension passes
-vascr_validate_file("R/AAA_TODO.R", "R")
+#vascr_validate_file("R/AAA_TODO.R", "R")
 # Check a file with one of two right extensions passes
-vascr_validate_file("R/AAA_TODO.R", extension = c("p", "r"))
+#vascr_validate_file("R/AAA_TODO.R", extension = c("p", "r"))
 }

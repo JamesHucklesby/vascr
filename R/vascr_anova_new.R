@@ -1,11 +1,3 @@
-# data.df = growth.df
-# unit = "R"
-# frequency = 4000
-# priority = NULL
-# time = 100
-# 
-
-
 #' Prep data for statistical analyasis
 #'
 #' @param data.df The dataset to analyse
@@ -17,7 +9,7 @@
 #' @export
 #'
 #' @examples
-#' vascr_prep_statdata(growth.df, "R", 4000, 100)
+#' #vascr_prep_statdata(growth.df, "R", 4000, 100)
 #' 
 vascr_prep_statdata = function(data.df, unit, frequency, time)
 {
@@ -45,14 +37,14 @@ return(imploded)
 
 #' Prep priority for statistical data
 #'
-#' @param data The dataset to use
+#' @param data.df The dataset to use
 #' @param priority Manual priority (if set)
 #'
 #' @return A priority list for use in a vascr dataset
 #' @export
 #'
 #' @examples
-#' vascr_prep_stat_priority(growth.df)
+#' #vascr_prep_stat_priority(growth.df)
 vascr_prep_stat_priority = function(data.df,priority = NULL)
 {
   priority = vascr_priority(data = data.df, explicit = "Value", priority = priority)
@@ -72,7 +64,7 @@ vascr_prep_stat_priority = function(data.df,priority = NULL)
 #' @return An ANOVA formula
 #'
 #' @examples
-#' vascr_formula(c("cells","well"))
+#' # vascr_formula(c("cells","well"))
 vascr_formula = function(priority)
 {
   formula = paste("Value ~ ",priority[[1]]," + ", priority[[2]])
@@ -93,7 +85,7 @@ vascr_formula = function(priority)
 #' @importFrom stats lm
 #'
 #' @examples
-#' vascr_lm(growth.df, "R", 4000, 100)
+#' # vascr_lm(growth.df, "R", 4000, 100)
 #' 
 vascr_lm = function(data.df, unit, frequency, time, priority = NULL)
 {
@@ -121,7 +113,7 @@ vascr_lm = function(data.df, unit, frequency, time, priority = NULL)
 #'
 #' @examples
 #' 
-#' vascr_residuals(growth.df, "R", "4000", 100)
+#' # vascr_residuals(growth.df, "R", "4000", 100)
 #' 
 vascr_residuals = function(data.df, unit, frequency, time, priority = NULL)
 {
@@ -146,7 +138,7 @@ vascr_residuals = function(data.df, unit, frequency, time, priority = NULL)
 #' @export
 #'
 #' @examples
-#' vascr_plot_qq(growth.df, "R", 4000, 100)
+#' # vascr_plot_qq(growth.df, "R", 4000, 100)
 #' 
 vascr_plot_qq = function(data.df, unit, frequency, time, priority = NULL)
 {
@@ -183,7 +175,7 @@ vascr_plot_qq = function(data.df, unit, frequency, time, priority = NULL)
 #' @export
 #'
 #' @examples
-#' vascr_shapiro(growth.df, "R", 4000, 100)
+#' # vascr_shapiro(growth.df, "R", 4000, 100)
 #' 
 vascr_shapiro = function(data.df, unit, frequency, time, priority = NULL)
 {
@@ -201,13 +193,14 @@ vascr_shapiro = function(data.df, unit, frequency, time, priority = NULL)
 #' @param time Time to plot
 #' @param priority Vascr priority list, will use the default if available
 #' 
+#' @importFrom ggplot2 stat_function ggplot geom_histogram aes
 #'
 #' @return a ggplot with rediduals overlaid by a normal curve
 #' @export
 #'
 #' @examples
 #' 
-#' vascr_plot_normality(growth.df, "R", 4000, 100)
+#' # vascr_plot_normality(growth.df, "R", 4000, 100)
 #' 
 vascr_plot_normality = function(data.df, unit, frequency, time, priority = NULL)
 {
@@ -219,7 +212,7 @@ vascr_plot_normality = function(data.df, unit, frequency, time, priority = NULL)
   filteredplot.df = filtered.df
   filteredplot.df$Value = filtered.df$residuals
   
-  normaloverlayplot = ggplot2::ggplot(filteredplot.df, aes(x = Value)) + 
+  normaloverlayplot = ggplot(filteredplot.df, aes(x = Value)) + 
     geom_histogram(aes(y =..density..),
                             colour = "black",
                             bins = 10,
@@ -247,7 +240,7 @@ vascr_plot_normality = function(data.df, unit, frequency, time, priority = NULL)
 #' @export
 #'
 #' @examples
-#' vascr_levene(growth.df, "R", 4000, 100)
+#' # vascr_levene(growth.df, "R", 4000, 100)
 #' 
 vascr_levene = function(data.df, unit, frequency, time, priority = NULL)
 {
@@ -270,12 +263,14 @@ vascr_levene = function(data.df, unit, frequency, time, priority = NULL)
 #' @param frequency Frequency to analyase
 #' @param time Time to analyse
 #' @param priority A vascr list of priorities. If left blank default will be used.
+#' 
+#' @importFrom ggplot2 ggplot xlab ylab labs stat_smooth geom_hline geom_point
 #'
 #' @return A ggplot of a levene's test and the underlying data analysed
 #' @export
 #'
 #' @examples
-#' vascr_plot_levene(growth.df, "R", 4000, 100)
+#' # vascr_plot_levene(growth.df, "R", 4000, 100)
 #' 
 #' 
 vascr_plot_levene = function(data.df, unit, frequency, time, priority = NULL)
@@ -313,13 +308,15 @@ vascr_plot_levene = function(data.df, unit, frequency, time, priority = NULL)
 #' @param frequency Frequency to plot
 #' @param time Time to plot
 #' @param priority Vascr priority list. Blank will use the baked in default.
-#' @param ... 
+#' @param ... Other arguements to be passed on to vascr_plot_line
+#'
+#' @importFrom ggplot2 geom_vline
 #'
 #' @return A ggplot2 object
 #' @export
 #'
 #' @examples
-#' vascr_plot_time_vline(growth.df, "R", 4000, 100)
+#' # vascr_plot_time_vline(growth.df, "R", 4000, 100)
 #' 
 vascr_plot_time_vline = function(data.df, unit, frequency, time, priority = NULL, ...)
 {
@@ -344,7 +341,7 @@ vascr_plot_time_vline = function(data.df, unit, frequency, time, priority = NULL
 
 #' Plot replicate data sets as a box plot
 #'
-#' @param data The dataset to plot
+#' @param data.df The dataset to plot
 #' @param unit Unit to plot
 #' @param frequency Frequency to plot
 #' @param time Time to plot
@@ -356,7 +353,7 @@ vascr_plot_time_vline = function(data.df, unit, frequency, time, priority = NULL
 #' @export
 #'
 #' @examples
-#' vascr_plot_box_replicate(growth.df, "R", 4000, 100)
+#' # vascr_plot_box_replicate(growth.df, "R", 4000, 100)
 #' 
 vascr_plot_box_replicate = function(data.df, unit, frequency, time, priority = NULL)
 {
@@ -374,7 +371,7 @@ return(overallplot)
 
 #' Make a display with all the anova analyasis pre-conducted
 #'
-#' @param data vascr dataset to plot
+#' @param data.df vascr dataset to plot
 #' @param unit unit to plot
 #' @param frequency frequnecy to plot
 #' @param time timepoint to plot at
@@ -387,7 +384,7 @@ return(overallplot)
 #'
 #' @examples
 #' 
-#' vascr_plot_anova(growth.df, "R", 4000, 100)
+#' # vascr_plot_anova(growth.df, "R", 4000, 100)
 #' 
 vascr_plot_anova = function(data.df, unit, frequency, time, priority = NULL, ...)
 {
@@ -411,19 +408,20 @@ return(grid)
 
 #' Generate a tukey analyasis of vascr data
 #'
-#' @param data.df 
-#' @param unit 
-#' @param frequency 
-#' @param time 
-#' @param priority 
-#' @param raw
+#' @param data.df The dataset to analyse
+#' @param unit Unit to analyse
+#' @param frequency Frequency to analyse
+#' @param time Time to analyse
+#' @param priority Priority of units for statistical analyasis
+#' @param raw If true, a non-processed form of the tukey results will be returned
+#' 
+#' @importFrom dplyr arrange
 #'
-#' @return
-#' @export
+#' @return A table or Tukey HSD test result
 #'
 #' @examples
-#' vascr_tukey(growth.df, "R", 4000, 100)
-#' vascr_tukey(growth.df, "R", 4000, 100, raw = TRUE)
+#' # vascr_tukey(growth.df, "R", 4000, 100)
+#' # vascr_tukey(growth.df, "R", 4000, 100, raw = TRUE)
 #' 
 vascr_tukey = function(data.df, unit, frequency, time, priority = NULL, raw = FALSE)
 {
@@ -435,7 +433,7 @@ vascr_tukey = function(data.df, unit, frequency, time, priority = NULL, raw = FA
   {
   data.df = vascr_implode(data.df, stripidentical = TRUE)
   sigtable = vascr_make_significance_table(data.df, time, unit, frequency, 1, format = "Tukey_data")
-  sigtable = arrange(sigtable, Tukey.levels)
+  sigtable = arrange(sigtable, "Tukey.levels")
   }
   
   return(sigtable)
@@ -444,17 +442,18 @@ vascr_tukey = function(data.df, unit, frequency, time, priority = NULL, raw = FA
 
 #' Run a standard panel of ANOVA tests and return the results in text format
 #'
-#' @param data.df  
-#' @param unit 
-#' @param frequency 
-#' @param time 
-#' @param priority 
+#' @param data.df  The dataset to analyse
+#' @param unit Unit to analyse
+#' @param frequency Frequency to analyse
+#' @param time Time to analyse
+#' @param priority Priority list of variables to run tests on
+#' 
+#' @importFrom stats anova
 #'
 #' @return Prints out the summary data for an ANOVA analysis
-#' @export 
 #'
 #' @examples
-#' vascr_summarise_anova(growth.df, "R", 4000, 100)
+#' #vascr_summarise_anova(growth.df, "R", 4000, 100)
 #' 
 vascr_summarise_anova = function(data.df, unit, frequency, time, priority = NULL)
 {

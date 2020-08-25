@@ -6,25 +6,26 @@
 #'
 #' @param file Path to the excelligence file to be imported
 #' @param key Optional, standard keyfile that will overwrite what is stored in the excelligence file
+#' @param experimentname The name of the expeiment to build into the dataset
 #'
 #' @return A standard impedr data frame
 #'
 #' @importFrom stringr str_split str_replace
 #' @importFrom dplyr select left_join
-#' @importFrom stats na.omit
+#' @importFrom stats na.omit time
 #' @importFrom tidyr separate fill pivot_longer
 #'
 #' @export
 #'
 #' @examples
-#' filename = "inst/extdata/xcell.txt"
-#' dataset = xcelligence_import_exported(filename)
-#' head(dataset)
+#' # filename = "inst/extdata/xcell.txt"
+#' # dataset = xcelligence_import_exported(filename)
+#' # head(dataset)
 #' 
-#' key = "inst/extdata/xcell_lookup.csv"
-#' dataset = xcelligence_import_exported(filename,key)
-#' head(dataset)
-#' head(vascr_explode(dataset))
+#' # key = "inst/extdata/xcell_lookup.csv"
+#' # dataset = xcelligence_import_exported(filename,key, "TEST")
+#' # head(dataset)
+#' # head(vascr_explode(dataset))
 xcelligence_import_exported = function(file, key, experimentname)
 {
 

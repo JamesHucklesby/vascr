@@ -17,7 +17,7 @@ Current aquisition rate
 }
 \examples{
 
-vascr_current_frequency(growth.df)
+#vascr_current_frequency(growth.df)
 
 
 }

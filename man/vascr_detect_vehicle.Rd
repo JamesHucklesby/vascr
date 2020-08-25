@@ -18,7 +18,6 @@ An vascr dataset with an extra IsVehicleControl column
 Detect vehicles in an vascr dataset
 }
 \examples{
-# data = xcell
-# vascr_detect_vehicle(data)
+#vascr_detect_vehicle(growth.df)
 
 }

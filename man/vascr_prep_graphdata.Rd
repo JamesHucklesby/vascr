@@ -5,12 +5,12 @@
 \title{Prepare a dataset to be graphed by vascar_graph_xxx}
 \usage{
 vascr_prep_graphdata(
-  data,
+  data.df,
   unit = "",
   frequency = Inf,
-  time = Inf,
-  samplecontains = "",
-  experiment = "",
+  time = NULL,
+  samplecontains = NULL,
+  experiment = NULL,
   error = Inf,
   alignkey = NULL,
   normtime = NULL,
@@ -19,48 +19,59 @@ vascr_prep_graphdata(
   continuouscontains = NULL,
   stripidentical = TRUE,
   sortkeyincreasing = TRUE,
-  level = "",
-  errortype = "sem"
+  level = "summary",
+  errortype = "sem",
+  subsample = NULL
 )
 }
 \arguments{
-\item{data}{}
+\item{unit}{Unit to subset to}
 
-\item{unit}{}
+\item{frequency}{Frequency to subset to}
 
-\item{frequency}{}
+\item{time}{Time to subset to}
 
-\item{time}{}
+\item{samplecontains}{Subset only sample names that contain this string}
 
-\item{samplecontains}{}
+\item{experiment}{Experiment to subset to}
 
-\item{experiment}{}
+\item{error}{How much error to plot. Required to allow subsampling if required}
 
-\item{error}{}
+\item{alignkey}{Should key points be aligned}
 
-\item{alignkey}{}
+\item{normtime}{Time to normalise to}
 
-\item{normtime}{}
+\item{divide}{Should normalisation be by division (true) or subtraction (false)}
 
-\item{divide}{}
+\item{preprocessed}{Is the data already processed and therefore should be left alone}
 
-\item{preprocessed}{}
+\item{continuouscontains}{Subset variables where the sample contains this string}
 
-\item{continuouscontains}{}
+\item{stripidentical}{Should entireley identical columns be removed}
 
-\item{stripidentical}{}
+\item{sortkeyincreasing}{Should samples be sorted in an increasing way}
+
+\item{level}{The level of summary to return}
+
+\item{errortype}{SEM or SD errors to generate}
+
+\item{data}{Vascr dataset to plot}
 }
 \value{
-
+A vascr dataset prepared for use in graphing
 }
 \description{
 Central data subset, cleanup and label prep function for generation of graphics
 }
 \examples{
 
-data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary")
-data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments")
-data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells")
+vascr_plot(growth.df, unit = "Rb", level = "experiments", frequency = 0)
+
+datum2 = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary", frequency = 0)
+
+
+#data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments")
+#data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells")
 
 
 }

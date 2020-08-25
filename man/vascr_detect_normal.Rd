@@ -16,9 +16,9 @@ The time the data was normalised to, or FALSE if not normalised
 Detect if an ECIS dataset has been normalised
 }
 \examples{
-growth.df$Instrument = "ECIS"
-standard = growth.df
-normal = vascr_normalise(growth.df, 100)
-vascr_detect_normal(standard)
-vascr_detect_normal(normal)
+#growth.df$Instrument = "ECIS"
+#standard = growth.df
+#normal = vascr_normalise(growth.df, 100)
+#vascr_detect_normal(standard)
+#vascr_detect_normal(normal)
 }

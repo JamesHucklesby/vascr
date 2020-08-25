@@ -10,6 +10,10 @@ vascr_plot_structure(data, title = "Title", stripidentical = TRUE, ...)
 \item{data}{The datapoint to plot}
 
 \item{title}{Title to be placed on the graph}
+
+\item{stripidentical}{Should identical wells be removed form the dataset}
+
+\item{...}{Variables to be passed onto prep_graphdata and polish_plot}
 }
 \value{
 A map of the data sampled
@@ -19,6 +23,6 @@ Plot the plate structure of a datset
 }
 \examples{
 
-vascr_plot_structure(growth.df)
+#vascr_plot_structure(growth.df)
 
 }

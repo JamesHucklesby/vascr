@@ -4,20 +4,14 @@
 \alias{vascr_plot_isolate}
 \title{Animation removed due to compatabilty issues with CRAN. To be re-introduced later.}
 \usage{
-vascr_plot_isolate(data, well, ...)
+vascr_plot_isolate(data.df, well, ...)
 }
 \arguments{
+\item{data.df}{The dataset the well is in}
+
 \item{well}{The well to be isolated}
 
 \item{...}{Other conditions to pass on to the vascr_plot command that generates the graph}
-
-\item{data.df}{The dataset the well is in}
-
-\item{title}{The title of the plot}
-
-\item{unit}{The unit to plot. Default is R}
-
-\item{frequency}{The frequency to plot. Default is 4000}
 }
 \value{
 A ggplot graph showing the isoated well and the experimental median well
@@ -42,7 +36,7 @@ A ggplot graph showing the isoated well and the experimental median well
 #' @export
 #'
 #' @examples
-#' vascr_animatefrequency(growth.df, 'R', 3)
+#' #vascr_animatefrequency(growth.df, 'R', 3)
 #' 
 vascr_animatefrequency = function(alldata.df, unittoplot, frames) {
     
@@ -66,8 +60,9 @@ Graph a single well that is misbehaving
 }
 \examples{
 
-datum = vascr_plot_isolate(growth.df, well = "A3", unit = "R", frequency = 4000, error = Inf, priority = NULL)
+#datum = vascr_plot_isolate(growth.df, well = "A3", unit = "R", frequency = 4000,
+# error = Inf, priority = NULL)
 
-vascr_plot_line(datum, preprocessed = TRUE, priority = c("Time", "Sample"))
+#vascr_plot_line(datum, preprocessed = TRUE, priority = c("Time", "Sample"))
 
 }

@@ -1,17 +1,11 @@
 #' Plot a categorical ECIS variable
 #'
 #' @param data A standard ECIS dataset
-#' @param unit The unit to plot
-#' @param frequency The frequency to plot
-#' @param replication The replication level to plot at
-#' @param time The time to run this analyasis at
-#' @param error How much error to display
-#' @param alphavalue The alpha of the error bars (how clear they are so you can see the overlap)
-#' @param xlab Label on the X axis
-#' @param ylab  Label on the Y axis
-#' @param title The title
 #' @param cols The column names to display
-#' @param continuous The nominated continuous variable
+#' @param priority Priority of variables to plot
+#' @param level Level of data replication to plot
+#' @param error Type of error to plot
+#' @param ... Variables to be passed to vascr_prep_graphdata and vascr_polish_plot
 #' 
 #' @importFrom ggplot2 aes labs geom_point geom_line geom_errorbar geom_ribbon
 #'
@@ -19,17 +13,19 @@
 #' @export
 #'
 #' @examples
+#'
+#' #vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary")
+#'
 #' 
-#' growth.df$Instrument = "ECIS"
+#' # vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "wells", 
+#' #time = 100, error = Inf, priority = c("cells", "Experiment"))
+#' # vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "experiments",
+#' # time = 100, priority = c("cells", "Experiment"), error = 1)
+#' # vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "summary",
+#' # time = 100, continuous = "cells", error = Inf, priority = c("cells", "Experiment"))
 #'
-#'vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary")
 #'
-#'vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "wells", time = 100, error = Inf, priority = c("cells", "Experiment"))
-#' vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "experiments", time = 100, priority = c("cells", "Experiment"), error = 1)
-#' vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "summary", time = 100, continuous = "cells", error = Inf, priority = c("cells", "Experiment"))
-#'
-#'
-#'data = growth.df
+#'#data = growth.df
 #'
 #' 
 vascr_plot_continuous = function(data, cols, priority, level, error, ...)
@@ -111,9 +107,9 @@ return(plot)
 #' @export 
 #'
 #' @examples
-#' vascr_reconstitute_sample("1nm cheese + 1nm cars")
-#' vascr_reconstitute_sample("   5,000.939 nM Oranges")
-#' vascr_reconstitute_sample("35,000 cells")
+#' #vascr_reconstitute_sample("1nm cheese + 1nm cars")
+#' #vascr_reconstitute_sample("   5,000.939 nM Oranges")
+#' #vascr_reconstitute_sample("35,000 cells")
 #' 
 vascr_reconstitute_sample = function(string)
 {
@@ -163,7 +159,8 @@ vascr_reconstitute_sample = function(string)
 #' @return A string with hashes collapsed
 #'
 #' @examples
-#' vascr_collapse_hash("###cat###andthe##hat####")
+#' #vascr_collapse_hash("###cat###andthe##hat####")
+#' 
 #' 
 vascr_collapse_hash = function(string)
 {
@@ -186,7 +183,7 @@ vascr_collapse_hash = function(string)
 #' @return A vector of the returned columns
 #'
 #' @examples
-#' vascr_exploded_cols(growth.df)
+#' #vascr_exploded_cols(growth.df)
 #' 
 vascr_exploded_cols = function(data)
 {
@@ -201,7 +198,6 @@ vascr_exploded_cols = function(data)
 #' @param set The set of columns to request. Default is core.
 #'
 #' @return A vector of the columns requested
-#' @export
 #'
 #' @examples
 #' 

@@ -13,6 +13,6 @@ Vector containing all wells of a 96 well plate
 All the well names of a 96 well plate
 }
 \examples{
-vascr_96_well_names()
+#vascr_96_well_names()
 
 }

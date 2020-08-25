@@ -17,11 +17,11 @@ Work out which instrument(s) generated a unit
 }
 \examples{
 
-vascr_instrument_from_unit("Rb")
-vascr_instrument_from_unit("CI")
-vascr_instrument_from_unit("TER")
+#vascr_instrument_from_unit("Rb")
+#vascr_instrument_from_unit("CI")
+#vascr_instrument_from_unit("TER")
 
-vascr_instrument_from_unit(c("Rb", "TER"))
+#vascr_instrument_from_unit(c("Rb", "TER"))
 
-vascr_instrument_from_unit("NA")
+#vascr_instrument_from_unit("NA")
 }

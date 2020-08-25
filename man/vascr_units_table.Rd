@@ -13,7 +13,6 @@ A data frame of units, their content and if they are modeled
 Table of units used in the vascr package
 }
 \examples{
-
-vascr_units_table()
+#vascr_units_table()
 
 }

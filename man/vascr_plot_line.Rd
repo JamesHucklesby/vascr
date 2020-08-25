@@ -2,35 +2,43 @@
 % Please edit documentation in R/vascr_plot_line.R
 \name{vascr_plot_line}
 \alias{vascr_plot_line}
-\title{Title}
+\title{Plot a line graph from a vascr dataset}
 \usage{
-vascr_plot_line(data, priority = NULL, error = Inf, alpha = 0.1, ...)
+vascr_plot_line(data.df, priority = NULL, error = Inf, alpha = 0.1, ...)
 }
 \arguments{
-\item{data}{}
+\item{data.df}{Vascr dataset to plot}
 
-\item{error}{}
+\item{priority}{Priority list of variables to plot}
 
-\item{alpha}{}
+\item{error}{Error to plot}
 
-\item{replication}{}
+\item{alpha}{Alpha value of the line plotted}
+
+\item{...}{Values to be passed onto prep_graphdata and polish_plot}
 }
 \value{
-
+A ggplot2 object of the graph created
 }
 \description{
-Title
+Plot a line graph from a vascr dataset
 }
 \examples{
-vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", title = "AAA")
+vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", error = Inf)
+
+
 vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "experiments", title = "AAA")
 vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "wells", title = "AAA")
 vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "deviation", title = "AAA")
 
-vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", title = "AAA")
-vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", title = "AAA", error = 1)
-vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", title = "AAA", error = 5)
+#vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary",
+# title = "AAA")
+#vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary",
+# title = "AAA", error = 1)
+#vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary",
+# title = "AAA", error = 5)
 
-vascr_plot_line(growth.df, unit = "R", frequency = "raw", time = 50, level = "experiments", title = "AAA", error = 0, logscale = "x")
+#vascr_plot_line(growth.df, unit = "R", frequency = "raw", time = 50,
+# level = "experiments", title = "AAA", error = 0, logscale = "x")
 
 }

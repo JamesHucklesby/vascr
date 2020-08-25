@@ -16,7 +16,7 @@ Boolean, true if multiple plates are present. Also returns an error if true.
 Test if multiple plates are present in a dataset
 }
 \examples{
-vascr_test_multi_plate(growth.df)
-vascr_test_multi_plate(vascr_combine(growth.df, growth.df)
+#vascr_test_multi_plate(growth.df)
+#vascr_test_multi_plate(vascr_combine(growth.df, growth.df)
 
 }

@@ -98,6 +98,7 @@ vascr_assign_samples = function (data, sampledefine)
 #'
 #' @param rawdata A resampled ABP file containing the un-modeled data
 #' @param sampledefine A CSV file containing well numbers and their corresponding sample names
+#' @param experimentname Name of the experiment to be built into the dataset
 #'
 #' @return Data frame containing all the raw data readings from the ECIS Z0 instrument
 #' 
@@ -117,17 +118,17 @@ vascr_assign_samples = function (data, sampledefine)
 #' #but you can use a path relative to the file you are working on. 
 #' #E.G 'Experiment1/Raw.abp'
 #' 
-#' rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'vascr')
-#' sampledefine = system.file('extdata/growth1_samples.csv', package = 'vascr')
+#' #rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'vascr')
+#' #sampledefine = system.file('extdata/growth1_samples.csv', package = 'vascr')
 #' 
 #' #Then run the import
 #' 
-#' data1 = ecis_import_raw(rawdata, sampledefine)
-#' data1$Experiment = "Growth_1"
-#' head(data1)
-#' vascr_plot(data1, unit = "X")
+#' #data1 = ecis_import_raw(rawdata, sampledefine, "TEST")
+#' #data1$Experiment = "Growth_1"
+#' #head(data1)
+#' #vascr_plot(data1, unit = "X")
 #' 
-ecis_import_raw = function(rawdata, sampledefine, experimentname) {
+ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
   
   vascr_validate_file(rawdata, "abp")
   vascr_validate_file(sampledefine, c("csv", "xlsx"))
@@ -230,6 +231,7 @@ ecis_import_raw = function(rawdata, sampledefine, experimentname) {
 #'
 #' @param modeleddata Raw modeled data in APB format
 #' @param sampledefine CSV file containing which wells correspond to which values
+#' @param experimentname Name of the experiment to be built into the dataset
 #'
 #' @return Data frame containing modeled data
 #' @export
@@ -247,16 +249,16 @@ ecis_import_raw = function(rawdata, sampledefine, experimentname) {
 #'  #can use a path relative to the file you are working on. 
 #'  #E.G 'Experiment1/Raw.abp'
 #' 
-#' modeleddata = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'vascr')
-#' sampledefine = system.file('extdata/growth1_samples.csv', package = 'vascr')
+#' #modeleddata = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'vascr')
+#' #sampledefine = system.file('extdata/growth1_samples.csv', package = 'vascr')
 #' 
 #' #Then run the import
 #' 
-#' data = ecis_import_model(modeleddata, sampledefine)
-#' head(data)
-#' vascr_plot(data, unit = "Rb", replication = "wells")
+#' #data = ecis_import_model(modeleddata, sampledefine)
+#' #head(data)
+#' #vascr_plot(data, unit = "Rb", level = "wells")
 #' 
-ecis_import_model = function(modeleddata, sampledefine, experimentname) {
+ecis_import_model = function(modeleddata, sampledefine, experimentname = "NA") {
   
    # Validate that the files are readable
    vascr_validate_file(modeleddata, "csv")
@@ -387,23 +389,22 @@ ecis_import_model = function(modeleddata, sampledefine, experimentname) {
 #' @param rawdata A raw ABP file to import
 #' @param modeled  A modeled APB file for import
 #' @param key A CSV file containing each well and it's corresponding sample
+#' @param experimentname Name of the experiment to be built into the dataset
 #'
 #' @return A dataframe containing all the data APB generated from an experiment 
 #' @export
 #'
 #' @examples
 #' 
-#' rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'vascr')
-#' modeled = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'vascr')
-#' key = system.file('extdata/growth1_samples.csv', package = 'vascr')
+#' #rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'vascr')
+#' #modeled = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'vascr')
+#' #key = system.file('extdata/growth1_samples.csv', package = 'vascr')
 #' 
 #' #Then run the import
 #' 
-#' data = ecis_import(rawdata,modeled,key)
-#' head(data)
-#' vascr_plot(data, unit = "Rb")
-#' vascr_plot(data, unit = "R")
-ecis_import = function(rawdata, modeled, key, experimentname) {
+#' #data = ecis_import(rawdata,modeled,key, experimentname = "TEST")
+#' #head(data)
+ecis_import = function(rawdata, modeled, key, experimentname = "NA") {
   
   # Validate files exist and are correct. Will be done in the internal functions, but doing it here saves time on failure
   vascr_validate_file(rawdata, "abp")
@@ -413,7 +414,7 @@ ecis_import = function(rawdata, modeled, key, experimentname) {
   
     combined.df = ecis_import_model(modeled, key, experimentname)
     raw.df = ecis_import_raw(rawdata, key, experimentname)
-    masterdata.df = vascr_combine(combined.df, raw.df, resample = TRUE)
+    masterdata.df = vascr_combine(combined.df, raw.df)
     
     return(masterdata.df)
 }

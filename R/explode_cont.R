@@ -12,14 +12,14 @@
 #' @examples
 #' growth.df$Instrument ="ECIS"
 #' 
-#' # Stip out all the non-core columns in the dataset
-#' data.df = vascr_remove_metadata(growth.df)
-#' 
-#' # Run the explosion to re-generate the non-core columns
-#' processed = vascr_explode(data.df)
-#' 
-#' # Show that the re-created data is identical to the original dataset
-#' all.equal(growth.df, processed)
+# # Stip out all the non-core columns in the dataset
+# # data.df = vascr_remove_metadata(growth.df)
+# 
+# # Run the explosion to re-generate the non-core columns
+# # processed = vascr_explode(data.df)
+# 
+# # Show that the re-created data is identical to the original dataset
+# # all.equal(growth.df, processed)
 #' 
 vascr_explode = function(data)
 {
@@ -52,7 +52,23 @@ vascr_explode = function(data)
   
   return(df4)
   
-  }
+}
+
+
+#' Make a vector containing numbers with commas numeric
+#'
+#' @param vector The vector to process
+#'
+#' @return A numeric vector
+#'
+#' @examples
+vascr_make_numeric = function(vector)
+{
+  vector = str_remove(vector, ",")
+  vector = as.numeric(vector)
+  vector = replace_na(vector, 0)
+  return(vector)
+}
 
 
 #' Test that the datset is correctly formatted for explosion
@@ -65,14 +81,14 @@ vascr_explode = function(data)
 #' @export
 #'
 #' @examples
-#' library(stringr)
+#' #library(stringr)
 #' 
-#' data.df = growth.df
-#' data.df$Sample = str_replace(data.df$Sample, " ", "_")
-#' data.df$Sample = paste(data.df$Sample, "+ 10_nm nothing important")
-#' data.df$Sample = paste(data.df$Sample, "+ 4_nm Carpet + ECV_line")
+#' #data.df = growth.df
+#' #data.df$Sample = str_replace(data.df$Sample, " ", "_")
+#' #data.df$Sample = paste(data.df$Sample, "+ 10_nm nothing important")
+#' #data.df$Sample = paste(data.df$Sample, "+ 4_nm Carpet + ECV_line")
 #' 
-#' vascr_test_explosion_integrity(growth.df)
+#' #vascr_test_explosion_integrity(growth.df)
 #' 
 vascr_test_explosion_integrity = function(data)
 {
@@ -97,9 +113,9 @@ vascr_test_explosion_integrity = function(data)
 #' @export
 #'
 #' @examples
-#' vascr_test_exploded(growth.df)
-#' imploded = vascr_implode(growth.df)
-#' vascr_test_exploded(imploded)
+#' #vascr_test_exploded(growth.df)
+#' #imploded = vascr_implode(growth.df)
+#' #vascr_test_exploded(imploded)
 #' 
 vascr_test_exploded = function(data)
 {

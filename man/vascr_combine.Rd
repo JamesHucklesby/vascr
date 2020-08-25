@@ -21,11 +21,11 @@ This funciton will combine ECIS datasets end to end. Preferential to use over a 
 
 #Make two fake experiments worth of data
 
-experiment1.df = vascr_subset(growth.df, experiment = "1")
-experiment2.df = vascr_subset(growth.df, experiment = "2")
-experiment3.df = vascr_subset(growth.df, experiment = "3")
+#experiment1.df = vascr_subset(growth.df, experiment = "1")
+#experiment2.df = vascr_subset(growth.df, experiment = "2")
+#experiment3.df = vascr_subset(growth.df, experiment = "3")
 
-data = vascr_combine(experiment1.df, experiment2.df, experiment3.df)
-head(data)
+#data = vascr_combine(experiment1.df, experiment2.df, experiment3.df)
+#head(data)
 
 }

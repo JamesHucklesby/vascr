@@ -19,7 +19,7 @@ Returns a subset of the original data set that has only every nth value. Greatly
 }
 \examples{
 
-data = vascr_subsample(growth.df, 50)
-head(data)
+#data = vascr_subsample(growth.df, 50)
+#head(data)
 
 }

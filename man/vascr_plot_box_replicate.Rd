@@ -7,6 +7,8 @@
 vascr_plot_box_replicate(data.df, unit, frequency, time, priority = NULL)
 }
 \arguments{
+\item{data.df}{The dataset to plot}
+
 \item{unit}{Unit to plot}
 
 \item{frequency}{Frequency to plot}
@@ -14,8 +16,6 @@ vascr_plot_box_replicate(data.df, unit, frequency, time, priority = NULL)
 \item{time}{Time to plot}
 
 \item{priority}{vascr priority, if empty default will be used}
-
-\item{data}{The dataset to plot}
 }
 \value{
 A ggplot2 box plot of replicate experiments
@@ -24,6 +24,6 @@ A ggplot2 box plot of replicate experiments
 Plot replicate data sets as a box plot
 }
 \examples{
-vascr_plot_box_replicate(growth.df, "R", 4000, 100)
+# vascr_plot_box_replicate(growth.df, "R", 4000, 100)
 
 }

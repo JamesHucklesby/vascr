@@ -24,12 +24,17 @@ vascr_subset_continuous(
 \item{implode}{Should the final data set be imploded, replacing the sample wells present}
 }
 \value{
-
+A vascr dataset subsampled on a continuous variable
 }
 \description{
 Subset the columns that are exploded out of a continuous variable. Contains options to remove descriptors that are now defunct, so this will be repaired later.
 }
 \examples{
+# Sub code for breaking out continuous datasets
+#exploded = vascr_explode(xcell)
+#subset = vascr_subset_continuous(exploded, continuous = "ATP", strip_empty = FALSE)
+#vascr_plot(exploded, unit = "CI", frequency = "10000", replication = "experiments"
+# , normtime = 160, continuouscontains = "ATP")
 
 
 }

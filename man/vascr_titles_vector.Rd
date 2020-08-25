@@ -2,20 +2,20 @@
 % Please edit documentation in R/helper_functions.R
 \name{vascr_titles_vector}
 \alias{vascr_titles_vector}
-\title{Title}
+\title{Convert a vector of titles into full names of units}
 \usage{
 vascr_titles_vector(units)
 }
 \arguments{
-\item{units}{}
+\item{units}{A vector of units to return}
 }
 \value{
-
+A vector of names of the units returned
 }
 \description{
-Title
+Convert a vector of titles into full names of units
 }
 \examples{
-vascr_titles_vector(c("Rb", "R", "Cm"))
+#vascr_titles_vector(c("Rb", "R", "Cm"))
 
 }

@@ -7,9 +7,9 @@
 vascr_prep_stat_priority(data.df, priority = NULL)
 }
 \arguments{
-\item{priority}{Manual priority (if set)}
+\item{data.df}{The dataset to use}
 
-\item{data}{The dataset to use}
+\item{priority}{Manual priority (if set)}
 }
 \value{
 A priority list for use in a vascr dataset
@@ -18,5 +18,5 @@ A priority list for use in a vascr dataset
 Prep priority for statistical data
 }
 \examples{
-vascr_prep_stat_priority(growth.df)
+#vascr_prep_stat_priority(growth.df)
 }

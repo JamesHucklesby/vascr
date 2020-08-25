@@ -17,8 +17,8 @@
 #' @importFrom dplyr summarise group_by
 #'
 #' @examples
-#' vascr_prism(growth.df, 'Rb', replication = "summary")
-#' prism = vascr_prism(growth.df, 'Rb', replication = "wells")
+#' #vascr_prism(growth.df, 'Rb', replication = "summary")
+#' #prism = vascr_prism(growth.df, 'Rb', replication = "wells")
 #' 
 vascr_prism = function(data.df, unit, frequency = 0, replication = "summary", experiment = "") {
     

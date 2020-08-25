@@ -5,6 +5,7 @@
 #'
 #' @param model The location of modeled data exported from the cellZscope data
 #' @param key Optional, a keyfile containing data on which well contains which sample
+#' @param experimentname Name of the experiment to be built into the dataset
 #' 
 #' @importFrom stringr str_remove str_split
 #' @importFrom tidyr separate fill pivot_longer
@@ -15,12 +16,12 @@
 #' @export
 #'
 #' @examples
-#' model = system.file("extdata/mdckmodel.txt", package = "vascr")
-#' key = system.file("extdata/mdckkey.csv", package = "vascr")
+#' #model = system.file("extdata/mdckmodel.txt", package = "vascr")
+#' #key = system.file("extdata/mdckkey.csv", package = "vascr")
 #' 
-#' output = cellzscope_import_model(model, key)
-#' output = vascr_subset(output, time = c(0,50))
-#' vascr_plot(output, unit = "TER", frequency = 0,replication = "wells")
+#' #output = cellzscope_import_model(model, key)
+#' #output = vascr_subset(output, time = c(0,50))
+#' #vascr_plot(output, unit = "TER", frequency = 0,replication = "wells")
 #' 
 cellzscope_import_model  = function(model, key, experimentname)
 {
@@ -106,6 +107,7 @@ return(separatedata)
 #'
 #' @param raw the locaiton of spectral data exported from the cellZscope software.
 #' @param key Optional, allows for sample names to be assigned to wells
+#' @param experimentname Name of the experiment to be built into the dataset
 #'
 #' @return A vascar compatable dataset
 #' 
@@ -118,12 +120,12 @@ return(separatedata)
 #' @export
 #'
 #' @examples
-#' raw = system.file("extdata/mdckspectra.txt", package = "vascr")
-#' key = system.file("extdata/mdckkey.csv", package = "vascr")
+#' #raw = system.file("extdata/mdckspectra.txt", package = "vascr")
+#' #key = system.file("extdata/mdckkey.csv", package = "vascr")
 #' 
-#' output = cellzscope_import_raw(raw, key)
-#' output = vascr_subset(output, time = c(0,50))
-#' vascr_plot(output, unit = "R", frequency = 4000, replication = "wells")
+#' #output = cellzscope_import_raw(raw, key)
+#' #output = vascr_subset(output, time = c(0,50))
+#' #vascr_plot(output, unit = "R", frequency = 4000, replication = "wells")
 cellzscope_import_raw = function(raw, key, experimentname)
 {
   
@@ -229,6 +231,7 @@ return(longdata.df)
 #' @param raw File location of the raw dataset
 #' @param model File locaiton of the modeled dataset
 #' @param key Location of a vascar standard lookup table. Optional, but can be used to import more granular data than possible with the built in row names
+#' @param experimentname Name of the experiment to be built into the dataset
 #' 
 #' @importFrom dplyr select left_join 
 #'
@@ -237,20 +240,15 @@ return(longdata.df)
 #'
 #' @examples
 #' 
-#' model = system.file("extdata/mdckmodel.txt", package = "vascr")
-#' raw = system.file("extdata/mdckspectra.txt", package = "vascr")
-#' key = system.file("extdata/mdckkey.csv", package = "vascr")
+#' #model = system.file("extdata/mdckmodel.txt", package = "vascr")
+#' #raw = system.file("extdata/mdckspectra.txt", package = "vascr")
+#' #key = system.file("extdata/mdckkey.csv", package = "vascr")
 #' 
-#' alldata = cellzscope_import(raw, model)
-#' vascr_plot(alldata, unit = "TER", preprocessed = TRUE, frequency = 0,
-#'  time = c(0,50), replication = "experiments")
+#' #alldatakey = cellzscope_import(raw, model, key, "TEST")
+#' #alldatakey$Instrument = "CZSII"
+#' #vascr_plot(alldatakey, unit = "TER", frequency = 0, time = c(0,50))
 #' 
-#' alldatakey = cellzscope_import(raw, model, key)
-#' alldatakey$Instrument = "CZSII"
-#' vascr_plot(alldatakey, unit = "TER", frequency = 0, time = c(0,50), 
-#' replication = "experiments", preprocessed = TRUE)
-#' 
-cellzscope_import = function(raw, model, key, experimentname)
+cellzscope_import = function(raw, model, key = NULL, experimentname = "NA")
 {
   
  vascr_validate_file(raw, "txt")

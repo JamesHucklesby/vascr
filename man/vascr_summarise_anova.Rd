@@ -7,15 +7,15 @@
 vascr_summarise_anova(data.df, unit, frequency, time, priority = NULL)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The dataset to analyse}
 
-\item{unit}{}
+\item{unit}{Unit to analyse}
 
-\item{frequency}{}
+\item{frequency}{Frequency to analyse}
 
-\item{time}{}
+\item{time}{Time to analyse}
 
-\item{priority}{}
+\item{priority}{Priority list of variables to run tests on}
 }
 \value{
 Prints out the summary data for an ANOVA analysis
@@ -24,6 +24,6 @@ Prints out the summary data for an ANOVA analysis
 Run a standard panel of ANOVA tests and return the results in text format
 }
 \examples{
-vascr_summarise_anova(growth.df, "R", 4000, 100)
+#vascr_summarise_anova(growth.df, "R", 4000, 100)
 
 }

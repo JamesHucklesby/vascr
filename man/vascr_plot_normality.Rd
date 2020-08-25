@@ -25,6 +25,6 @@ Plot rediduals overlaid with a normal curve
 }
 \examples{
 
-vascr_plot_normality(growth.df, "R", 4000, 100)
+# vascr_plot_normality(growth.df, "R", 4000, 100)
 
 }

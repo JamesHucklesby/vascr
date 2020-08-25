@@ -6,7 +6,7 @@
 #' @export
 #'
 #' @examples
-#' getmode(c(1,3,3,4,7))
+#' #getmode(c(1,3,3,4,7))
 getmode <- function(v) {
   uniqv <- unique(v)
   uniqv[which.max(tabulate(match(v, uniqv)))]
@@ -25,8 +25,8 @@ getmode <- function(v) {
 #' @export
 #'
 #' @examples
-#' vascr_median_well (c("A1", "B2", "C3"))
-#' vascr_median_well(c("A1", "NA", "NA", "NA"))
+#' #vascr_median_well (c("A1", "B2", "C3"))
+#' #vascr_median_well(c("A1", "NA", "NA", "NA"))
 vascr_median_well = function(wells)
 {
   
@@ -75,10 +75,10 @@ vascr_median_well = function(wells)
 #' @export
 #'
 #' @examples 
-#' vascr_standardise_wells('A01')
-#' vascr_standardise_wells('A 1')
-#' vascr_standardise_wells('tortoise') # Non-standardisable becomes NA
-#' vascr_standardise_wells(growth.df$Well)
+#' #vascr_standardise_wells('A01')
+#' #vascr_standardise_wells('A 1')
+#' #vascr_standardise_wells('tortoise') # Non-standardisable becomes NA
+#' #vascr_standardise_wells(growth.df$Well)
 #' 
 vascr_standardise_wells = function(well) {
   
@@ -105,7 +105,7 @@ vascr_standardise_wells = function(well) {
 #' @export
 #'
 #' @examples
-#' vascr_96_well_names()
+#' #vascr_96_well_names()
 #' 
 vascr_96_well_names = function()
 {
@@ -119,68 +119,7 @@ vascr_96_well_names = function()
 }
 
 
-#' Align times
-#' 
-#' When running analyasis, you can only run stats on a timepoint that exists in the dataset. These are not always logical or easy to remember. This function rounds the number given to the nearest timepoint that is actually in the dataset.
-#'
-#' @param data.df A standard ECIS data frame
-#' @param time The time point that needs rounding
-#'
-#' @return A timepoint that exactly aligns with a measured datapoint
-#'
-#' @export
-#'
-#' @examples
-#' vascr_find_time(growth.df, 146.2)
-#' 
-vascr_find_time = function(data.df, time) {
-  times = unique(data.df$Time)
-  numberinlist = which.min(abs(times - time))
-  timetouse = times[numberinlist]
-  
-  return(timetouse)
-}
 
-#' Align frequencies
-#' 
-#' When running analyasis, you can only subset or plot a time that exists in the dataset. These are not always logical or easy to remember. This function rounds the number given to the nearest frequency that is actually in the dataset.
-#'
-#' @param data.df A standard ECIS data frame
-#' @param frequency The tfrequency that needs rounding
-#'
-#' @return A timepoint that exactly aligns with a measured datapoint
-#'
-#' @export
-#'
-#' @examples
-#' vascr_find_frequency(growth.df, 4382)
-#' 
-#' vascr_find_frequency(data, frequency = 4000)
-#' 
-#' data.df = data
-#' 
-vascr_find_frequency = function(data.df, frequency) {
-  if(!is.numeric(frequency))
-  {
-    allowedtext = c("raw", "model")
-    
-    if(frequency %in% allowedtext)
-    {
-      return(frequency)
-    }
-    else
-    {
-      warning("Frequency specified is not a number, 'raw' or 'model'. Please correct this argument")
-    }
-  }
-  
-  data.df$Frequency = as.numeric(as.character(data.df$Frequency))
-  times = unique(data.df$Frequency)
-  numberinlist = which.min(abs(times - frequency))
-  timetouse = times[numberinlist]
-  
-  return(timetouse)
-}
 
 #' Detect if an ECIS dataset has been normalised
 #'
@@ -190,11 +129,11 @@ vascr_find_frequency = function(data.df, frequency) {
 #' @export
 #'
 #' @examples
-#' growth.df$Instrument = "ECIS"
-#' standard = growth.df
-#' normal = vascr_normalise(growth.df, 100)
-#' vascr_detect_normal(standard)
-#' vascr_detect_normal(normal)
+#' #growth.df$Instrument = "ECIS"
+#' #standard = growth.df
+#' #normal = vascr_normalise(growth.df, 100)
+#' #vascr_detect_normal(standard)
+#' #vascr_detect_normal(normal)
 
 vascr_detect_normal = function(data.df)
 {
@@ -212,12 +151,12 @@ vascr_detect_normal = function(data.df)
 #'
 #' @param data The data frame to analyse
 #'
-#' @return
+#' @return The level of the dataset analysed
 #'
 #' @examples
-#' vascr_detect_level(growth.df)
-#' vascr_detect_level(vascr_summarise(growth.df, level = "experiments"))
-#' vascr_detect_level(vascr_summarise(growth.df, level = "summary"))
+#' #vascr_detect_level(growth.df)
+#' #vascr_detect_level(vascr_summarise(growth.df, level = "experiments"))
+#' #vascr_detect_level(vascr_summarise(growth.df, level = "summary"))
 vascr_detect_level = function(data)
 {
   if("totaln" %in% colnames(data))
@@ -248,10 +187,10 @@ vascr_detect_level = function(data)
 #' @export
 #'
 #' @examples
-#' growth.df$Instrument = "ECIS"
-#' exploded.df = vascr_explode(growth.df)
-#' cleaned.df = vascr_remove_metadata(exploded.df)
-#' identical(growth.df,cleaned.df)
+#' #growth.df$Instrument = "ECIS"
+#' #exploded.df = vascr_explode(growth.df)
+#' #cleaned.df = vascr_remove_metadata(exploded.df)
+#' #identical(growth.df,cleaned.df)
 vascr_remove_metadata = function(data.df, subset = "all")
 {
   
@@ -281,22 +220,22 @@ vascr_remove_metadata = function(data.df, subset = "all")
 #' @export
 #'
 #' @examples
-#' vascr_priority()
-#' vascr_priority(growth.df)
-#' vascr_priority(growth.df, priority = c("cells", "...", "Well"))
+#' #vascr_priority()
+#' #vascr_priority(growth.df)
+#' #vascr_priority(growth.df, priority = c("cells", "...", "Well"))
 #' 
-#' vascr_priority(data = growth.df, priority = c("Sample"))
+#' #vascr_priority(data = growth.df, priority = c("Sample"))
 #' 
-#' vascr_priority(data = growth.df)
+#' #vascr_priority(data = growth.df)
 #' 
-#' missing.df = growth.df
-#' missing.df$Value = NULL
+#' #missing.df = growth.df
+#' #missing.df$Value = NULL
 #' 
-#' vascr_priority(missing.df)
+#' #vascr_priority(missing.df)
 #' 
 #' # vascr_priority(filtered.df)
 #' 
-#' vascr_priority(data)
+#' # vascr_priority(data)
 vascr_priority = function(data = NULL, explicit = NULL, priority = NULL)
 {
   
@@ -397,15 +336,19 @@ vascr_priority = function(data = NULL, explicit = NULL, priority = NULL)
 }
 
 
+
+
 #' Remove columns if they exist in a dataset, otherwise do nothing
 #'
 #' @param data.df The dataset to remove
 #' @param cols The name, or names, of cols to remove
 #'
 #' @return The truncated data set
+#' 
+#' @export
 #'
 #' @examples
-#' remove_cols_if_exists(data.df, c("Unit", "Sample", "Donkey"))
+#' #remove_cols_if_exists(growth.df, c("Unit", "Sample", "Donkey"))
 remove_cols_if_exists = function(data.df, cols)
 {
   
@@ -425,10 +368,10 @@ remove_cols_if_exists = function(data.df, cols)
 #'
 #' @param data.df The dataset to clean
 #'
-#' @return
+#' @return A vascr dataset, without any statistical columns
 #'
 #' @examples
-#' vascr_remove_stats(vascr_summarise(growth.df,level = "summary"))
+#' #vascr_remove_stats(vascr_summarise(growth.df,level = "summary"))
 #' 
 vascr_remove_stats = function(data.df)
 {
@@ -447,8 +390,8 @@ vascr_remove_stats = function(data.df)
 #'
 #' @examples
 #' 
-#' vascr_titles("Rb")
-#' vascr_titles("R")
+#' #vascr_titles("Rb")
+#' #vascr_titles("R")
 #' 
 #' 
 vascr_titles = function (unit, frequency = 0)
@@ -485,15 +428,14 @@ vascr_titles = function (unit, frequency = 0)
 
 
 
-#' Title
+#' Convert a vector of titles into full names of units
 #'
-#' @param units 
+#' @param units A vector of units to return
 #'
-#' @return
-#' @export
+#' @return A vector of names of the units returned
 #'
 #' @examples
-#' vascr_titles_vector(c("Rb", "R", "Cm"))
+#' #vascr_titles_vector(c("Rb", "R", "Cm"))
 #' 
 vascr_titles_vector = function(units)
 {
@@ -520,15 +462,13 @@ return(return)
 }
 
 
-
 #' Table of units used in the vascr package
 #'
 #' @return A data frame of units, their content and if they are modeled
 #' @export 
 #'
 #' @examples
-#' 
-#' vascr_units_table()
+#' #vascr_units_table()
 #' 
 vascr_units_table = function()
 {
@@ -547,119 +487,6 @@ return(vascr_unit_table)
 }
 
 
-#' Find which modeled units in the dataset
-#'
-#' @param data The dataset to analyse
-#'
-#' @return A vector of the modeled units in the dataset
-#'
-#' @examples
-#' vascr_modeled_in_data(growth.df)
-#' 
-#' 
-vascr_modeled_in_data = function(data)
-{
-  allunits = unique(data$Unit)
-  return(allunits[vascr_is_modeled_unit(allunits)])
-}
-  
-#' Return the raw units in the dataset
-#'
-#' @param data The dataset to search
-#'
-#' @return A vector containing the raw units present in the data
-#'
-#' @examples
-#' vascr_raw_in_data(growth.df)
-#' 
-vascr_raw_in_data = function(data)
-{
-  allunits = unique(data$Unit)
-  return(allunits[!vascr_is_modeled_unit(allunits)])
-}
-
-#' Split out all the frequenices if all is presented
-#'
-#' @param data.df The dataet to analyse
-#' @param frequency The frequency to analyse
-#'
-#' @return A number of a frequency in the dataset
-#'
-#' @examples
-#' 
-#' vascr_realise_frequencies(growth.df, c(4594, 3000, "all"))
-#' 
-vascr_realise_frequencies = function(data.df, frequency)
-{
-  units = c()
-  
-  for(fre in frequency)
-  {
-    if(tolower(fre) == "all")
-    {
-      units = c(units, unique(data.df$Frequency))
-    } else
-    {
-      units = c(units, fre)
-    }
-  }
-  
- returndata = c()
-  
- for(uni in units)
- {
-   
-   returndata = c(returndata, vascr_find_frequency(data.df, as.numeric(uni)))
- }
-  
- returndata = unique(returndata) 
- 
-  return(returndata)
-  
-}
-
-
-#' Realise vascr units
-#'
-#' @param data The dataset to process
-#' @param unit The unit(s) to return
-#'
-#' @return A vector of vascr units
-#'
-#' @examples
-#' vascr_realise_units(growth.df, c("Rb", "R", "Cm"))
-#' vascr_realise_units(growth.df, "all")
-#' vascr_realise_units(growth.df, "modeled")
-#' vascr_realise_units(growth.df, "raw")
-#' 
-vascr_realise_units = function (data, unit)
-{
-  return = c()
-  
-  for(uni in unit)
-  {
-      if(tolower(uni) == "raw")
-      {
-        return = c(return,(vascr_raw_in_data(data)))
-      } else if(tolower(uni) == "modeled")
-      {
-        return = c(return,(vascr_modeled_in_data(data)))
-      } else if (tolower(uni) == "all")
-      {
-        return = c(return,unique(data$Unit))
-      } else
-      {
-        return = c(return,uni)
-       }
-  
-  }
-  
-  # Weed out any duplicates, if present
-  return = unique(return)
-  return(return)
-}
-
-
 #' Check if a selected unit is modelled
 #'
 #' @param unit The vascr symbol for the unit
@@ -668,9 +495,9 @@ vascr_realise_units = function (data, unit)
 #' @export
 #'
 #' @examples
-#' vascr_is_modeled_unit("R")
-#' vascr_is_modeled_unit("Rb")
-#' vascr_is_modeled_unit(c("R", "Rb"))
+#' #vascr_is_modeled_unit("R")
+#' #vascr_is_modeled_unit("Rb")
+#' #vascr_is_modeled_unit(c("R", "Rb"))
 #' 
 vascr_is_modeled_unit = function(unit)
 {
@@ -692,9 +519,9 @@ vascr_is_modeled_unit = function(unit)
 #' @return a vector of units provided by an instrument
 #'
 #' @examples
-#' vascr_instrument_units("ECIS")
-#' vascr_instrument_units("xCELLigence")
-#' vascr_instrument_units("cellZscope")
+#' #vascr_instrument_units("ECIS")
+#' #vascr_instrument_units("xCELLigence")
+#' #vascr_instrument_units("cellZscope")
 #' 
 vascr_instrument_units =  function(instrument)
 {
@@ -716,13 +543,13 @@ vascr_instrument_units =  function(instrument)
 #'
 #' @examples
 #' 
-#' vascr_instrument_from_unit("Rb")
-#' vascr_instrument_from_unit("CI")
-#' vascr_instrument_from_unit("TER")
+#' #vascr_instrument_from_unit("Rb")
+#' #vascr_instrument_from_unit("CI")
+#' #vascr_instrument_from_unit("TER")
 #' 
-#' vascr_instrument_from_unit(c("Rb", "TER"))
+#' #vascr_instrument_from_unit(c("Rb", "TER"))
 #' 
-#' vascr_instrument_from_unit("NA")
+#' #vascr_instrument_from_unit("NA")
 vascr_instrument_from_unit = function(unit)
 {
   
@@ -752,6 +579,17 @@ for (uni in unit)
   }
  
   return(return) 
+}
+
+#' Returns a list of the instruments supported by the VASCR package
+#'
+#' @return A vector of all the supported instrument names
+#'
+#' @examples
+#' vascr_instrument_list()
+vascr_instrument_list = function()
+{
+  return(c("ECIS", "xCELLigence", "cellZscope"))
 }
 
 
@@ -796,7 +634,7 @@ for (uni in unit)
 #' @export
 #'
 #' @examples
-#' categorical_mode(c("Cat", "Cat", "Monkey"))
+#' #categorical_mode(c("Cat", "Cat", "Monkey"))
 #' 
 categorical_mode = function(x){
   
@@ -838,17 +676,17 @@ categorical_mode = function(x){
 #'
 #' @examples
 #' 
-#' unique(growth.df$Sample)
-#' excludedgrowth.df = vascr_exclude(growth.df, samples = c("35,000 cells", "0 cells"))
-#' unique(excludedgrowth.df$Sample)
+#' #unique(growth.df$Sample)
+#' #excludedgrowth.df = vascr_exclude(growth.df, samples = c("35,000 cells", "0 cells"))
+#' #unique(excludedgrowth.df$Sample)
 #' 
-#' unique(growth.df$Well)
-#' excludedgrowth.df = vascr_exclude(growth.df, wells = c("A1", "B1", "C1"))
-#' unique(excludedgrowth.df$Well)
+#' #unique(growth.df$Well)
+#' #excludedgrowth.df = vascr_exclude(growth.df, wells = c("A1", "B1", "C1"))
+#' #unique(excludedgrowth.df$Well)
 #' 
-#' unique(growth.df$Experiment)
-#' excludedgrowth.df = vascr_exclude(growth.df, experiment = c(1,2))
-#' unique(excludedgrowth.df$Experiment)
+#' #unique(growth.df$Experiment)
+#' #excludedgrowth.df = vascr_exclude(growth.df, experiment = c(1,2))
+#' #unique(excludedgrowth.df$Experiment)
 #' 
 
 
@@ -905,12 +743,12 @@ vascr_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = 
 #' 
 #' #Make two fake experiments worth of data
 #' 
-#' experiment1.df = vascr_subset(growth.df, experiment = "1")
-#' experiment2.df = vascr_subset(growth.df, experiment = "2")
-#' experiment3.df = vascr_subset(growth.df, experiment = "3")
+#' #experiment1.df = vascr_subset(growth.df, experiment = "1")
+#' #experiment2.df = vascr_subset(growth.df, experiment = "2")
+#' #experiment3.df = vascr_subset(growth.df, experiment = "3")
 #' 
-#' data = vascr_combine(experiment1.df, experiment2.df, experiment3.df)
-#' head(data)
+#' #data = vascr_combine(experiment1.df, experiment2.df, experiment3.df)
+#' #head(data)
 #' 
 vascr_combine = function(..., resample = FALSE) {
   
@@ -984,12 +822,11 @@ retitle = function(df) {
 #' @return An array containing numeric data. NA will be returned if not numeric, and a warning will be generated
 #'
 #' @examples
+#' # A working dataset
+#' # comma_to_numeric(c("100.001", "10,839", "882,292,939"))
 #' 
-# # A working dataset
-# # comma_to_numeric(c("100.001", "10,839", "882,292,939"))
-# 
-# # And one with non-numeric and broken data
-# # comma_to_numeric(c("Foo", "77,00", "88.88.88"))
+#' # And one with non-numeric and broken data
+#' # comma_to_numeric(c("Foo", "77,00", "88.88.88"))
 #' 
 comma_to_numeric = function(comma_array)
 {
@@ -1011,11 +848,10 @@ comma_to_numeric = function(comma_array)
 #'
 #' @param data The dataset to derrive the instrument type from
 #'
-#' @return
-#' @export
+#' @return The default frequency and unit in a list
 #'
 #' @examples
-#' vascr_default(growth.df)
+#' # vascr_default(growth.df)
 #' 
 vascr_default = function (data)
 {
@@ -1054,6 +890,8 @@ vascr_default = function (data)
 #' @param name Name of the funciton to call
 #' @param payload The key data frame or graph to be passed on
 #' @param arguments Any arguements to apply
+#' 
+#' @importFrom ggplot2 is.ggplot
 #'
 #' @return The returned value from the function applied
 #'
@@ -1072,7 +910,7 @@ do.call_relevant = function(name, payload, arguments)
   
   if(is.data.frame(payload))
   {
-    present_args[["data"]] = payload
+    present_args[["data.df"]] = payload
   }
   else if(is.ggplot(payload))
   {

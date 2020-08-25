@@ -10,12 +10,12 @@ vascr_remove_stats(data.df)
 \item{data.df}{The dataset to clean}
 }
 \value{
-
+A vascr dataset, without any statistical columns
 }
 \description{
 Clean the statistics off a vascr dataset
 }
 \examples{
-vascr_remove_stats(vascr_summarise(growth.df,level = "summary"))
+#vascr_remove_stats(vascr_summarise(growth.df,level = "summary"))
 
 }

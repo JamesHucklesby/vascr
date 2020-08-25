@@ -11,7 +11,7 @@ vascr_plot(
   level = "summary",
   time = Inf,
   samplecontains = "",
-  experiment = "",
+  experiment = NULL,
   error = Inf,
   linesize = 1,
   normtime = NULL,
@@ -91,7 +91,19 @@ searches apply.}
 
 \item{returndata}{Return the dataset, rather than the graph. Default FALSE, usefull for debugging}
 
+\item{sortkeyincreasing}{Sort the data specified in an increasing way.}
+
 \item{showpoints}{Show the time points on the graph}
+
+\item{singleplot}{Merge all the data specified into a single plot.}
+
+\item{priority}{The priority of variables to plot. Will be automatically filled if not available.}
+
+\item{errortype}{Type of error to plot. Can be SEM or SD.}
+
+\item{visualisation}{How to visualise the data}
+
+\item{threshold}{The threshold value to place on the graph}
 }
 \value{
 A ggplot2 object
@@ -100,34 +112,35 @@ A ggplot2 object
 The master function for generating ggplot2 objects from ECIS data. Incorporates all the summarising, testing and graphing operations into a single function.
 }
 \examples{
-growth.df$Instrument = "ECIS"
-
-vascr_plot(growth.df, 'Rb', level = 'summary',
-error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-vascr_plot(growth.df, 'Rb', level = 'wells',
- error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
- vascr_plot(growth.df, 'Rb', level = 'experiments',
- error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
- , xlab = "Hours")
-vascr_plot(growth.df, 'R', 4000, 'summary', time = 75)
-vascr_plot(growth.df, "R", 4000, "summary", 50, confidence = 0.1, sortkeyincreasing = FALSE)
-
-vascr_plot(growth.df, sortkeyincreasing = TRUE)
-
-vascr_plot(growth.df, continuous = "cells", level = "summary", time = 50)
-
-vascr_plot(growth.df, level = "plate", time = 100)
-
-vascr_plot(growth.df, time = list(c(100,190)), unit = list("Rb", "Cm", "Alpha", "R"),  frequency = 4000)
-
-vascr_plot(growth.df, time = 100, unit = "Cm",  frequency = 4000, level = "summary")
-
-vascr_plot(growth.df, level = "deviation")
-vascr_plot(growth.df, level = "anova")
-
-vascr_plot(growth.df, visualisation = "line", level = "summary")
 
 
-vascr_plot(growth.df)
+
+#vascr_plot(growth.df, 'Rb', level = 'summary',
+#error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+#vascr_plot(growth.df, 'Rb', level = 'wells',
+#  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+# vascr_plot(growth.df, 'Rb', level = 'experiments',
+ #error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
+ #, xlab = "Hours")
+#vascr_plot(growth.df, 'R', 4000, 'summary', time = 75)
+#vascr_plot(growth.df, "R", 4000, "summary", 50, confidence = 0.1, sortkeyincreasing = FALSE)
+
+#vascr_plot(growth.df, sortkeyincreasing = TRUE)
+
+#vascr_plot(growth.df, continuous = "cells", level = "summary", time = 50)
+
+#vascr_plot(growth.df, level = "plate", time = 100)
+
+#vascr_plot(growth.df, time = list(c(100,190)), 
+#unit = list("Rb", "Cm", "Alpha", "R"),  frequency = 4000)
+
+#vascr_plot(growth.df, time = 100, unit = "Cm",  frequency = 4000, level = "summary")
+
+#vascr_plot(growth.df, level = "deviation")
+
+#vascr_plot(growth.df, visualisation = "line", level = "summary")
+
+
+#vascr_plot(growth.df)
 
 }

@@ -16,9 +16,9 @@ Standardised well names
 Replaces A1 in strings with A01. Important for importing ABP files which may use either notation. Returns NA if the string could not be normalised, which can be configured to throw a warning in import code.
 }
 \examples{
-vascr_standardise_wells('A01')
-vascr_standardise_wells('A 1')
-vascr_standardise_wells('tortoise') # Non-standardisable becomes NA
-vascr_standardise_wells(growth.df$Well)
+#vascr_standardise_wells('A01')
+#vascr_standardise_wells('A 1')
+#vascr_standardise_wells('tortoise') # Non-standardisable becomes NA
+#vascr_standardise_wells(growth.df$Well)
 
 }

@@ -17,7 +17,7 @@ vascr_plot_time_vline(data.df, unit, frequency, time, priority = NULL, ...)
 
 \item{priority}{Vascr priority list. Blank will use the baked in default.}
 
-\item{...}{}
+\item{...}{Other arguements to be passed on to vascr_plot_line}
 }
 \value{
 A ggplot2 object
@@ -26,6 +26,6 @@ A ggplot2 object
 Plot a line graph with a vertical line on it
 }
 \examples{
-vascr_plot_time_vline(growth.df, "R", 4000, 100)
+# vascr_plot_time_vline(growth.df, "R", 4000, 100)
 
 }

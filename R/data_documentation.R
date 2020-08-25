@@ -16,6 +16,8 @@ utils::globalVariables(c("Val1", "Val2", "Val3", "Val4", "Val5"))
 
 utils::globalVariables(c('Data','Instrument', '..density..','dnorm','.fitted','.resid', 'data.df', 'Var', 'Val', "sem", ".", "allNA", 'import_mdb_return_TEMP_object_from_32_bit_R', 'starts_with', 'TTimes', 'Layout'))
 
+utils::globalVariables(c("commaarray", "lsf.str", "Deviation", "Max_Deviation", "Vehicle", "count_na", "IsVehicleControl", "Vehicle", "growth.df", "unit", "error", "ymin", "ymax", "toplot", "continuous", "frequency", "title", "Tukey.levels", "Well ID", "12"))
+
 
 #' Example data set from an ECIS growth experiment
 #'

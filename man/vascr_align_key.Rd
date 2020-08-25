@@ -24,8 +24,8 @@ Sets the time at which each replicate well is maximal to time 0. Results in vari
 }
 \examples{
 
-data = vascr_align_key(growth.df, 'max')
-head(data)
-data = vascr_align_key(growth.df, 'min')
-head(data)
+#data = vascr_align_key(growth.df, 'max')
+#head(data)
+#data = vascr_align_key(growth.df, 'min')
+#head(data)
 }

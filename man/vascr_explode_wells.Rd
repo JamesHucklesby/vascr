@@ -4,22 +4,21 @@
 \alias{vascr_explode_wells}
 \title{Explode the wells in a VASCR dataset}
 \usage{
-vascr_explode_wells(data, separate_rows = FALSE)
+vascr_explode_wells(data.df, separate_rows = FALSE)
 }
 \arguments{
-\item{data}{}
+\item{data.df}{The dataset to explode}
+
+\item{separate_rows}{Split cells onto multiple rows if wells such as "A1,A2" may be present in the dataset}
 }
 \value{
-
+A vascr dataset with rows and columns exploded
 }
 \description{
-Explode the wells in a VASCR dataset
+Tools for exploding wells out into row and column variables, and separating comma separated well values if needed.
 }
 \examples{
-vascr_explode_wells(growth.df)
-
-data = vascr_summarise(growth.df)
-vascr_explode_wells(data)
-vascr_explode_wells(data, separate_rows = TRUE)
+#vascr_explode_wells(growth.df)
+#vascr_explode_wells(growth.df, separate_rows = TRUE)
 
 }

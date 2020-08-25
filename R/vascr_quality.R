@@ -18,11 +18,16 @@
 #' @importFrom magrittr "%>%"
 #'
 #' @examples
-#' example = vascr_detect_deviation(growth.df)
+#' example = vascr_summarise_deviation(growth.df)
 #' 
-vascr_detect_deviation = function(data, deviation = 0, frequency = 4000, unit = "R")
+#' 
+#' 
+vascr_summarise_deviation = function(data.df, frequency = NA, unit = NA)
 {
-  cleandata.df = subset(data, !is.na(Value)) # Exclude wells where there is no data available (IE connection lost)
+  cleandata.df = subset(data.df, !is.na(Value)) # Exclude wells where there is no data available (IE connection lost)
+  
+  unit = vascr_find_unit(data.df, unit)
+  frequency = vascr_find_frequency(data.df, frequency)
   
   cleandata.df = vascr_subset(cleandata.df, unit = unit, frequency = frequency) # Run the diagnosis on only one frequency to save time, at R4000
   
@@ -44,9 +49,13 @@ vascr_detect_deviation = function(data, deviation = 0, frequency = 4000, unit = 
     group_by(Experiment, Sample, Time) %>%
     mutate(Deviation = (abs(Value - median(Value)))/median(Value)) 
   
-  metadata = subset(metadata, metadata$Deviation >= deviation)
   
   return(metadata)
+}
+
+vascr_detect_deviation = function(...)
+{
+  vascr_summarise_deviation(...)
 }
 
 
@@ -62,7 +71,7 @@ vascr_detect_deviation = function(data, deviation = 0, frequency = 4000, unit = 
 #' A dataframe is returned with a score for each well, fully labeled minus Time and Value as these are inappropriate for a summarised unit.
 #' 
 #' @param data.df A standard ECIS data frame
-#' @param threshold How stringent to be in excluding wells. Higher is less stringent. Default is 5.
+#' @param max_deviation Maximum deviation that is acceptable, lower is more stringent
 #' @param frequency Frequency to run numbers on, default is 4000
 #' @param unit Unit to use in detection, default is R
 #'
@@ -74,14 +83,16 @@ vascr_detect_deviation = function(data, deviation = 0, frequency = 4000, unit = 
 #'
 #' @examples
 #' # Return the results as a table
-#' vascr_detect_max_deviation(growth.df)
+#' #vascr_detect_max_deviation(growth.df)
 #' # Then return a graphical representaiton
-#' vascr_plot_deviation(growth.df)
-vascr_detect_max_deviation = function(data, max_deviation = 0, frequency = 4000, unit = "R")
+#' #vascr_plot_deviation(growth.df)
+vascr_detect_max_deviation = function(data.df, max_deviation = 0, frequency = 4000, unit = "R")
 {
   
+   data = data.df
+  
     # First we use a related funciton to detect the deviation for each data point. Do not strip out any data at this point, as any high values need the whole well removed when this funciton is called
-     deviation =  vascr_detect_deviation(data = data, deviation = 0, frequency = frequency, unit = unit)
+     deviation =  vascr_detect_deviation(data = data, frequency = frequency, unit = unit)
   
     # Then we ungroup, and find the maximum well for each well:experiment pair
       metadata = deviation%>%
@@ -113,21 +124,23 @@ vascr_detect_max_deviation = function(data, max_deviation = 0, frequency = 4000,
 #' @param unit The unit you wish to run the analyasis on. A raw unit is usually best. Default is R.
 #' @param frequency The frequency you want to run the analyasis on. Default is 4000.
 #' @param visualisation The visualisation you want to focus in on. Options are "bar", "plate" or "line". The default is to tile all three.
+#' @param title The title to place on the plot
 #' @param ... Any other arguements to be passed on to either vascr_subset or vascr_polish_plot
 #'
 #' @return A ggplot object, or matrix of ggplot objects
 #' @export
 #' 
-#' @importFrom ggplot2 ggplot aes_string geom_line geom_hline facet_wrap geom_bar xlab ylab theme element_text scale_x_discrete vars scale_fill_gradient2
+#' @importFrom ggplot2 ggplot aes_string geom_line geom_hline facet_wrap geom_bar xlab ylab theme element_text scale_x_discrete vars scale_fill_gradient2 ggplotGrob ggtitle
 #' @importFrom stats reorder
 #' @importFrom gridExtra grid.arrange
+#' @importFrom grid unit.c
 #'
 #' @examples
-#' grid = vascr_plot_deviation(growth.df)
-#' vascr_plot_deviation(growth.df, visualisation = "bar")
-#' vascr_plot_deviation(growth.df, visualisation = "plate")
-#' vascr_plot_deviation(growth.df, visualisation = "line")
-#' vascr_plot_deviation(growth.df, max_deviation = 0.2)
+#' #grid = vascr_plot_deviation(growth.df)
+#' #vascr_plot_deviation(growth.df, visualisation = "bar")
+#' #vascr_plot_deviation(growth.df, visualisation = "plate")
+#' #vascr_plot_deviation(growth.df, visualisation = "line")
+#' #vascr_plot_deviation(growth.df, max_deviation = 0.2)
 #' 
 vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority = NULL, unit = "R", frequency = 4000, visualisation = NULL, title = "",  ...)
 {
@@ -158,7 +171,7 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
     
     # Run the deviation calculation
     
-    deviationdata = vascr_detect_deviation(data, deviation = 0, frequency = 4000, unit = "R")
+    deviationdata = vascr_detect_deviation(data)
     
     if(length(priority)==1)
     {
@@ -250,7 +263,6 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
   scores = vascr_explode_wells(scores)
     
   plot = ggplot(scores, aes(col, row, fill= Max_Deviation)) + 
-    geom_tile()  +
     xlab("Column") +
     ylab("Row")+
     scale_x_discrete(position = "top") +
@@ -293,7 +305,8 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
 #' Exclude automatically detected wells that have a connection issue from the dataset
 #'
 #' @param data.df The dataset to parse
-#' @param threshold The threshold stringency to use in detection. Default is 5, the range of 1-10 may be appropriate. Higher numbers are less stringent.
+#' @param deviation The threshold stringency to use in detection. Default is 5, the range of 1-10 may be appropriate. Higher numbers are less stringent.
+#' @param max_deviation The maximum deviation tollerable before a well is excluded.
 #' @param frequency The frequency to use for detection, default is 4000 Hz
 #' @param unit  The unit to run the detection on, default is R
 #' @param verbose Prints which wells have been removed in the terminal. Should be used when first investigating data to allow for follow up plots with vascr_isolate_well to be conducted.
@@ -306,16 +319,16 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
 #'
 #' @examples
 #' 
-#' vascr_plot_deviation(growth.df, max_deviation = 0.3)
+#' #vascr_plot_deviation(growth.df, max_deviation = 0.3)
 #' 
-#' datum = vascr_exclude_deviation(growth.df, max_deviation = 0.3)
+#' #datum = vascr_exclude_deviation(growth.df, max_deviation = 0.3)
 #' 
-#' vascr_plot_deviation(datum)
+#' #vascr_plot_deviation(datum)
 #' 
-#' (vascr_subset(growth.df, max_deviation = 0.3)$Well)
 #' 
-vascr_exclude_deviation = function(data, deviation = 0.5, max_deviation = 0, frequency = 4000, unit = "R", verbose = TRUE)
+vascr_exclude_deviation = function(data.df, deviation = 0.5, max_deviation = 0, frequency = 4000, unit = "R", verbose = TRUE)
 {
+  data = data.df
   
   # Calculate both sets of deviation data
   toremovedeviation = vascr_detect_deviation(data, deviation = deviation, frequency = frequency, unit = unit)

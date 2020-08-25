@@ -24,7 +24,7 @@ A ggplot of a levene's test and the underlying data analysed
 Plot the results of a Levene's test with a fitted variables and residuals plot
 }
 \examples{
-vascr_plot_levene(growth.df, "R", 4000, 100)
+# vascr_plot_levene(growth.df, "R", 4000, 100)
 
 
 }

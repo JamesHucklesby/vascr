@@ -10,6 +10,8 @@ cellzscope_import_raw(raw, key, experimentname)
 \item{raw}{the locaiton of spectral data exported from the cellZscope software.}
 
 \item{key}{Optional, allows for sample names to be assigned to wells}
+
+\item{experimentname}{Name of the experiment to be built into the dataset}
 }
 \value{
 A vascar compatable dataset
@@ -18,10 +20,10 @@ A vascar compatable dataset
 Data must first be exported from the cellZscope software.
 }
 \examples{
-raw = system.file("extdata/mdckspectra.txt", package = "vascr")
-key = system.file("extdata/mdckkey.csv", package = "vascr")
+#raw = system.file("extdata/mdckspectra.txt", package = "vascr")
+#key = system.file("extdata/mdckkey.csv", package = "vascr")
 
-output = cellzscope_import_raw(raw, key)
-output = vascr_subset(output, time = c(0,50))
-vascr_plot(output, unit = "R", frequency = 4000, replication = "wells")
+#output = cellzscope_import_raw(raw, key)
+#output = vascr_subset(output, time = c(0,50))
+#vascr_plot(output, unit = "R", frequency = 4000, replication = "wells")
 }

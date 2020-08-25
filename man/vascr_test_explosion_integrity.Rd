@@ -16,13 +16,13 @@ A boolean value
 Test that the datset is correctly formatted for explosion
 }
 \examples{
-library(stringr)
+#library(stringr)
 
-data.df = growth.df
-data.df$Sample = str_replace(data.df$Sample, " ", "_")
-data.df$Sample = paste(data.df$Sample, "+ 10_nm nothing important")
-data.df$Sample = paste(data.df$Sample, "+ 4_nm Carpet + ECV_line")
+#data.df = growth.df
+#data.df$Sample = str_replace(data.df$Sample, " ", "_")
+#data.df$Sample = paste(data.df$Sample, "+ 10_nm nothing important")
+#data.df$Sample = paste(data.df$Sample, "+ 4_nm Carpet + ECV_line")
 
-vascr_test_explosion_integrity(growth.df)
+#vascr_test_explosion_integrity(growth.df)
 
 }

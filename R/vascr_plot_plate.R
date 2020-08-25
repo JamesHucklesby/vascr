@@ -3,15 +3,17 @@
 #' @param data Vascr dataset to plot
 #' @param priority Vascr priority to plot
 #' @param ... Other values to pass on to data conditioning funcions
+#' 
+#' @importFrom ggplot2 ggplot geom_tile scale_fill_gradient xlab ylab scale_x_discrete facet_wrap
 #'
 #' @return A vascr platemap of the selected data
 #'
 #' @examples
 #' 
-#' vascr_plot_plate(growth.df, time = 100, unit = "Rb")
-#' vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = "4000")
-#' vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = "4000", level = "deviation")
-#' vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = 4000, level = "structure")
+#' #vascr_plot_plate(growth.df, time = 100, unit = "Rb")
+#' #vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = "4000")
+#' #vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = "4000", level = "deviation")
+#' #vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = 4000, level = "structure")
 #' 
 vascr_plot_plate= function(data, priority = NULL,  ...)
 {
@@ -21,7 +23,7 @@ vascr_plot_plate= function(data, priority = NULL,  ...)
   
   if(dots["level"] == "structure")
   {
-    return(vascr_plot_samplemap(data))
+    return(vascr_plot_structure(data))
   }
   
   
@@ -73,8 +75,8 @@ vascr_plot_plate= function(data, priority = NULL,  ...)
 #' @return Boolean, true if multiple plates are present. Also returns an error if true.
 #'
 #' @examples
-#' vascr_test_multi_plate(growth.df)
-#' vascr_test_multi_plate(vascr_combine(growth.df, growth.df)
+#' #vascr_test_multi_plate(growth.df)
+#' #vascr_test_multi_plate(vascr_combine(growth.df, growth.df)
 #' 
 vascr_test_multi_plate = function(data)
 {
@@ -98,16 +100,18 @@ vascr_test_multi_plate = function(data)
 #'
 #' @param data The datapoint to plot
 #' @param title Title to be placed on the graph
+#' @param stripidentical Should identical wells be removed form the dataset
+#' @param ... Variables to be passed onto prep_graphdata and polish_plot
 #'
 #' @return A map of the data sampled
 #' 
 #' @importFrom magrittr '%>%'
 #' @importFrom dplyr select
-#' @importFrom ggplot2 ggplot ylab xlab scale_x_discrete facet_wrap vars
+#' @importFrom ggplot2 ggplot ylab xlab scale_x_discrete facet_wrap vars geom_tile scale_fill_gradient guides guide_legend
 #'
 #' @examples
 #' 
-#' vascr_plot_structure(growth.df)
+#' #vascr_plot_structure(growth.df)
 #' 
 vascr_plot_structure = function(data, title ="Title", stripidentical = TRUE, ...)
 {
@@ -135,5 +139,5 @@ vascr_plot_structure = function(data, title ="Title", stripidentical = TRUE, ...
     scale_x_discrete(position = "top")+
     facet_wrap(vars(Experiment), scales = "free_x")
   
-  return(vascr_polish_plot(plot, rotate_x = FALSE))
+  return(vascr_polish_plot(plot))
 }

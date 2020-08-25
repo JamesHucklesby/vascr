@@ -24,6 +24,6 @@ A shapiro test of the selected data
 Plot a shapiro test
 }
 \examples{
-vascr_shapiro(growth.df, "R", 4000, 100)
+# vascr_shapiro(growth.df, "R", 4000, 100)
 
 }

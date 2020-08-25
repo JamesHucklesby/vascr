@@ -8,23 +8,28 @@
 #'
 #' @return the cleaned up data frame
 #'
-#' @importFrom dplyr select setdiff intersect
+#' @importFrom dplyr select setdiff intersect na_if
 #' @importFrom tidyr unite
+#' @importFrom tidyselect all_of
 #'
 #' @export
 #'
 #' @examples
 #' # Check the function works
-#' imploded = vascr_implode(growth.df)
-#' imploded = vascr_implode(growth.df, stripidentical = TRUE)
+#' #imploded = vascr_implode(growth.df)
+#' #imploded = vascr_implode(growth.df, stripidentical = TRUE)
 #'
-#' exploded = vascr_explode(vascr_remove_metadata(growth.df))
-#' imploded = vascr_implode(exploded)
+#' #exploded = vascr_explode(vascr_remove_metadata(growth.df))
+#' #imploded = vascr_implode(exploded)
 #' 
-#' data = vascr_subset(growth.df, samplecontains = "35,000")
-#' imploded = vascr_implode(data)
-
-vascr_implode = function(data, select_columns = NULL, stripidentical = FALSE)
+#' #data = vascr_subset(growth.df, samplecontains = "35,000")
+#' #imploded = vascr_implode(data)
+#' 
+#' mindat = vascr_subset(unifiedr, unit = "Rb")
+#' 
+#' miniexploded = vascr_implode(mindat)
+#' miniexploded = mutate(miniexploded, Sample = str_replace_all(Sample, "\\|$", ""))
+vascr_implode = function(data, select_columns = NULL, stripidentical = TRUE, stripzero = TRUE)
 {
   if(length(unique(data$Sample))==1 & is.null(select_columns))
   {
@@ -75,11 +80,36 @@ vascr_implode = function(data, select_columns = NULL, stripidentical = FALSE)
     }
     
     # Add the name of each column to the end of each cell, so they are labeled when pasted together
+    
+    if(stripzero)
+    {
+      miniexploded[col] = na_if(miniexploded[col], 0)
+      miniexploded[col] = na_if(miniexploded[col], "NA")
+      miniexploded[[col]] = paste(miniexploded[[col]], col, sep ="_")
+      treat= str_count(miniexploded[[col]], "NA")==0
+      miniexploded[[col]] = ifelse(treat, miniexploded[[col]], "")
+    }else
+    {
     miniexploded[[col]] = paste(miniexploded[[col]], col, sep ="_")
+    }
   }
   
   miniexploded$Sample = NULL # Check sample is gone so we can re-create it
-  miniexploded = unite(miniexploded, Sample, select_columns, sep = " + ")
+  miniexploded = unite(miniexploded, Sample, select_columns, sep = "|")
+  
+  miniexploded = mutate(miniexploded, Sample = str_replace_all(Sample, "\\|\\|", "|"))
+  miniexploded = mutate(miniexploded, Sample = str_replace_all(Sample, "\\|$", ""))
+  miniexploded = mutate(miniexploded, Sample = str_replace_all(Sample, "$\\|", ""))
+  miniexploded = mutate(miniexploded, Sample = str_replace_all(Sample, "\\|", " + "))
+  
+  
   
   return(miniexploded)
 }
+
+
+
+
+
+
+

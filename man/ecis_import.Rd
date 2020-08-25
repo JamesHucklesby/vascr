@@ -4,7 +4,7 @@
 \alias{ecis_import}
 \title{Import all ECIS values, a child of ecis_import_raw and ecis_import_model}
 \usage{
-ecis_import(rawdata, modeled, key, experimentname)
+ecis_import(rawdata, modeled, key, experimentname = "NA")
 }
 \arguments{
 \item{rawdata}{A raw ABP file to import}
@@ -12,6 +12,8 @@ ecis_import(rawdata, modeled, key, experimentname)
 \item{modeled}{A modeled APB file for import}
 
 \item{key}{A CSV file containing each well and it's corresponding sample}
+
+\item{experimentname}{Name of the experiment to be built into the dataset}
 }
 \value{
 A dataframe containing all the data APB generated from an experiment
@@ -21,14 +23,12 @@ Import all ECIS values, a child of ecis_import_raw and ecis_import_model
 }
 \examples{
 
-rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'vascr')
-modeled = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'vascr')
-key = system.file('extdata/growth1_samples.csv', package = 'vascr')
+#rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'vascr')
+#modeled = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'vascr')
+#key = system.file('extdata/growth1_samples.csv', package = 'vascr')
 
 #Then run the import
 
-data = ecis_import(rawdata,modeled,key)
-head(data)
-vascr_plot(data, unit = "Rb")
-vascr_plot(data, unit = "R")
+#data = ecis_import(rawdata,modeled,key, experimentname = "TEST")
+#head(data)
 }

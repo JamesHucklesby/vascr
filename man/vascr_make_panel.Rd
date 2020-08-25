@@ -2,33 +2,24 @@
 % Please edit documentation in R/ecis_graphics.R
 \name{vascr_make_panel}
 \alias{vascr_make_panel}
-\title{Title}
+\title{Combine mulitple VASCR plots into a single pannel}
 \usage{
 vascr_make_panel(..., plots = NULL, legend_from_index = 1)
 }
 \arguments{
-\item{...}{}
+\item{...}{The plots that need to be combined}
 
-\item{plots}{}
+\item{plots}{A vector of plots, if not available in ... format}
+
+\item{legend_from_index}{Which plot in the list to clone the legend from}
 }
 \value{
-
+A panel with multiple plots on it
 }
 \description{
-Title
+Combine mulitple VASCR plots into a single pannel
 }
 \examples{
-plots = list()
-plots[[1]] = vascr_plot(growth.df, "Rb")
-plots[[2]] = vascr_plot(growth.df, "Cm")
-vascr_make_panel(plots = plots)
-
-vascr_make_panel(vascr_plot(growth.df, unit = "Cm"), vascr_plot(growth.df, unit = "Rb"))
-
-vascr_multiplot(data = growth.df, frequency = 4000, time = c(100, 50))
-
-vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100), 10))
-
-vascr_make_panel(wells, experiments, summary)
+#plots = list()
 
 }

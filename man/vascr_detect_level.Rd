@@ -10,13 +10,13 @@ vascr_detect_level(data)
 \item{data}{The data frame to analyse}
 }
 \value{
-
+The level of the dataset analysed
 }
 \description{
 Check the level of a vascr data frame
 }
 \examples{
-vascr_detect_level(growth.df)
-vascr_detect_level(vascr_summarise(growth.df, level = "experiments"))
-vascr_detect_level(vascr_summarise(growth.df, level = "summary"))
+#vascr_detect_level(growth.df)
+#vascr_detect_level(vascr_summarise(growth.df, level = "experiments"))
+#vascr_detect_level(vascr_summarise(growth.df, level = "summary"))
 }

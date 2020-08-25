@@ -33,7 +33,7 @@ A table of what is significant
 Make a dataframe of what is statistically significant
 }
 \examples{
-vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95)
-vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95, format = "Tukey_data")
+#vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95)
+#vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95, format = "Tukey_data")
 
 }

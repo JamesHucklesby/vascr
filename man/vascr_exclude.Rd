@@ -43,16 +43,16 @@ Exclude erronious data from an ECIS dataframe
 }
 \examples{
 
-unique(growth.df$Sample)
-excludedgrowth.df = vascr_exclude(growth.df, samples = c("35,000 cells", "0 cells"))
-unique(excludedgrowth.df$Sample)
+#unique(growth.df$Sample)
+#excludedgrowth.df = vascr_exclude(growth.df, samples = c("35,000 cells", "0 cells"))
+#unique(excludedgrowth.df$Sample)
 
-unique(growth.df$Well)
-excludedgrowth.df = vascr_exclude(growth.df, wells = c("A1", "B1", "C1"))
-unique(excludedgrowth.df$Well)
+#unique(growth.df$Well)
+#excludedgrowth.df = vascr_exclude(growth.df, wells = c("A1", "B1", "C1"))
+#unique(excludedgrowth.df$Well)
 
-unique(growth.df$Experiment)
-excludedgrowth.df = vascr_exclude(growth.df, experiment = c(1,2))
-unique(excludedgrowth.df$Experiment)
+#unique(growth.df$Experiment)
+#excludedgrowth.df = vascr_exclude(growth.df, experiment = c(1,2))
+#unique(excludedgrowth.df$Experiment)
 
 }

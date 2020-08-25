@@ -19,11 +19,11 @@ Creates and ECIS dataset that has had all samples of the same type averaged toge
 }
 \examples{
 
-vascr_summarise(growth.df, "summary")
-vascr_summarise(growth.df, "experiments")
-vascr_summarise(growth.df, "wells")
+#vascr_summarise(growth.df, "summary")
+#vascr_summarise(growth.df, "experiments")
+#vascr_summarise(growth.df, "wells")
 
-data = vascr_summarise(growth.df, "summary")
+#data = vascr_summarise(growth.df, "summary")
 
 
 

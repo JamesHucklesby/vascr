@@ -18,13 +18,5 @@ Explode out continuous data from Sample
 \examples{
 growth.df$Instrument ="ECIS"
 
-# Stip out all the non-core columns in the dataset
-data.df = vascr_remove_metadata(growth.df)
-
-# Run the explosion to re-generate the non-core columns
-processed = vascr_explode(data.df)
-
-# Show that the re-created data is identical to the original dataset
-all.equal(growth.df, processed)
 
 }

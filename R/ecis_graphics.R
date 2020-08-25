@@ -32,44 +32,51 @@
 #' @param continuouscontains Subset of samplecontains, only returns data where the continuous value contains this data
 #' @param returndata Return the dataset, rather than the graph. Default FALSE, usefull for debugging
 #' @param showpoints Show the time points on the graph
+#' @param sortkeyincreasing Sort the data specified in an increasing way.
+#' @param singleplot Merge all the data specified into a single plot.
+#' @param priority The priority of variables to plot. Will be automatically filled if not available.
+#' @param errortype Type of error to plot. Can be SEM or SD.
+#' @param visualisation How to visualise the data
+#' @param threshold The threshold value to place on the graph
 #'
 #' @return A ggplot2 object
 #' 
 #' @export
 #' @examples
-#' growth.df$Instrument = "ECIS"
 #' 
-#' vascr_plot(growth.df, 'Rb', level = 'summary',
-#' error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-#' vascr_plot(growth.df, 'Rb', level = 'wells',
-#'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-#'  vascr_plot(growth.df, 'Rb', level = 'experiments',
-#'  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
-#'  , xlab = "Hours")
-#' vascr_plot(growth.df, 'R', 4000, 'summary', time = 75)
-#' vascr_plot(growth.df, "R", 4000, "summary", 50, confidence = 0.1, sortkeyincreasing = FALSE)
 #' 
-#' vascr_plot(growth.df, sortkeyincreasing = TRUE)
 #' 
-#' vascr_plot(growth.df, continuous = "cells", level = "summary", time = 50)
+#' #vascr_plot(growth.df, 'Rb', level = 'summary',
+#' #error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+#' #vascr_plot(growth.df, 'Rb', level = 'wells',
+#' #  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+#' # vascr_plot(growth.df, 'Rb', level = 'experiments',
+#'  #error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
+#'  #, xlab = "Hours")
+#' #vascr_plot(growth.df, 'R', 4000, 'summary', time = 75)
+#' #vascr_plot(growth.df, "R", 4000, "summary", 50, confidence = 0.1, sortkeyincreasing = FALSE)
+#' 
+#' #vascr_plot(growth.df, sortkeyincreasing = TRUE)
+#' 
+#' #vascr_plot(growth.df, continuous = "cells", level = "summary", time = 50)
 #'
-#' vascr_plot(growth.df, level = "plate", time = 100)
+#' #vascr_plot(growth.df, level = "plate", time = 100)
 #' 
-#'vascr_plot(growth.df, time = list(c(100,190)), unit = list("Rb", "Cm", "Alpha", "R"),  frequency = 4000)
+#' #vascr_plot(growth.df, time = list(c(100,190)), 
+#' #unit = list("Rb", "Cm", "Alpha", "R"),  frequency = 4000)
 #'
-#' vascr_plot(growth.df, time = 100, unit = "Cm",  frequency = 4000, level = "summary")
+#' #vascr_plot(growth.df, time = 100, unit = "Cm",  frequency = 4000, level = "summary")
 #' 
-#' vascr_plot(growth.df, level = "deviation")
-#' vascr_plot(growth.df, level = "anova")
+#' #vascr_plot(growth.df, level = "deviation")
 #' 
-#' vascr_plot(growth.df, visualisation = "line", level = "summary")
+#' #vascr_plot(growth.df, visualisation = "line", level = "summary")
 #' 
 #' 
-#' vascr_plot(growth.df)
+#' #vascr_plot(growth.df)
 #' 
 
 
-vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = FALSE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE, sortkeyincreasing = TRUE, showpoints = FALSE, singleplot = FALSE, priority = NULL, errortype = "sem", visualisation = NULL, threshold = 0) 
+vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", time = Inf, samplecontains = "", experiment = NULL, error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = FALSE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE, sortkeyincreasing = TRUE, showpoints = FALSE, singleplot = FALSE, priority = NULL, errortype = "sem", visualisation = NULL, threshold = 0) 
   {
   
 
@@ -79,7 +86,7 @@ vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", tim
   {
     singleplot = TRUE
     allarguements = as.list(environment())
-    multiplot = do.call(vascr_multiplot, allarguments)
+    multiplot = do.call(vascr_multiplot, allarguements)
     return(multiplot)
   }
   
@@ -122,25 +129,25 @@ vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", tim
     return(plot)
   }
   
-  if(level == "structure" || visualisation == "structure")
+  if(level == "structure")
   {
     plot = do.call("vascr_plot_structure", as.list(environment()))
     return(plot)
   }
   
-  if(visualisation == "line")
+  if(isTRUE(visualisation == "line"))
   {
     plot = do.call("vascr_plot_line", as.list(environment()))
     return(plot)
   }
   
-  if(visualisation == "bar")
+  if(isTRUE(visualisation == "bar"))
   {
       plot = do.call("vascr_plot_bar", as.list(environment()))
       return(plot)
   }
 
-  if(visualisation == "plate")
+  if(isTRUE(visualisation == "plate"))
   {
     plot = do.call("vascr_plot_plate", as.list(environment()))
     return(plot)
@@ -157,16 +164,17 @@ vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", tim
 #' @param unit The unit to plot. "raw" will plot all raw units and "modeled" will plot all modeled units.
 #' @param frequency The frequency to plot
 #' @param time The time to plot. Multiple time plots can be plotted with list(1,2) and multiple ranges can be plotted with list(c(1,2), c(3,4))
+#' @param ... Other conditions to be passed into data conditioning and graph preparing steps
 #'
 #' @return An array of requested ggplots
 #' @export
 #'
 #' @examples
-#' vascr_multiplot(data = growth.df, frequency = 4000, time = list(50, 100))
+#' #vascr_multiplot(data = growth.df, frequency = 4000, time = list(50, 100))
 #' 
-#' vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100),100), level = "wells")
+#' #vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100),100), level = "wells")
 #' 
-#' vascr_multiplot(growth.df, frequency = c(2000,4000), unit = "R")
+#' #vascr_multiplot(growth.df, frequency = c(2000,4000), unit = "R")
 #' 
 #' 
 vascr_multiplot = function(data, unit = "all", frequency = 0, time = Inf, ...)
@@ -211,27 +219,31 @@ vascr_multiplot = function(data, unit = "all", frequency = 0, time = Inf, ...)
 }
 
 
-#' Title
+#' Combine mulitple VASCR plots into a single pannel
+#' 
 #'
-#' @param ... 
-#' @param plots 
+#' @param ... The plots that need to be combined
+#' @param plots A vector of plots, if not available in ... format
+#' @param legend_from_index Which plot in the list to clone the legend from
+#' 
+#' @importFrom gridExtra arrangeGrob grid.arrange
+#' @importFrom ggplot2 ggplotGrob theme
+#' @importFrom grid unit.c unit
 #'
-#' @return
+#' @return A panel with multiple plots on it
 #' @export
 #'
 #' @examples
-#' plots = list()
-#' plots[[1]] = vascr_plot(growth.df, "Rb")
-#' plots[[2]] = vascr_plot(growth.df, "Cm")
-#' vascr_make_panel(plots = plots)
-#' 
-#' vascr_make_panel(vascr_plot(growth.df, unit = "Cm"), vascr_plot(growth.df, unit = "Rb"))
-#' 
-#' vascr_multiplot(data = growth.df, frequency = 4000, time = c(100, 50))
-#' 
-#' vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100), 10))
-#' 
-#' vascr_make_panel(wells, experiments, summary)
+#' #plots = list()
+# #plots[[1]] = vascr_plot(growth.df, "Rb")
+# #plots[[2]] = vascr_plot(growth.df, "Cm")
+# #vascr_make_panel(plots = plots)
+# 
+# #vascr_make_panel(vascr_plot(growth.df, unit = "Cm"), vascr_plot(growth.df, unit = "Rb"))
+# 
+# #vascr_multiplot(data = growth.df, frequency = 4000, time = c(100, 50))
+# 
+# #vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100), 10))
 #' 
 vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1) {
   
@@ -281,24 +293,28 @@ vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1) {
   
 }
   
-  
 
 #' Post-processing on ECIS plots to make them a bit more pretty
 #'
 #' @param plot The plot to format
+#' @param rotate_x_angle Angle by which X axis values should be rotated
+#' @param logscale Should X, Y or XY axes be log10 transformed
+#' @param title Title of the graph
 #'
-#' @importFrom ggplot2 theme_bw 
+#' @importFrom ggplot2 theme_bw ggtitle
 #' @importFrom ggpubr rotate_x_text
 #'
 #' @return A standardised ggplot2 object
 #' @export
 #'
+#' @importFrom ggplot2 scale_x_log10 scale_y_log10
+#'
 #' @examples
 #' # Automatically applied to ggplot, should not be required externaly
 #' 
-#' plot = vascr_plot(growth.df)
-#' vascr_polish_plot(plot)
-#' vascr_polish_plot(plot, rotate_x = FALSE)
+#' #plot = vascr_plot(growth.df)
+#' #vascr_polish_plot(plot)
+#' #vascr_polish_plot(plot, rotate_x_angle = FALSE)
 #' 
 vascr_polish_plot = function(plot, rotate_x_angle = 45, logscale = "", title = NULL)
 {
@@ -374,7 +390,7 @@ vascr_polish_plot = function(plot, rotate_x_angle = 45, logscale = "", title = N
 #' #' @export
 #' #'
 #' #' @examples
-#' #' vascr_animatefrequency(growth.df, 'R', 3)
+#' #' #vascr_animatefrequency(growth.df, 'R', 3)
 #' #' 
 #' vascr_animatefrequency = function(alldata.df, unittoplot, frames) {
 #'     
@@ -399,9 +415,6 @@ vascr_polish_plot = function(plot, rotate_x_angle = 45, logscale = "", title = N
 #'
 #' @param data.df The dataset the well is in
 #' @param well The well to be isolated
-#' @param title The title of the plot
-#' @param unit The unit to plot. Default is R
-#' @param frequency The frequency to plot. Default is 4000
 #' @param ... Other conditions to pass on to the vascr_plot command that generates the graph
 #' 
 #' @importFrom magrittr "%>%"
@@ -413,18 +426,20 @@ vascr_polish_plot = function(plot, rotate_x_angle = 45, logscale = "", title = N
 #'
 #' @examples
 #' 
-#' datum = vascr_plot_isolate(growth.df, well = "A3", unit = "R", frequency = 4000, error = Inf, priority = NULL)
+#' #datum = vascr_plot_isolate(growth.df, well = "A3", unit = "R", frequency = 4000,
+#' # error = Inf, priority = NULL)
 #' 
-#' vascr_plot_line(datum, preprocessed = TRUE, priority = c("Time", "Sample"))
+#' #vascr_plot_line(datum, preprocessed = TRUE, priority = c("Time", "Sample"))
 #' 
-vascr_plot_isolate= function(data, well, ...)
+vascr_plot_isolate= function(data.df, well, ...)
 {
+  data = data.df
   
   # Run the preparation command for a standard well
   dots = list(...)
   data = do.call_relevant("vascr_prep_graphdata", data, dots)
   
-  if(unique(data$Frequency)>1)
+  if(length(unique(data$Frequency))>1)
   {
     warning("More than 1 frequency detected, use with care")
   }
@@ -462,7 +477,7 @@ vascr_plot_isolate= function(data, well, ...)
 #' @param data.df A standard ECIS dataframe. Ideally this will contain only one experiment, but multiple experiments are supported.
 #' @param unit The unit to plot. Default is R
 #' @param frequency The frequency to plot. Default is 4000
-#' @param verbose Prints out the scores for each well. On by default.
+#' @param ... Values to be passed onto prep_graphdata and polish_plot
 #'
 #' @importFrom ggplot2 aes geom_line facet_grid labs
 #'
@@ -470,14 +485,13 @@ vascr_plot_isolate= function(data, well, ...)
 #' @export 
 #'
 #' @examples
-#' vascr_plot_matrix(growth.df, unit = "Rb")
+#' #vascr_plot_matrix(growth.df, unit = "Rb")
 #' 
 vascr_plot_matrix = function(data.df, unit = "R", frequency = 4000, ...)
 {
   # Gather graph data based on the ...
   dots = as.list(environment())
-  data = do.call_relevant("vascr_prep_graphdata", data, dots)
-  
+  data = do.call_relevant("vascr_prep_graphdata", data.df, dots)
   
   # Grab the column and row components from each well to allow plate separation
   data$col = substr(data$Well,1,1)
@@ -502,7 +516,7 @@ vascr_plot_matrix = function(data.df, unit = "R", frequency = 4000, ...)
 #' @export
 #'
 #' @examples
-#' vascr_factorise_and_sort(growth.df$Sample)
+#' #vascr_factorise_and_sort(growth.df$Sample)
 #' 
 vascr_factorise_and_sort = function(data, sortkeyincreasing = TRUE)
 {

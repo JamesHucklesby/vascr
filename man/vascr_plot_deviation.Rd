@@ -31,6 +31,8 @@ vascr_plot_deviation(
 
 \item{visualisation}{The visualisation you want to focus in on. Options are "bar", "plate" or "line". The default is to tile all three.}
 
+\item{title}{The title to place on the plot}
+
 \item{...}{Any other arguements to be passed on to either vascr_subset or vascr_polish_plot}
 }
 \value{
@@ -40,10 +42,10 @@ A ggplot object, or matrix of ggplot objects
 This function by default outputs three sets of diagnostic plots that describe where, by how much and when a well has drifted from the median for that dataset. Individual visualisations from this set can also be requested using the visualisation paramater. The max_deviation and deviation paramaters can be used to annotate these plots, allowing acceptable variation.
 }
 \examples{
-grid = vascr_plot_deviation(growth.df)
-vascr_plot_deviation(growth.df, visualisation = "bar")
-vascr_plot_deviation(growth.df, visualisation = "plate")
-vascr_plot_deviation(growth.df, visualisation = "line")
-vascr_plot_deviation(growth.df, max_deviation = 0.2)
+#grid = vascr_plot_deviation(growth.df)
+#vascr_plot_deviation(growth.df, visualisation = "bar")
+#vascr_plot_deviation(growth.df, visualisation = "plate")
+#vascr_plot_deviation(growth.df, visualisation = "line")
+#vascr_plot_deviation(growth.df, max_deviation = 0.2)
 
 }

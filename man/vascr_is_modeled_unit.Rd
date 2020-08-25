@@ -16,8 +16,8 @@ A boolean, true if it is modelled, false if it is raw electrical data
 Check if a selected unit is modelled
 }
 \examples{
-vascr_is_modeled_unit("R")
-vascr_is_modeled_unit("Rb")
-vascr_is_modeled_unit(c("R", "Rb"))
+#vascr_is_modeled_unit("R")
+#vascr_is_modeled_unit("Rb")
+#vascr_is_modeled_unit(c("R", "Rb"))
 
 }

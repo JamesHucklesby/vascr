@@ -16,5 +16,5 @@ An ANOVA formula
 Generate an anova formula
 }
 \examples{
-vascr_formula(c("cells","well"))
+# vascr_formula(c("cells","well"))
 }

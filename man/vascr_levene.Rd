@@ -24,6 +24,6 @@ A Levene Test object
 Runs a test for homogenicity of variance, to ensure that the conditions of an ANOVA are met. Built into anova plotting functions and anova summary.
 }
 \examples{
-vascr_levene(growth.df, "R", 4000, 100)
+# vascr_levene(growth.df, "R", 4000, 100)
 
 }

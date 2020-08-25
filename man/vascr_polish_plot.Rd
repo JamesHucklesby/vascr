@@ -8,6 +8,12 @@ vascr_polish_plot(plot, rotate_x_angle = 45, logscale = "", title = NULL)
 }
 \arguments{
 \item{plot}{The plot to format}
+
+\item{rotate_x_angle}{Angle by which X axis values should be rotated}
+
+\item{logscale}{Should X, Y or XY axes be log10 transformed}
+
+\item{title}{Title of the graph}
 }
 \value{
 A standardised ggplot2 object
@@ -18,8 +24,8 @@ Post-processing on ECIS plots to make them a bit more pretty
 \examples{
 # Automatically applied to ggplot, should not be required externaly
 
-plot = vascr_plot(growth.df)
-vascr_polish_plot(plot)
-vascr_polish_plot(plot, rotate_x = FALSE)
+#plot = vascr_plot(growth.df)
+#vascr_polish_plot(plot)
+#vascr_polish_plot(plot, rotate_x_angle = FALSE)
 
 }

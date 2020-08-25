@@ -24,6 +24,6 @@ A ggpubr ggqqplot object
 Generate a qq plot and shapiro test from a vascr data frame
 }
 \examples{
-vascr_plot_qq(growth.df, "R", 4000, 100)
+# vascr_plot_qq(growth.df, "R", 4000, 100)
 
 }

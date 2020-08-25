@@ -113,29 +113,35 @@ import_mdb = function(file, table)
 #'
 #' @param file The file to import
 #' @param key A keyfile to apply. Optional, as the xCELLigence internal definitions will be used if no file is specified
+#' @param experimentname Name of the experiment to be built into the dataset
 #' 
 #' @importFrom tidyr separate pivot_wider
 #' @importFrom dplyr left_join
 #' @importFrom stringr str_replace
 #'
-#' @return
-#' @export
+#' @return A vascr datafile
 #'
 #' @examples
 #' # Arguments to push through the function
-#' file = "inst/extdata/xcell.plt"
-#' key = "inst/extdata/xcell_lookup.csv"
-#' xcell = import_xcelligence(file, key)
+#' # file = "inst/extdata/xcell.plt"
+#' # key = "inst/extdata/xcell_lookup.csv"
+#' 
+#' #xcell = import_xcelligence(file, key)
+#' 
+#' #xcell = vascr_explode(xcell)
+#' 
+#' #vascr_plot(xcell, unit = "Z", frequency = "10000")
+#' 
+#' #vascr_plot_line(xcell, unit ="CI", frequency = "10000")
+#' 
+#' # xplot = vascr_subset_continuous(xcelle, continuous = "ATP")
+#' 
+#' #  vascr_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", level = "wells")
 #'
-#' xcell = vascr_explode(xcell)
-#'
-#' #vascr_plot(xcell, unit = "Z", frequency = "10000", replication = "experiments", continuouscontains = "ATP", normtime = 0)
-#'
-#' #vascr_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", replication = "wells")
-#'
+#' #vascr_plot(growth.df)
+#' 
 #'  
-
-import_xcelligence = function(file, key, experimentname)
+import_xcelligence = function(file, key, experimentname = "NA")
 {
   vascr_validate_file(file, "plt")
   
@@ -155,7 +161,9 @@ import_xcelligence = function(file, key, experimentname)
   file = tempfile
 
 # Hard code in the list of tables we need to import from access. This will be pruned later to speed things up
-tables = c("Calibration","ENotes", "ErrLog", "ETimes", "Index1", "Index2", "Index3", "Layout", "Messages", "mIndex1", "Org10K", "Org25K", "Org50K", "ScanPlate", "ScanPlateData", "StepStatus", "TTimes", "WellColor")
+# tables = c("Calibration","ENotes", "ErrLog", "ETimes", "Index1", "Index2", "Index3", "Layout", "Messages", "mIndex1", "Org10K", "Org25K", "Org50K", "ScanPlate", "ScanPlateData", "StepStatus", "TTimes", "WellColor")
+  
+ tables = c("Layout","Org10K", "Org25K", "Org50K", "TTimes")
 
 # Import all the tables in the list, saving them back to global variables by the same name.
 for(table in tables)
@@ -195,13 +203,13 @@ TimeOrg$StepID = NULL
 TimeOrg$Unit = "Z" # Assign impedance (Z) as the unit for all time points. This is all the CellZScope can capture.
 
 # Assign experiment name
-if(!missing(experimentname))
+if(experimentname=="NA")
 {
-  combined2.df$Experiment = basename(file)
+  TimeOrg$Experiment = basename(file)
 }
 else
 {
-  combined2.df$Experiment = experimentname
+  TimeOrg$Experiment = experimentname
 }
 
 
@@ -240,26 +248,47 @@ if(missing(key))
       finaldata = vascr_assign_samples(TimeOrg,key)
 }
 
-# Normalise the data to the minimum timepoint in the dataset (should be 0). This satisfies the top of the CI equation
-xcellCI = vascr_normalise(finaldata, min(finaldata$Time), divide = FALSE)
+# # Normalise the data to the minimum timepoint in the dataset (should be 0). This satisfies the top of the CI equation
+# xcellCI = vascr_normalise(finaldata, min(finaldata$Time), divide = FALSE)
+# 
+# # Generate a divisor column, switch in the correct numbers, divide by each other and clean up
+# xcellCI$divisor = xcellCI$Frequency
+# xcellCI$divisor = as.character(xcellCI$divisor)
+# xcellCI$divisor = str_replace(xcellCI$divisor, "10000", "15")
+# xcellCI$divisor = str_replace(xcellCI$divisor, "25000", "12")
+# xcellCI$divisor = str_replace(xcellCI$divisor, "50000", "10")
+# xcellCI$divisor = as.numeric(xcellCI$divisor)
+# xcellCI$Value = xcellCI$Value/xcellCI$divisor
+# xcellCI$divisor = NULL
+# 
+# # Fix up the unit, as they are now all CI
+# xcellCI$Unit = "CI"
+# 
+# returndata = vascr_combine(xcellCI, finaldata)
 
-# Generate a divisor column, switch in the correct numbers, divide by each other and clean up
-xcellCI$divisor = xcellCI$Frequency
-xcellCI$divisor = as.character(xcellCI$divisor)
-xcellCI$divisor = str_replace(xcellCI$divisor, "10000", "15")
-xcellCI$divisor = str_replace(xcellCI$divisor, "25000", "12")
-xcellCI$divisor = str_replace(xcellCI$divisor, "50000", "10")
-xcellCI$divisor = as.numeric(xcellCI$divisor)
-xcellCI$Value = xcellCI$Value/xcellCI$divisor
-xcellCI$divisor = NULL
-
-# Fix up the unit, as they are now all CI
-xcellCI$Unit = "CI"
-
-returndata = vascr_combine(xcellCI, finaldata)
+# Make CI
+returndata = xcelligence_import_generate_CI(finaldata)
 
 return(returndata)
 }
+
+
+#' Generate CI from xcelligence data
+#'
+#' @param data.df The dataset to generate CI from
+#'
+#' @return An enlargened dataset
+#'
+#' @examples
+xcelligence_import_generate_CI = function(data.df)
+{
+  cidata = vascr_normalise(data.df, normtime = 0)
+  cidata$Unit = "CI"
+  
+  returndata = vascr_combine(cidata, data.df)
+  return(returndata)
+}
+
 
 # #//////////////////////////////// Subtract background (needs validation)
 # 

@@ -10,12 +10,12 @@ vascr_default(data)
 \item{data}{The dataset to derrive the instrument type from}
 }
 \value{
-
+The default frequency and unit in a list
 }
 \description{
 Central source of lookup values for default graph settings for various instruments.
 }
 \examples{
-vascr_default(growth.df)
+# vascr_default(growth.df)
 
 }

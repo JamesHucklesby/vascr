@@ -15,11 +15,11 @@
 #'
 #' @examples
 #' 
-#' vascr_summarise(growth.df, "summary")
-#' vascr_summarise(growth.df, "experiments")
-#' vascr_summarise(growth.df, "wells")
+#' #vascr_summarise(growth.df, "summary")
+#' #vascr_summarise(growth.df, "experiments")
+#' #vascr_summarise(growth.df, "wells")
 #' 
-#' data = vascr_summarise(growth.df, "summary")
+#' #data = vascr_summarise(growth.df, "summary")
 #' 
 #' 
 #' 
@@ -111,8 +111,8 @@ vascr_summarise <- function(data.df, level = "summary") {
 #'
 #' @examples
 #' 
-#' data = vascr_normalise(growth.df, 100)
-#' head(data)
+#' #data = vascr_normalise(growth.df, 100)
+#' #head(data)
 #' 
 vascr_normalise = function(data.df, normtime, divide = FALSE) {
     
@@ -176,10 +176,10 @@ vascr_normalise = function(data.df, normtime, divide = FALSE) {
 #'
 #' @examples
 #' 
-#' data = vascr_align_key(growth.df, 'max')
-#' head(data)
-#' data = vascr_align_key(growth.df, 'min')
-#' head(data)
+#' #data = vascr_align_key(growth.df, 'max')
+#' #head(data)
+#' #data = vascr_align_key(growth.df, 'min')
+#' #head(data)
 
 vascr_align_key = function(data.df, point, discrepancy = 5) {
     
@@ -226,10 +226,16 @@ vascr_align_key = function(data.df, point, discrepancy = 5) {
 #'
 #' @examples
 #' 
-#' data = vascr_subsample(growth.df, 50)
-#' head(data)
+#' #data = vascr_subsample(growth.df, 50)
+#' #head(data)
 #' 
 vascr_subsample = function(data.df, nth) {
+  
+   if(is.infinite(nth))
+   {
+     return(data.df)
+   }
+  
     
     Time = unique(data.df$Time)
     TimeID = c(1:length(Time))
@@ -254,7 +260,7 @@ vascr_subsample = function(data.df, nth) {
 #'
 #' @examples
 #' 
-#' vascr_current_frequency(growth.df)
+#' #vascr_current_frequency(growth.df)
 #' 
 #' 
 vascr_current_frequency = function (data.df)
@@ -292,8 +298,8 @@ vascr_current_frequency = function (data.df)
 #'
 #' @examples
 #' 
-#' data = vascr_resample(growth.df, 10, 50 ,100, 50)
-#' head (data)
+#' #data = vascr_resample(data.df = growth.df, by = 10)
+#' #head (data)
 #' 
 vascr_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 {
@@ -371,153 +377,6 @@ vascr_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 }
 
 
-#' Subset an ECIS dataset on multiple factors
-#' 
-#' Generates a cut down dataset for processing purposes. Used heavily by all other internal functions, but may also be useful for inspecting digestable chunks of raw data.
-#'
-#' @param data.df A standard ECIS dataset
-#' @param time The time to subset at. Default will line plot all data, can also submit a vector of length 2
-#'  and the times between those two points will be submited.
-#' @param unit The unit requred
-#' @param frequency The frequency at which the reading was taken. All modeled variables have a frequency of 0
-#' @param experiment The experiment to plot. Default is all experiments
-#' @param samplecontains The samples to plot. A string that is searched accross all sample names, and those that match are plotted.
-#' @param well The wells required
-#'
-#' @return A smaller ECIS dataset
-#' 
-#' @importFrom dplyr filter
-#' @importFrom magrittr "%>%"
-#' @importFrom stringr str_detect
-#' @export 
-#'
-#' @examples
-#' data = vascr_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
-#' samplecontains = "05,000", experiment = "2", well = "G5")
-#' head(data)
-#' data = vascr_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
-#' samplecontains = "05,000", experiment = "2")
-#' head(data)
-#' 
-#' data = vascr_subset(growth.df, time = list(50,100))
-#' unique(data$Time)
-#' 
-#' data = vascr_subset(growth.df, time = c(50,70))
-#' unique(data$Time)
-#' 
-#' data = vascr_subset(growth.df, samplecontains = "5000")
-#' data.df = growth.df
-#' 
-#' unique(vascr_subset(growth.df, max_deviation = 0.3)$Well)
-
-vascr_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplecontains = "", experiment = "", well = "", deviation = 0, max_deviation = 0){
-  
-  if(!(is.data.frame(data.df)))
-  {
-    stop("Data is not a data frame. This function can only be used on vascr data frames")
-  }
-  
-  defaultfrequency = frequency
-  defaultunit = unit
-  
-  data.df$Well = vascr_standardise_wells(data.df$Well)
-  
-  
-  if(vascr_is_modeled_unit(unit)) # Wipe out frequency if it is a modelled variable as that makes no sense
-  {
-    frequency = 0
-    defaultfrequency = 0
-  }
-  
-  
-  
-  # Deal with time
-  
-  if(is.list(time))
-  {
-    subsetdata = data.df[0, ]
-    for(tim in time)
-    {
-      localdata = vascr_subset(data.df, time = tim)
-      subsetdata = rbind(subsetdata, localdata)
-    }
-    data.df = subsetdata
-  }
-  
-  else if (length(time) == 2) # If a vector of length 2 was submitted (ie two times) then we subset to that
-  {
-    data.df = data.df %>% filter(Time >= time[1])
-    data.df = data.df %>% filter(Time <= time[2])
-  }
-  
-  else if(is.finite(time)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
-  {
-    time = as.numeric(time) # Clean up the data type just in case the user is lazy
-    actualtime = vascr_find_time(data.df, time)
-    data.df = data.df %>% filter(Time == actualtime)
-  }
-  else if(is.infinite(time)) # The number is infinity, so return everything (IE do nothing)
-  {
-    
-  } else
-  {
-    warning("Time argument could not be parsed. No time subsetting completed")
-  }
-  
-  #Then we deal with the frequency
-  
-  if(frequency == "raw")
-  {
-    data.df = data.df %>% filter(Frequency > 0 )
-    
-  } else if (frequency == "modeled")
-  {
-    data.df = data.df %>% filter(Frequency == 0)
-  }
-  
-  else if(is.finite(frequency)) # Check that time finite. If so, trim down the dataset to the single finite frequency given, or the nearest rounded one.
-  {
-    frequency = as.numeric(frequency) # clean up the data type
-    frequency = vascr_find_frequency(data.df, frequency)
-    data.df = data.df %>% filter(Frequency == frequency)
-  }
-  
-  #Then we deal with the textey ones
-  
-  data.df = data.df %>% filter(str_detect(Unit, unit))
-  data.df = data.df %>% filter(str_detect(Sample, samplecontains))
-  data.df = data.df %>% filter(str_detect(Experiment, experiment))
-  
-  if (!all((well == "")))
-  {
-  data.df = data.df %>% filter(Well == well)
-  }
-  
-  
-  if(deviation>0 || max_deviation>0)
-  {
-    if(length(frequency>0) || length(unit)>0)
-    {
-      warning("Mulitple units selected, deviation calculations will be inaccurate due to comparing non-like units")
-    }
-    
-    data.df = vascr_exclude_deviation(data = data.df, deviation = deviation, frequency = frequency, unit = unit)
-    
-  }
-  
-  
-  # Check if there is still some data here, and if not sound a warning
-  if(nrow(data.df)==0)
-  {
-    warning("No data returned from dataset subset. Check your frequencies, times and units are present in the dataset")
-  }
-  
-  return(data.df)
-  
-  
-}
-
-
 
 #' Subset a continuous variable
 #'
@@ -532,14 +391,14 @@ vascr_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplec
 #' @importFrom dplyr mutate_all
 #' @importFrom stringr str_detect
 #'
-#' @return
-#' @export
+#' @return A vascr dataset subsampled on a continuous variable
 #'
 #' @examples
-# # Sub code for breaking out continuous datasets
-# #exploded = vascr_explode(xcell)
-# #subset = vascr_subset_continuous(exploded, continuous = "ATP", strip_empty = FALSE)
-# #vascr_plot(exploded, unit = "CI", frequency = "10000", replication = "experiments", normtime = 160, continuouscontains = "ATP")
+#' # Sub code for breaking out continuous datasets
+#' #exploded = vascr_explode(xcell)
+#' #subset = vascr_subset_continuous(exploded, continuous = "ATP", strip_empty = FALSE)
+#' #vascr_plot(exploded, unit = "CI", frequency = "10000", replication = "experiments"
+#' # , normtime = 160, continuouscontains = "ATP")
 #'
 #'
 vascr_subset_continuous = function(data, continuous, exact_match = FALSE, strip_empty = TRUE, implode = TRUE)
@@ -601,21 +460,22 @@ vascr_subset_continuous = function(data, continuous, exact_match = FALSE, strip_
 
 
 #' Explode the wells in a VASCR dataset
+#' 
+#' Tools for exploding wells out into row and column variables, and separating comma separated well values if needed.
 #'
-#' @param data 
+#' @param data.df The dataset to explode
+#' @param separate_rows Split cells onto multiple rows if wells such as "A1,A2" may be present in the dataset
 #'
-#' @return
-#' @export
+#' @return A vascr dataset with rows and columns exploded
 #'
 #' @examples
-#' vascr_explode_wells(growth.df)
+#' #vascr_explode_wells(growth.df)
+#' #vascr_explode_wells(growth.df, separate_rows = TRUE)
 #' 
-#' data = vascr_summarise(growth.df)
-#' vascr_explode_wells(data)
-#' vascr_explode_wells(data, separate_rows = TRUE)
-#' 
-vascr_explode_wells = function(data, separate_rows = FALSE)
+vascr_explode_wells = function(data.df, separate_rows = FALSE)
 {
+   data = data.df
+  
    if(separate_rows & max(str_count(unique(data$Well), ","))>0)
    {
    data = separate_rows(growth.df, Well, sep = ",")
@@ -632,134 +492,159 @@ vascr_explode_wells = function(data, separate_rows = FALSE)
 #' 
 #' Central data subset, cleanup and label prep function for generation of graphics
 #'
-#' @param data 
-#' @param unit 
-#' @param frequency 
-#' @param time 
-#' @param samplecontains 
-#' @param experiment 
-#' @param error 
-#' @param alignkey 
-#' @param normtime 
-#' @param divide 
-#' @param preprocessed 
-#' @param continuouscontains 
-#' @param stripidentical 
+#' @param data Vascr dataset to plot
+#' @param unit Unit to subset to
+#' @param frequency Frequency to subset to
+#' @param time Time to subset to
+#' @param samplecontains Subset only sample names that contain this string
+#' @param experiment Experiment to subset to
+#' @param error How much error to plot. Required to allow subsampling if required
+#' @param alignkey Should key points be aligned
+#' @param normtime Time to normalise to
+#' @param divide Should normalisation be by division (true) or subtraction (false)
+#' @param preprocessed Is the data already processed and therefore should be left alone
+#' @param continuouscontains Subset variables where the sample contains this string
+#' @param stripidentical Should entireley identical columns be removed
+#' @param sortkeyincreasing Should samples be sorted in an increasing way
+#' @param level The level of summary to return
+#' @param errortype SEM or SD errors to generate
 #' 
 #' @importFrom dplyr coalesce mutate
 #' @importFrom tidyr drop_na
 #' @importFrom stats sd
 #'
-#' @return 
-#' @export
+#' @return A vascr dataset prepared for use in graphing
 #'
 #' @examples
 #' 
-#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary")
-#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments")
-#' data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells")
+#' vascr_plot(growth.df, unit = "Rb", level = "experiments", frequency = 0)
+#' 
+#' datum2 = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary", frequency = 0)
 #' 
 #' 
-vascr_prep_graphdata = function(data, unit = "", frequency = Inf, time = Inf, samplecontains = "", experiment = "", error = Inf, alignkey = NULL, normtime = NULL, divide = FALSE, preprocessed = FALSE, continuouscontains = NULL , stripidentical = TRUE, sortkeyincreasing = TRUE, level = "", errortype = "sem")
+#' #data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments")
+#' #data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells")
+#' 
+#' 
+vascr_prep_graphdata = function(data.df, unit = "", frequency = Inf, time = NULL, samplecontains = NULL, experiment = NULL, error = Inf, alignkey = NULL, normtime = NULL, divide = FALSE, preprocessed = FALSE, continuouscontains = NULL , stripidentical = TRUE, sortkeyincreasing = TRUE, level = "summary", errortype = "sem", subsample = NULL)
 {
   
   if(preprocessed)
   {
-    return(data)
+    return(data.df)
   }
+  
+  if(error>1 && error)
   
   # First subset away what we don't need for normalising to a particular point (speeds up things a lot)
-  data = vascr_subset(data, unit = unit, frequency = frequency, samplecontains = samplecontains, experiment = experiment)
-  
-  # Subsample the data if only some time points are required for error plotting
-  if (error>1 && !is.infinite(Inf))
-  {
-    data = vascr_subsample(data, error)
-  }
+    #If requested
+  data.df = vascr_subset(data.df, unit = unit, frequency = frequency, experiment = experiment)
+    #And if error is low
+  data.df = vascr_subset(data.df, subsample = max(subsample, error,1))
   
   # Then normalise or align key points, if required. Alignment then normalisation are preformed, as the final data, not the transposed data is usually what is requested. This behaviour can be changed by manually formulating the data ahead of time.
   if(!is.null(alignkey))
   {
-    data = vascr_align_key(data, alignkey)
+    data.df = vascr_align_key(data.df, alignkey)
   }
-  
+  # 
   if(!is.null(normtime))
   {
-    data = vascr_normalise(data, normtime, divide)
+    data.df = vascr_normalise(data.df, normtime, divide)
   }
-  
+
   # Then subset down to the timepoints that are required
-  data = vascr_subset(data, time = time)
-  
-  
+  data.df = vascr_subset(data.df, time = time)
+
+
   # If data is not preprocessed and data is not exploded already, explode the dataset
-  if (isFALSE(preprocessed) & isFALSE(vascr_test_exploded(data)))
+  if (isFALSE(vascr_test_exploded(data.df)))
   {
-    data = vascr_explode(data)
+    data.df = vascr_explode(data.df)
   }
-  
-  # If  data is being subset based on a continuous column, run that now
-  if(!is.null(continuouscontains))
-  {
-    data = vascr_subset_continuous(data, continuouscontains)
-  }
-  
+
+
   if(stripidentical)
   {
-    data$Sample = (vascr_implode(data, stripidentical = TRUE))$Sample
-  } 
-  
-  data = vascr_summarise(data, level = level)
-  
-  if(isFALSE(preprocessed))
-  {
-    # Replace all the underscores in titles with spaces
-    data$Sample = str_replace(data$Sample, "_", " ")
+    data.df$Sample = (vascr_implode(data.df, stripidentical = TRUE))$Sample
   }
   
-  # Sort the order of titles as numbers
-  if(!is.null(sortkeyincreasing))
-  {
-    data$Sample = vascr_factorise_and_sort(data$Sample, sortkeyincreasing)
-    data$Frequency = vascr_factorise_and_sort(data$Frequency, sortkeyincreasing)
-  }
-  
+  data.df = vascr_summarise(data.df, level = level)
+
+   # Replace all the underscores in titles with spaces
+    data.df$Sample = str_replace(data.df$Sample, "_", " ")
+
+
+    # Sort the order of titles as numbers
+    if(!is.null(sortkeyincreasing))
+    {
+      data.df$Sample = vascr_factorise_and_sort(data.df$Sample, sortkeyincreasing)
+      data.df$Frequency = vascr_factorise_and_sort(data.df$Frequency, sortkeyincreasing)
+    }
+
   # Remove any values that are unplottable, IE generation of SD or SEM failed, likely due to missing values from modeling failures
-  data = drop_na(data, Value)
+    data.df = drop_na(data.df, Value)
+
+  data.df = vascr_summarise_errortype(data.df, errortype)
+
   
+  return(data.df)
+  
+}
+
+
+
+
+#' Title
+#'
+#' @param data.df 
+#' @param errortype 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_summarise_errortype = function(data.df, errortype)
+{
+  
+  level = vascr_detect_level(data.df)
   
   if(level == "summary" || level =="experiments")
   {
     
     if(errortype == "sem")
     {
-      data$sem = data$sd/sqrt(data$n)
-      data$ymax = data$Value + data$sem
-      data$ymin = data$Value - data$sem
+      data.df$sem = data.df$sd/sqrt(data.df$n)
+      data.df$ymax = data.df$Value + data.df$sem
+      data.df$ymin = data.df$Value - data.df$sem
     }
     else if (errortype == "sd")
     {
-      data$ymax = data$Value + data$sd
-      data$ymin = data$Value  - data$sd
+      data.df$ymax = data.df$Value + data.df$sd
+      data.df$ymin = data.df$Value  - data.df$sd
     }
     else if(errortype == "range")
     {
-      data$ymax = data$max
-      data$ymin = data$min
+      data.df$ymax = data.df$max
+      data.df$ymin = data.df$min
     }
     else
     {
-      warning("No error specified,  and hence won't be generated")
+      warning("No error specified,  and hence error cols won't be generated")
     }
     
-    
     # Remove impossible error bars for the avoidance of errors. Replaces both max and min with the actual value.
-    data = mutate(data, ymax = coalesce(ymax, Value))
-    data = mutate(data, ymin = coalesce(ymin, Value))
+    data.df = mutate(data.df, ymax = coalesce(ymax, Value))
+    data.df = mutate(data.df, ymin = coalesce(ymin, Value))
     
   }
+  else
+  {
+    data.df$ymax = 0
+    data.df$ymin = 0
+  }
   
-  return(data)
   
+  return(data.df)
 }
 

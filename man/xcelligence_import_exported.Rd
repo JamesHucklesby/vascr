@@ -10,6 +10,8 @@ xcelligence_import_exported(file, key, experimentname)
 \item{file}{Path to the excelligence file to be imported}
 
 \item{key}{Optional, standard keyfile that will overwrite what is stored in the excelligence file}
+
+\item{experimentname}{The name of the expeiment to build into the dataset}
 }
 \value{
 A standard impedr data frame
@@ -21,12 +23,12 @@ Is possible, use xcelligence_import. This function will import data exported as 
 However, unlike excelligence_import this import process is not dependent on any 3rd party Microsoft software being installed, and is less prone to errors as the import from a text file is much less complex.
 }
 \examples{
-filename = "inst/extdata/xcell.txt"
-dataset = xcelligence_import_exported(filename)
-head(dataset)
+# filename = "inst/extdata/xcell.txt"
+# dataset = xcelligence_import_exported(filename)
+# head(dataset)
 
-key = "inst/extdata/xcell_lookup.csv"
-dataset = xcelligence_import_exported(filename,key)
-head(dataset)
-head(vascr_explode(dataset))
+# key = "inst/extdata/xcell_lookup.csv"
+# dataset = xcelligence_import_exported(filename,key, "TEST")
+# head(dataset)
+# head(vascr_explode(dataset))
 }

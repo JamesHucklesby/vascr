@@ -11,25 +11,13 @@ vascr_plot_continuous(data, cols, priority, level, error, ...)
 
 \item{cols}{The column names to display}
 
-\item{error}{How much error to display}
+\item{priority}{Priority of variables to plot}
 
-\item{unit}{The unit to plot}
+\item{level}{Level of data replication to plot}
 
-\item{frequency}{The frequency to plot}
+\item{error}{Type of error to plot}
 
-\item{replication}{The replication level to plot at}
-
-\item{time}{The time to run this analyasis at}
-
-\item{alphavalue}{The alpha of the error bars (how clear they are so you can see the overlap)}
-
-\item{xlab}{Label on the X axis}
-
-\item{ylab}{Label on the Y axis}
-
-\item{title}{The title}
-
-\item{continuous}{The nominated continuous variable}
+\item{...}{Variables to be passed to vascr_prep_graphdata and vascr_polish_plot}
 }
 \value{
 a ggplot 2 object
@@ -39,16 +27,18 @@ Plot a categorical ECIS variable
 }
 \examples{
 
-growth.df$Instrument = "ECIS"
-
-vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary")
-
-vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "wells", time = 100, error = Inf, priority = c("cells", "Experiment"))
-vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "experiments", time = 100, priority = c("cells", "Experiment"), error = 1)
-vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "summary", time = 100, continuous = "cells", error = Inf, priority = c("cells", "Experiment"))
+#vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary")
 
 
-data = growth.df
+# vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "wells", 
+#time = 100, error = Inf, priority = c("cells", "Experiment"))
+# vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "experiments",
+# time = 100, priority = c("cells", "Experiment"), error = 1)
+# vascr_plot_continuous(growth.df, unit = "R", frequency = 4000, level = "summary",
+# time = 100, continuous = "cells", error = Inf, priority = c("cells", "Experiment"))
+
+
+#data = growth.df
 
 
 }

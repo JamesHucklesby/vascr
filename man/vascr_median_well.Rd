@@ -19,6 +19,6 @@ This function finds the well that is the median of a set. This will be the most 
 Works for both vertical, horrosontal and diffuse well configurations
 }
 \examples{
-vascr_median_well (c("A1", "B2", "C3"))
-vascr_median_well(c("A1", "NA", "NA", "NA"))
+#vascr_median_well (c("A1", "B2", "C3"))
+#vascr_median_well(c("A1", "NA", "NA", "NA"))
 }

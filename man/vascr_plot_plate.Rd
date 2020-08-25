@@ -21,9 +21,9 @@ Plot a heatmap of a particular timepoint
 }
 \examples{
 
-vascr_plot_plate(growth.df, time = 100, unit = "Rb")
-vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = "4000")
-vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = "4000", level = "deviation")
-vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = 4000, level = "structure")
+#vascr_plot_plate(growth.df, time = 100, unit = "Rb")
+#vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = "4000")
+#vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = "4000", level = "deviation")
+#vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = 4000, level = "structure")
 
 }
