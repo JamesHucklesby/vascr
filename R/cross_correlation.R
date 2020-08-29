@@ -1,25 +1,3 @@
-#' Generate numeric CCF values from vectors
-#'
-#' @param v1 Vector 1
-#' @param v2 Vector 2
-#' @param plot Should a plot be generated, default FALSE
-#' 
-#' @importFrom stats ccf as.ts
-#'
-#' @return A numeric value representing the CCF at time 0
-#' 
-#' @examples
-vascr_ccf_vectors = function(v1, v2, plot = FALSE)
-{
-  v1 = as.ts(v1)
-  v2 = as.ts(v2)
-  corrcoeff = ccf(v1, v2, plot = FALSE)[0]
-  corrcoeff = unlist(corrcoeff)["acf"]
-  corrcoeff = as.numeric(corrcoeff)
-  return(corrcoeff)
-}
-
-
 #' Find which R columns change accross the dataset
 #'
 #' @param data.df The dataset to analyse
@@ -51,8 +29,7 @@ vascr_find_changing_cols = function(data.df)
 }
 
 
-
-#' Create a data frame summarising the changing variables in a dataset
+#' Create a data frame summarising the changing variables in a dataset in a single column
 #'
 #' @param data.df The dataset to summarise
 #'
@@ -63,6 +40,7 @@ vascr_find_changing_cols = function(data.df)
 #' 
 #'
 #' @examples
+#' vascr_summarise_change(data.df)
 #' 
 vascr_summarise_change = function(data.df)
 {
@@ -93,6 +71,27 @@ deltadata$deltacols = NULL
 
 return(deltadata)
 
+}
+
+#' Generate numeric CCF values from vectors
+#'
+#' @param v1 Vector 1
+#' @param v2 Vector 2
+#' @param plot Should a plot be generated, default FALSE
+#' 
+#' @importFrom stats ccf as.ts
+#'
+#' @return A numeric value representing the CCF at time 0
+#' 
+#' @examples
+vascr_ccf_vectors = function(v1, v2, plot = FALSE)
+{
+  v1 = as.ts(v1)
+  v2 = as.ts(v2)
+  corrcoeff = ccf(v1, v2, plot = FALSE)[0]
+  corrcoeff = unlist(corrcoeff)["acf"]
+  corrcoeff = as.numeric(corrcoeff)
+  return(corrcoeff)
 }
 
 
@@ -213,63 +212,4 @@ V2C = arrange(V2C, sample)
  
 }
  
-
-
-#' Generate ggplot colour hues, for manually specifiying colours that match the default theme
-#'
-#' @param n Number of variables to access
-#' 
-#' @importFrom grDevices hcl
-#'
-#' @return A vector of ggplot colours
-#' 
-#' @examples
-vascr_gg_color_hue <- function(n) {
-  hues = seq(15, 375, length = n + 1)
-  hcl(h = hues, l = 65, c = 100)[1:n]
-}
-
-
-#' Rename a column - cleanup of the built in funciton
-#'
-#' @param data.df The datset to rename
-#' @param old Old column name
-#' @param new Replacement column name
-#'
-#' @return The updated dataset
-#'
-#' @examples
-#' vascr_rename_columns(data.df, "Unit", "Measurement")
-#' 
-vascr_rename_columns = function(data.df, old, new)
-{
-  names(data.df)[names(data.df) == old] <- new
-  return(data.df)
-}
-
-
-#' Remove an item from a vector
-#' 
-#' This function cleans up the default R syntax
-#'
-#' @param values The value(s) to remove
-#' @param vector The vector to search and modify
-#'
-#' @return The modified vector
-#'
-#' @examples
-#' 
-#' vector = unique(growth.df$Unit)
-#' vector = vascr_remove_from_vector("Rb", vector)
-#' 
-vascr_remove_from_vector = function(values, vector)
-{
-  for (value in values)
-  {
-    vector = vector[!(vector == value)]
-  }
-  
-  return(vector)
-}
-
 

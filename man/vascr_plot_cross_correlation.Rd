@@ -4,7 +4,7 @@
 \alias{vascr_plot_cross_correlation}
 \title{Title}
 \usage{
-vascr_plot_cross_correlation(data.df)
+vascr_plot_cross_correlation(data.df, level = NULL)
 }
 \arguments{
 \item{data.df}{}
@@ -16,6 +16,5 @@ vascr_plot_cross_correlation(data.df)
 Title
 }
 \examples{
- data.df = rdata
 
 }

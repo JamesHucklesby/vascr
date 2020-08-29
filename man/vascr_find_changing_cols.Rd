@@ -2,16 +2,20 @@
 % Please edit documentation in R/cross_correlation.R
 \name{vascr_find_changing_cols}
 \alias{vascr_find_changing_cols}
-\title{Title}
+\title{Find which R columns change accross the dataset}
 \usage{
 vascr_find_changing_cols(data.df)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The dataset to analyse}
 }
 \value{
-
+A vector of the column names that change in the dataset
 }
 \description{
-Title
+Find which R columns change accross the dataset
+}
+\examples{
+
+vascr_find_changing_cols(data.df)
 }

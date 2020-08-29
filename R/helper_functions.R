@@ -920,3 +920,61 @@ do.call_relevant = function(name, payload, arguments)
   return(do.call(name, present_args))
 }
 
+
+
+#' Generate ggplot colour hues, for manually specifiying colours that match the default theme
+#'
+#' @param n Number of variables to access
+#' 
+#' @importFrom grDevices hcl
+#'
+#' @return A vector of ggplot colours
+#' 
+#' @examples
+vascr_gg_color_hue <- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
+}
+
+
+#' Rename a column - cleanup of the built in funciton
+#'
+#' @param data.df The datset to rename
+#' @param old Old column name
+#' @param new Replacement column name
+#'
+#' @return The updated dataset
+#'
+#' @examples
+#' vascr_rename_columns(data.df, "Unit", "Measurement")
+#' 
+vascr_rename_columns = function(data.df, old, new)
+{
+  names(data.df)[names(data.df) == old] <- new
+  return(data.df)
+}
+
+
+#' Remove an item from a vector
+#' 
+#' This function cleans up the default R syntax
+#'
+#' @param values The value(s) to remove
+#' @param vector The vector to search and modify
+#'
+#' @return The modified vector
+#'
+#' @examples
+#' 
+#' vector = unique(growth.df$Unit)
+#' vector = vascr_remove_from_vector("Rb", vector)
+#' 
+vascr_remove_from_vector = function(values, vector)
+{
+  for (value in values)
+  {
+    vector = vector[!(vector == value)]
+  }
+  
+  return(vector)
+}

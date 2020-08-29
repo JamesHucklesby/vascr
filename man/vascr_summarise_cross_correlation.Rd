@@ -2,7 +2,7 @@
 % Please edit documentation in R/cross_correlation.R
 \name{vascr_summarise_cross_correlation}
 \alias{vascr_summarise_cross_correlation}
-\title{Title}
+\title{Generate all cross-correlation pairs between sets of values}
 \usage{
 vascr_summarise_cross_correlation(data.df)
 }
@@ -13,7 +13,7 @@ vascr_summarise_cross_correlation(data.df)
 
 }
 \description{
-Title
+Generate all cross-correlation pairs between sets of values
 }
 \examples{
 growthrb = vascr_subset(growth.df, unit = "Rb", time = c(5,150))

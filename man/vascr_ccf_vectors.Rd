@@ -2,20 +2,20 @@
 % Please edit documentation in R/cross_correlation.R
 \name{vascr_ccf_vectors}
 \alias{vascr_ccf_vectors}
-\title{Title}
+\title{Generate numeric CCF values from vectors}
 \usage{
 vascr_ccf_vectors(v1, v2, plot = FALSE)
 }
 \arguments{
-\item{v1}{}
+\item{v1}{Vector 1}
 
-\item{v2}{}
+\item{v2}{Vector 2}
 
-\item{plot}{}
+\item{plot}{Should a plot be generated, default FALSE}
 }
 \value{
-
+A numeric value representing the CCF at time 0
 }
 \description{
-Title
+Generate numeric CCF values from vectors
 }

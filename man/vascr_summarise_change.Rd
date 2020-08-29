@@ -2,16 +2,20 @@
 % Please edit documentation in R/cross_correlation.R
 \name{vascr_summarise_change}
 \alias{vascr_summarise_change}
-\title{Title}
+\title{Create a data frame summarising the changing variables in a dataset in a single column}
 \usage{
 vascr_summarise_change(data.df)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The dataset to summarise}
 }
 \value{
-
+A full dataset
 }
 \description{
-Title
+Create a data frame summarising the changing variables in a dataset in a single column
+}
+\examples{
+vascr_summarise_change(data.df)
+
 }
