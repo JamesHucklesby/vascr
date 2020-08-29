@@ -5,14 +5,14 @@
 \title{Implode a continuous dataset}
 \usage{
 vascr_implode(
-  data,
+  data.df,
   select_columns = NULL,
   stripidentical = TRUE,
   stripzero = TRUE
 )
 }
 \arguments{
-\item{data}{A standard ECIS data frame}
+\item{data.df}{A standard ECIS data frame}
 
 \item{select_columns}{The columns to plot. Default of null plots the whole lot.}
 
@@ -32,11 +32,14 @@ This function implodes a coninuous dataset to re-create Sample names from only s
 #exploded = vascr_explode(vascr_remove_metadata(growth.df))
 #imploded = vascr_implode(exploded)
 
-#data = vascr_subset(growth.df, samplecontains = "35,000")
-#imploded = vascr_implode(data)
+#data.df = vascr_subset(growth.df, samplecontains = "35,000")
+#imploded = vascr_implode(data.df)
 
 mindat = vascr_subset(unifiedr, unit = "Rb")
 
 miniexploded = vascr_implode(mindat)
 miniexploded = mutate(miniexploded, Sample = str_replace_all(Sample, "\\\\|$", ""))
+
+data.df = rb
+
 }

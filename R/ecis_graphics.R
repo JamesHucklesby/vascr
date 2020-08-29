@@ -513,10 +513,8 @@ vascr_plot_matrix = function(data.df, unit = "R", frequency = 4000, ...)
 #'
 #' @return A factorised vector that can be saved directly back to a data frame
 #' 
-#' @export
-#'
 #' @examples
-#' #vascr_factorise_and_sort(growth.df$Sample)
+#' vascr_factorise_and_sort(growth.df$Sample)
 #' 
 vascr_factorise_and_sort = function(data, sortkeyincreasing = TRUE)
 {
@@ -525,4 +523,26 @@ vascr_factorise_and_sort = function(data, sortkeyincreasing = TRUE)
   allsamples = str_sort(allsamples, numeric = TRUE, decreasing = !sortkeyincreasing)
   data = factor(data, allsamples)
   return(data)
+}
+
+
+
+
+#' Return a blank white box
+#'
+#' @return A blank ggplot2 object
+#' 
+#' @importFrom ggplot2 ggplot theme_bw theme element_blank
+#'
+#' @examples
+#' vascr_plot_blank()
+vascr_plot_blank = function()
+{
+  plot = ggplot()+ theme_bw() +   theme(
+    plot.background = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank())
+    
+    return(plot)
 }

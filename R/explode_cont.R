@@ -60,6 +60,7 @@ vascr_explode = function(data)
 #' @param vector The vector to process
 #'
 #' @return A numeric vector
+#' @importFrom tidyr replace_na
 #'
 #' @examples
 vascr_make_numeric = function(vector)
