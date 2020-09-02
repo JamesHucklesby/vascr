@@ -3,7 +3,8 @@
 #' @param v Vector of numeric data to find the mode of
 #'
 #' @return The mode of the vector
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #getmode(c(1,3,3,4,7))
@@ -22,7 +23,8 @@ getmode <- function(v) {
 #' @param wells A vector of wells to find the median of
 #'
 #' @return The name of the median well
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_median_well (c("A1", "B2", "C3"))
@@ -72,7 +74,7 @@ vascr_median_well = function(wells)
 #'
 #' @return Standardised well names
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples 
 #' #vascr_standardise_wells('A01')
@@ -102,7 +104,8 @@ vascr_standardise_wells = function(well) {
 #' All the well names of a 96 well plate
 #'
 #' @return Vector containing all wells of a 96 well plate
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_96_well_names()
@@ -126,7 +129,8 @@ vascr_96_well_names = function()
 #' @param data.df an ECIS dataset
 #'
 #' @return The time the data was normalised to, or FALSE if not normalised
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #growth.df$Instrument = "ECIS"
@@ -152,6 +156,8 @@ vascr_detect_normal = function(data.df)
 #' @param data The data frame to analyse
 #'
 #' @return The level of the dataset analysed
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_detect_level(growth.df)
@@ -184,7 +190,8 @@ vascr_detect_level = function(data)
 #' @importFrom stringr str_trim
 #'
 #' @return A dataset containing only the core ECIS columns
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #growth.df$Instrument = "ECIS"
@@ -217,7 +224,7 @@ vascr_remove_metadata = function(data.df, subset = "all")
 #'
 #' @return A vector of priorities to plot
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_priority()
@@ -345,7 +352,7 @@ vascr_priority = function(data = NULL, explicit = NULL, priority = NULL)
 #'
 #' @return The truncated data set
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' #remove_cols_if_exists(growth.df, c("Unit", "Sample", "Donkey"))
@@ -369,6 +376,8 @@ remove_cols_if_exists = function(data.df, cols)
 #' @param data.df The dataset to clean
 #'
 #' @return A vascr dataset, without any statistical columns
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_remove_stats(vascr_summarise(growth.df,level = "summary"))
@@ -386,7 +395,8 @@ vascr_remove_stats = function(data.df)
 #' @param frequency The frequency to submit
 #'
 #' @return An expression containing the correct data label for the unit
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 
@@ -433,6 +443,8 @@ vascr_titles = function (unit, frequency = 0)
 #' @param units A vector of units to return
 #'
 #' @return A vector of names of the units returned
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_titles_vector(c("Rb", "R", "Cm"))
@@ -465,7 +477,8 @@ return(return)
 #' Table of units used in the vascr package
 #'
 #' @return A data frame of units, their content and if they are modeled
-#' @export 
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_units_table()
@@ -492,7 +505,8 @@ return(vascr_unit_table)
 #' @param unit The vascr symbol for the unit
 #'
 #' @return A boolean, true if it is modelled, false if it is raw electrical data
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_is_modeled_unit("R")
@@ -517,6 +531,8 @@ vascr_is_modeled_unit = function(unit)
 #' @param instrument The instrument to find the units for
 #'
 #' @return a vector of units provided by an instrument
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_instrument_units("ECIS")
@@ -540,6 +556,8 @@ vascr_instrument_units =  function(instrument)
 #' @param unit The unit(s) to test
 #'
 #' @return The instrument(s) separated by "+" that could have generated that value. If more than one unit was entered a stirng will be generated for each unit.
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 
@@ -584,9 +602,11 @@ for (uni in unit)
 #' Returns a list of the instruments supported by the VASCR package
 #'
 #' @return A vector of all the supported instrument names
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_instrument_list()
+#' # vascr_instrument_list()
 vascr_instrument_list = function()
 {
   return(c("ECIS", "xCELLigence", "cellZscope"))
@@ -631,7 +651,8 @@ vascr_instrument_list = function()
 #' @param x vector to find mode of
 #'
 #' @return the most commonly occouring character 
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #categorical_mode(c("Cat", "Cat", "Monkey"))
@@ -727,7 +748,6 @@ vascr_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = 
 
 # Worker functions for importing files ------------------------------------
 
-
 #' Combine ECIS data frames end to end
 #' 
 #' This funciton will combine ECIS datasets end to end. Preferential to use over a simple rbind command as it runs additional checks to ensure that datapoints are correctly generated
@@ -753,8 +773,6 @@ vascr_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = 
 vascr_combine = function(..., resample = FALSE) {
   
   dataframes = list(...)
-  
-  # Test filler variables dataframes = list(child1.df, child2.df, child3.df) i = 1
   
   # Generate an empty data frame with the correct columns to fill later
   alldata = dataframes[[1]][0, ]
@@ -797,11 +815,14 @@ vascr_combine = function(..., resample = FALSE) {
 }
 
 
+
 #' Retitle
 #' 
 #' Recapitulation of the funciton in tidyR, allows the re-titling of a data frame from the top row of a dataset. Used in import funcitons to set titles from the content of ABP files. For internal use only.
 #'
 #' @param df A data frame containing the desired values in the top row
+#' 
+#' @keywords internal
 #'
 #' @return A dataframe where the top row has been converted to titles.
 # 
@@ -820,6 +841,8 @@ retitle = function(df) {
 #' @param comma_array The array (and hence column of a data frame also works) containing comma separated values to process
 #'
 #' @return An array containing numeric data. NA will be returned if not numeric, and a warning will be generated
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # A working dataset
@@ -849,6 +872,8 @@ comma_to_numeric = function(comma_array)
 #' @param data The dataset to derrive the instrument type from
 #'
 #' @return The default frequency and unit in a list
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # vascr_default(growth.df)
@@ -894,6 +919,8 @@ vascr_default = function (data)
 #' @importFrom ggplot2 is.ggplot
 #'
 #' @return The returned value from the function applied
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # Not relevant here
@@ -930,6 +957,8 @@ do.call_relevant = function(name, payload, arguments)
 #'
 #' @return A vector of ggplot colours
 #' 
+#' @keywords internal
+#' 
 #' @examples
 vascr_gg_color_hue <- function(n) {
   hues = seq(15, 375, length = n + 1)
@@ -944,9 +973,11 @@ vascr_gg_color_hue <- function(n) {
 #' @param new Replacement column name
 #'
 #' @return The updated dataset
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_rename_columns(data.df, "Unit", "Measurement")
+#' # vascr_rename_columns(data.df, "Unit", "Measurement")
 #' 
 vascr_rename_columns = function(data.df, old, new)
 {
@@ -963,11 +994,13 @@ vascr_rename_columns = function(data.df, old, new)
 #' @param vector The vector to search and modify
 #'
 #' @return The modified vector
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 
-#' vector = unique(growth.df$Unit)
-#' vector = vascr_remove_from_vector("Rb", vector)
+#' #vector = unique(growth.df$Unit)
+#' #vector = vascr_remove_from_vector("Rb", vector)
 #' 
 vascr_remove_from_vector = function(values, vector)
 {

@@ -22,3 +22,4 @@ Detect if an ECIS dataset has been normalised
 #vascr_detect_normal(standard)
 #vascr_detect_normal(normal)
 }
+\keyword{internal}

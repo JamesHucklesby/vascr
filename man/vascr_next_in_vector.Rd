@@ -2,22 +2,23 @@
 % Please edit documentation in R/vascr_align.R
 \name{vascr_next_in_vector}
 \alias{vascr_next_in_vector}
-\title{Title}
+\title{Find the next value in a vector}
 \usage{
 vascr_next_in_vector(value, vector)
 }
 \arguments{
-\item{value}{}
+\item{value}{Value to search for}
 
-\item{vector}{}
+\item{vector}{Vector to search}
 }
 \value{
-
+The value of the next element in the vector
 }
 \description{
-Title
+Find the next value in a vector
 }
 \examples{
-vascr_next_in_vector("Cm", vector)
-vascr_next_in_vector("X", vector)
+# vascr_next_in_vector("Cm", vector)
+# vascr_next_in_vector("X", vector)
 }
+\keyword{internal}

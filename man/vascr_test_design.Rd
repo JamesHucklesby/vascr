@@ -19,17 +19,18 @@ This function will run a whole suite of tests on an ECIS dataframe, to check tha
 }
 \examples{
 # Prep a known good compliment of data
-data = vascr_subset(growth.df, time = 100, unit = "R", frequency = 4000)
+#data = vascr_subset(growth.df, time = 100, unit = "R", frequency = 4000)
 
 # Test a full compliment of data passes
-vascr_test_design(data)
+#vascr_test_design(data)
 
-vascr_test_design(growth.df)
+#vascr_test_design(growth.df)
 # Test function picks up unbalanced replicate #'s
-data2 = vascr_exclude(data, well = c("A1", "B1", "C1"))
-vascr_test_design(data2)
+#data2 = vascr_exclude(data, well = c("A1", "B1", "C1"))
+#vascr_test_design(data2)
 # Test function picks up missing pairs (in this case due to Rb not being established)
-data3 = vascr_subset(growth.df, time = 100, unit = "Rb")
-vascr_test_design(data3)
+#data3 = vascr_subset(growth.df, time = 100, unit = "Rb")
+#vascr_test_design(data3)
 
 }
+\keyword{internal}

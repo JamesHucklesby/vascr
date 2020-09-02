@@ -105,9 +105,9 @@ vascr_summarise <- function(data.df, level = "summary") {
 #'
 #' @return A standard ECIS dataset with each value normalised to the selected point.
 #' 
-#' @importFrom dplyr left_join
+#' @keywords internal
 #' 
-#' @export
+#' @importFrom dplyr left_join
 #'
 #' @examples
 #' 
@@ -172,7 +172,7 @@ vascr_normalise = function(data.df, normtime, divide = FALSE) {
 #' @importFrom stringr str_detect
 #' @importFrom dplyr group_by arrange mutate
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' 
@@ -222,7 +222,7 @@ vascr_align_key = function(data.df, point, discrepancy = 5) {
 #' 
 #' @importFrom dplyr left_join
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' 
@@ -256,7 +256,8 @@ vascr_subsample = function(data.df, nth) {
 #' @param data.df The dataframe to compute the current data aquisition frequency of
 #'
 #' @return The current aquisition rate of the data frame
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 
@@ -294,7 +295,7 @@ vascr_current_frequency = function (data.df)
 #'
 #' @return An ECIS dataset with re-located time points
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' 
@@ -392,6 +393,8 @@ vascr_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 #' @importFrom stringr str_detect
 #'
 #' @return A vascr dataset subsampled on a continuous variable
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # Sub code for breaking out continuous datasets
@@ -467,6 +470,8 @@ vascr_subset_continuous = function(data, continuous, exact_match = FALSE, strip_
 #' @param separate_rows Split cells onto multiple rows if wells such as "A1,A2" may be present in the dataset
 #'
 #' @return A vascr dataset with rows and columns exploded
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_explode_wells(growth.df)
@@ -492,7 +497,7 @@ vascr_explode_wells = function(data.df, separate_rows = FALSE)
 #' 
 #' Central data subset, cleanup and label prep function for generation of graphics
 #'
-#' @param data Vascr dataset to plot
+#' @param data.df Vascr dataset to plot
 #' @param unit Unit to subset to
 #' @param frequency Frequency to subset to
 #' @param time Time to subset to
@@ -508,18 +513,21 @@ vascr_explode_wells = function(data.df, separate_rows = FALSE)
 #' @param sortkeyincreasing Should samples be sorted in an increasing way
 #' @param level The level of summary to return
 #' @param errortype SEM or SD errors to generate
+#' @param subsample Number of points to subsample
 #' 
 #' @importFrom dplyr coalesce mutate
 #' @importFrom tidyr drop_na
 #' @importFrom stats sd
 #'
 #' @return A vascr dataset prepared for use in graphing
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 
-#' vascr_plot(growth.df, unit = "Rb", level = "experiments", frequency = 0)
+#' # vascr_plot(growth.df, unit = "Rb", level = "experiments", frequency = 0)
 #' 
-#' datum2 = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary", frequency = 0)
+#' # datum2 = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary", frequency = 0)
 #' 
 #' 
 #' #data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments")
@@ -595,15 +603,18 @@ vascr_prep_graphdata = function(data.df, unit = "", frequency = Inf, time = NULL
 
 
 
-#' Title
+#' Create a summary with correct errors
 #'
-#' @param data.df 
-#' @param errortype 
+#' @param data.df The dataset to analyse
+#' @param errortype The type of error to generate for graphing
 #'
-#' @return
-#' @export
+#' @return An annotated up dataset, with ymax and ymin in place
+#' 
+#' @keywords internal
 #'
 #' @examples
+#' # vascr_summarise_errortype(growth.df, "sem")
+#' 
 vascr_summarise_errortype = function(data.df, errortype)
 {
   

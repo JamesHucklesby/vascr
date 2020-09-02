@@ -23,3 +23,4 @@ Returns a subset of the original data set that has only every nth value. Greatly
 #head(data)
 
 }
+\keyword{internal}

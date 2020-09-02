@@ -5,8 +5,7 @@
 #' 
 #' This function is not as diagnostic or sensitive compared to vascr_detect_max_deviation but is usefull if you need to find out when and where a well differs from the remainder of the triplicate.
 #'
-#' @param data A vascr dataset to process
-#' @param deviation The minimum deviation to return
+#' @param data.df A vascr dataset to process
 #' @param frequency The frequency to run the calculations on. Only one frequency should be selected, default is 4000.
 #' @param unit The unit to run calculations on. Only one unit should be selected, and generally this should be a raw frequency. Default R.
 #'
@@ -17,8 +16,10 @@
 #' @importFrom stats median
 #' @importFrom magrittr "%>%"
 #'
+#' @keywords internal
+#'
 #' @examples
-#' example = vascr_summarise_deviation(growth.df)
+#' # example = vascr_summarise_deviation(growth.df)
 #' 
 #' 
 #' 
@@ -76,14 +77,16 @@ vascr_detect_deviation = function(...)
 #' @param unit Unit to use in detection, default is R
 #'
 #' @return  A tibble containing the offending wells, which experiment they are from and the score they were removed with
-#' @export
+#' 
+#' 
+#' @keywords internal
 #' 
 #' @importFrom magrittr "%>%"
 #' @importFrom dplyr group_by summarise arrange select distinct left_join ungroup
 #'
 #' @examples
 #' # Return the results as a table
-#' #vascr_detect_max_deviation(growth.df)
+#' # vascr_detect_max_deviation(growth.df)
 #' # Then return a graphical representaiton
 #' #vascr_plot_deviation(growth.df)
 vascr_detect_max_deviation = function(data.df, max_deviation = 0, frequency = 4000, unit = "R")
@@ -128,7 +131,7 @@ vascr_detect_max_deviation = function(data.df, max_deviation = 0, frequency = 40
 #' @param ... Any other arguements to be passed on to either vascr_subset or vascr_polish_plot
 #'
 #' @return A ggplot object, or matrix of ggplot objects
-#' @export
+#' @keywords internal
 #' 
 #' @importFrom ggplot2 ggplot aes_string geom_line geom_hline facet_wrap geom_bar xlab ylab theme element_text scale_x_discrete vars scale_fill_gradient2 ggplotGrob ggtitle
 #' @importFrom stats reorder
@@ -315,15 +318,15 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
 #' 
 #' @importFrom dplyr filter select
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' 
-#' #vascr_plot_deviation(growth.df, max_deviation = 0.3)
+#' # vascr_plot_deviation(growth.df, max_deviation = 0.3)
 #' 
-#' #datum = vascr_exclude_deviation(growth.df, max_deviation = 0.3)
+#' # datum = vascr_exclude_deviation(growth.df, max_deviation = 0.3)
 #' 
-#' #vascr_plot_deviation(datum)
+#' # vascr_plot_deviation(datum)
 #' 
 #' 
 vascr_exclude_deviation = function(data.df, deviation = 0.5, max_deviation = 0, frequency = 4000, unit = "R", verbose = TRUE)

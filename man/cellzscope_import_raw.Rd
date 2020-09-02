@@ -27,3 +27,4 @@ Data must first be exported from the cellZscope software.
 #output = vascr_subset(output, time = c(0,50))
 #vascr_plot(output, unit = "R", frequency = 4000, replication = "wells")
 }
+\keyword{internal}

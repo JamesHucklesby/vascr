@@ -15,3 +15,4 @@ A dataframe where the top row has been converted to titles.
 \description{
 Recapitulation of the funciton in tidyR, allows the re-titling of a data frame from the top row of a dataset. Used in import funcitons to set titles from the content of ABP files. For internal use only.
 }
+\keyword{internal}

@@ -81,3 +81,4 @@ Find the mode of a categorical variable
 #categorical_mode(c("Cat", "Cat", "Monkey"))
 
 }
+\keyword{internal}

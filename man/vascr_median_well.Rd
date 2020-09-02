@@ -22,3 +22,4 @@ Works for both vertical, horrosontal and diffuse well configurations
 #vascr_median_well (c("A1", "B2", "C3"))
 #vascr_median_well(c("A1", "NA", "NA", "NA"))
 }
+\keyword{internal}

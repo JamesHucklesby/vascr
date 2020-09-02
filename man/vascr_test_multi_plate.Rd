@@ -20,3 +20,4 @@ Test if multiple plates are present in a dataset
 #vascr_test_multi_plate(vascr_combine(growth.df, growth.df)
 
 }
+\keyword{internal}

@@ -30,3 +30,4 @@ Make a display with all the anova analyasis pre-conducted
 # vascr_plot_anova(growth.df, "R", 4000, 100)
 
 }
+\keyword{internal}

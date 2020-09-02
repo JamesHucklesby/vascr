@@ -10,7 +10,8 @@
 #' @param experiment The experiment to export. Default is all experiments
 #'
 #' @return A data frame that can be copied and pasted into prism
-#' @export
+#' 
+#' @keywords internal
 #' 
 #' @importFrom tidyr spread
 #' @importFrom tibble as_tibble

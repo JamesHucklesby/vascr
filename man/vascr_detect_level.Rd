@@ -20,3 +20,4 @@ Check the level of a vascr data frame
 #vascr_detect_level(vascr_summarise(growth.df, level = "experiments"))
 #vascr_detect_level(vascr_summarise(growth.df, level = "summary"))
 }
+\keyword{internal}

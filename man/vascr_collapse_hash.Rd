@@ -20,3 +20,4 @@ Collapse multiple hashes in a string down to a single hash
 
 
 }
+\keyword{internal}

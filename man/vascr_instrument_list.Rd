@@ -13,5 +13,6 @@ A vector of all the supported instrument names
 Returns a list of the instruments supported by the VASCR package
 }
 \examples{
-vascr_instrument_list()
+# vascr_instrument_list()
 }
+\keyword{internal}

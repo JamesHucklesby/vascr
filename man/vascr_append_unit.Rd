@@ -18,5 +18,6 @@ The appended unit
 Append the unit containing string from a second vector to a non-unit containing string
 }
 \examples{
-vascr_append_unit("ATP", xcell)
+# vascr_append_unit("ATP", xcell)
 }
+\keyword{internal}

@@ -11,6 +11,8 @@
 #' 
 #' @importFrom tidyr pivot_longer
 #' @importFrom stringr str_remove
+#' 
+#' @keywords internal
 #'
 #' @return A slighlty tidier dataset
 #' 
@@ -40,6 +42,8 @@ xcelligence_lengthen_platemap = function(data)
 #'
 #' @importFrom svSocket startSocketServer stopSocketServer evalServer
 #' @importFrom RODBC odbcDriverConnect odbcCloseAll
+#' 
+#' @keywords internal
 #'
 #' @return A table, as outlined in the Access database
 #'
@@ -120,6 +124,8 @@ import_mdb = function(file, table)
 #' @importFrom stringr str_replace
 #'
 #' @return A vascr datafile
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # Arguments to push through the function
@@ -278,6 +284,8 @@ return(returndata)
 #' @param data.df The dataset to generate CI from
 #'
 #' @return An enlargened dataset
+#' 
+#' @keywords internal
 #'
 #' @examples
 xcelligence_import_generate_CI = function(data.df)

@@ -19,7 +19,8 @@ This function cleans up the default R syntax
 }
 \examples{
 
-vector = unique(growth.df$Unit)
-vector = vascr_remove_from_vector("Rb", vector)
+#vector = unique(growth.df$Unit)
+#vector = vascr_remove_from_vector("Rb", vector)
 
 }
+\keyword{internal}

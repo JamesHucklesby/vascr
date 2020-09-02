@@ -30,3 +30,4 @@ Generate a tukey analyasis of vascr data
 # vascr_tukey(growth.df, "R", 4000, 100, raw = TRUE)
 
 }
+\keyword{internal}

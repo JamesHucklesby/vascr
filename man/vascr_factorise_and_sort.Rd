@@ -18,6 +18,7 @@ A factorised vector that can be saved directly back to a data frame
 Factorise and sort a the column of a data frame for plotting
 }
 \examples{
-vascr_factorise_and_sort(growth.df$Sample)
+# vascr_factorise_and_sort(growth.df$Sample)
 
 }
+\keyword{internal}

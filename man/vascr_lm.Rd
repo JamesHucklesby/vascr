@@ -27,3 +27,4 @@ Generate a linear model of vascr data
 # vascr_lm(growth.df, "R", 4000, 100)
 
 }
+\keyword{internal}

@@ -27,3 +27,4 @@ Runs a test for homogenicity of variance, to ensure that the conditions of an AN
 # vascr_levene(growth.df, "R", 4000, 100)
 
 }
+\keyword{internal}

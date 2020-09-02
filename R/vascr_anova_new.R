@@ -6,7 +6,7 @@
 #' @param time  Timepoint to use
 #'
 #' @return A conditioned vascr dataset
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_prep_statdata(growth.df, "R", 4000, 100)
@@ -41,7 +41,8 @@ return(imploded)
 #' @param priority Manual priority (if set)
 #'
 #' @return A priority list for use in a vascr dataset
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_prep_stat_priority(growth.df)
@@ -57,11 +58,14 @@ vascr_prep_stat_priority = function(data.df,priority = NULL)
   return(priority)
 }
 
+
 #' Generate an anova formula
 #'
 #' @param priority The priority to use
 #'
 #' @return An ANOVA formula
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # vascr_formula(c("cells","well"))
@@ -80,7 +84,8 @@ vascr_formula = function(priority)
 #' @param priority override the default vascr priority list
 #'
 #' @return A linear model object
-#' @export
+#' 
+#' @keywords internal
 #' 
 #' @importFrom stats lm
 #'
@@ -109,7 +114,7 @@ vascr_lm = function(data.df, unit, frequency, time, priority = NULL)
 #' 
 #' @importFrom stats residuals
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' 
@@ -135,7 +140,7 @@ vascr_residuals = function(data.df, unit, frequency, time, priority = NULL)
 #' @importFrom ggplot2 labs
 #'
 #' @return A ggpubr ggqqplot object
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' # vascr_plot_qq(growth.df, "R", 4000, 100)
@@ -172,7 +177,7 @@ vascr_plot_qq = function(data.df, unit, frequency, time, priority = NULL)
 #' @param priority Vascr priority list
 #'
 #' @return A shapiro test of the selected data
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' # vascr_shapiro(growth.df, "R", 4000, 100)
@@ -196,7 +201,7 @@ vascr_shapiro = function(data.df, unit, frequency, time, priority = NULL)
 #' @importFrom ggplot2 stat_function ggplot geom_histogram aes
 #'
 #' @return a ggplot with rediduals overlaid by a normal curve
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' 
@@ -237,7 +242,8 @@ vascr_plot_normality = function(data.df, unit, frequency, time, priority = NULL)
 #' @importFrom stats lm
 #'
 #' @return A Levene Test object
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # vascr_levene(growth.df, "R", 4000, 100)
@@ -267,7 +273,7 @@ vascr_levene = function(data.df, unit, frequency, time, priority = NULL)
 #' @importFrom ggplot2 ggplot xlab ylab labs stat_smooth geom_hline geom_point
 #'
 #' @return A ggplot of a levene's test and the underlying data analysed
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' # vascr_plot_levene(growth.df, "R", 4000, 100)
@@ -313,7 +319,7 @@ vascr_plot_levene = function(data.df, unit, frequency, time, priority = NULL)
 #' @importFrom ggplot2 geom_vline
 #'
 #' @return A ggplot2 object
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' # vascr_plot_time_vline(growth.df, "R", 4000, 100)
@@ -350,7 +356,7 @@ vascr_plot_time_vline = function(data.df, unit, frequency, time, priority = NULL
 #' @importFrom ggplot2 ggplot aes geom_boxplot labs
 #'
 #' @return A ggplot2 box plot of replicate experiments
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' # vascr_plot_box_replicate(growth.df, "R", 4000, 100)
@@ -381,6 +387,8 @@ return(overallplot)
 #' @return A matrix of different ANOVA tests
 #' 
 #' @importFrom cowplot plot_grid
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 
@@ -418,6 +426,8 @@ return(grid)
 #' @importFrom dplyr arrange
 #'
 #' @return A table or Tukey HSD test result
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # vascr_tukey(growth.df, "R", 4000, 100)
@@ -449,6 +459,8 @@ vascr_tukey = function(data.df, unit, frequency, time, priority = NULL, raw = FA
 #' @param priority Priority list of variables to run tests on
 #' 
 #' @importFrom stats anova
+#' 
+#' @keywords internal
 #'
 #' @return Prints out the summary data for an ANOVA analysis
 #'

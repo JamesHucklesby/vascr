@@ -27,6 +27,7 @@ A list of values that fit the criteria
 Find values within particular paramaters
 }
 \examples{
-vascr_find_value(data.df)
+# vascr_find_value(data.df)
 
 }
+\keyword{internal}

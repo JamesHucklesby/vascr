@@ -1,46 +1,45 @@
-#' Title
+#' Subset a vascr datset based on a numebr of factors
 #'
-#' @param data.df 
-#' @param time 
-#' @param unit 
-#' @param well 
-#' @param value_greater_than 
-#' @param value_less_than 
-#' @param value_equal_to 
-#' @param sample_contains 
-#' @param sample_not_contains 
-#' @param sample_equal_to 
-#' @param variable_set 
-#' @param variable_unset 
-#' @param variable_equal_to 
-#' @param variable_not_equal_to 
-#' @param variable_greater_than 
-#' @param variable_less_than 
-#' @param include_vehicle 
-#' @param frequency 
-#' @param experiment 
-#' @param instrument 
-#' @param max_deviation 
-#' @param subsample 
-#' @param return_lists 
+#' @param data.df Vascr dataset to subset
+#' @param time Specified times. Individual values in a list will be subset out. If vectors are present in the list, values between the two most extreme values will be returned.
+#' @param unit Units to subset. These are checked for integrity against possible units and the dataset itself
+#' @param well Wells to select
+#' @param value_greater_than Select lines where the value is greater than a certain value
+#' @param value_less_than Select lines where the value is less than a certain value
+#' @param value_equal_to Select lines where the value is equal to a certain value
+#' @param sample_contains Return lines where the sample contains a particular value
+#' @param sample_not_contains Return lines where theh sample does not contain particular values
+#' @param sample_equal_to Return lines when the sample exactly matches a particular string
+#' @param variable_set Vector of variables. Lines will be returned if a variable is set.
+#' @param variable_unset Vector of variables. Lines will be returned if a variable is not set.
+#' @param variable_equal_to Vector of pairs of variables and values. Rows will be returned where each variable matches the value following it.
+#' @param variable_not_equal_to Vector of pairs of variables and values. Rows will be returned where each selected variable does not match the value following it.
+#' @param variable_greater_than Vector of pairs of variables and values. Rows will be returned where each selected variable is larger than value following it.
+#' @param variable_less_than Vector of pairs of variables and values. Rows will be returned where each selected variable is less than value following it.
+#' @param include_vehicle Should all relevant vehicle control wells be included in the dataset.
+#' @param frequency Frequencies to include in the dataset.
+#' @param experiment Experiments to include in the dataset. Can be addressed either by name, or by the numerical order that they were loaded into vascr_combine in
+#' @param instrument Which instruments to include values from
+#' @param max_deviation Maximum deviation to allow between replicates
+#' @param subsample Frequency values shoud be subsampled to
+#' @param return_lists Return lists of the varibles to select rather than the subset dataset
 #'
-#' @return
+#' @return The subset dataset, based on the values selected
+#' 
 #' @export
 #'
 #' @examples
-#' vascr_subset(growth.df)
-#' vascr_subset(growth.df, time = 40)
-#' vascr_subset(growth.df, time = NULL)
+#' # vascr_subset(growth.df)
+#' # vascr_subset(growth.df, time = 40)
+#' # vascr_subset(growth.df, time = NULL)
 #'  
-#' vascr_subset(growth.df, unit = "Rb")
-#' vascr_subset(growth.df, unit = "R")
-#' vascr_subset(growth.df, well = "A1")
-#' vascr_subset(growth.df, value_less_than = 100)
-#' vascr_subset(growth.df, max_deviation = 10)
+#' # vascr_subset(growth.df, unit = "Rb")
+#' # vascr_subset(growth.df, unit = "R")
+#' # vascr_subset(growth.df, well = "A1")
+#' # vascr_subset(growth.df, value_less_than = 100)
+#' # vascr_subset(growth.df, max_deviation = 10)
 #' 
-#' vascr_subset(growth.df, time = c(5,20))
-#' 
-#' vascr_subset(czs)
+#' # vascr_subset(growth.df, time = c(5,20))
 #' 
 vascr_subset = function(data.df, 
                         time = NULL, 
@@ -148,9 +147,11 @@ vascr_subset = function(data.df,
 #' @param value_equal_to Values will be returned if equal to this value
 #'
 #' @return A list of values that fit the criteria
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_find_value(data.df)
+#' # vascr_find_value(data.df)
 #' 
 vascr_find_value = function(data.df, value_greater_than = NULL, value_less_than = NULL, value_equal_to = NULL)
 {
@@ -186,13 +187,15 @@ vascr_find_value = function(data.df, value_greater_than = NULL, value_less_than 
 #' @return A character string of the closest matched string
 #' 
 #' @importFrom utils adist
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' tomatch = "Rs"
-#' vector = vascr_find_unit(growth.df, "all")
+#' # tomatch = "Rs"
+#' # vector = vascr_find_unit(growth.df, "all")
 #' 
-#' vascr_match(tomatch, vector)
-#' vascr_match("Rb", vector)
+#' # vascr_match(tomatch, vector)
+#' # vascr_match("Rb", vector)
 vascr_match = function(tomatch, vector)
 {
   
@@ -225,16 +228,17 @@ vascr_match = function(tomatch, vector)
 
 #' Test if a unit is valid
 #'
-#' @param data.df 
-#' @param unit 
+#' @param data.df The dataset to check against
+#' @param unit The unit to test
 #'
-#' @return
-#' @export
+#' @return A boolean
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_is_valid_unit(growth.df, "TEER")
-#' vascr_is_valid_unit(growth.df, "TER")
-#' vascr_is_valid_unit(growth.df, "Rb")
+#' # vascr_is_valid_unit(growth.df, "TEER")
+#' # vascr_is_valid_unit(growth.df, "TER")
+#' # vascr_is_valid_unit(growth.df, "Rb")
 #' 
 vascr_is_valid_unit = function(data.df, unit)
 {
@@ -270,14 +274,16 @@ vascr_is_valid_unit = function(data.df, unit)
 #' @param unit The unit to find
 #'
 #' @return A vector of units that have been identified
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_find_unit(growth.df, "raw")
-#' vascr_find_unit(growth.df, "modeled")
-#' vascr_find_unit(growth.df, "all")
-#' vascr_find_unit(growth.df, "Cm")
-#' vascr_find_unit(growth.df, NA)
-#' vascr_find_unit(growth.df, c("CI", "Rb"))
+#' # vascr_find_unit(growth.df, "raw")
+#' # vascr_find_unit(growth.df, "modeled")
+#' # vascr_find_unit(growth.df, "all")
+#' # vascr_find_unit(growth.df, "Cm")
+#' # vascr_find_unit(growth.df, NA)
+#' # vascr_find_unit(growth.df, unit = c("Ci", "Rb"))
 #' 
 vascr_find_unit = function(data.df, unit = NA)
   {
@@ -287,33 +293,34 @@ vascr_find_unit = function(data.df, unit = NA)
     return(unique(data.df$Unit))
   }
   
-  
-  if(is.na(unit))
-  {
-     
-    instrumentused = categorical_mode(data.df$Instrument)
-    
-    if(instrumentused == "ECIS")
-    {
-      return("R")
-    }
-   if(instrumentused == "cellZscope")
-    {
-      return("TER")
-    }
-    if(instrumentused == "xCELLigence")
-    {
-      return("CI")
-    }
-
-  }
 
   toreturn = c()
 
   for(uni in unit)
   {
-
-    if(tolower(uni) == "raw")
+    
+    if(is.na(uni))
+    {
+      
+      instruments = unique(data.df$Instrument)
+      
+      for(instrumentused in instruments)
+      {
+        if(instrumentused == "ECIS")
+        {
+          toreturn = c(toreturn, "R")
+        }
+        if(instrumentused == "cellZscope")
+        {
+          toreturn = c(toreturn, "TER")
+        }
+        if(instrumentused == "xCELLigence")
+        {
+          toreturn = c(toreturn, "CI")
+        }
+      }
+      
+    } else if(tolower(uni) == "raw")
     {
       toreturn = c(toreturn,(vascr_raw_in_data(data.df)))
     } else if(tolower(uni) == "modeled")
@@ -334,7 +341,6 @@ vascr_find_unit = function(data.df, unit = NA)
   toreturn = unique(toreturn)
   return(toreturn)
   
-  
 }
 
 #' DEPRICATED: alias for vascr_find unit
@@ -342,6 +348,8 @@ vascr_find_unit = function(data.df, unit = NA)
 #' @param ... variables for vascr_find_unit
 #'
 #' @return results from vascr_find_unit
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # See vascr_find_unit
@@ -351,17 +359,18 @@ vascr_realise_units = function(...)
 }
 
 
-
 #' Find a well in a local dataset
 #'
 #' @param data.df The dataset to detect from
 #' @param well The well to find
 #'
 #' @return The string of a valid well to return
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_find_well(growth.df, "A1")
-#' vascr_find_well(growth.df, NULL)
+#' # vascr_find_well(growth.df, "A1")
+#' # vascr_find_well(growth.df, NULL)
 #' 
 vascr_find_well = function(data.df, well)
 {
@@ -383,17 +392,20 @@ vascr_find_well = function(data.df, well)
 
 
 
-#' Title
+#' Find the median of a dataset, forced to a value from which the median is calculated
+#' 
+#' Usually, this would be the mean of the two centremost values, but that is not appropriate in some situations. Hence this function exists.
 #'
-#' @param vector 
-#' @param round 
+#' @param vector Values to find the median of
+#' @param round Should it be rounded "up" (default) or "down"
 #'
-#' @return
-#' @export
+#' @return The forced median value
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vector = unique(growth.df$Frequency)
-#' vascr_force_median(vector)
+#' # vector = unique(growth.df$Frequency)
+#' # vascr_force_median(vector)
 vascr_force_median = function(vector, round = "up")
 {
   vector = as.numeric(vector)
@@ -422,13 +434,15 @@ vascr_force_median = function(vector, round = "up")
 #' @param frequency The tfrequency that needs rounding
 #'
 #' @return A timepoint that exactly aligns with a measured datapoint
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_find_frequency(growth.df, 4382)
 #' #vascr_find_frequency(growth.df, 4000)
-#' vascr_find_frequency(growth.df, NULL)
-#' vascr_find_frequency(growth.df, NA)
-#' vascr_find_frequency(growth.df, Inf)
+#' #vascr_find_frequency(growth.df, NULL)
+#' #vascr_find_frequency(growth.df, NA)
+#' #vascr_find_frequency(growth.df, Inf)
 #' 
 vascr_find_frequency = function(data.df, frequency) {
   
@@ -472,10 +486,12 @@ vascr_find_frequency = function(data.df, frequency) {
 #' @param experiment The experiment to find. Either a name or a number from when the experiment is combined can be used.
 #'
 #' @return A character string of the most closley matched experiment
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_find_experiment(growth.df, 1)
-#' vascr_find_experiment(growth.df, "1 : Experiment 1")
+#' # vascr_find_experiment(growth.df, 1)
+#' # vascr_find_experiment(growth.df, "1 : Experiment 1")
 #' 
 vascr_find_experiment = function(data.df, experiment)
 {
@@ -505,9 +521,11 @@ vascr_find_experiment = function(data.df, experiment)
 #' @param time The time to align
 #'
 #' @return A single time that aligns with the dataset
+#' 
+#' @keywords internal
 #'
 #' @examples 
-#' vascr_find_time(data.df, 43.78)
+#' #vascr_find_time(data.df, 43.78)
 vascr_find_single_time = function(data.df, time)
 {
   if(is.null(time))
@@ -547,14 +565,16 @@ vascr_find_single_time = function(data.df, time)
 #' @param time The time point that needs rounding
 #'
 #' @return A timepoint that exactly aligns with a measured datapoint
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_find_time(growth.df, 146.2)
-#' vascr_find_time(growth.df)
-#' vascr_find_time(growth.df, Inf)
-#' vascr_find_time(growth.df, NULL)
+#' #vascr_find_time(growth.df, 146.2)
+#' #vascr_find_time(growth.df)
+#' #vascr_find_time(growth.df, Inf)
+#' #vascr_find_time(growth.df, NULL)
 #' 
-#' vascr_find_time(growth.df, time = c(5,20))
+#' #vascr_find_time(growth.df, time = c(5,20))
 #' 
 vascr_find_time = function(data.df, time = NULL) {
   
@@ -604,19 +624,21 @@ vascr_find_time = function(data.df, time = NULL) {
 
 
 
-#' Find a vascr unit
+#' Find an instrument known to vascr
 #'
 #' @param data.df A vascr dataset to analyse
-#' @param instrument 
+#' @param instrument The instrument to search for
 #'
 #' @return A vector of strings that match
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_find_instrument(growth.df, "Rb")
-#' vascr_find_instrument(growth.df, "cellZScope")
-#' vascr_find_instrument(growth.df, c("cellZscope", "ECIS"))
+#' #vascr_find_instrument(growth.df, "Rb")
+#' #vascr_find_instrument(growth.df, "cellZScope")
+#' #vascr_find_instrument(growth.df, c("cellZscope", "ECIS"))
 #' 
-#' vascr_find_instrument(growth.df, NULL)
+#' #vascr_find_instrument(growth.df, NULL)
 vascr_find_instrument = function(data.df, instrument = NULL)
 {
 
@@ -656,17 +678,18 @@ vascr_find_instrument = function(data.df, instrument = NULL)
 }
 
 
-
 #' Find exploded column names in teh dataset
 #'
 #' @param data.df The dataset to analyse
 #' @param colname The column to look for
 #'
 #' @return The columns that match
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_find_colname(data.df, "ADP")
-#' vascr_find_colname(data.df, colname = "HCMVEC")
+#' #vascr_find_colname(data.df, "ADP")
+#' #vascr_find_colname(data.df, colname = "HCMVEC")
 #' 
 vascr_find_colname = function(data.df, colname = NULL)
 {
@@ -705,9 +728,11 @@ vascr_find_colname = function(data.df, colname = NULL)
 #' @param allcols The full colunm names to search
 #'
 #' @return The appended unit
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_append_unit("ATP", xcell)
+#' # vascr_append_unit("ATP", xcell)
 vascr_append_unit = function(strippedcol, allcols)
 {
   if(is.data.frame(allcols))
@@ -730,10 +755,12 @@ vascr_append_unit = function(strippedcol, allcols)
 #' @param string The string to strip from
 #'
 #' @return The trimmed string
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' string = c("nm.ml.Oleandrin", "nm.ATP")
-#' vascr_strip_unit(string)
+#' # string = c("nm.ml.Oleandrin", "nm.ATP")
+#' # vascr_strip_unit(string)
 vascr_strip_unit = function(string)
 {
   removed = c()
@@ -750,14 +777,16 @@ vascr_strip_unit = function(string)
 
 
 
-#' Title
+#' Check if all arguements are null
 #'
-#' @param ... 
+#' @param ... List of items, all of which may be null
 #'
-#' @return
-#' @export
+#' @return Boolean
+#' 
+#' @keywords internal
 #'
 #' @examples
+#' # vascr_all_null(NULL, TRUE)
 vascr_all_null = function(...)
 {
   arguments = list(...)
@@ -778,27 +807,29 @@ vascr_all_null = function(...)
 #'
 #' @param data.df The dataset to screen
 #' @param sample_contains Returns that samples that contain a string. This is very broad.
-#' @param sample_not_contains 
-#' @param sample_equal_to 
-#' @param variable_set 
-#' @param variable_unset 
-#' @param variable_equal_to 
-#' @param variable_not_equal_to 
-#' @param variable_greater_than 
-#' @param variable_less_than 
-#' @param include_vehicle 
+#' @param sample_not_contains Include sampels that do not contain this value
+#' @param sample_equal_to Return where the sample is an exact match
+#' @param variable_set Returns where the variable is set
+#' @param variable_unset Returns where the variable is unset
+#' @param variable_equal_to Returns if the variable, is equal to the second unit in the vector
+#' @param variable_not_equal_to  Returns when the variable is not equal to the second in each pair
+#' @param variable_greater_than Returns when the varaible first is greater than the second value.
+#' @param variable_less_than Returns when the variable is less than the second value
+#' @param include_vehicle Should the vehicle sample be included in the dataset
 #'
-#' @return
+#' @return A vector of samples that match the criterion
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 
-#' vascr_find_sample(xcell, variable_set = "ATP")
-#' vascr_find_sample(growth.df)
+#' # vascr_find_sample(xcell, variable_set = "ATP")
+#' # vascr_find_sample(growth.df)
 #' 
-#' vascr_find_sample(czs)
+#' # vascr_find_sample(czs)
 #' 
-#' data.df = vascr_subset(unifiedr, unit = "Rb")
-#' vascr_find_sample(data.df, variable_equal_to = c("HCMVEC", 20000))
+#' # data.df = vascr_subset(unifiedr, unit = "Rb")
+#' # vascr_find_sample(data.df, variable_equal_to = c("HCMVEC", 20000))
 #' 
 vascr_find_sample = function(data.df, sample_contains = NULL, sample_not_contains = NULL, sample_equal_to = NULL, variable_set = NULL, variable_unset = NULL, variable_equal_to = NULL, variable_not_equal_to = NULL, variable_greater_than = NULL, variable_less_than = NULL, include_vehicle = TRUE)
 {
@@ -955,18 +986,20 @@ vascr_find_sample = function(data.df, sample_contains = NULL, sample_not_contain
 }
 
 
-#' Title
+#' Checks if the value is placed in an odd position in a vector
 #'
-#' @param value 
-#' @param vector 
+#' @param value The value to search for
+#' @param vector Vector to search
 #'
-#' @return
+#' @return A boolean
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vector = vascr_units_table()$Unit
-#' vascr_odd_in_vector("Alpha", vector)
-#' vascr_odd_in_vector("Cm", vector)
-#' vascr_odd_in_vector("Drift", vector)
+#' # vector = vascr_units_table()$Unit
+#' # vascr_odd_in_vector("Alpha", vector)
+#' # vascr_odd_in_vector("Cm", vector)
+#' # vascr_odd_in_vector("Drift", vector)
 #' 
 #' 
 vascr_odd_in_vector = function(value, vector)
@@ -979,16 +1012,18 @@ vascr_odd_in_vector = function(value, vector)
 
 
 
-#' Title
+#' Find the next value in a vector
 #'
-#' @param value 
-#' @param vector 
+#' @param value Value to search for
+#' @param vector Vector to search
 #'
-#' @return
+#' @return The value of the next element in the vector
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_next_in_vector("Cm", vector)
-#' vascr_next_in_vector("X", vector)
+#' # vascr_next_in_vector("Cm", vector)
+#' # vascr_next_in_vector("X", vector)
 vascr_next_in_vector = function(value, vector)
 {
   location = match(value, vector)
@@ -997,31 +1032,34 @@ vascr_next_in_vector = function(value, vector)
 }
 
 
-#' Title
+#' Check if a column exists in a dataset
 #'
-#' @param col 
-#' @param data.df 
+#' @param col Column to search for
+#' @param data.df Dataset to search
 #'
-#' @return
+#' @return A boolean
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_col_exists("Well", data.df)
+#' # vascr_col_exists("Well", data.df)
 vascr_col_exists = function(col, data.df)
 {
   return(col %in% colnames(data.df))
 }
 
 
-#' Title
+#' Calculate a table of samples present in a dataset
 #'
-#' @param data.df 
+#' @param data.df The dataset to create a table of
 #'
-#' @return
-#' @export
+#' @return The summarised sample table
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' data.df = xcell
-#' samplecols = vascr_sample_table(data.df)
+#' # data.df = xcell
+#' # samplecols = vascr_sample_table(data.df)
 vascr_sample_table = function(data.df)
 {
   # Detect vehicles if needed

@@ -7,6 +7,8 @@
 #' @importFrom ggplot2 ggplot geom_tile scale_fill_gradient xlab ylab scale_x_discrete facet_wrap
 #'
 #' @return A vascr platemap of the selected data
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 
@@ -73,6 +75,8 @@ vascr_plot_plate= function(data, priority = NULL,  ...)
 #' @param data Dataset to test
 #'
 #' @return Boolean, true if multiple plates are present. Also returns an error if true.
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_test_multi_plate(growth.df)
@@ -108,6 +112,8 @@ vascr_test_multi_plate = function(data)
 #' @importFrom magrittr '%>%'
 #' @importFrom dplyr select
 #' @importFrom ggplot2 ggplot ylab xlab scale_x_discrete facet_wrap vars geom_tile scale_fill_gradient guides guide_legend
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 

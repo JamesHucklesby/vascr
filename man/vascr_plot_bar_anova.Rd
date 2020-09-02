@@ -48,3 +48,4 @@ Plot a bar chart with ANOVA statistics superimposed on it
 #  time = 100, frequency = 4000, rotate_x_angle = 45)
 
 }
+\keyword{internal}

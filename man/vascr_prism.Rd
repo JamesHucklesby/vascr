@@ -34,3 +34,4 @@ This function will automatically average the wells in each experiment, to give a
 #prism = vascr_prism(growth.df, 'Rb', replication = "wells")
 
 }
+\keyword{internal}

@@ -16,6 +16,6 @@ A vector of the column names that change in the dataset
 Find which R columns change accross the dataset
 }
 \examples{
-
-vascr_find_changing_cols(data.df)
+# vascr_find_changing_cols(data.df)
 }
+\keyword{internal}

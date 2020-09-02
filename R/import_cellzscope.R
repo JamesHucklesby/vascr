@@ -13,7 +13,8 @@
 #' @importFrom textclean replace_non_ascii
 #'
 #' @return An vascr compatable dataset
-#' @export
+#'
+#' @keywords internal
 #'
 #' @examples
 #' #model = system.file("extdata/mdckmodel.txt", package = "vascr")
@@ -117,7 +118,7 @@ return(separatedata)
 #' @importFrom textclean replace_non_ascii
 #' 
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' #raw = system.file("extdata/mdckspectra.txt", package = "vascr")
@@ -234,6 +235,8 @@ return(longdata.df)
 #' @param experimentname Name of the experiment to be built into the dataset
 #' 
 #' @importFrom dplyr select left_join 
+#' 
+#' @keywords internal
 #'
 #' @return a standard vascar dataset
 #' @export

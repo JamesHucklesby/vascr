@@ -25,3 +25,4 @@ Work out which instrument(s) generated a unit
 
 #vascr_instrument_from_unit("NA")
 }
+\keyword{internal}

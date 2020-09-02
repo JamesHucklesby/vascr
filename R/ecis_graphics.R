@@ -305,7 +305,8 @@ vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1) {
 #' @importFrom ggpubr rotate_x_text
 #'
 #' @return A standardised ggplot2 object
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @importFrom ggplot2 scale_x_log10 scale_y_log10
 #'
@@ -420,6 +421,8 @@ vascr_polish_plot = function(plot, rotate_x_angle = 45, logscale = "", title = N
 #' @importFrom magrittr "%>%"
 #' @importFrom dplyr group_by mutate ungroup
 #' 
+#' @keywords internal
+#' 
 #'
 #' @return A ggplot graph showing the isoated well and the experimental median well
 #' @export 
@@ -482,7 +485,8 @@ vascr_plot_isolate= function(data.df, well, ...)
 #' @importFrom ggplot2 aes geom_line facet_grid labs
 #'
 #' @return A GGplot2 matrix
-#' @export 
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_plot_matrix(growth.df, unit = "Rb")
@@ -513,8 +517,10 @@ vascr_plot_matrix = function(data.df, unit = "R", frequency = 4000, ...)
 #'
 #' @return A factorised vector that can be saved directly back to a data frame
 #' 
+#' @keywords internal
+#' 
 #' @examples
-#' vascr_factorise_and_sort(growth.df$Sample)
+#' # vascr_factorise_and_sort(growth.df$Sample)
 #' 
 vascr_factorise_and_sort = function(data, sortkeyincreasing = TRUE)
 {
@@ -533,9 +539,11 @@ vascr_factorise_and_sort = function(data, sortkeyincreasing = TRUE)
 #' @return A blank ggplot2 object
 #' 
 #' @importFrom ggplot2 ggplot theme_bw theme element_blank
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_plot_blank()
+#' # vascr_plot_blank()
 vascr_plot_blank = function()
 {
   plot = ggplot()+ theme_bw() +   theme(

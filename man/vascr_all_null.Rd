@@ -2,16 +2,20 @@
 % Please edit documentation in R/vascr_align.R
 \name{vascr_all_null}
 \alias{vascr_all_null}
-\title{Title}
+\title{Check if all arguements are null}
 \usage{
 vascr_all_null(...)
 }
 \arguments{
-\item{...}{}
+\item{...}{List of items, all of which may be null}
 }
 \value{
-
+Boolean
 }
 \description{
-Title
+Check if all arguements are null
 }
+\examples{
+# vascr_all_null(NULL, TRUE)
+}
+\keyword{internal}

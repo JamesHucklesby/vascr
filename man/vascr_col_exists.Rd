@@ -2,21 +2,22 @@
 % Please edit documentation in R/vascr_align.R
 \name{vascr_col_exists}
 \alias{vascr_col_exists}
-\title{Title}
+\title{Check if a column exists in a dataset}
 \usage{
 vascr_col_exists(col, data.df)
 }
 \arguments{
-\item{col}{}
+\item{col}{Column to search for}
 
-\item{data.df}{}
+\item{data.df}{Dataset to search}
 }
 \value{
-
+A boolean
 }
 \description{
-Title
+Check if a column exists in a dataset
 }
 \examples{
-vascr_col_exists("Well", data.df)
+# vascr_col_exists("Well", data.df)
 }
+\keyword{internal}

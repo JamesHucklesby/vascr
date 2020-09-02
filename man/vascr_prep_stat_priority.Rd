@@ -20,3 +20,4 @@ Prep priority for statistical data
 \examples{
 #vascr_prep_stat_priority(growth.df)
 }
+\keyword{internal}

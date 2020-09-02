@@ -20,6 +20,7 @@ The updated dataset
 Rename a column - cleanup of the built in funciton
 }
 \examples{
-vascr_rename_columns(data.df, "Unit", "Measurement")
+# vascr_rename_columns(data.df, "Unit", "Measurement")
 
 }
+\keyword{internal}

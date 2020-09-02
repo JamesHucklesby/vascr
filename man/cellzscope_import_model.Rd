@@ -28,3 +28,4 @@ Imports modeled data previously exported from the cellZscope package. Will not a
 #vascr_plot(output, unit = "TER", frequency = 0,replication = "wells")
 
 }
+\keyword{internal}

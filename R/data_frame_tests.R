@@ -4,6 +4,8 @@
 #'
 #' @param data the data frame to test
 #'
+#'@keywords internal
+#'
 #' @return True (exploded) or false (not exploded)
 #' 
 #' @examples
@@ -28,25 +30,26 @@ vascr_test_exploded = function(data.df)
 #' @importFrom dplyr group_by summarise
 #' @importFrom magrittr "%>%"
 #' 
+#' @keywords internal
 #' 
 #' @export
 #'
 #' @examples
 #' # Prep a known good compliment of data
-#' data = vascr_subset(growth.df, time = 100, unit = "R", frequency = 4000)
+#' #data = vascr_subset(growth.df, time = 100, unit = "R", frequency = 4000)
 #' 
 #' # Test a full compliment of data passes
-#' vascr_test_design(data)
+#' #vascr_test_design(data)
 #' 
-#' vascr_test_design(growth.df)
+#' #vascr_test_design(growth.df)
 
 #' # Test function picks up unbalanced replicate #'s
-#' data2 = vascr_exclude(data, well = c("A1", "B1", "C1"))
-#' vascr_test_design(data2)
+#' #data2 = vascr_exclude(data, well = c("A1", "B1", "C1"))
+#' #vascr_test_design(data2)
 
 #' # Test function picks up missing pairs (in this case due to Rb not being established)
-#' data3 = vascr_subset(growth.df, time = 100, unit = "Rb")
-#' vascr_test_design(data3)
+#' #data3 = vascr_subset(growth.df, time = 100, unit = "Rb")
+#' #vascr_test_design(data3)
 #' 
 vascr_test_design = function(data.df, verbose = FALSE)
 {
@@ -110,10 +113,10 @@ vascr_test_design = function(data.df, verbose = FALSE)
 #'
 #' @return A summarised standard ECIS dataframe
 #'
-#' @export
+#' @keywords internal
 #'
 #' @examples
-#' vascr_test_summary_level(growth.df)
+#' # vascr_test_summary_level(growth.df)
 #' 
 vascr_test_summary_level = function(data.df)
 {

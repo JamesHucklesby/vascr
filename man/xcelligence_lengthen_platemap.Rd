@@ -17,3 +17,4 @@ A slighlty tidier dataset
 \description{
 Switches the xcelligence format of having each column as a column and each row as a row, then stacking timepoints to a standardised tidy data format
 }
+\keyword{internal}

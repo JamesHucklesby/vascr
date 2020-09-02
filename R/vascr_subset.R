@@ -3,6 +3,8 @@
 #' @param data The dataset to analyse
 #'
 #' @return A vector of the modeled units in the dataset
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_modeled_in_data(growth.df)
@@ -19,6 +21,8 @@ vascr_modeled_in_data = function(data)
 #' @param data The dataset to search
 #'
 #' @return A vector containing the raw units present in the data
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # vascr_raw_in_data(growth.df)
@@ -35,6 +39,8 @@ vascr_raw_in_data = function(data)
 #' @param frequency The frequency to analyse
 #'
 #' @return A number of a frequency in the dataset
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 

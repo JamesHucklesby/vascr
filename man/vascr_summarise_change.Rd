@@ -16,6 +16,8 @@ A full dataset
 Create a data frame summarising the changing variables in a dataset in a single column
 }
 \examples{
-vascr_summarise_change(data.df)
+# vascr_summarise_change(data.df)
+# data.df = rdata
 
 }
+\keyword{internal}

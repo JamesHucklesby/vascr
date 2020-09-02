@@ -27,3 +27,4 @@ Generate a qq plot and shapiro test from a vascr data frame
 # vascr_plot_qq(growth.df, "R", 4000, 100)
 
 }
+\keyword{internal}

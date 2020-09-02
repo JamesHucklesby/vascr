@@ -23,3 +23,4 @@ This function converts numbers formatted with commas, such as those used in text
 # comma_to_numeric(c("Foo", "77,00", "88.88.88"))
 
 }
+\keyword{internal}

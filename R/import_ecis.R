@@ -8,6 +8,8 @@
 #' Function used by default as part of ecis_import_raw
 #'
 #' @param data.df The dataset to calculate from
+#' 
+#' @keywords internal
 #'
 #' @return An ecis data frame, with calculated values included
 ecis_calculate_quantaties = function(data.df)
@@ -42,7 +44,8 @@ ecis_calculate_quantaties = function(data.df)
 #' @param sampledefine  path to the file containing the sample definitions
 #'
 #' @return A standard ECIS data frame, annotated
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # This function is baked into ecis_import and it's parts
@@ -108,8 +111,7 @@ vascr_assign_samples = function (data, sampledefine)
 #' @importFrom dplyr left_join
 #' 
 #' 
-#' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' 
@@ -234,7 +236,8 @@ ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
 #' @param experimentname Name of the experiment to be built into the dataset
 #'
 #' @return Data frame containing modeled data
-#' @export
+#' 
+#' @keywords internal
 #' 
 #' @importFrom stringr str_detect
 #' @importFrom tidyr separate gather
@@ -392,7 +395,8 @@ ecis_import_model = function(modeleddata, sampledefine, experimentname = "NA") {
 #' @param experimentname Name of the experiment to be built into the dataset
 #'
 #' @return A dataframe containing all the data APB generated from an experiment 
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 

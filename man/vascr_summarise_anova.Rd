@@ -27,3 +27,4 @@ Run a standard panel of ANOVA tests and return the results in text format
 #vascr_summarise_anova(growth.df, "R", 4000, 100)
 
 }
+\keyword{internal}

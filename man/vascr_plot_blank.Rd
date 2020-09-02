@@ -13,5 +13,6 @@ A blank ggplot2 object
 Return a blank white box
 }
 \examples{
-vascr_plot_blank()
+# vascr_plot_blank()
 }
+\keyword{internal}

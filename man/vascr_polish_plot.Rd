@@ -29,3 +29,4 @@ Post-processing on ECIS plots to make them a bit more pretty
 #vascr_polish_plot(plot, rotate_x_angle = FALSE)
 
 }
+\keyword{internal}

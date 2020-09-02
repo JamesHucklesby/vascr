@@ -34,11 +34,12 @@ Exclude automatically detected wells that have a connection issue from the datas
 }
 \examples{
 
-#vascr_plot_deviation(growth.df, max_deviation = 0.3)
+# vascr_plot_deviation(growth.df, max_deviation = 0.3)
 
-#datum = vascr_exclude_deviation(growth.df, max_deviation = 0.3)
+# datum = vascr_exclude_deviation(growth.df, max_deviation = 0.3)
 
-#vascr_plot_deviation(datum)
+# vascr_plot_deviation(datum)
 
 
 }
+\keyword{internal}

@@ -19,3 +19,4 @@ Convert a vector of titles into full names of units
 #vascr_titles_vector(c("Rb", "R", "Cm"))
 
 }
+\keyword{internal}

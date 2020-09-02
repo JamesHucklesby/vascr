@@ -19,3 +19,4 @@ Clean the statistics off a vascr dataset
 #vascr_remove_stats(vascr_summarise(growth.df,level = "summary"))
 
 }
+\keyword{internal}

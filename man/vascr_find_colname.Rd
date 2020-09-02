@@ -18,7 +18,8 @@ The columns that match
 Find exploded column names in teh dataset
 }
 \examples{
-vascr_find_colname(data.df, "ADP")
-vascr_find_colname(data.df, colname = "HCMVEC")
+#vascr_find_colname(data.df, "ADP")
+#vascr_find_colname(data.df, colname = "HCMVEC")
 
 }
+\keyword{internal}

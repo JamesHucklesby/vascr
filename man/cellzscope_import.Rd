@@ -32,3 +32,4 @@ Data must first be exported in two parts from the cellZScope software. This can 
 #vascr_plot(alldatakey, unit = "TER", frequency = 0, time = c(0,50))
 
 }
+\keyword{internal}

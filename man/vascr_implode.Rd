@@ -17,6 +17,8 @@ vascr_implode(
 \item{select_columns}{The columns to plot. Default of null plots the whole lot.}
 
 \item{stripidentical}{Strip out columns that are identical in all samples. Tidies up graphs significantly (at the cost of being less explicit). Default is FALSE as the user must manually specify what has been removed in the graph title, or data is implicity lost.}
+
+\item{stripzero}{Strip columns where the value is 0}
 }
 \value{
 the cleaned up data frame
@@ -35,11 +37,10 @@ This function implodes a coninuous dataset to re-create Sample names from only s
 #data.df = vascr_subset(growth.df, samplecontains = "35,000")
 #imploded = vascr_implode(data.df)
 
-mindat = vascr_subset(unifiedr, unit = "Rb")
+#  mindat = vascr_subset(unifiedr, unit = "Rb")
 
-miniexploded = vascr_implode(mindat)
-miniexploded = mutate(miniexploded, Sample = str_replace_all(Sample, "\\\\|$", ""))
-
-data.df = rb
+# miniexploded = vascr_implode(mindat)
+# miniexploded = mutate(miniexploded, Sample = str_replace_all(Sample, "\\|$", ""))
 
 }
+\keyword{internal}

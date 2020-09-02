@@ -28,3 +28,4 @@ Plot the results of a Levene's test with a fitted variables and residuals plot
 
 
 }
+\keyword{internal}

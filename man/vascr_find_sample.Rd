@@ -23,38 +23,39 @@ vascr_find_sample(
 
 \item{sample_contains}{Returns that samples that contain a string. This is very broad.}
 
-\item{sample_not_contains}{}
+\item{sample_not_contains}{Include sampels that do not contain this value}
 
-\item{sample_equal_to}{}
+\item{sample_equal_to}{Return where the sample is an exact match}
 
-\item{variable_set}{}
+\item{variable_set}{Returns where the variable is set}
 
-\item{variable_unset}{}
+\item{variable_unset}{Returns where the variable is unset}
 
-\item{variable_equal_to}{}
+\item{variable_equal_to}{Returns if the variable, is equal to the second unit in the vector}
 
-\item{variable_not_equal_to}{}
+\item{variable_not_equal_to}{Returns when the variable is not equal to the second in each pair}
 
-\item{variable_greater_than}{}
+\item{variable_greater_than}{Returns when the varaible first is greater than the second value.}
 
-\item{variable_less_than}{}
+\item{variable_less_than}{Returns when the variable is less than the second value}
 
-\item{include_vehicle}{}
+\item{include_vehicle}{Should the vehicle sample be included in the dataset}
 }
 \value{
-
+A vector of samples that match the criterion
 }
 \description{
 Search the samples, based on pairs of datasets. Pass to any variable names of variables paired with what is beng screened for. Using include_vehicle will respect variable
 }
 \examples{
 
-vascr_find_sample(xcell, variable_set = "ATP")
-vascr_find_sample(growth.df)
+# vascr_find_sample(xcell, variable_set = "ATP")
+# vascr_find_sample(growth.df)
 
-vascr_find_sample(czs)
+# vascr_find_sample(czs)
 
-data.df = vascr_subset(unifiedr, unit = "Rb")
-vascr_find_sample(data.df, variable_equal_to = c("HCMVEC", 20000))
+# data.df = vascr_subset(unifiedr, unit = "Rb")
+# vascr_find_sample(data.df, variable_equal_to = c("HCMVEC", 20000))
 
 }
+\keyword{internal}

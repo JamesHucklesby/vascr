@@ -7,19 +7,20 @@
 vascr_is_valid_unit(data.df, unit)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The dataset to check against}
 
-\item{unit}{}
+\item{unit}{The unit to test}
 }
 \value{
-
+A boolean
 }
 \description{
 Test if a unit is valid
 }
 \examples{
-vascr_is_valid_unit(growth.df, "TEER")
-vascr_is_valid_unit(growth.df, "TER")
-vascr_is_valid_unit(growth.df, "Rb")
+# vascr_is_valid_unit(growth.df, "TEER")
+# vascr_is_valid_unit(growth.df, "TER")
+# vascr_is_valid_unit(growth.df, "Rb")
 
 }
+\keyword{internal}

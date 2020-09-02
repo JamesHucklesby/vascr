@@ -15,3 +15,4 @@ A numeric vector
 \description{
 Make a vector containing numbers with commas numeric
 }
+\keyword{internal}

@@ -16,7 +16,8 @@ The data frame to return
 Explode out continuous data from Sample
 }
 \examples{
-growth.df$Instrument ="ECIS"
+# growth.df$Instrument ="ECIS"
 
 
 }
+\keyword{internal}

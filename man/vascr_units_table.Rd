@@ -16,3 +16,4 @@ Table of units used in the vascr package
 #vascr_units_table()
 
 }
+\keyword{internal}

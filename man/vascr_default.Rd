@@ -19,3 +19,4 @@ Central source of lookup values for default graph settings for various instrumen
 # vascr_default(growth.df)
 
 }
+\keyword{internal}

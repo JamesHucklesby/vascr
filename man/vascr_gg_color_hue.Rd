@@ -15,3 +15,4 @@ A vector of ggplot colours
 \description{
 Generate ggplot colour hues, for manually specifiying colours that match the default theme
 }
+\keyword{internal}

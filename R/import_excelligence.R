@@ -9,13 +9,15 @@
 #' @param experimentname The name of the expeiment to build into the dataset
 #'
 #' @return A standard impedr data frame
+#' 
+#' 
 #'
 #' @importFrom stringr str_split str_replace
 #' @importFrom dplyr select left_join
 #' @importFrom stats na.omit time
 #' @importFrom tidyr separate fill pivot_longer
 #'
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' # filename = "inst/extdata/xcell.txt"

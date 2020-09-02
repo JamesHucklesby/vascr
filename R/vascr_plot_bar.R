@@ -10,7 +10,8 @@
 #' 
 #' @importFrom ggplot2 position_dodge scale_colour_grey ggplot geom_text aes_string aes geom_bar
 #' 
-#'
+#' @keywords internal
+#' 
 #' @examples
 #' #vascr_plot_bar(growth.df, level = "experiments", frequency = 4000, unit = "R"
 #' #, time = list(50,100), error = Inf)
@@ -161,6 +162,8 @@ vascr_plot_bar = function(data, priority = NULL, error = Inf, confidence = NULL,
 #' @param ... Any arguement to vascr_prep_graphdata or vascr_polish_plot. Use this to select values ect.
 #'
 #' @return A vascr bar plot with statistics attached to it
+#' 
+#' @keywords internal
 #' 
 #' @importFrom ggplot2 geom_errorbar aes ggplot geom_text geom_bar
 #'

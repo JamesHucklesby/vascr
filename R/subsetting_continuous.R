@@ -7,7 +7,7 @@
 #' 
 #' @importFrom stats var
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_detect_vehicle(growth.df)
@@ -64,6 +64,8 @@ vascr_detect_vehicle = function (data, force_replace = FALSE)
 #' @param force_replace Should existing IsVehicleControl wells be replaced (if present)?
 #' 
 #' @importFrom dplyr select
+#' 
+#' @keywords internal
 #'
 #' @return A vector of vehicle control wells
 #'
@@ -94,7 +96,7 @@ vascr_detect_vehicle_control_wells = function(data, force_replace = FALSE)
 #'
 #' @return A boolean, true if the column is found, false if not
 #'
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' #col_exists(growth.df, "Vector")

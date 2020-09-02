@@ -29,3 +29,4 @@ Validates if a file exists, and if it has the correct file extension. This is us
 # Check a file with one of two right extensions passes
 #vascr_validate_file("R/AAA_TODO.R", extension = c("p", "r"))
 }
+\keyword{internal}

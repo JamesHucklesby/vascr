@@ -1,6 +1,8 @@
 #' List out all the vascr functions
 #'
 #' @return A vector of all the exported and non-exported functions present
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_all_functions()

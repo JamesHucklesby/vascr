@@ -21,3 +21,4 @@ Check if a selected unit is modelled
 #vascr_is_modeled_unit(c("R", "Rb"))
 
 }
+\keyword{internal}

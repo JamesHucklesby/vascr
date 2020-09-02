@@ -7,13 +7,11 @@
 vascr_summarise_deviation(data.df, frequency = NA, unit = NA)
 }
 \arguments{
+\item{data.df}{A vascr dataset to process}
+
 \item{frequency}{The frequency to run the calculations on. Only one frequency should be selected, default is 4000.}
 
 \item{unit}{The unit to run calculations on. Only one unit should be selected, and generally this should be a raw frequency. Default R.}
-
-\item{data}{A vascr dataset to process}
-
-\item{deviation}{The minimum deviation to return}
 }
 \value{
 A vascr dataset containing the deviaiton at each time point
@@ -25,8 +23,9 @@ This function detects the proportion deviation between the median of each sample
 This function is not as diagnostic or sensitive compared to vascr_detect_max_deviation but is usefull if you need to find out when and where a well differs from the remainder of the triplicate.
 }
 \examples{
-example = vascr_summarise_deviation(growth.df)
+# example = vascr_summarise_deviation(growth.df)
 
 
 
 }
+\keyword{internal}

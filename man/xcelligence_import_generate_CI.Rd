@@ -15,3 +15,4 @@ An enlargened dataset
 \description{
 Generate CI from xcelligence data
 }
+\keyword{internal}

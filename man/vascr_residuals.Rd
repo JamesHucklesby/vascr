@@ -28,3 +28,4 @@ Generate the residuals from a vascr linear model
 # vascr_residuals(growth.df, "R", "4000", 100)
 
 }
+\keyword{internal}

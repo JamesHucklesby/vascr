@@ -24,12 +24,12 @@ A ggplot2 object of the graph created
 Plot a line graph from a vascr dataset
 }
 \examples{
-vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", error = Inf)
+# vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", error = Inf)
 
 
-vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "experiments", title = "AAA")
-vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "wells", title = "AAA")
-vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "deviation", title = "AAA")
+# vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "experiments", title = "AAA")
+# vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "wells", title = "AAA")
+# vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "deviation", title = "AAA")
 
 #vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary",
 # title = "AAA")
@@ -42,3 +42,4 @@ vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "deviation", ti
 # level = "experiments", title = "AAA", error = 0, logscale = "x")
 
 }
+\keyword{internal}

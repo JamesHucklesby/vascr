@@ -18,11 +18,12 @@ A vector of units that have been identified
 Find a valid unit in the dataset, and throw an error if the unit selected is not appropriate
 }
 \examples{
-vascr_find_unit(growth.df, "raw")
-vascr_find_unit(growth.df, "modeled")
-vascr_find_unit(growth.df, "all")
-vascr_find_unit(growth.df, "Cm")
-vascr_find_unit(growth.df, NA)
-vascr_find_unit(growth.df, c("CI", "Rb"))
+# vascr_find_unit(growth.df, "raw")
+# vascr_find_unit(growth.df, "modeled")
+# vascr_find_unit(growth.df, "all")
+# vascr_find_unit(growth.df, "Cm")
+# vascr_find_unit(growth.df, NA)
+# vascr_find_unit(growth.df, unit = c("Ci", "Rb"))
 
 }
+\keyword{internal}

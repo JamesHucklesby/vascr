@@ -21,3 +21,4 @@ Check if a column exists in a dataset
 #col_exists(growth.df, "Vector")
 #col_exists(growth.df, "Unit")
 }
+\keyword{internal}

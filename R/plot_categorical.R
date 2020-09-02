@@ -104,7 +104,7 @@ return(plot)
 #' @importFrom stringr str_length str_split
 #' @importFrom purrr as_vector
 #' 
-#' @export 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_reconstitute_sample("1nm cheese + 1nm cars")
@@ -157,6 +157,8 @@ vascr_reconstitute_sample = function(string)
 #' @param string The string to collapse the hashes in
 #'
 #' @return A string with hashes collapsed
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_collapse_hash("###cat###andthe##hat####")
@@ -181,6 +183,8 @@ vascr_collapse_hash = function(string)
 #' @param data The ECIS dataset with exploded columns
 #'
 #' @return A vector of the returned columns
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_exploded_cols(growth.df)
@@ -198,6 +202,8 @@ vascr_exploded_cols = function(data)
 #' @param set The set of columns to request. Default is core.
 #'
 #' @return A vector of the columns requested
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 

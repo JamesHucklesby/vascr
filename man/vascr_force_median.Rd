@@ -2,22 +2,23 @@
 % Please edit documentation in R/vascr_align.R
 \name{vascr_force_median}
 \alias{vascr_force_median}
-\title{Title}
+\title{Find the median of a dataset, forced to a value from which the median is calculated}
 \usage{
 vascr_force_median(vector, round = "up")
 }
 \arguments{
-\item{vector}{}
+\item{vector}{Values to find the median of}
 
-\item{round}{}
+\item{round}{Should it be rounded "up" (default) or "down"}
 }
 \value{
-
+The forced median value
 }
 \description{
-Title
+Usually, this would be the mean of the two centremost values, but that is not appropriate in some situations. Hence this function exists.
 }
 \examples{
-vector = unique(growth.df$Frequency)
-vascr_force_median(vector)
+# vector = unique(growth.df$Frequency)
+# vascr_force_median(vector)
 }
+\keyword{internal}

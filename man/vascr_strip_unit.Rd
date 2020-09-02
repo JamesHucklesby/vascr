@@ -16,6 +16,7 @@ The trimmed string
 Strip units from a title containing string
 }
 \examples{
-string = c("nm.ml.Oleandrin", "nm.ATP")
-vascr_strip_unit(string)
+# string = c("nm.ml.Oleandrin", "nm.ATP")
+# vascr_strip_unit(string)
 }
+\keyword{internal}

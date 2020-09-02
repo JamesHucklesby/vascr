@@ -6,7 +6,8 @@
 #' @param extension Character string containing a file extension that will be matched against the file type of file_name. Case insensitive.
 #'
 #' @return TRUE if it passes, FALSE if it does not. Also spits out warnings that will help the user correct the error
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # check a file that does not exist fails

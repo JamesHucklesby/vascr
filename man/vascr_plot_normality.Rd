@@ -28,3 +28,4 @@ Plot rediduals overlaid with a normal curve
 # vascr_plot_normality(growth.df, "R", 4000, 100)
 
 }
+\keyword{internal}

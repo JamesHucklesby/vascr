@@ -5,6 +5,7 @@
 #' @param data.df A standard ECIS data frame
 #' @param select_columns The columns to plot. Default of null plots the whole lot.
 #' @param stripidentical Strip out columns that are identical in all samples. Tidies up graphs significantly (at the cost of being less explicit). Default is FALSE as the user must manually specify what has been removed in the graph title, or data is implicity lost.
+#' @param stripzero Strip columns where the value is 0
 #'
 #' @return the cleaned up data frame
 #'
@@ -13,7 +14,7 @@
 #' @importFrom tidyselect all_of
 #' @importFrom stringr str_replace_all str_replace
 #'
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' # Check the function works
@@ -26,12 +27,10 @@
 #' #data.df = vascr_subset(growth.df, samplecontains = "35,000")
 #' #imploded = vascr_implode(data.df)
 #' 
-#' mindat = vascr_subset(unifiedr, unit = "Rb")
+#'#  mindat = vascr_subset(unifiedr, unit = "Rb")
 #' 
-#' miniexploded = vascr_implode(mindat)
-#' miniexploded = mutate(miniexploded, Sample = str_replace_all(Sample, "\\|$", ""))
-#' 
-#' data.df = rb
+#' # miniexploded = vascr_implode(mindat)
+#' # miniexploded = mutate(miniexploded, Sample = str_replace_all(Sample, "\\|$", ""))
 #' 
 vascr_implode = function(data.df, select_columns = NULL, stripidentical = TRUE, stripzero = TRUE)
 {

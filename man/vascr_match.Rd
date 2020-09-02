@@ -18,9 +18,10 @@ A character string of the closest matched string
 Match a string with the closest available option
 }
 \examples{
-tomatch = "Rs"
-vector = vascr_find_unit(growth.df, "all")
+# tomatch = "Rs"
+# vector = vascr_find_unit(growth.df, "all")
 
-vascr_match(tomatch, vector)
-vascr_match("Rb", vector)
+# vascr_match(tomatch, vector)
+# vascr_match("Rb", vector)
 }
+\keyword{internal}

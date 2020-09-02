@@ -18,23 +18,25 @@ utils::globalVariables(c('Data','Instrument', '..density..','dnorm','.fitted','.
 
 utils::globalVariables(c("commaarray", "lsf.str", "Deviation", "Max_Deviation", "Vehicle", "count_na", "IsVehicleControl", "Vehicle", "growth.df", "unit", "error", "ymin", "ymax", "toplot", "continuous", "frequency", "title", "Tukey.levels", "Well ID", "12"))
 
+utils::globalVariables(c("Distance", "Delta_Length", "value", "coeffs", "data"))
 
-#' Example data set from an ECIS growth experiment
-#'
-#' @format A data frame with 53940 rows and 10 variables:
-#' \describe{
-#'   \item{Experiment}{Date the experiment was conducted}
-#'   \item{Frequency}{Frequency of colleciton, modeled units have a frequency of 0}
-#'   \item{Sample}{Name of the sample located in that well, formated in a standardised way}
-#'   \item{Time}{Capture time in hours since the start of the experiment}
-#'   \item{Unit}{Unit that the value is measured in}
-#'   \item{Value}{Numerical value in units}
-#'   \item{Well}{Well of plate that was measured}
-#'   \item{Instrument}{The instrument the data was collected on}
-#'   \item{cells}{Number of cells added to each well}
-#'   \item{line}{The cell line used in this experiment (all HCMEC/D3)}
-#'   ...
-#' }
-#' @description A dataset containing growth curves from a variety of experiments
-#' @source James Hucklesby 2019
-"growth.df"
+
+#' #' Example data set from an ECIS growth experiment
+#' #'
+#' #' @format A data frame with 53940 rows and 10 variables:
+#' #' \describe{
+#' #'   \item{Experiment}{Date the experiment was conducted}
+#' #'   \item{Frequency}{Frequency of colleciton, modeled units have a frequency of 0}
+#' #'   \item{Sample}{Name of the sample located in that well, formated in a standardised way}
+#' #'   \item{Time}{Capture time in hours since the start of the experiment}
+#' #'   \item{Unit}{Unit that the value is measured in}
+#' #'   \item{Value}{Numerical value in units}
+#' #'   \item{Well}{Well of plate that was measured}
+#' #'   \item{Instrument}{The instrument the data was collected on}
+#' #'   \item{cells}{Number of cells added to each well}
+#' #'   \item{line}{The cell line used in this experiment (all HCMEC/D3)}
+#' #'   ...
+#' #' }
+#' #' @description A dataset containing growth curves from a variety of experiments
+#' #' @source James Hucklesby 2019
+#' "growth.df"

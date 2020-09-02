@@ -18,5 +18,6 @@ A single time that aligns with the dataset
 Find a time aligned with a vascr dataset
 }
 \examples{
-vascr_find_time(data.df, 43.78)
+#vascr_find_time(data.df, 43.78)
 }
+\keyword{internal}

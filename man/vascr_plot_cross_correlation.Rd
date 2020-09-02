@@ -2,19 +2,21 @@
 % Please edit documentation in R/cross_correlation.R
 \name{vascr_plot_cross_correlation}
 \alias{vascr_plot_cross_correlation}
-\title{Title}
+\title{Plot cross correlation data from a vascr dataset}
 \usage{
-vascr_plot_cross_correlation(data.df, level = NULL)
+vascr_plot_cross_correlation(data.df)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The dataset to plot}
 }
 \value{
-
+A plots of the cross correlation calculated
 }
 \description{
-Title
+Plot cross correlation data from a vascr dataset
 }
 \examples{
+# vascr_plot_cross_correlation(growth.df)
 
 }
+\keyword{internal}

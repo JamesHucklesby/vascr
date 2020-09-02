@@ -18,3 +18,4 @@ Generate an anova formula
 \examples{
 # vascr_formula(c("cells","well"))
 }
+\keyword{internal}

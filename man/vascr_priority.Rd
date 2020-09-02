@@ -37,3 +37,4 @@ This function calculates the order of priority of variables in a vascr dataset s
 
 # vascr_priority(data)
 }
+\keyword{internal}

@@ -18,11 +18,12 @@ A timepoint that exactly aligns with a measured datapoint
 When running analyasis, you can only run stats on a timepoint that exists in the dataset. These are not always logical or easy to remember. This function rounds the number given to the nearest timepoint that is actually in the dataset.
 }
 \examples{
-vascr_find_time(growth.df, 146.2)
-vascr_find_time(growth.df)
-vascr_find_time(growth.df, Inf)
-vascr_find_time(growth.df, NULL)
+#vascr_find_time(growth.df, 146.2)
+#vascr_find_time(growth.df)
+#vascr_find_time(growth.df, Inf)
+#vascr_find_time(growth.df, NULL)
 
-vascr_find_time(growth.df, time = c(5,20))
+#vascr_find_time(growth.df, time = c(5,20))
 
 }
+\keyword{internal}

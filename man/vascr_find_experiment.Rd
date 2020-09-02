@@ -18,7 +18,8 @@ A character string of the most closley matched experiment
 Find an experiment in a vascr dataset
 }
 \examples{
-vascr_find_experiment(growth.df, 1)
-vascr_find_experiment(growth.df, "1 : Experiment 1")
+# vascr_find_experiment(growth.df, 1)
+# vascr_find_experiment(growth.df, "1 : Experiment 1")
 
 }
+\keyword{internal}

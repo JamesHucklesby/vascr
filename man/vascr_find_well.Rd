@@ -18,7 +18,8 @@ The string of a valid well to return
 Find a well in a local dataset
 }
 \examples{
-vascr_find_well(growth.df, "A1")
-vascr_find_well(growth.df, NULL)
+# vascr_find_well(growth.df, "A1")
+# vascr_find_well(growth.df, NULL)
 
 }
+\keyword{internal}

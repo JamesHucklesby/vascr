@@ -26,3 +26,4 @@ Plot the plate structure of a datset
 #vascr_plot_structure(growth.df)
 
 }
+\keyword{internal}

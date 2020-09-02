@@ -27,3 +27,4 @@ Plot replicate data sets as a box plot
 # vascr_plot_box_replicate(growth.df, "R", 4000, 100)
 
 }
+\keyword{internal}

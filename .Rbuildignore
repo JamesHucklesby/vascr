@@ -5,4 +5,4 @@
 ^\.Rprofile$
 ^\.git$
 ^draft_functions\.R$
-^excluded/
+^inst/compare/

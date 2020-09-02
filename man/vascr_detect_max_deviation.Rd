@@ -35,7 +35,8 @@ A dataframe is returned with a score for each well, fully labeled minus Time and
 }
 \examples{
 # Return the results as a table
-#vascr_detect_max_deviation(growth.df)
+# vascr_detect_max_deviation(growth.df)
 # Then return a graphical representaiton
 #vascr_plot_deviation(growth.df)
 }
+\keyword{internal}

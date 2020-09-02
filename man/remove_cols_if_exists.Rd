@@ -20,3 +20,4 @@ Remove columns if they exist in a dataset, otherwise do nothing
 \examples{
 #remove_cols_if_exists(growth.df, c("Unit", "Sample", "Donkey"))
 }
+\keyword{internal}

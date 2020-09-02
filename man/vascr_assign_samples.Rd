@@ -21,3 +21,4 @@ Internal function to assign sample names to a data frame
 # This function is baked into ecis_import and it's parts
 
 }
+\keyword{internal}

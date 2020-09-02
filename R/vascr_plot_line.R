@@ -7,14 +7,16 @@
 #' @param ... Values to be passed onto prep_graphdata and polish_plot
 #'
 #' @return A ggplot2 object of the graph created
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", error = Inf)
+#' # vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary", error = Inf)
 #' 
 #' 
-#' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "experiments", title = "AAA")
-#' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "wells", title = "AAA")
-#' vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "deviation", title = "AAA")
+#' # vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "experiments", title = "AAA")
+#' # vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "wells", title = "AAA")
+#' # vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "deviation", title = "AAA")
 #' 
 #' #vascr_plot_line(growth.df, unit = "R", frequency = 4000, level = "summary",
 #' # title = "AAA")

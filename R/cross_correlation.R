@@ -1,12 +1,13 @@
 #' Find which R columns change accross the dataset
 #'
 #' @param data.df The dataset to analyse
+#' 
+#' @keywords internal
 #'
 #' @return A vector of the column names that change in the dataset
 #'
 #' @examples
-#' 
-#' vascr_find_changing_cols(data.df)
+#' # vascr_find_changing_cols(data.df)
 vascr_find_changing_cols = function(data.df)
 {
   
@@ -38,9 +39,11 @@ vascr_find_changing_cols = function(data.df)
 #' @importFrom dplyr select all_of
 #' @importFrom tidyr unite
 #' 
+#' @keywords internal
 #'
 #' @examples
-#' vascr_summarise_change(data.df)
+#' # vascr_summarise_change(data.df)
+#' # data.df = rdata
 #' 
 vascr_summarise_change = function(data.df)
 {
@@ -48,11 +51,11 @@ vascr_summarise_change = function(data.df)
 datalevel = vascr_detect_level(data.df)
 
 data.df = vascr_remove_stats(data.df)
-data.df = vascr_explode(data.df)
-data.df = vascr_implode(data.df)
+# data.df = vascr_explode(data.df)
+# data.df = vascr_implode(data.df)
 
 deltacols = vascr_find_changing_cols(data.df)
-deltacols = vascr_remove_from_vector(c("Time", "Value"), deltacols)
+deltacols = vascr_remove_from_vector(c("Time", "Value", "Sample"), deltacols)
 
 if(datalevel != "wells")
 {
@@ -81,6 +84,8 @@ return(deltadata)
 #' 
 #' @importFrom stats ccf as.ts
 #'
+#' @keywords internal
+#'
 #' @return A numeric value representing the CCF at time 0
 #' 
 #' @examples
@@ -97,16 +102,18 @@ vascr_ccf_vectors = function(v1, v2, plot = FALSE)
 
 #' Generate all cross-correlation pairs between sets of values
 #'
-#' @param data.df 
+#' @param data.df The vascr dataset to summarise
 #'
-#' @return
+#' @return A dataset contining values from each cross correlation pair
+#' 
+#' @keywords internal
 #' 
 #' @importFrom utils combn
 #'
 #' @examples
-#' growthrb = vascr_subset(growth.df, unit = "Rb", time = c(5,150))
-#' vascr_plot(growthrb, unit ="Rb")
-#' vascr_summarise_cross_correlation(growthrb)
+#' # growthrb = vascr_subset(growth.df, unit = "Rb", time = c(5,150))
+#' # vascr_plot(growthrb, unit ="Rb")
+#' # vascr_summarise_cross_correlation(growthrb)
 #' 
 vascr_summarise_cross_correlation = function(data.df)
 {
@@ -159,23 +166,26 @@ return(combinations)
 }
 
 
-#' Title
+#' Plot cross correlation data from a vascr dataset
 #'
-#' @param data.df 
+#' @param data.df The dataset to plot
 #'
-#' @return
-#' @export
+#' @return A plots of the cross correlation calculated
 #' 
-#' @importFrom magrittr '%>%
+#' @importFrom magrittr '%>%'
 #' @importFrom dplyr group_by mutate arrange left_join
-#' @importFrom ggplot2 ggplot aes geom_line geom_col coord_flip scale_colour_manual scale_fill_manual
+#' @importFrom ggplot2 ggplot aes geom_line geom_col coord_flip scale_colour_manual scale_color_manual scale_fill_manual
+#' 
+#' @keywords internal
 #'
 #' @examples
+#' # vascr_plot_cross_correlation(growth.df)
 #' 
-vascr_plot_cross_correlation = function(data.df, level = NULL)
+vascr_plot_cross_correlation = function(data.df)
 {
   
 deltadata = vascr_summarise_change(data.df)
+deltadata$value = replace_na(deltadata$value, 0)
 deltadata = deltadata %>% group_by(sample) %>% mutate(value = value/max(value))
 
 combinations = vascr_summarise_cross_correlation(data.df)

@@ -2,18 +2,23 @@
 % Please edit documentation in R/data_transformation.R
 \name{vascr_summarise_errortype}
 \alias{vascr_summarise_errortype}
-\title{Title}
+\title{Create a summary with correct errors}
 \usage{
 vascr_summarise_errortype(data.df, errortype)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The dataset to analyse}
 
-\item{errortype}{}
+\item{errortype}{The type of error to generate for graphing}
 }
 \value{
-
+An annotated up dataset, with ymax and ymin in place
 }
 \description{
-Title
+Create a summary with correct errors
 }
+\examples{
+# vascr_summarise_errortype(growth.df, "sem")
+
+}
+\keyword{internal}

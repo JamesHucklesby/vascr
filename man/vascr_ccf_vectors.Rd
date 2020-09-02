@@ -19,3 +19,4 @@ A numeric value representing the CCF at time 0
 \description{
 Generate numeric CCF values from vectors
 }
+\keyword{internal}

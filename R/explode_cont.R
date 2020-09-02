@@ -3,14 +3,16 @@
 #' @param data Standard ECIS data frame to explode
 #'
 #' @return The data frame to return
-#' @export 
+#' 
+#' 
+#' @keywords internal
 #' 
 #' @importFrom tidyr separate_rows pivot_wider separate pivot_wider
 #' @importFrom magrittr "%>%"
 #' @importFrom dplyr all_equal
 #'
 #' @examples
-#' growth.df$Instrument ="ECIS"
+#' # growth.df$Instrument ="ECIS"
 #' 
 # # Stip out all the non-core columns in the dataset
 # # data.df = vascr_remove_metadata(growth.df)
@@ -62,6 +64,8 @@ vascr_explode = function(data)
 #' @return A numeric vector
 #' @importFrom tidyr replace_na
 #'
+#' @keywords internal
+#'
 #' @examples
 vascr_make_numeric = function(vector)
 {
@@ -79,7 +83,8 @@ vascr_make_numeric = function(vector)
 #' @importFrom stringr str_count str_replace
 #'
 #' @return A boolean value
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #library(stringr)
@@ -111,7 +116,8 @@ vascr_test_explosion_integrity = function(data)
 #' @param data the data frame to test
 #'
 #' @return True (exploded) or false (not exploded)
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' #vascr_test_exploded(growth.df)

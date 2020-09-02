@@ -27,3 +27,4 @@ Plot a shapiro test
 # vascr_shapiro(growth.df, "R", 4000, 100)
 
 }
+\keyword{internal}

@@ -38,3 +38,4 @@ Plot a vascr data set as a bar
 
 #vascr_plot_bar(growth.df, frequency = 4000, unit = "R", time = 50, confidence = 0.5)
 }
+\keyword{internal}

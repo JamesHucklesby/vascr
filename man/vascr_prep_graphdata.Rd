@@ -25,6 +25,8 @@ vascr_prep_graphdata(
 )
 }
 \arguments{
+\item{data.df}{Vascr dataset to plot}
+
 \item{unit}{Unit to subset to}
 
 \item{frequency}{Frequency to subset to}
@@ -55,7 +57,7 @@ vascr_prep_graphdata(
 
 \item{errortype}{SEM or SD errors to generate}
 
-\item{data}{Vascr dataset to plot}
+\item{subsample}{Number of points to subsample}
 }
 \value{
 A vascr dataset prepared for use in graphing
@@ -65,9 +67,9 @@ Central data subset, cleanup and label prep function for generation of graphics
 }
 \examples{
 
-vascr_plot(growth.df, unit = "Rb", level = "experiments", frequency = 0)
+# vascr_plot(growth.df, unit = "Rb", level = "experiments", frequency = 0)
 
-datum2 = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary", frequency = 0)
+# datum2 = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary", frequency = 0)
 
 
 #data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments")
@@ -75,3 +77,4 @@ datum2 = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary", frequen
 
 
 }
+\keyword{internal}

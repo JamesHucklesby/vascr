@@ -23,3 +23,4 @@ Usefull if you want to to further data manipluation, without having to worry abo
 #cleaned.df = vascr_remove_metadata(exploded.df)
 #identical(growth.df,cleaned.df)
 }
+\keyword{internal}
