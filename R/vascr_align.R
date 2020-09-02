@@ -801,6 +801,29 @@ vascr_all_null = function(...)
 }
 
 
+#' Check if any of the arguements are null
+#'
+#' @param ... List of items, all of which may be null
+#'
+#' @return Boolean
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' # vascr_all_null(NULL, TRUE)
+vascr_any_null = function(...)
+{
+  arguments = list(...)
+  
+  for(var in arguments)
+  {
+    if(is.null(var))
+    {return(TRUE)}
+  }
+  
+  return(FALSE)
+}
+
 #' Find vascr samples that meet the criteria
 #' 
 #' Search the samples, based on pairs of datasets. Pass to any variable names of variables paired with what is beng screened for. Using include_vehicle will respect variable 

@@ -20,23 +20,11 @@ A vascr datafile
 Import an xcelligence file
 }
 \examples{
-# Arguments to push through the function
-# file = "inst/extdata/xcell.plt"
-# key = "inst/extdata/xcell_lookup.csv"
+# xCELLigence test
+rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr')
+sampledefine = system.file('extdata/instruments/xcellkey.csv', package = 'vascr')
 
-#xcell = import_xcelligence(file, key)
-
-#xcell = vascr_explode(xcell)
-
-#vascr_plot(xcell, unit = "Z", frequency = "10000")
-
-#vascr_plot_line(xcell, unit ="CI", frequency = "10000")
-
-# xplot = vascr_subset_continuous(xcelle, continuous = "ATP")
-
-#  vascr_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", level = "wells")
-
-#vascr_plot(growth.df)
+data7 = import_xcelligence(file = rawdata, key = sampledefine, "TEST7")
 
  
 }

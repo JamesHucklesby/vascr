@@ -21,7 +21,28 @@ utils::globalVariables(c("commaarray", "lsf.str", "Deviation", "Max_Deviation", 
 utils::globalVariables(c("Distance", "Delta_Length", "value", "coeffs", "data"))
 
 
-#' #' Example data set from an ECIS growth experiment
+#' Example data set from an ECIS growth experiment
+#'
+#' @format A data frame with 53940 rows and 10 variables:
+#' \describe{
+#'   \item{Experiment}{Date the experiment was conducted}
+#'   \item{Frequency}{Frequency of colleciton, modeled units have a frequency of 0}
+#'   \item{Sample}{Name of the sample located in that well, formated in a standardised way}
+#'   \item{Time}{Capture time in hours since the start of the experiment}
+#'   \item{Unit}{Unit that the value is measured in}
+#'   \item{Value}{Numerical value in units}
+#'   \item{Well}{Well of plate that was measured}
+#'   \item{Instrument}{The instrument the data was collected on}
+#'   \item{cells}{Number of cells added to each well}
+#'   \item{line}{The cell line used in this experiment (all HCMEC/D3)}
+#'   ...
+#' }
+#' @description A dataset containing growth curves from a variety of experiments
+#' @source James Hucklesby 2020
+"growth.df"
+
+
+#' #' Example data on ECIS, xCELLigence and cellZscope instrumentation
 #' #'
 #' #' @format A data frame with 53940 rows and 10 variables:
 #' #' \describe{
@@ -34,9 +55,11 @@ utils::globalVariables(c("Distance", "Delta_Length", "value", "coeffs", "data"))
 #' #'   \item{Well}{Well of plate that was measured}
 #' #'   \item{Instrument}{The instrument the data was collected on}
 #' #'   \item{cells}{Number of cells added to each well}
-#' #'   \item{line}{The cell line used in this experiment (all HCMEC/D3)}
+#' #'   \item{line}{The cell line used in this experiment (all HCMVEC)}
 #' #'   ...
 #' #' }
 #' #' @description A dataset containing growth curves from a variety of experiments
-#' #' @source James Hucklesby 2019
-#' "growth.df"
+#' #' @source James Hucklesby 2020
+#' "instruments.df"
+
+
