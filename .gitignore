@@ -5,6 +5,4 @@ inst/compare*
 .Ruserdata
 .RData
 packrat/lib*/
-packrat/*
-compare/*
-
+compare*/
