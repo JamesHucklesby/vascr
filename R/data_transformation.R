@@ -1,6 +1,64 @@
 # Summary function --------------------------------------------------------
 
-#' Summarise ECIS datasets from a single experiment
+#' Title
+#'
+#' @param set 
+#'
+#' @return
+#' @keywords internal- /py
+#'
+#' @examples
+vascr_levels = function(set = "all")
+{
+  vector = c("summary", "wells", "experiments")
+  
+  if(set == "all")
+  {
+    vector = c(vector, "explode")
+  }
+  
+  return(vector)
+}
+
+
+# level = c("well", "explode")
+# 
+# vascr_summarise(growth.df, "summary")
+
+#' Title
+#'
+#' @param data.df 
+#' @param level 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' vascr_summarise(growth.df, level = "summary")
+#' 
+vascr_summarise = function(data.df, level = "wells")
+{
+  levels = vascr_match(level, vascr_levels(set = "all"))
+  
+  for(lev in level)
+  {
+    
+    if(lev=="summary" | lev == "experiments" | lev =="wells")
+    {
+      data.df = vascr_summarise_mean(data.df, lev)
+    }
+    
+  }
+  
+  return(data.df)
+  
+}
+
+
+
+
+
+#' Create the means from differnet wells, experiments or an overall summary
 #' 
 #' Creates and ECIS dataset that has had all samples of the same type averaged together. Assumes that each sample is independent, IE that this function has already been run on individual experiments
 #'
@@ -15,36 +73,27 @@
 #'
 #' @examples
 #' 
-#' #vascr_summarise(growth.df, "summary")
-#' #vascr_summarise(growth.df, "experiments")
-#' #vascr_summarise(growth.df, "wells")
+#' vascr_summarise_mean(growth.df, "summary")
+#' vascr_summarise_mean(growth.df, "experiments")
+#' vascr_summarise_mean(growth.df, "wells")
 #' 
-#' #data = vascr_summarise(growth.df, "summary")
+#' vascr_test_summary_level(growth.df)
 #' 
-#' 
-#' 
-vascr_summarise <- function(data.df, level = "summary") {
+vascr_summarise_mean <- function(data.df, level = "summary") {
   
   # Use a test to check what the current summary level of the data is
   summary_level = vascr_test_summary_level(data.df)
   
-  if(level == "" || level == "deviation" || level == "plate" || level == "structure")
+  if(summary_level == level)
   {
     return(data.df)
   }
-  
-  if(level == summary_level)   # Return the same data if summary level is already in place
-  {
-    return (data.df)
-  }
-  
-  # If possible, make experimental resolution
   
   if(summary_level == "wells")
   {
     experiment.df = data.df %>%
       group_by(Time, Unit, Frequency, Sample, Experiment, Instrument) %>%
-      summarise(sd = sd(Value), n = n(),min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","),Value = mean(Value))
+      summarise(sd = sd(Value), n = n(),min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","),Value = mean(Value), .groups = "drop")
     
     othervars.df = select(data.df, -Value, -Well) %>% distinct()
     
@@ -60,7 +109,7 @@ vascr_summarise <- function(data.df, level = "summary") {
   {
     summary.df = experiment.df %>%
       group_by(Time, Unit, Frequency, Sample, Instrument) %>%
-      summarise(sd = sd(Value), totaln = sum(n), n = n(), min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","), Value = mean(Value), Experiment = "Summary")
+      summarise(sd = sd(Value), totaln = sum(n), n = n(), min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","), Value = mean(Value), Experiment = "Summary",  .groups = "drop")
     
     othervars.df = select(experiment.df, -'Value', -'Well', -'Experiment', -'n', -'sd', -'min', -'max') %>% distinct()
     

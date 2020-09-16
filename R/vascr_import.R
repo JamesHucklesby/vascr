@@ -33,9 +33,10 @@
 #' rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr')
 #' sampledefine = system.file('extdata/instruments/xcellkey.csv', package = 'vascr')
 #' 
-#' data7 = import_xcelligence(file = rawdata, key = sampledefine, "TEST7")
+#' data7 = vascr_import("xCELLigence", raw = rawdata, key = sampledefine, experimentname = "TEST7")
 #' 
 #' masterdata = vascr_combine(data3, data6, data7)
+#' masterdata = vascr_resample(masterdata, 1)
 #' 
 vascr_import = function(instrument, raw = NULL, model = NULL, key = NULL, experimentname = "NA")
 {
@@ -88,7 +89,7 @@ vascr_import = function(instrument, raw = NULL, model = NULL, key = NULL, experi
   }else if(inst == "xCELLigence")
   {
     
-    data.df = xceligence_import(raw, key, experimentname)
+    data.df = import_xcelligence(raw, key, experimentname)
     return(data.df)
     
   }

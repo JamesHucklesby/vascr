@@ -53,8 +53,9 @@ data6 = vascr_import("cellZscope",model = modeleddata, raw = rawdata, key = samp
 rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr')
 sampledefine = system.file('extdata/instruments/xcellkey.csv', package = 'vascr')
 
-data7 = import_xcelligence(file = rawdata, key = sampledefine, "TEST7")
+data7 = vascr_import("xCELLigence", raw = rawdata, key = sampledefine, experimentname = "TEST7")
 
 masterdata = vascr_combine(data3, data6, data7)
+masterdata = vascr_resample(masterdata, 1)
 
 }

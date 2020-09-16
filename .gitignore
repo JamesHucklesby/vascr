@@ -6,4 +6,5 @@ inst/compare*
 .RData
 packrat/lib*/
 packrat/*
+compare/*
 

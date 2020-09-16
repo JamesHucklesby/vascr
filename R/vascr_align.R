@@ -41,6 +41,8 @@
 #' 
 #' # vascr_subset(growth.df, time = c(5,20))
 #' 
+#' vascr_subset(growth.df, unit = "Rb")
+#' 
 vascr_subset = function(data.df, 
                         time = NULL, 
                         unit = NULL, 
@@ -191,20 +193,23 @@ vascr_find_value = function(data.df, value_greater_than = NULL, value_less_than 
 #' @keywords internal
 #'
 #' @examples
-#' # tomatch = "Rs"
 #' # vector = vascr_find_unit(growth.df, "all")
-#' 
-#' # vascr_match(tomatch, vector)
+#' # vascr_match("Re", vector)
 #' # vascr_match("Rb", vector)
-vascr_match = function(tomatch, vector)
+#' # vascr_match(c("Rb", "Cm"), vector)
+vascr_match = function(match, vector)
 {
+  toreturn = c()
   
+  for(tomatch in match)
+  {
   # If an exact match is present, return the matched value
   if(tomatch %in% vector)
   {
-    return(tomatch)
+    toreturn = c(toreturn, tomatch)
   }
-  
+  else
+  {
   # Make a data table of the distances between the tables 
   match_table = data.frame(vector)
   match_distance = as.vector(adist(tomatch, vector))
@@ -222,7 +227,12 @@ vascr_match = function(tomatch, vector)
   
   warning(string)
   
-  return(matched)
+  toreturn = c(toreturn, matched)
+  }
+    
+  }
+  
+  return(toreturn)
   
 }
 
@@ -444,38 +454,60 @@ vascr_force_median = function(vector, round = "up")
 #' #vascr_find_frequency(growth.df, NA)
 #' #vascr_find_frequency(growth.df, Inf)
 #' 
+#' #vascr_find_frequency(data.df = growth.df, frequency = c("raw", 0))
+#' 
+#' # THIS ONE IS CURRENT
+#' 
 vascr_find_frequency = function(data.df, frequency) {
   
+  toreturn = c()
+  
   if(is.null(frequency))
+  {
+    toreturn = c(toreturn,unique(data.df$Frequency))
+  }
+  
+  for (freq in frequency)
+  {
+  if(is.null(freq))
    {
-    return(unique(data.df$Frequency))
+    toreturn = c(toreturn,unique(data.df$Frequency))
   }
   
-  if(is.na(frequency))
+  if(is.na(freq))
   {
-    return(vascr_force_median(unique(growth.df$Frequency)))
+    toreturn = c(toreturn,vascr_force_median(unique(growth.df$Frequency)))
   }
   
-  if(!is.numeric(frequency))
+  if(isTRUE(grepl("^[A-Za-z]+$", freq)))
   {
-    allowedtext = c("raw", "model")
     
-    if(frequency %in% allowedtext)
+    if(freq == "raw")
     {
-      return(frequency)
+      rawfrequencies = subset(unique(data.df$Frequency), unique(data.df$Frequency)>0)
+      toreturn = c(toreturn, rawfrequencies)
+    } else if (freq== "model"){
+      toreturn = c(toreturn, 0)
+    }else {
+      warning("text not found")
     }
-    else
-    {
-      warning("Frequency specified is not a number, 'raw' or 'model'. Please correct this argument")
-    }
+    
+    
+  } else
+  {
+        
+      data.df$Frequency = as.numeric(as.character(data.df$Frequency))
+      times = unique(data.df$Frequency)
+      freq = as.numeric(freq)
+      numberinlist = which.min(abs(times - freq))
+      timetouse = times[numberinlist]
+      toreturn = c(toreturn, timetouse)
+  }
+    
   }
   
-  data.df$Frequency = as.numeric(as.character(data.df$Frequency))
-  times = unique(data.df$Frequency)
-  numberinlist = which.min(abs(times - frequency))
-  timetouse = times[numberinlist]
+  return(unique(toreturn))
   
-  return(timetouse)
 }
 
 

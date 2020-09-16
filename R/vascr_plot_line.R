@@ -101,8 +101,6 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1, .
     }
   }
   
-  print(error)
-  
   if(is.infinite(error))
   {
     plot = plot + geom_ribbon(alpha = alpha)

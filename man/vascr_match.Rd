@@ -4,12 +4,12 @@
 \alias{vascr_match}
 \title{Match a string with the closest available option}
 \usage{
-vascr_match(tomatch, vector)
+vascr_match(match, vector)
 }
 \arguments{
-\item{tomatch}{The string to match}
-
 \item{vector}{The vector to match into}
+
+\item{tomatch}{The string to match}
 }
 \value{
 A character string of the closest matched string
@@ -18,10 +18,9 @@ A character string of the closest matched string
 Match a string with the closest available option
 }
 \examples{
-# tomatch = "Rs"
 # vector = vascr_find_unit(growth.df, "all")
-
-# vascr_match(tomatch, vector)
+# vascr_match("Re", vector)
 # vascr_match("Rb", vector)
+# vascr_match(c("Rb", "Cm"), vector)
 }
 \keyword{internal}

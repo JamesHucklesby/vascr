@@ -4,7 +4,7 @@
 \alias{vascr_summarise_cross_correlation}
 \title{Generate all cross-correlation pairs between sets of values}
 \usage{
-vascr_summarise_cross_correlation(data.df)
+vascr_summarise_cross_correlation(data.df, reference = NULL, comparator = NULL)
 }
 \arguments{
 \item{data.df}{The vascr dataset to summarise}
@@ -16,9 +16,12 @@ A dataset contining values from each cross correlation pair
 Generate all cross-correlation pairs between sets of values
 }
 \examples{
-# growthrb = vascr_subset(growth.df, unit = "Rb", time = c(5,150))
-# vascr_plot(growthrb, unit ="Rb")
-# vascr_summarise_cross_correlation(growthrb)
+growthrb = vascr_subset(growth.df, unit = "Rb", time = c(5,150))
+corr = vascr_summarise_cross_correlation(growthrb)
+corr = vascr_summarise_cross_correlation(growthrb, reference = "internal")
+corr = vascr_summarise_cross_correlation(vascr_summarise(growthrb, level = "summary"))
+
+corr = vascr_summarise_cross_correlation(growthrb, reference = "[ 1 : Experiment 1 | 25000 ]", comparator = "[ 1 : Experiment 1 | 30000 ]")
 
 }
 \keyword{internal}

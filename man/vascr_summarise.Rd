@@ -2,29 +2,22 @@
 % Please edit documentation in R/data_transformation.R
 \name{vascr_summarise}
 \alias{vascr_summarise}
-\title{Summarise ECIS datasets from a single experiment}
+\title{Title}
 \usage{
-vascr_summarise(data.df, level = "summary")
+vascr_summarise(data.df, level = "wells")
 }
 \arguments{
-\item{data.df}{An ECIS dataset in standard format}
+\item{data.df}{}
 
-\item{level}{The level of replication to generate the summary at. Options are "experiment" or "summary"}
+\item{level}{}
 }
 \value{
-An ECIS dataset supplimented with summary statistics
+
 }
 \description{
-Creates and ECIS dataset that has had all samples of the same type averaged together. Assumes that each sample is independent, IE that this function has already been run on individual experiments
+Title
 }
 \examples{
-
-#vascr_summarise(growth.df, "summary")
-#vascr_summarise(growth.df, "experiments")
-#vascr_summarise(growth.df, "wells")
-
-#data = vascr_summarise(growth.df, "summary")
-
-
+vascr_summarise(growth.df, level = "summary")
 
 }

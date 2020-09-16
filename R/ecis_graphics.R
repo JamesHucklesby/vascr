@@ -245,7 +245,7 @@ vascr_multiplot = function(data, unit = "all", frequency = 0, time = Inf, ...)
 # 
 # #vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100), 10))
 #' 
-vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1) {
+vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1, ncols = 1) {
   
   if(!is.null(plots))
   {
@@ -274,7 +274,7 @@ vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1) {
     
     legend,
     
-    ncol = 1,
+    ncol = ncols,
     
     heights = unit.c(unit(1, "npc") - lheight, lheight))
   
@@ -288,7 +288,7 @@ vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1) {
         
         x + theme(legend.position="none"))),
       
-      ncol = 1)
+      ncol = ncols)
   }
   
 }

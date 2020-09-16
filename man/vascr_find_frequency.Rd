@@ -24,5 +24,9 @@ When running analyasis, you can only subset or plot a time that exists in the da
 #vascr_find_frequency(growth.df, NA)
 #vascr_find_frequency(growth.df, Inf)
 
+#vascr_find_frequency(data.df = growth.df, frequency = c("raw", 0))
+
+# THIS ONE IS CURRENT
+
 }
 \keyword{internal}

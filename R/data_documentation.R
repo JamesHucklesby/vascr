@@ -60,6 +60,6 @@ utils::globalVariables(c("Distance", "Delta_Length", "value", "coeffs", "data"))
 #' #' }
 #' #' @description A dataset containing growth curves from a variety of experiments
 #' #' @source James Hucklesby 2020
-#' "instruments.df"
+#' ,"instruments.df"
 
 
