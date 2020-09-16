@@ -8,7 +8,7 @@
 #' @param data A standard ECIS data frame to plot
 #' @param unit Unit to plot
 #' @param frequency The frequency of data to display. All modelled variables have a frequency of 0
-#' @param replication How much of the replicaiton to display. Options are 'all', 'experiment', 'summary" or "plate"
+#' @param level How much of the replicaiton to display. Options are 'all', 'experiment', 'summary" or "plate"
 #' @param time The time to subset if a slice is required. If set to Inf all data will be displayed
 #' @param samplecontains Optional, only samples that contain this string will be plotted. Standard search and wildcard
 #' @param experiment Optional, allows you to limit the experiment plotted. Experiment names should be separated with |
@@ -28,249 +28,327 @@
 #' @param verbose Outputs where in the funtion ploting is happening. Usefull for debugging as needed
 #' @param preprocessed Selects if the data is preprocessed. Will not run explosion and implosion if that is the case
 #' @param continuous Selects a continuous point for plotting
-#' @param alignkey Aligns key points (max, min ect). See ecis_align_key for details
+#' @param alignkey Aligns key points (max, min ect). See vascr_align_key for details
 #' @param continuouscontains Subset of samplecontains, only returns data where the continuous value contains this data
 #' @param returndata Return the dataset, rather than the graph. Default FALSE, usefull for debugging
 #' @param showpoints Show the time points on the graph
+#' @param sortkeyincreasing Sort the data specified in an increasing way.
+#' @param singleplot Merge all the data specified into a single plot.
+#' @param priority The priority of variables to plot. Will be automatically filled if not available.
+#' @param errortype Type of error to plot. Can be SEM or SD.
+#' @param visualisation How to visualise the data
+#' @param threshold The threshold value to place on the graph
 #'
 #' @return A ggplot2 object
 #' 
 #' @export
+#' @examples
 #' 
-#' @importFrom stats sd
-#' @importFrom dplyr filter group_by summarise
-#' @importFrom ggplot2 ggplot geom_line labs aes geom_bar position_dodge theme element_text geom_text geom_ribbon geom_point geom_errorbar
+#' 
+#' 
+#' #vascr_plot(growth.df, 'Rb', level = 'summary',
+#' #error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+#' #vascr_plot(growth.df, 'Rb', level = 'wells',
+#' #  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+#' # vascr_plot(growth.df, 'Rb', level = 'experiments',
+#'  #error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
+#'  #, xlab = "Hours")
+#' #vascr_plot(growth.df, 'R', 4000, 'summary', time = 75)
+#' #vascr_plot(growth.df, "R", 4000, "summary", 50, confidence = 0.1, sortkeyincreasing = FALSE)
+#' 
+#' #vascr_plot(growth.df, sortkeyincreasing = TRUE)
+#' 
+#' #vascr_plot(growth.df, continuous = "cells", level = "summary", time = 50)
+#'
+#' #vascr_plot(growth.df, level = "plate", time = 100)
+#' 
+#' #vascr_plot(growth.df, time = list(c(100,190)), 
+#' #unit = list("Rb", "Cm", "Alpha", "R"),  frequency = 4000)
+#'
+#' #vascr_plot(growth.df, time = 100, unit = "Cm",  frequency = 4000, level = "summary")
+#' 
+#' #vascr_plot(growth.df, level = "deviation")
+#' 
+#' #vascr_plot(growth.df, visualisation = "line", level = "summary")
+#' 
+#' 
+#' #vascr_plot(growth.df)
+#' 
+
+
+vascr_plot = function(data, unit = "R", frequency = 4000, level = "summary", time = Inf, samplecontains = "", experiment = NULL, error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = FALSE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE, sortkeyincreasing = TRUE, showpoints = FALSE, singleplot = FALSE, priority = NULL, errortype = "sem", visualisation = NULL, threshold = 0) 
+  {
+  
+
+   # Use recursion to plot anything that is a list
+
+  if(any(is.list(unit), is.list(frequency), is.list(time)) & !singleplot)
+  {
+    singleplot = TRUE
+    allarguements = as.list(environment())
+    multiplot = do.call(vascr_multiplot, allarguements)
+    return(multiplot)
+  }
+  
+  if(level == "deviation")
+  {
+    plot = do.call("vascr_plot_deviation", as.list(environment()))
+    return(plot)
+  }
+  
+  # Start calling subservient plotting functions ----------------------------
+  if(is.null(visualisation))
+  {
+    if(level == "plate")
+    {
+      plot = do.call("vascr_plot_plate", as.list(environment()))
+    }
+    
+    else if(level == "structure")
+    {
+      plot = do.call("vascr_plot_structure", as.list(environment()))
+    }
+    
+    else if(length(time)>0)
+    {
+      plot = do.call("vascr_plot_line", as.list(environment()))
+      return(plot)
+    }
+    else
+    {
+    plot = do.call("vascr_plot_bar", as.list(environment()))
+    return(plot)
+    }
+  }
+  
+  # Deal with level is a special way
+
+  if(level == "anova")
+  {
+    plot = do.call("vascr_plot_anova", as.list(environment()))
+    return(plot)
+  }
+  
+  if(level == "structure")
+  {
+    plot = do.call("vascr_plot_structure", as.list(environment()))
+    return(plot)
+  }
+  
+  if(isTRUE(visualisation == "line"))
+  {
+    plot = do.call("vascr_plot_line", as.list(environment()))
+    return(plot)
+  }
+  
+  if(isTRUE(visualisation == "bar"))
+  {
+      plot = do.call("vascr_plot_bar", as.list(environment()))
+      return(plot)
+  }
+
+  if(isTRUE(visualisation == "plate"))
+  {
+    plot = do.call("vascr_plot_plate", as.list(environment()))
+    return(plot)
+  }
+  
+  
+}
+
+#' Plot multiple ggplots
+#' 
+#' This function splits out multiple ggplots into a grid when more than one is requested.
+#'
+#' @param data A vascr dataset
+#' @param unit The unit to plot. "raw" will plot all raw units and "modeled" will plot all modeled units.
+#' @param frequency The frequency to plot
+#' @param time The time to plot. Multiple time plots can be plotted with list(1,2) and multiple ranges can be plotted with list(c(1,2), c(3,4))
+#' @param ... Other conditions to be passed into data conditioning and graph preparing steps
+#'
+#' @return An array of requested ggplots
+#' @export
 #'
 #' @examples
-#' growth.df$Instrument = "ECIS"
+#' #vascr_multiplot(data = growth.df, frequency = 4000, time = list(50, 100))
 #' 
-# ecis_plot(growth.df, 'Rb', replication = 'summary',
-# error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-# ecis_plot(growth.df, 'Rb', replication = 'wells',
-#  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
-#  ecis_plot(growth.df, 'Rb', replication = 'experiments',
-#  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
-#  , xlab = "Hours")
-# ecis_plot(growth.df, 'R', 4000, 'summary', time = 75)
-# ecis_plot(growth.df, "R", 4000, "summary", 50, confidence = 0.1, sortkeyincreasing = FALSE)
-# 
-# ecis_plot(growth.df, sortkeyincreasing = TRUE)
-# 
-# ecis_plot(growth.df, continuous = "cells", replication = "summary", time = 50)
-#
-# ecis_plot(growth.df, replication = "plate", time = 100)
+#' #vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100),100), level = "wells")
+#' 
+#' #vascr_multiplot(growth.df, frequency = c(2000,4000), unit = "R")
+#' 
+#' 
+vascr_multiplot = function(data, unit = "all", frequency = 0, time = Inf, ...)
+{
 
+  units =  vascr_realise_units(data, unit) 
+  frequencies = vascr_realise_frequencies(data, frequency)
+  
+  plots = list()
+  n = 1
 
-ecis_plot = function(data, unit = "R", frequency = 4000, replication = "summary", time = Inf, samplecontains = "", experiment = "", error = Inf, linesize = 1, normtime = NULL, divide = FALSE,  errorsize = 1, alphavalue = 0.1, confidence = 1, xlab = "Time (hours)", ylab = "Value", title = "Title", stripidentical = TRUE, cols = NULL, verbose = TRUE, preprocessed = FALSE, continuous = NULL, alignkey = NULL, continuouscontains = NULL, returndata = FALSE, sortkeyincreasing = TRUE, showpoints = FALSE) 
+ for(tim in time)
+ {
+   tim = unlist(tim)
+  for(uni in units)
   {
-  
-
-# Subset data -------------------------------------------------------------
-  data = ecis_prep_graphdata(data, unit, frequency, time, samplecontains, experiment, error, alignkey, normtime, divide, preprocessed, continuouscontains, stripidentical)
-  
-
-# Create labels -----------------------------------------------------------
-  
-  # Use the default name of the unit on the Y axis
-  if (ylab == "Value")
-  {
-    ylab = ecis_titles(unit)
-  }
-  
-  # Check frequency is a real value
-  frequency = ecis_find_frequency(data, frequency)
-  
-  # Generate a title, containing the Hz if the unit is not modeled
-  if (title == "Title")
-  {
-    if(ecis_is_modeled_unit(unit))
+    uni = unlist(uni)
+    if(vascr_is_modeled_unit(uni))
     {
-      title = unit
-    }
-    else
+      p = vascr_plot(data, unit = uni, time = tim, ...)
+      plots[[n]]= p
+      n=n+1
+    }else
     {
-    title = paste(unit, " (",frequency," Hz)", sep = "")
-    }
-  }
-
-
-
-# Start calling subservient plotting functions ----------------------------
-
-  
-  # Deal with if a continuous variable has been selected
-  if(!is.null(continuous))
-  {
-    plot = ecis_plot_continuous(data = data, unit = unit, frequency = frequency, replication = replication, time = time, error = error,alphavalue  = alphavalue, xlab = xlab, ylab = ylab, title = title, cols = cols, continuous = continuous)
-    
-    return(ecis_polish_plot(plot))
-  }
-  
-  # Deal with if a platemap has been requested
-  
-  if(replication == "plate")
-  {
-    if(length(unique(data$Time))>1)
+    for(fre in frequencies)
     {
-    return(ecis_polish_plot(ecis_plot_plate(data, unit, frequency, verbose)))
-    }
-    else
-    {
-    return(ecis_plot_heatmap(data, time, unit, frequency, title))
-    }
-  }
-  
-    
-  # First we deal with if the graph requested is a line graph
-    
-    if (length(unique(data$Time))>1) { # Check if we are plotting a single, or multiple, time points
-        
+      fre = unlist(fre)
+      if(as.numeric(fre)>0)
       {
-        return(ecis_plot_line(data, replication, error, title, xlab, ylab, linesize, alphavalue))
+
+        p = vascr_plot(data, unit = uni, frequency = as.numeric(fre), time = tim, ...)
+        plots[[n]] = p
+        n=n+1
       }
-        
-     # Then we deal with if a single time point has been requested
-        
-    } else {
-      ecis_plot_column(data, replication, error = Inf, title, xlab, ylab, time, unit, frequency, confidence)
+      
     }
+    }
+  }
+ }
+  panel = do.call(vascr_make_panel, plots)
+  return(panel)
 }
 
-# Multiplot with common key -------------------------------------------------------
 
-#' Internal funciton for aligning grids
-#'
-#' @param ...  GGPlot objects to combine
-#' @param ncol Number of columns
-#' @param nrow Number of rows
-#' @param position Where to place each graph. Unsure about this one.
-#'
-#' @return A multi-plot graph object
+#' Combine mulitple VASCR plots into a single pannel
 #' 
-#' @importFrom ggplot2 ggplotGrob 
-#' @importFrom graphics legend
-#' @importFrom grid grid.draw unit
-#' @importFrom gridExtra arrangeGrob
 #'
-#' @examples
+#' @param ... The plots that need to be combined
+#' @param plots A vector of plots, if not available in ... format
+#' @param legend_from_index Which plot in the list to clone the legend from
 #' 
-#' #graph1 = ecis_plot(growth.df, 'Rb', 0, 'all')
-#' #graph2 = ecis_plot(growth.df, 'Rb', 0, 'experiment')
-#' #graph3 = ecis_plot(growth.df, 'Rb', 0, 'summary')
-#' 
-#' #grid_arrange_shared_legend(graph1, graph2, graph3, ncol = 1, nrow = 3)
-#' 
-grid_arrange_shared_legend <- function(..., ncol = length(list(...)), nrow = 1, position = c("bottom", 
-    "right")) {
-    
-    requireNamespace("gridExtra")
-    requireNamespace("grid")
-    
-    plots <- list(...)
-    position <- match.arg(position)
-    g <- ggplot2::ggplotGrob(plots[[1]] + ggplot2::theme(legend.position = position))$grobs
-    legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
-    lheight <- sum(legend$height)
-    lwidth <- sum(legend$width)
-    gl <- lapply(plots, function(x) x + ggplot2::theme(legend.position = "none"))
-    gl <- c(gl, ncol = ncol, nrow = nrow)
-    
-    combined <- switch(position, bottom = gridExtra::arrangeGrob(do.call(gridExtra::arrangeGrob, 
-        gl), legend, ncol = 1, heights = grid::unit.c(grid::unit(1, "npc") - lheight, lheight)), 
-        right = gridExtra::arrangeGrob(do.call(gridExtra::arrangeGrob, gl), legend, ncol = 2, 
-            widths = grid::unit.c(grid::unit(1, "npc") - lwidth, lwidth)))
-    
-    # grid.newpage()
-    grid::grid.draw(combined)
-    
-    # return gtable invisibly
-    invisible(combined)
-    
-}
-
-#' Plot graphs accross a standard ECIS spectra
+#' @importFrom gridExtra arrangeGrob grid.arrange
+#' @importFrom ggplot2 ggplotGrob theme
+#' @importFrom grid unit.c unit
 #'
-#' @param data A standard ECIS data frame 
-#' @param variable Variable to plot. Can't be a modeled variable (use ecis_plot_model instead)
-#' @param ... Other arguements may be included that will be passed through to ecis_plot
-#'
-#' @return A matrix of ggplot2 objects
+#' @return A panel with multiple plots on it
 #' @export
 #'
 #' @examples
+#' #plots = list()
+# #plots[[1]] = vascr_plot(growth.df, "Rb")
+# #plots[[2]] = vascr_plot(growth.df, "Cm")
+# #vascr_make_panel(plots = plots)
+# 
+# #vascr_make_panel(vascr_plot(growth.df, unit = "Cm"), vascr_plot(growth.df, unit = "Rb"))
+# 
+# #vascr_multiplot(data = growth.df, frequency = 4000, time = c(100, 50))
+# 
+# #vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100), 10))
 #' 
-#' ecis_plot_spectra(growth.df, 'R', replication = "summary")
-#' 
-ecis_plot_spectra = function(data, variable, ...) {
+vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1, ncols = 1) {
+  
+  if(!is.null(plots))
+  {
+    plots = plots
+  }
+  else
+  {
+    plots = list(...)
+  }
+  
+  
+  g <- ggplotGrob(plots[[legend_from_index]] + theme(legend.position="bottom"))$grobs
+  
+  
+  if(any(sapply(g, function(x) x$name) == "guide-box"))
+  {
     
-    data = subset(data, Unit == variable)
+  legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
+  lheight <- sum(legend$height)
+  
+  final = grid.arrange(
     
-    expectedfrequencies = c(250,500,1000,2000,4000,8000,16000,32000,64000)
+    do.call(arrangeGrob, lapply(plots, function(x)
+      
+      x + theme(legend.position="none"))),
     
-    if(!setequal(expectedfrequencies, unique(data$Frequency)))
-    {
-      warning("Frequencies do not match the standard set and therefore some graphs may not be shown")
-    }
+    legend,
     
-    p1 = ecis_plot(data, variable, 250, title = "250 Hz", ...)
-    p2 = ecis_plot(data, variable, 500,title = "500 Hz", ...)
-    p3 = ecis_plot(data, variable, 1000,title = "1,000 Hz", ...)
-    p4 = ecis_plot(data, variable, 2000,title = "2,000 Hz", ...)
-    p5 = ecis_plot(data, variable, 4000,title = "4,000 Hz", ...)
-    p6 = ecis_plot(data, variable, 8000,title = "8,000 Hz", ...)
-    p7 = ecis_plot(data, variable, 16000,title = "16,000 Hz", ...)
-    p8 = ecis_plot(data, variable, 32000,title = "32,000 Hz", ...)
-    p9 = ecis_plot(data, variable, 64000,title = "64,000 Hz", ...)
+    ncol = ncols,
     
-    return(grid_arrange_shared_legend(p1, p2, p3, p4, p5, p6, p7, p8, p9, ncol = 3, nrow = 3))
-    
+    heights = unit.c(unit(1, "npc") - lheight, lheight))
+  
+  }
+  else
+  {
+    legend = NULL
+   grid.arrange(
+      
+      do.call(arrangeGrob, lapply(plots, function(x)
+        
+        x + theme(legend.position="none"))),
+      
+      ncol = ncols)
+  }
+  
 }
-
-#' Plot all values generated by the ECIS model
-#' 
-#' This is a pre-generated piece of code that automaticaly plots all the variables generated by the ECIS model against time. Resistance at 4000 Hz is also included as a sensible sanity check of the model. 
-#'
-#' @param alldata.df An ECIS data frame
-#' @param ... Any other arguements from ecis_plot that you might want passed through to all of the graphs
-#'
-#' @return A matrix containing graphs of all the variables generated by the ECIS model.
-#' @export
-#'
-#' @examples
-#' 
-#' ecis_plot_model(growth.df, replication = "wells")
-#' 
-ecis_plot_model <- function(alldata.df, ...) {
-    
-    m1 = ecis_plot(alldata.df, "R", 4000, title = "R (4000 Hz)", ...)
-    m2 = ecis_plot(alldata.df, "Rb", title = "Rb", ...)
-    m3 = ecis_plot(alldata.df, "Cm", title = "Cm", ...)
-    m4 = ecis_plot(alldata.df, "Alpha",title = "Alpha", ...)
-    
-    return(grid_arrange_shared_legend(m1, m2, m3, m4, ncol = 2, nrow = 2))
-    
-}
-
+  
 
 #' Post-processing on ECIS plots to make them a bit more pretty
 #'
 #' @param plot The plot to format
+#' @param rotate_x_angle Angle by which X axis values should be rotated
+#' @param logscale Should X, Y or XY axes be log10 transformed
+#' @param title Title of the graph
 #'
-#' @importFrom ggplot2 theme_bw 
+#' @importFrom ggplot2 theme_bw ggtitle
 #' @importFrom ggpubr rotate_x_text
 #'
 #' @return A standardised ggplot2 object
-#' @export
+#' 
+#' @keywords internal
+#'
+#' @importFrom ggplot2 scale_x_log10 scale_y_log10
 #'
 #' @examples
 #' # Automatically applied to ggplot, should not be required externaly
 #' 
-#' plot = ecis_plot(growth.df)
-#' ecis_polish_plot(plot)
-#' ecis_polish_plot(plot, rotate_x = FALSE)
+#' #plot = vascr_plot(growth.df)
+#' #vascr_polish_plot(plot)
+#' #vascr_polish_plot(plot, rotate_x_angle = FALSE)
 #' 
-ecis_polish_plot = function(plot, rotate_x_angle = 45, logscale = "")
+vascr_polish_plot = function(plot, rotate_x_angle = 45, logscale = "", title = NULL)
 {
+  
+  # # Create labels -----------------------------------------------------------
+  # 
+  # # Use the default name of the unit on the Y axis
+  # if (ylab == "Value")
+  # {
+  #   ylab = vascr_titles(unit)
+  # }
+  # 
+  # # Check frequency is a real value
+  # frequency = vascr_find_frequency(data, frequency)
+  # 
+  # # Generate a title, containing the Hz if the unit is not modeled
+  # if (title == "Title")
+  # {
+  #   if(vascr_is_modeled_unit(unit))
+  #   {
+  #     title = unit
+  #   }
+  #   else
+  #   {
+  #     title = paste(unit, " (",frequency," Hz)", sep = "")
+  #   }
+  # }
+  
+  
+  if(!(is.null(title)))
+  {
+    plot = plot + ggtitle(title)
+  }
   
   if(str_detect(logscale, "x"))
   {
@@ -282,12 +360,12 @@ ecis_polish_plot = function(plot, rotate_x_angle = 45, logscale = "")
     plot = plot +scale_y_log10()
   }
   
-  if(!missing(rotate_x))
+  if(!missing(rotate_x_angle))
   {
-  plot = plot + rotate_x_text(angle = 45)
+  plot = plot + theme(axis.text.x = element_text(angle = rotate_x_angle))
   }
 
-  return(plot + theme_bw())
+  return(plot)
 }
 
 
@@ -313,9 +391,9 @@ ecis_polish_plot = function(plot, rotate_x_angle = 45, logscale = "")
 #' #' @export
 #' #'
 #' #' @examples
-#' #' ecis_animatefrequency(growth.df, 'R', 3)
+#' #' #vascr_animatefrequency(growth.df, 'R', 3)
 #' #' 
-#' ecis_animatefrequency = function(alldata.df, unittoplot, frames) {
+#' vascr_animatefrequency = function(alldata.df, unittoplot, frames) {
 #'     
 #'     alldatasum.df = summarise(group_by(alldata.df, Sample, Time, Unit, Frequency), sd = sd(Value), 
 #'         n = n(), Value = mean(Value))
@@ -338,13 +416,12 @@ ecis_polish_plot = function(plot, rotate_x_angle = 45, logscale = "")
 #'
 #' @param data.df The dataset the well is in
 #' @param well The well to be isolated
-#' @param title The title of the plot
-#' @param unit The unit to plot. Default is R
-#' @param frequency The frequency to plot. Default is 4000
-#' @param ... Other conditions to pass on to the ecis_plot command that generates the graph
+#' @param ... Other conditions to pass on to the vascr_plot command that generates the graph
 #' 
 #' @importFrom magrittr "%>%"
 #' @importFrom dplyr group_by mutate ungroup
+#' 
+#' @keywords internal
 #' 
 #'
 #' @return A ggplot graph showing the isoated well and the experimental median well
@@ -352,31 +429,47 @@ ecis_polish_plot = function(plot, rotate_x_angle = 45, logscale = "")
 #'
 #' @examples
 #' 
-#' ecis_plot_isolate(growth.df, well = "A3")
+#' #datum = vascr_plot_isolate(growth.df, well = "A3", unit = "R", frequency = 4000,
+#' # error = Inf, priority = NULL)
 #' 
-ecis_plot_isolate= function(data.df, well, title = "Well isolation plot", unit = "R", frequency = 4000, ...)
+#' #vascr_plot_line(datum, preprocessed = TRUE, priority = c("Time", "Sample"))
+#' 
+vascr_plot_isolate= function(data.df, well, ...)
 {
+  data = data.df
   
-  if(title=="Title")
+  # Run the preparation command for a standard well
+  dots = list(...)
+  data = do.call_relevant("vascr_prep_graphdata", data, dots)
+  
+  if(length(unique(data$Frequency))>1)
   {
-    title = "Well Isolation Plot"
+    warning("More than 1 frequency detected, use with care")
   }
   
-  well = ecis_standardise_wells(well)
-  data.df$Well = ecis_standardise_wells(data.df$Well)
-  cleandata.df = ecis_subset(data.df, unit = unit, frequency = frequency)
+  if(unique(data$Unit)>1)
+  {
+    warning("More than 1 unit detected, use with care")
+  }
   
-  badwell = ecis_subset(cleandata.df, well = well)
-  badwell$Sample = paste(badwell$Well, badwell$Sample,badwell$Experiment)
+  # Standardise all wells
+  well = vascr_standardise_wells(well)
+  data$Well = vascr_standardise_wells(data$Well)
+
+  # Generate a data frame 
+  quality = vascr_subset(data, well = well)
+  quality$Sample = paste(quality$Well, quality$Sample,quality$Experiment)
   
-  medianwell = cleandata.df %>%
+  medianwell = data %>%
     group_by(Time) %>%
     mutate(Value = median(Value), Sample = "Experimental Mean Well", Well = "Z00") %>%
     ungroup
   
-  toplot.df = rbind(badwell, medianwell)
+  toplot.df = rbind(quality, medianwell)
   
-  plot = ecis_plot(toplot.df, unit, frequency, "wells", title = title, preprocessed = TRUE, ...)
+  return(toplot.df)
+  
+  plot = vascr_plot_line(toplot.df, unit, frequency, "wells", title = title, ...)
   
   return (plot)
 }
@@ -387,28 +480,28 @@ ecis_plot_isolate= function(data.df, well, title = "Well isolation plot", unit =
 #' @param data.df A standard ECIS dataframe. Ideally this will contain only one experiment, but multiple experiments are supported.
 #' @param unit The unit to plot. Default is R
 #' @param frequency The frequency to plot. Default is 4000
-#' @param verbose Prints out the scores for each well. On by default.
+#' @param ... Values to be passed onto prep_graphdata and polish_plot
 #'
 #' @importFrom ggplot2 aes geom_line facet_grid labs
 #'
 #' @return A GGplot2 matrix
-#' @export 
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' ecis_plot_plate(growth.df, unit = "Rb")
+#' #vascr_plot_matrix(growth.df, unit = "Rb")
 #' 
-ecis_plot_plate = function(data.df, unit = "R", frequency = 4000, verbose = TRUE)
+vascr_plot_matrix = function(data.df, unit = "R", frequency = 4000, ...)
 {
-  # Cut the data down to what is needed
-  data = ecis_subset(data.df, unit = unit, frequency = frequency)
+  # Gather graph data based on the ...
+  dots = as.list(environment())
+  data = do.call_relevant("vascr_prep_graphdata", data.df, dots)
   
   # Grab the column and row components from each well to allow plate separation
   data$col = substr(data$Well,1,1)
   data$row = substr(data$Well,2,3)
   
-  plot =  ggplot(data=data, aes(x=Time, y = Value, colour = Sample, linetype = Experiment)) + geom_line() + facet_grid(col~row) + labs(x = "Time(hours)", y=ecis_titles(unit,frequency))
-  
-  print(ecis_detect_badwells(data.df, threshold = 0))
+  plot =  ggplot(data=data, aes(x=Time, y = Value, colour = Sample, linetype = Experiment)) + geom_line() + facet_grid(col~row) + labs(x = "Time(hours)", y=vascr_titles(unit,frequency))
   
   return (plot)
 }
@@ -420,17 +513,44 @@ ecis_plot_plate = function(data.df, unit = "R", frequency = 4000, verbose = TRUE
 #' @param data A vector to sort and factorise. This uses stringr's numeric =TRUE to line up all numbers in order correctly
 #' @param sortkeyincreasing Should samples be returned increasing or decreasing. Default increasing.
 #' 
-#' @importFrom stringr str_sort
+#' @importFrom stringr str_sort str_replace
 #'
-#' @returnA A factorised vector that can be saved directly back to a data frame
+#' @return A factorised vector that can be saved directly back to a data frame
 #' 
-#' @export
-#'
+#' @keywords internal
+#' 
 #' @examples
-ecis_factorise_and_sort = function(data, sortkeyincreasing = TRUE)
+#' # vascr_factorise_and_sort(growth.df$Sample)
+#' 
+vascr_factorise_and_sort = function(data, sortkeyincreasing = TRUE)
 {
+  data  = str_replace(data, "_", " ")
   allsamples = unique(data)
   allsamples = str_sort(allsamples, numeric = TRUE, decreasing = !sortkeyincreasing)
   data = factor(data, allsamples)
   return(data)
+}
+
+
+
+
+#' Return a blank white box
+#'
+#' @return A blank ggplot2 object
+#' 
+#' @importFrom ggplot2 ggplot theme_bw theme element_blank
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' # vascr_plot_blank()
+vascr_plot_blank = function()
+{
+  plot = ggplot()+ theme_bw() +   theme(
+    plot.background = element_blank(),
+    panel.grid.major = element_blank(),
+    panel.grid.minor = element_blank(),
+    panel.border = element_blank())
+    
+    return(plot)
 }

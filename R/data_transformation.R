@@ -1,3 +1,146 @@
+# Summary function --------------------------------------------------------
+
+#' Title
+#'
+#' @param set 
+#'
+#' @return
+#' @keywords internal- /py
+#'
+#' @examples
+vascr_levels = function(set = "all")
+{
+  vector = c("summary", "wells", "experiments")
+  
+  if(set == "all")
+  {
+    vector = c(vector, "explode")
+  }
+  
+  return(vector)
+}
+
+
+# level = c("well", "explode")
+# 
+# vascr_summarise(growth.df, "summary")
+
+#' Title
+#'
+#' @param data.df 
+#' @param level 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' vascr_summarise(growth.df, level = "summary")
+#' 
+vascr_summarise = function(data.df, level = "wells")
+{
+  levels = vascr_match(level, vascr_levels(set = "all"))
+  
+  for(lev in level)
+  {
+    
+    if(lev=="summary" | lev == "experiments" | lev =="wells")
+    {
+      data.df = vascr_summarise_mean(data.df, lev)
+    }
+    
+  }
+  
+  return(data.df)
+  
+}
+
+
+
+
+
+#' Create the means from differnet wells, experiments or an overall summary
+#' 
+#' Creates and ECIS dataset that has had all samples of the same type averaged together. Assumes that each sample is independent, IE that this function has already been run on individual experiments
+#'
+#' @param data.df An ECIS dataset in standard format
+#' @param level The level of replication to generate the summary at. Options are "experiment" or "summary"
+#'
+#' @return An ECIS dataset supplimented with summary statistics
+#' 
+#' @export
+#' @importFrom dplyr summarise group_by n
+#' @importFrom magrittr "%>%"
+#'
+#' @examples
+#' 
+#' vascr_summarise_mean(growth.df, "summary")
+#' vascr_summarise_mean(growth.df, "experiments")
+#' vascr_summarise_mean(growth.df, "wells")
+#' 
+#' vascr_test_summary_level(growth.df)
+#' 
+vascr_summarise_mean <- function(data.df, level = "summary") {
+  
+  # Use a test to check what the current summary level of the data is
+  summary_level = vascr_test_summary_level(data.df)
+  
+  if(summary_level == level)
+  {
+    return(data.df)
+  }
+  
+  if(summary_level == "wells")
+  {
+    experiment.df = data.df %>%
+      group_by(Time, Unit, Frequency, Sample, Experiment, Instrument) %>%
+      summarise(sd = sd(Value), n = n(),min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","),Value = mean(Value), .groups = "drop")
+    
+    othervars.df = select(data.df, -Value, -Well) %>% distinct()
+    
+    experiment.df = experiment.df %>% ungroup() %>% left_join(othervars.df, by = c("Time", "Unit", "Frequency", "Sample", "Experiment", "Instrument"))
+  }else if(summary_level == "experiments")
+  {
+    experiment.df = data.df
+  }
+  
+  # If possible, make summary resolution
+  
+  if (summary_level == "experiments" || summary_level == "wells")
+  {
+    summary.df = experiment.df %>%
+      group_by(Time, Unit, Frequency, Sample, Instrument) %>%
+      summarise(sd = sd(Value), totaln = sum(n), n = n(), min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","), Value = mean(Value), Experiment = "Summary",  .groups = "drop")
+    
+    othervars.df = select(experiment.df, -'Value', -'Well', -'Experiment', -'n', -'sd', -'min', -'max') %>% distinct()
+    
+    summary.df = left_join(summary.df, othervars.df, by = c("Time", "Unit", "Frequency", "Sample", "Instrument"))
+  }
+  else
+  {
+    warning ("Can't determine summary level, check data frame integrity")
+    return ("NA")
+  }
+  
+  
+  if(level == "summary" && exists ("summary.df"))
+  {
+    summary.df = ungroup(summary.df)
+    return(summary.df)
+  }else if(level == "experiments" && exists ("experiment.df"))
+  {
+    experiment.df = ungroup(experiment.df)
+    return(experiment.df)
+  }else
+  {
+    warning("Invalid level requested. Please check level is valid and you have presented a data frame that has a higher resolution than the summary you have requested")
+    return("NA")
+  }
+  
+}
+
+
+
+
 
 # Normalisation function --------------------------------------------------
 
@@ -11,19 +154,19 @@
 #'
 #' @return A standard ECIS dataset with each value normalised to the selected point.
 #' 
-#' @importFrom dplyr left_join
+#' @keywords internal
 #' 
-#' @export
+#' @importFrom dplyr left_join
 #'
 #' @examples
 #' 
-#' data = ecis_normalise(growth.df, 100)
-#' head(data)
+#' #data = vascr_normalise(growth.df, 100)
+#' #head(data)
 #' 
-ecis_normalise = function(data.df, normtime, divide = FALSE) {
+vascr_normalise = function(data.df, normtime, divide = FALSE) {
     
     # Create a table that contains the full dataset at the time we are normalising to
-    mininormaltable = ecis_subset(data.df, time = normtime)
+    mininormaltable = vascr_subset(data.df, time = normtime)
     
     # Now use left_join to match this time point to every other time point.This creates a table with an additional column that everything needs to be    normalised to, allowing for the actual normalisation to be done via vector maths. Not the most memory efficent, but is explicit and clean.
     
@@ -78,16 +221,16 @@ ecis_normalise = function(data.df, normtime, divide = FALSE) {
 #' @importFrom stringr str_detect
 #' @importFrom dplyr group_by arrange mutate
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' 
-#' data = ecis_align_key(growth.df, 'max')
-#' head(data)
-#' data = ecis_align_key(growth.df, 'min')
-#' head(data)
+#' #data = vascr_align_key(growth.df, 'max')
+#' #head(data)
+#' #data = vascr_align_key(growth.df, 'min')
+#' #head(data)
 
-ecis_align_key = function(data.df, point, discrepancy = 5) {
+vascr_align_key = function(data.df, point, discrepancy = 5) {
     
     #These actions are implimented as big dplyr pipelines that group the datasets together, sort it by time     and then subtract the minimimum/maximum point in the dataset from each point. This leverages the            efficencies of dplyr making it faster than a raw implementation. 
   
@@ -128,14 +271,20 @@ ecis_align_key = function(data.df, point, discrepancy = 5) {
 #' 
 #' @importFrom dplyr left_join
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' 
-#' data = ecis_subsample(growth.df, 50)
-#' head(data)
+#' #data = vascr_subsample(growth.df, 50)
+#' #head(data)
 #' 
-ecis_subsample = function(data.df, nth) {
+vascr_subsample = function(data.df, nth) {
+  
+   if(is.infinite(nth))
+   {
+     return(data.df)
+   }
+  
     
     Time = unique(data.df$Time)
     TimeID = c(1:length(Time))
@@ -144,10 +293,9 @@ ecis_subsample = function(data.df, nth) {
     withid.df = dplyr::left_join(data.df, time.df, by = "Time")
     subset.df = subset(withid.df, (TimeID%%nth) == 1)
     
-    data.df = subset.df
     subset.df$TimeID = NULL
     
-    return(data.df)
+    return(subset.df)
     
 }
 
@@ -157,14 +305,15 @@ ecis_subsample = function(data.df, nth) {
 #' @param data.df The dataframe to compute the current data aquisition frequency of
 #'
 #' @return The current aquisition rate of the data frame
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 
-#' ecis_current_frequency(growth.df)
+#' #vascr_current_frequency(growth.df)
 #' 
 #' 
-ecis_current_frequency = function (data.df)
+vascr_current_frequency = function (data.df)
 {
   times = unique (data.df$Time) # Make a list of unique datapoints 
   times = sort(times) # Sort them
@@ -195,17 +344,17 @@ ecis_current_frequency = function (data.df)
 #'
 #' @return An ECIS dataset with re-located time points
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' 
-#' data = ecis_resample(growth.df, 10, 50 ,100, 50)
-#' head (data)
+#' #data = vascr_resample(data.df = growth.df, by = 10)
+#' #head (data)
 #' 
-ecis_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
+vascr_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
 {
   
-  if(from == Inf)
+  if(from == -Inf)
   {
     from = min(data.df$Time)
   }
@@ -224,8 +373,8 @@ ecis_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
     warning(paste("To is greater than the maximum of the dataset. Please select a number below", max(data.df$Time)))
   }
   
-  movedata = ecis_remove_metadata(data.df)
-  movedata = ecis_subset(movedata, time = c(from,to))
+  movedata = vascr_remove_metadata(data.df)
+  movedata = vascr_subset(movedata, time = c(from,to))
   
   movedata$Time = movedata$Time - zero_time
   
@@ -244,15 +393,20 @@ ecis_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
   
   # Construct an empty data frame to take the new data
   movedata3 <- movedata2[0,]
+  movedata3 = as.data.frame(movedata3)
   movedata3[nrow(movedata3)+length(newtimepoints),] <- NA
   movedata3$Time = newtimepoints
   
   currentcol = 2
   totalcols = length(colnames(movedata2))
   
+  movedata2 = as.data.frame(movedata2)
+  
   while(currentcol<(totalcols+1))
   {
-    replot = approxfun(oldtimepoints, movedata2[,currentcol])
+    oldtp = as.vector(oldtimepoints)
+    oldval = as.vector(movedata2[,currentcol])
+    replot = approxfun(oldtp, oldval)
     movedata3[,currentcol] = replot(newtimepoints)
     currentcol = currentcol + 1
   }
@@ -265,136 +419,13 @@ ecis_resample = function (data.df, by, from = Inf, to = Inf, zero_time = 0)
     warning("You have oversampled your data, meaning that you now have more datapoints than you originally collected. This may be misleading, use with care.")
   }
   
-  movedata6 = ecis_remove_metadata(movedata5)
-  movedata6 = ecis_explode(movedata6)
+  movedata6 = vascr_remove_metadata(movedata5)
+  movedata6 = vascr_explode(movedata6)
   
   return(movedata6)
   
 }
 
-
-#' Subset an ECIS dataset on multiple factors
-#' 
-#' Generates a cut down dataset for processing purposes. Used heavily by all other internal functions, but may also be useful for inspecting digestable chunks of raw data.
-#'
-#' @param data.df A standard ECIS dataset
-#' @param time The time to subset at. Default will line plot all data, can also submit a vector of length 2
-#'  and the times between those two points will be submited.
-#' @param unit The unit requred
-#' @param frequency The frequency at which the reading was taken. All modeled variables have a frequency of 0
-#' @param experiment The experiment to plot. Default is all experiments
-#' @param samplecontains The samples to plot. A string that is searched accross all sample names, and those that match are plotted.
-#' @param well The wells required
-#'
-#' @return A smaller ECIS dataset
-#' 
-#' @importFrom dplyr filter
-#' @importFrom magrittr "%>%"
-#' @importFrom stringr str_detect
-#' @export 
-#'
-#' @examples
-#' data = ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
-#' samplecontains = "05,000", experiment = "2", well = "G5")
-#' head(data)
-#' data = ecis_subset(growth.df, time = c(20.23,50.73), frequency = 4000, unit = "R", 
-#' samplecontains = "05,000", experiment = "2")
-#' head(data)
-#' 
-#' data = ecis_subset(growth.df, samplecontains = "5000")
-#' data.df = growth.df
-
-ecis_subset = function(data.df, time = Inf, unit = "", frequency = Inf, samplecontains = "", experiment = "", well = ""){
-  
-  if(!(is.data.frame(data.df)))
-  {
-    error("Data is not a data frame. This function can only be used on vascr data frames")
-  }
-  
-  data.df$Well = ecis_standardise_wells(data.df$Well)
-  
-  
-  if(ecis_is_modeled_unit(unit)) # Wipe out frequency if it is a modelled variable as that makes no sense
-  {
-    frequency = 0
-  }
-  
-  if (length(time) == 2) # If a vector of length 2 was submitted (ie two times) then we subset to that
-  {
-    data.df = data.df %>% filter(Time > time[1])
-    data.df = data.df %>% filter(Time < time[2])
-  }
-  
-  else if(is.finite(time)) # Check that time finite. If so, trim down the dataset to the single finite time point given.
-  {
-    time = as.numeric(time) # Clean up the data type just in case the user is lazy
-    actualtime = ecis_find_time(data.df, time)
-    data.df = data.df %>% filter(Time == actualtime)
-  }
-  else # The number is infinity, so return everything
-  {
-    
-  }
-  
-  #Then we deal with the frequency
-  
-  if(frequency == "raw")
-  {
-    data.df = data.df %>% filter(Frequency > 0 )
-    
-  } else if (frequency == "modeled")
-  {
-    data.df = data.df %>% filter(Frequency == 0)
-  }
-  
-  else if(is.finite(frequency)) # Check that time finite. If so, trim down the dataset to the single finite frequency given, or the nearest rounded one.
-  {
-    frequency = as.numeric(frequency) # clean up the data type
-    frequency = ecis_find_frequency(data.df, frequency)
-    data.df = data.df %>% filter(Frequency == frequency)
-  }
-  
-  #Then we deal with the textey ones
-  
-  data.df = data.df %>% filter(str_detect(Unit, unit))
-  data.df = data.df %>% filter(str_detect(Sample, samplecontains))
-  data.df = data.df %>% filter(str_detect(Experiment, experiment))
-  
-  if (!all((well == "")))
-  {
-  data.df = data.df %>% filter(Well == well)
-  }
-  
-  # Check if there is still some data here, and if not sound a warning
-  if(nrow(data.df)==0)
-  {
-    warning("No data returned from dataset subset. Check your frequencies, times and units are present in the dataset")
-  }
-  
-  return(data.df)
-  
-  
-}
-
-#' Check if a selected unit is modelled
-#'
-#' @param unit The ecisr symbol for the unit
-#'
-#' @return A boolean, true if it is modelled, false if it is raw electrical data
-#' @export
-#'
-#' @examples
-ecis_is_modeled_unit = function(unit)
-{
-  if (unit == "Rb" || unit == "Cm" || unit == "Alpha" || unit == "RMSE" || unit == "Drift" || unit == "CPE_A" || unit == "CPE_n" || unit == "TER" || unit == "Ccl" || unit == "Rmed")
-  {
-    return(TRUE)
-  }
-  else
-  {
-    return(FALSE)
-  }
-}
 
 
 #' Subset a continuous variable
@@ -410,23 +441,25 @@ ecis_is_modeled_unit = function(unit)
 #' @importFrom dplyr mutate_all
 #' @importFrom stringr str_detect
 #'
-#' @return
-#' @export
+#' @return A vascr dataset subsampled on a continuous variable
+#' 
+#' @keywords internal
 #'
 #' @examples
-# # Sub code for breaking out continuous datasets
-# #exploded = ecis_explode(xcell)
-# #subset = ecis_subset_continuous(exploded, continuous = "ATP", strip_empty = FALSE)
-# #ecis_plot(exploded, unit = "CI", frequency = "10000", replication = "experiments", normtime = 160, continuouscontains = "ATP")
+#' # Sub code for breaking out continuous datasets
+#' #exploded = vascr_explode(xcell)
+#' #subset = vascr_subset_continuous(exploded, continuous = "ATP", strip_empty = FALSE)
+#' #vascr_plot(exploded, unit = "CI", frequency = "10000", replication = "experiments"
+#' # , normtime = 160, continuouscontains = "ATP")
 #'
 #'
-ecis_subset_continuous = function(data, continuous, exact_match = FALSE, strip_empty = TRUE, implode = TRUE)
+vascr_subset_continuous = function(data, continuous, exact_match = FALSE, strip_empty = TRUE, implode = TRUE)
 {
 
   # We can only subset continuous data that is exploded, so fix this if it's not already done
-  if(isFALSE(ecis_test_exploded(data)))
+  if(isFALSE(vascr_test_exploded(data)))
      {
-       data = ecis_explode(data)
+       data = vascr_explode(data)
      }
 
   cols = colnames(data)
@@ -450,7 +483,7 @@ ecis_subset_continuous = function(data, continuous, exact_match = FALSE, strip_e
   }
 
 # Grab all the cols we want
-  eciscols = data[,ecis_cols()]
+  eciscols = data[,vascr_cols()]
   selectedcols = data[,colstokeep]
 
 
@@ -471,243 +504,207 @@ ecis_subset_continuous = function(data, continuous, exact_match = FALSE, strip_e
   # If requested, we implode to fix up the sample names
   if(implode)
   {
-  return = ecis_implode(return)
+  return = vascr_implode(return)
   }
 
   return(return)
 }
 
-###############################################################
 
-
-#' Automatically strip badly connected wells from an ECIS dataset
-#'
-#' @param data.df A standard ECIS data frame
-#' @param threshold How stringent to be in excluding wells. Higher is less stringent. Default is 5.
-#' @param frequency Frequency to run numbers on, default is 4000
-#' @param unit Unit to use in detection, default is R
-#'
-#' @return  A tibble containing the offending wells, which experiment they are from and the score they were removed with
-#' @export
+#' Explode the wells in a VASCR dataset
 #' 
-#' @importFrom dplyr group_by mutate summarise arrange distinct left_join
-#' @importFrom magrittr "%>%"
+#' Tools for exploding wells out into row and column variables, and separating comma separated well values if needed.
+#'
+#' @param data.df The dataset to explode
+#' @param separate_rows Split cells onto multiple rows if wells such as "A1,A2" may be present in the dataset
+#'
+#' @return A vascr dataset with rows and columns exploded
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' # Make a defective well in the dataset
-#' baddata = growth.df
-#' welltobreak = "B1"
-#' baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
-#' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
+#' #vascr_explode_wells(growth.df)
+#' #vascr_explode_wells(growth.df, separate_rows = TRUE)
 #' 
-#' welltobreak = "H4"
-#' baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
-#' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
-#' 
-#' # Plot out the well, and then try to detect it
-#' ecis_detect_badwells(baddata,1)
-#' 
-#' # Check it works for a good dataset
-#' ecis_detect_badwells(growth.df,1)
-#' 
-ecis_detect_badwells = function(data.df, threshold = 5, frequency = 4000, unit = "R")
+vascr_explode_wells = function(data.df, separate_rows = FALSE)
 {
+   data = data.df
   
-  cycles = 0
-  runagain = TRUE
+   if(separate_rows & max(str_count(unique(data$Well), ","))>0)
+   {
+   data = separate_rows(growth.df, Well, sep = ",")
+   }
   
-  cleandata.df = subset(data.df, !is.na(Value)) # Exclude wells where there is no data available (IE connection lost)
-  
-  cleandata.df = ecis_subset(cleandata.df, unit = unit, frequency = frequency) # Run the diagnosis on only one frequency to save time, at R4000
-  
-  
-  #Calculate the fractional difference between the sample mean and the value of the well in each experiment at each timepoint
-  while(runagain == TRUE)
-  {
-    
-    metadata =  cleandata.df %>%
-      group_by(Experiment, Sample, Time) %>%
-      mutate(movementfrommean = abs(Value - mean(Value))/mean(Value)) %>%
-      group_by(Well, Experiment) %>%
-      summarise(Score = max(movementfrommean)) %>%
-      arrange(desc(Score)) %>%
-      left_join(cleandata.df, by = c("Well", "Experiment"))
-    
-    togo = metadata %>%
-      distinct(Well, Score, Experiment) %>%
-      subset(Score>threshold)
-    
-    cleandata.df = ecis_exclude(cleandata.df, wells = togo$Well[1]) # Remove the most offending well. Do this itterativley so the scores have less of an effect on each other (important if a spikey well hits one that is continuously highly raised)
-    
-    if(nrow(togo)==0 & cycles == 0)
-    {
-      runagain = FALSE
-      strippedwells = togo
-    }
-    
-    else if(nrow(togo)==0)
-    {
-      runagain = FALSE
-    }
-    else if (cycles == 0)
-    {
-      strippedwells = togo[1,]
-      cycles = cycles + 1
-    }
-    else
-    {
-      strippedwells = rbind(strippedwells, togo[1,])
-      cycles = cycles+1
-    }
-    
-    
-  }
-  
-  
-  return(strippedwells)
-  
-}
-
-
-
-#' Title
-#'
-#' @param data 
-#' @param threshold 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' ecis_plot_badwell_scores(growth.df, 0.2)
-#' 
-ecis_plot_badwell_scores = function(data, threshold = 0)
-{
-
-# Calculate the scores for all wells
-scores = ecis_detect_badwells(data, threshold = 0)
-
-# Plot out the graph, sorting the Y axis by the score of each well to make a pretty waterfall
-plot = ggplot(scores, aes(x=reorder(Well,-Score), y=Score)) +
-  geom_bar(stat="identity") + xlab("Well")
-
-# Add a horosontal line if a threshold has been specified
-if(threshold>0)
-{
-  plot = plot + geom_hline(yintercept = threshold, color = "blue")
-}
-
-plot = ecis_polish_plot(plot, rotate_x = TRUE)
-return(plot)
-
-}
-
-
-
-#' Title
-#'
-#' @param data 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-#' ecis_plot_badwell_plate(growth.df)
-#' 
-ecis_plot_badwell_plate = function(data)
-{
-  # Needs a warning if multiple plates detected
-  
-data = ecis_detect_badwells(growth.df, threshold = 0)
-data = ecis_explode_wells(data)
-plot = ggplot(data, aes(col, row, fill= Score)) + 
-  geom_tile()  +
-  scale_fill_gradient(low="white", high="blue")+
-  xlab("Column") +
-  ylab("Row")+
-  scale_x_discrete(position = "top")
-
-return(ecis_polish_plot(plot, rotate_x = FALSE))
-}
-
-#' Title
-#'
-#' @param data 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-ecis_explode_wells = function(data)
-{
-  data$Well = ecis_standardise_wells(data$Well)
-  data$row = ecis_factorise_and_sort(substr(data$Well, 1,1), sortkeyincreasing = FALSE)
-  data$col = ecis_factorise_and_sort(as.numeric(substr(data$Well, 2,3)), sortkeyincreasing = TRUE)
+  data$Well = vascr_standardise_wells(data$Well)
+  data$row = vascr_factorise_and_sort(substr(data$Well, 1,1), sortkeyincreasing = FALSE)
+  data$col = vascr_factorise_and_sort(as.numeric(substr(data$Well, 2,3)), sortkeyincreasing = TRUE)
   return(data)
 }
 
 
-
-#' Exclude automatically detected wells that have a connection issue from the dataset
-#'
-#' @param data.df The dataset to parse
-#' @param threshold The threshold stringency to use in detection. Default is 5, the range of 1-10 may be appropriate. Higher numbers are less stringent.
-#' @param frequency The frequency to use for detection, default is 4000 Hz
-#' @param unit  The unit to run the detection on, default is R
-#' @param verbose Prints which wells have been removed in the terminal. Should be used when first investigating data to allow for follow up plots with ecis_isolate_well to be conducted.
-#'
-#' @return A standard ECIS dataframe, minus the detected wells
+#' Prepare a dataset to be graphed by vascar_graph_xxx
 #' 
-#' @importFrom dplyr filter select
+#' Central data subset, cleanup and label prep function for generation of graphics
+#'
+#' @param data.df Vascr dataset to plot
+#' @param unit Unit to subset to
+#' @param frequency Frequency to subset to
+#' @param time Time to subset to
+#' @param samplecontains Subset only sample names that contain this string
+#' @param experiment Experiment to subset to
+#' @param error How much error to plot. Required to allow subsampling if required
+#' @param alignkey Should key points be aligned
+#' @param normtime Time to normalise to
+#' @param divide Should normalisation be by division (true) or subtraction (false)
+#' @param preprocessed Is the data already processed and therefore should be left alone
+#' @param continuouscontains Subset variables where the sample contains this string
+#' @param stripidentical Should entireley identical columns be removed
+#' @param sortkeyincreasing Should samples be sorted in an increasing way
+#' @param level The level of summary to return
+#' @param errortype SEM or SD errors to generate
+#' @param subsample Number of points to subsample
 #' 
-#' @export
+#' @importFrom dplyr coalesce mutate
+#' @importFrom tidyr drop_na
+#' @importFrom stats sd
+#'
+#' @return A vascr dataset prepared for use in graphing
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' # Make a defective well in the dataset
-#' baddata = growth.df
-#' welltobreak = "B1"
-#' baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
-#' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
 #' 
-#' welltobreak = "H4"
-#' baddata$randoms = sample(baddata$Value*2, size = nrow(baddata), replace = TRUE)
-#' baddata$Value = baddata$Value + ((baddata$Well == welltobreak)*baddata$randoms)
+#' # vascr_plot(growth.df, unit = "Rb", level = "experiments", frequency = 0)
 #' 
-#' ecis_exclude_badwells(baddata, threshold = 1)
-#' ecis_exclude_badwells(growth.df, threshold = 1)
+#' # datum2 = vascr_prep_graphdata(growth.df, unit = "Rb", level = "summary", frequency = 0)
 #' 
-ecis_exclude_badwells = function(data.df, threshold = 5, frequency = 4000, unit = "R", verbose = TRUE)
+#' 
+#' #data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "experiments")
+#' #data = vascr_prep_graphdata(growth.df, unit = "Rb", level = "wells")
+#' 
+#' 
+vascr_prep_graphdata = function(data.df, unit = "", frequency = Inf, time = NULL, samplecontains = NULL, experiment = NULL, error = Inf, alignkey = NULL, normtime = NULL, divide = FALSE, preprocessed = FALSE, continuouscontains = NULL , stripidentical = TRUE, sortkeyincreasing = TRUE, level = "summary", errortype = "sem", subsample = NULL)
 {
-
- # Detect if any bad wells are present
   
- toremove = ecis_detect_badwells(data.df, threshold = threshold, frequency = frequency, unit = unit)
- 
- if(nrow(toremove) ==0) # If nothing is bad, just return the data frame
- {
-   if (verbose)
-   {
-   print("No bad wells detected")
-   }
-   return(data.df)
- }
- 
- 
- toremove$expwells = paste(toremove$Experiment, ":", toremove$Well, sep="")
- data.df$expwells = paste(data.df$Experiment, ":", data.df$Well, sep="")
- 
- expwellstogo = toremove$expwells
- 
- if(verbose)
- {
- print("Wells Removed:")
- print(expwellstogo)
- }
- 
- toreturn = dplyr::filter(data.df,!expwells %in% expwellstogo)
- toreturn = dplyr::select(toreturn, -c("expwells"))
- 
- return(toreturn)
- 
+  if(preprocessed)
+  {
+    return(data.df)
+  }
+  
+  if(error>1 && error)
+  
+  # First subset away what we don't need for normalising to a particular point (speeds up things a lot)
+    #If requested
+  data.df = vascr_subset(data.df, unit = unit, frequency = frequency, experiment = experiment)
+    #And if error is low
+  data.df = vascr_subset(data.df, subsample = max(subsample, error,1))
+  
+  # Then normalise or align key points, if required. Alignment then normalisation are preformed, as the final data, not the transposed data is usually what is requested. This behaviour can be changed by manually formulating the data ahead of time.
+  if(!is.null(alignkey))
+  {
+    data.df = vascr_align_key(data.df, alignkey)
+  }
+  # 
+  if(!is.null(normtime))
+  {
+    data.df = vascr_normalise(data.df, normtime, divide)
+  }
+
+  # Then subset down to the timepoints that are required
+  data.df = vascr_subset(data.df, time = time)
+
+
+  # If data is not preprocessed and data is not exploded already, explode the dataset
+  if (isFALSE(vascr_test_exploded(data.df)))
+  {
+    data.df = vascr_explode(data.df)
+  }
+
+
+  if(stripidentical)
+  {
+    data.df$Sample = (vascr_implode(data.df, stripidentical = TRUE))$Sample
+  }
+  
+  data.df = vascr_summarise(data.df, level = level)
+
+   # Replace all the underscores in titles with spaces
+    data.df$Sample = str_replace(data.df$Sample, "_", " ")
+
+
+    # Sort the order of titles as numbers
+    if(!is.null(sortkeyincreasing))
+    {
+      data.df$Sample = vascr_factorise_and_sort(data.df$Sample, sortkeyincreasing)
+      data.df$Frequency = vascr_factorise_and_sort(data.df$Frequency, sortkeyincreasing)
+    }
+
+  # Remove any values that are unplottable, IE generation of SD or SEM failed, likely due to missing values from modeling failures
+    data.df = drop_na(data.df, Value)
+
+  data.df = vascr_summarise_errortype(data.df, errortype)
+
+  
+  return(data.df)
   
 }
+
+
+
+
+#' Create a summary with correct errors
+#'
+#' @param data.df The dataset to analyse
+#' @param errortype The type of error to generate for graphing
+#'
+#' @return An annotated up dataset, with ymax and ymin in place
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' # vascr_summarise_errortype(growth.df, "sem")
+#' 
+vascr_summarise_errortype = function(data.df, errortype)
+{
+  
+  level = vascr_detect_level(data.df)
+  
+  if(level == "summary" || level =="experiments")
+  {
+    
+    if(errortype == "sem")
+    {
+      data.df$sem = data.df$sd/sqrt(data.df$n)
+      data.df$ymax = data.df$Value + data.df$sem
+      data.df$ymin = data.df$Value - data.df$sem
+    }
+    else if (errortype == "sd")
+    {
+      data.df$ymax = data.df$Value + data.df$sd
+      data.df$ymin = data.df$Value  - data.df$sd
+    }
+    else if(errortype == "range")
+    {
+      data.df$ymax = data.df$max
+      data.df$ymin = data.df$min
+    }
+    else
+    {
+      warning("No error specified,  and hence error cols won't be generated")
+    }
+    
+    # Remove impossible error bars for the avoidance of errors. Replaces both max and min with the actual value.
+    data.df = mutate(data.df, ymax = coalesce(ymax, Value))
+    data.df = mutate(data.df, ymin = coalesce(ymin, Value))
+    
+  }
+  else
+  {
+    data.df$ymax = 0
+    data.df$ymin = 0
+  }
+  
+  
+  return(data.df)
+}
+

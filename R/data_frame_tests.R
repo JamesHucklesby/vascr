@@ -1,12 +1,23 @@
-
-
-ecis_test = function ()
+#' Test if an ECIS data frame is exploded
+#'
+#' This function tests to see if exploded columns are present in a dataset. Does not check that all are present, or that they are corrrectly exploded as this would be much slower.
+#'
+#' @param data the data frame to test
+#'
+#'@keywords internal
+#'
+#' @return True (exploded) or false (not exploded)
+#' 
+#' @examples
+#' #vascr_test_exploded(growth.df)
+#' #imploded = vascr_implode(growth.df)
+#' #vascr_test_exploded(imploded)
+#'
+vascr_test_exploded = function(data.df)
 {
-  
+  # If exploded cols exist, assume it's exploded
+  return(length(vascr_exploded_cols(data.df))>1)
 }
-
-
-
 
 #' Test the integrity of an ECIS dataframe
 #' 
@@ -19,27 +30,28 @@ ecis_test = function ()
 #' @importFrom dplyr group_by summarise
 #' @importFrom magrittr "%>%"
 #' 
+#' @keywords internal
 #' 
 #' @export
 #'
 #' @examples
 #' # Prep a known good compliment of data
-#' data = ecis_subset(growth.df, time = 100, unit = "R", frequency = 4000)
+#' #data = vascr_subset(growth.df, time = 100, unit = "R", frequency = 4000)
 #' 
 #' # Test a full compliment of data passes
-#' ecis_test_design(data)
+#' #vascr_test_design(data)
 #' 
-#' ecis_test_design(growth.df)
+#' #vascr_test_design(growth.df)
 
 #' # Test function picks up unbalanced replicate #'s
-#' data2 = ecis_exclude(data, well = c("A1", "B1", "C1"))
-#' ecis_test_design(data2)
+#' #data2 = vascr_exclude(data, well = c("A1", "B1", "C1"))
+#' #vascr_test_design(data2)
 
 #' # Test function picks up missing pairs (in this case due to Rb not being established)
-#' data3 = ecis_subset(growth.df, time = 100, unit = "Rb")
-#' ecis_test_design(data3)
+#' #data3 = vascr_subset(growth.df, time = 100, unit = "Rb")
+#' #vascr_test_design(data3)
 #' 
-ecis_test_design = function(data.df, verbose = FALSE)
+vascr_test_design = function(data.df, verbose = FALSE)
 {
   
   data = data.df  #Copy out the data so we can muck with if needed
@@ -101,17 +113,12 @@ ecis_test_design = function(data.df, verbose = FALSE)
 #'
 #' @return A summarised standard ECIS dataframe
 #'
-#' @export
+#' @keywords internal
 #'
 #' @examples
-#' experiment.df = ecis_summarise(growth.df, "experiment")
-#' summary.df = ecis_summarise(growth.df, "summary")
+#' # vascr_test_summary_level(growth.df)
 #' 
-#' ecis_test_summary_level(growth.df)
-#' ecis_test_summary_level(experiment.df)
-#' ecis_test_summary_level(summary.df)
-#' 
-ecis_test_summary_level = function(data.df)
+vascr_test_summary_level = function(data.df)
 {
   if(identical(unique(data.df$Experiment),"Summary"))
   {
@@ -126,18 +133,6 @@ ecis_test_summary_level = function(data.df)
   {
   return("wells")
   }
-  
-  
-}
-
-
-vascr_test_instrument = function(data.df)
-{
-  
-  # This will compare the test datasets to each of the values
-  
-  units = unique(data.df$Unit)
-
   
   
 }

@@ -4,30 +4,28 @@
 \alias{import_xcelligence}
 \title{Import an xcelligence file}
 \usage{
-import_xcelligence(file, key)
+import_xcelligence(file, key, experimentname = "NA")
 }
 \arguments{
 \item{file}{The file to import}
 
 \item{key}{A keyfile to apply. Optional, as the xCELLigence internal definitions will be used if no file is specified}
+
+\item{experimentname}{Name of the experiment to be built into the dataset}
 }
 \value{
-
+A vascr datafile
 }
 \description{
 Import an xcelligence file
 }
 \examples{
-# Arguments to push through the function
-file = "inst/extdata/xcell.plt"
-key = "inst/extdata/xcell_lookup.csv"
-xcell = import_xcelligence(file, key)
+# xCELLigence test
+rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr')
+sampledefine = system.file('extdata/instruments/xcellkey.csv', package = 'vascr')
 
-xcell = ecis_explode(xcell)
-
-#ecis_plot(xcell, unit = "Z", frequency = "10000", replication = "experiments", continuouscontains = "ATP", normtime = 0)
-
-#ecis_plot(xcell, unit = "CI", frequency = 10000, continuouscontains = "PDGF", replication = "wells")
+data7 = import_xcelligence(file = rawdata, key = sampledefine, "TEST7")
 
  
 }
+\keyword{internal}

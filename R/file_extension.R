@@ -6,21 +6,22 @@
 #' @param extension Character string containing a file extension that will be matched against the file type of file_name. Case insensitive.
 #'
 #' @return TRUE if it passes, FALSE if it does not. Also spits out warnings that will help the user correct the error
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # check a file that does not exist fails
-#' ecis_validate_file("R/AAA_TODOOO.R", "P")
+#' #vascr_validate_file("R/AAA_TODOOO.R", "P")
 #' # Check a file with the wrong extension fails
-#' ecis_validate_file("R/AAA_TODO.R", "P")
+#' #vascr_validate_file("R/AAA_TODO.R", "P")
 #' # Check a file with the wrong extensions fail
-#' ecis_validate_file("R/AAA_TODO.R", c("P", "q"))
+#' #vascr_validate_file("R/AAA_TODO.R", c("P", "q"))
 #' # Check a file with the right extension passes
-#' ecis_validate_file("R/AAA_TODO.R", "R")
+#' #vascr_validate_file("R/AAA_TODO.R", "R")
 #' # Check a file with one of two right extensions passes
-#' ecis_validate_file("R/AAA_TODO.R", extension = c("p", "r"))
+#' #vascr_validate_file("R/AAA_TODO.R", extension = c("p", "r"))
 
-ecis_validate_file = function(file_name, extension)
+vascr_validate_file = function(file_name, extension)
 {
 
   if(!(isTRUE(file.exists(file_name))))
@@ -67,7 +68,6 @@ ecis_validate_file = function(file_name, extension)
   # Return true if all conditions are met
   return(all(exists,correct))
 }
-
 
 
 

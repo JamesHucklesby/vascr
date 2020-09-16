@@ -18,6 +18,7 @@ A boolean, true if the column is found, false if not
 Check if a column exists in a dataset
 }
 \examples{
-col_exists(growth.df, "Vector")
-col_exists(growth.df, "Unit")
+#col_exists(growth.df, "Vector")
+#col_exists(growth.df, "Unit")
 }
+\keyword{internal}

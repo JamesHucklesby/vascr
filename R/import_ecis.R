@@ -8,6 +8,8 @@
 #' Function used by default as part of ecis_import_raw
 #'
 #' @param data.df The dataset to calculate from
+#' 
+#' @keywords internal
 #'
 #' @return An ecis data frame, with calculated values included
 ecis_calculate_quantaties = function(data.df)
@@ -42,29 +44,30 @@ ecis_calculate_quantaties = function(data.df)
 #' @param sampledefine  path to the file containing the sample definitions
 #'
 #' @return A standard ECIS data frame, annotated
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # This function is baked into ecis_import and it's parts
 #' 
-ecis_assign_samples = function (data, sampledefine)
+vascr_assign_samples = function (data, sampledefine)
 {
   if(is.null(sampledefine)) # If samples are not defined, bypass this and just spit out well id's as names
   {
-    data$Well = ecis_standardise_wells(data$Well)
+    data$Well = vascr_standardise_wells(data$Well)
     data$Sample = paste(data$Well, "Well", sep = "_")
     warning("The argument 'sampledefine' is not set. Defaulting to using well ID's as sample names")
     return(data)
   }
   
-  ecis_validate_file(sampledefine, c("csv"))
+  vascr_validate_file(sampledefine, c("csv"))
   
   # Read in the data table created by the user
   names.df = read.csv(sampledefine, as.is = TRUE)
   
   # Standardise all wells
-  names.df$Well = ecis_standardise_wells(names.df$Well)
-  data$Well = ecis_standardise_wells(data$Well)
+  names.df$Well = vascr_standardise_wells(names.df$Well)
+  data$Well = vascr_standardise_wells(data$Well)
   
   
   
@@ -98,6 +101,7 @@ ecis_assign_samples = function (data, sampledefine)
 #'
 #' @param rawdata A resampled ABP file containing the un-modeled data
 #' @param sampledefine A CSV file containing well numbers and their corresponding sample names
+#' @param experimentname Name of the experiment to be built into the dataset
 #'
 #' @return Data frame containing all the raw data readings from the ECIS Z0 instrument
 #' 
@@ -107,8 +111,7 @@ ecis_assign_samples = function (data, sampledefine)
 #' @importFrom dplyr left_join
 #' 
 #' 
-#' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
 #' 
@@ -117,20 +120,20 @@ ecis_assign_samples = function (data, sampledefine)
 #' #but you can use a path relative to the file you are working on. 
 #' #E.G 'Experiment1/Raw.abp'
 #' 
-#' rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'ecisr')
-#' sampledefine = system.file('extdata/growth1_samples.csv', package = 'ecisr')
+#' #rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'vascr')
+#' #sampledefine = system.file('extdata/growth1_samples.csv', package = 'vascr')
 #' 
 #' #Then run the import
 #' 
-#' data1 = ecis_import_raw(rawdata, sampledefine)
-#' data1$Experiment = "Growth_1"
-#' head(data1)
-#' ecis_plot(data1, unit = "X")
+#' #data1 = ecis_import_raw(rawdata, sampledefine, "TEST")
+#' #data1$Experiment = "Growth_1"
+#' #head(data1)
+#' #vascr_plot(data1, unit = "X")
 #' 
-ecis_import_raw = function(rawdata, sampledefine) {
+ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
   
-  ecis_validate_file(rawdata, "abp")
-  ecis_validate_file(sampledefine, c("csv", "xlsx"))
+  vascr_validate_file(rawdata, "abp")
+  vascr_validate_file(sampledefine, c("csv", "xlsx"))
     
     # Grab all the rows of the file and dump them into a data frame
   
@@ -202,10 +205,20 @@ ecis_import_raw = function(rawdata, sampledefine) {
     longdata.df = ecis_calculate_quantaties(fulldata_long.df)
     
     # Add constants, standardise well format and assign samples
-    longdata.df$Experiment = rawdata
+    
+    if(!missing(experimentname))
+    {
+    longdata.df$Experiment = basename(rawdata)
+    }
+    else
+    {
+     longdata.df$Experiment = experimentname
+    }
+    
+    
     longdata.df$Instrument = "ECIS"
-    longdata.df$Well = ecis_standardise_wells(longdata.df$Well)
-    combined.df = ecis_assign_samples(longdata.df, sampledefine)
+    longdata.df$Well = vascr_standardise_wells(longdata.df$Well)
+    combined.df = vascr_assign_samples(longdata.df, sampledefine)
     
     
     # Explicitly return
@@ -220,9 +233,11 @@ ecis_import_raw = function(rawdata, sampledefine) {
 #'
 #' @param modeleddata Raw modeled data in APB format
 #' @param sampledefine CSV file containing which wells correspond to which values
+#' @param experimentname Name of the experiment to be built into the dataset
 #'
 #' @return Data frame containing modeled data
-#' @export
+#' 
+#' @keywords internal
 #' 
 #' @importFrom stringr str_detect
 #' @importFrom tidyr separate gather
@@ -237,20 +252,20 @@ ecis_import_raw = function(rawdata, sampledefine) {
 #'  #can use a path relative to the file you are working on. 
 #'  #E.G 'Experiment1/Raw.abp'
 #' 
-#' modeleddata = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'ecisr')
-#' sampledefine = system.file('extdata/growth1_samples.csv', package = 'ecisr')
+#' #modeleddata = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'vascr')
+#' #sampledefine = system.file('extdata/growth1_samples.csv', package = 'vascr')
 #' 
 #' #Then run the import
 #' 
-#' data = ecis_import_model(modeleddata, sampledefine)
-#' head(data)
-#' ecis_plot(data, unit = "Rb", replication = "wells")
+#' #data = ecis_import_model(modeleddata, sampledefine)
+#' #head(data)
+#' #vascr_plot(data, unit = "Rb", level = "wells")
 #' 
-ecis_import_model = function(modeleddata, sampledefine) {
+ecis_import_model = function(modeleddata, sampledefine, experimentname = "NA") {
   
    # Validate that the files are readable
-   ecis_validate_file(modeleddata, "csv")
-   ecis_validate_file(sampledefine, c("csv", "xlsx"))
+   vascr_validate_file(modeleddata, "csv")
+   vascr_validate_file(sampledefine, c("csv", "xlsx"))
     
     rawdata = modeleddata
   
@@ -346,12 +361,20 @@ ecis_import_model = function(modeleddata, sampledefine) {
     combined.df$Well = factor(combined.df$Well)
     
     # import the naming tags
-    combined2.df = ecis_assign_samples(combined.df, sampledefine)
+    combined2.df = vascr_assign_samples(combined.df, sampledefine)
     
     combined2.df$Frequency = 0
 
     # Add constants and fix data types
-    combined2.df$Experiment = rawdata
+    if(!missing(experimentname))
+    {
+      combined2.df$Experiment = basename(modeleddata)
+    }
+    else
+    {
+      combined2.df$Experiment = experimentname
+    }
+    
     combined2.df$Instrument = "ECIS"
     combined2.df$Time = as.numeric(combined2.df$Time)
     
@@ -369,33 +392,33 @@ ecis_import_model = function(modeleddata, sampledefine) {
 #' @param rawdata A raw ABP file to import
 #' @param modeled  A modeled APB file for import
 #' @param key A CSV file containing each well and it's corresponding sample
+#' @param experimentname Name of the experiment to be built into the dataset
 #'
 #' @return A dataframe containing all the data APB generated from an experiment 
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 
-#' rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'ecisr')
-#' modeled = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'ecisr')
-#' key = system.file('extdata/growth1_samples.csv', package = 'ecisr')
+#' #rawdata = system.file('extdata/growth1_raw_TimeResample.abp', package = 'vascr')
+#' #modeled = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'vascr')
+#' #key = system.file('extdata/growth1_samples.csv', package = 'vascr')
 #' 
 #' #Then run the import
 #' 
-#' data = ecis_import(rawdata,modeled,key)
-#' head(data)
-#' ecis_plot(data, unit = "Rb")
-#' ecis_plot(data, unit = "R")
-ecis_import = function(rawdata, modeled, key) {
+#' #data = ecis_import(rawdata,modeled,key, experimentname = "TEST")
+#' #head(data)
+ecis_import = function(rawdata, modeled, key, experimentname = "NA") {
   
   # Validate files exist and are correct. Will be done in the internal functions, but doing it here saves time on failure
-  ecis_validate_file(rawdata, "abp")
-  ecis_validate_file(modeled, "csv")
-  ecis_validate_file(key, "csv")
+  vascr_validate_file(rawdata, "abp")
+  vascr_validate_file(modeled, "csv")
+  vascr_validate_file(key, "csv")
   
   
-    combined.df = ecis_import_model(modeled, key)
-    raw.df = ecis_import_raw(rawdata, key)
-    masterdata.df = ecis_combine(combined.df, raw.df, resample = TRUE)
+    combined.df = ecis_import_model(modeled, key, experimentname)
+    raw.df = ecis_import_raw(rawdata, key, experimentname)
+    masterdata.df = vascr_combine(combined.df, raw.df)
     
     return(masterdata.df)
 }

@@ -21,7 +21,7 @@ A data frame with 53940 rows and 10 variables:
 }
 }
 \source{
-James Hucklesby 2019
+James Hucklesby 2020
 }
 \usage{
 growth.df

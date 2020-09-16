@@ -4,7 +4,7 @@
 \alias{cellzscope_import}
 \title{Import cellSZcope data}
 \usage{
-cellzscope_import(raw, model, key)
+cellzscope_import(raw, model, key = NULL, experimentname = "NA")
 }
 \arguments{
 \item{raw}{File location of the raw dataset}
@@ -12,6 +12,8 @@ cellzscope_import(raw, model, key)
 \item{model}{File locaiton of the modeled dataset}
 
 \item{key}{Location of a vascar standard lookup table. Optional, but can be used to import more granular data than possible with the built in row names}
+
+\item{experimentname}{Name of the experiment to be built into the dataset}
 }
 \value{
 a standard vascar dataset
@@ -21,17 +23,13 @@ Data must first be exported in two parts from the cellZScope software. This can 
 }
 \examples{
 
-model = system.file("extdata/mdckmodel.txt", package = "ecisr")
-raw = system.file("extdata/mdckspectra.txt", package = "ecisr")
-key = system.file("extdata/mdckkey.csv", package = "ecisr")
+#model = system.file("extdata/mdckmodel.txt", package = "vascr")
+#raw = system.file("extdata/mdckspectra.txt", package = "vascr")
+#key = system.file("extdata/mdckkey.csv", package = "vascr")
 
-alldata = cellzscope_import(raw, model)
-ecis_plot(alldata, unit = "TER", preprocessed = TRUE, frequency = 0,
- time = c(0,50), replication = "experiments")
-
-alldatakey = cellzscope_import(raw, model, key)
-alldatakey$Instrument = "CZSII"
-ecis_plot(alldatakey, unit = "TER", frequency = 0, time = c(0,50), 
-replication = "experiments", preprocessed = TRUE)
+#alldatakey = cellzscope_import(raw, model, key, "TEST")
+#alldatakey$Instrument = "CZSII"
+#vascr_plot(alldatakey, unit = "TER", frequency = 0, time = c(0,50))
 
 }
+\keyword{internal}

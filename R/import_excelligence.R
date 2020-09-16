@@ -6,33 +6,36 @@
 #'
 #' @param file Path to the excelligence file to be imported
 #' @param key Optional, standard keyfile that will overwrite what is stored in the excelligence file
+#' @param experimentname The name of the expeiment to build into the dataset
 #'
 #' @return A standard impedr data frame
+#' 
+#' 
 #'
 #' @importFrom stringr str_split str_replace
 #' @importFrom dplyr select left_join
-#' @importFrom stats na.omit
+#' @importFrom stats na.omit time
 #' @importFrom tidyr separate fill pivot_longer
 #'
-#' @export
+#' @keywords internal
 #'
 #' @examples
-#' filename = "inst/extdata/xcell.txt"
-#' dataset = xcelligence_import_exported(filename)
-#' head(dataset)
+#' # filename = "inst/extdata/xcell.txt"
+#' # dataset = xcelligence_import_exported(filename)
+#' # head(dataset)
 #' 
-#' key = "inst/extdata/xcell_lookup.csv"
-#' dataset = xcelligence_import_exported(filename,key)
-#' head(dataset)
-#' head(ecis_explode(dataset))
-xcelligence_import_exported = function(file, key)
+#' # key = "inst/extdata/xcell_lookup.csv"
+#' # dataset = xcelligence_import_exported(filename,key, "TEST")
+#' # head(dataset)
+#' # head(vascr_explode(dataset))
+xcelligence_import_exported = function(file, key, experimentname)
 {
 
-  ecis_validate_file(file, "txt")
+  vascr_validate_file(file, "txt")
   
   if(!missing(key))
   {
-  ecis_validate_file(key, "csv")
+  vascr_validate_file(key, "csv")
   }
 
 # Import the raw excelligence file as a data frame
@@ -118,14 +121,25 @@ fulldata$Sample = str_replace(fulldata$Sample, "_ +", "") # Remove hanging space
 fulldata$Unit = "CI" # Set all units equal to CI
 fulldata$Instrument = "xCELLigence"
 fulldata$Frequency = 0 # Set frequency to 0
-fulldata$Experiment =  file # Set experiment name equal to filename
+
+
+if(!missing(experimentname))
+{
+  combined2.df$Experiment = basename(file)
+}
+else
+{
+  combined2.df$Experiment = experimentname
+}
+
+
 fulldata$Value = as.numeric(fulldata$Value) # make value names numeric
-fulldata$Well = ecis_standardise_wells(fulldata$Well)
+fulldata$Well = vascr_standardise_wells(fulldata$Well)
 
 if(!missing(key))
 {
   fulldata$Sample = NULL
- fulldata = ecis_assign_samples(fulldata, key)
+ fulldata = vascr_assign_samples(fulldata, key)
 }
 
 return(fulldata)

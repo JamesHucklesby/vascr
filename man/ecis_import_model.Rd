@@ -4,12 +4,14 @@
 \alias{ecis_import_model}
 \title{Import raw modeled data}
 \usage{
-ecis_import_model(modeleddata, sampledefine)
+ecis_import_model(modeleddata, sampledefine, experimentname = "NA")
 }
 \arguments{
 \item{modeleddata}{Raw modeled data in APB format}
 
 \item{sampledefine}{CSV file containing which wells correspond to which values}
+
+\item{experimentname}{Name of the experiment to be built into the dataset}
 }
 \value{
 Data frame containing modeled data
@@ -24,13 +26,14 @@ Import raw modeled data
  #can use a path relative to the file you are working on. 
  #E.G 'Experiment1/Raw.abp'
 
-modeleddata = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'ecisr')
-sampledefine = system.file('extdata/growth1_samples.csv', package = 'ecisr')
+#modeleddata = system.file('extdata/growth1_raw_TimeResample_RbA.csv', package = 'vascr')
+#sampledefine = system.file('extdata/growth1_samples.csv', package = 'vascr')
 
 #Then run the import
 
-data = ecis_import_model(modeleddata, sampledefine)
-head(data)
-ecis_plot(data, unit = "Rb", replication = "wells")
+#data = ecis_import_model(modeleddata, sampledefine)
+#head(data)
+#vascr_plot(data, unit = "Rb", level = "wells")
 
 }
+\keyword{internal}

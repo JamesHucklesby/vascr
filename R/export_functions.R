@@ -10,26 +10,27 @@
 #' @param experiment The experiment to export. Default is all experiments
 #'
 #' @return A data frame that can be copied and pasted into prism
-#' @export
+#' 
+#' @keywords internal
 #' 
 #' @importFrom tidyr spread
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr summarise group_by
 #'
 #' @examples
-#' ecis_prism(growth.df, 'Rb', replication = "summary")
-#' prism = ecis_prism(growth.df, 'Rb', replication = "wells")
+#' #vascr_prism(growth.df, 'Rb', replication = "summary")
+#' #prism = vascr_prism(growth.df, 'Rb', replication = "wells")
 #' 
-ecis_prism = function(data.df, unit, frequency = 0, replication = "summary", experiment = "") {
+vascr_prism = function(data.df, unit, frequency = 0, replication = "summary", experiment = "") {
     
     # Cut the data frame down to what can reasonably be represented on one prism table
     
-    data.df = ecis_subset(data.df, unit = unit, frequency = frequency, experiment = experiment)
+    data.df = vascr_subset(data.df, unit = unit, frequency = frequency, experiment = experiment)
     
     if (replication == "wells")
     {
         warning("Well export is not yet fully supported, use with care")
-        data.df = ecis_remove_metadata(data.df)
+        data.df = vascr_remove_metadata(data.df)
         data.df$Experiment = data.df$Well
         data.df$Well = NULL
         data.df$Frequency = NULL
@@ -101,9 +102,9 @@ ecis_prism = function(data.df, unit, frequency = 0, replication = "summary", exp
 #' @examples
 #' # Export a massive dataset. Not run as an example because it makes a mess.
 #' 
-#' # ecis_export_prism(growth.df, "PRISMTEST5", "all")
+#' # vascr_export_prism(growth.df, "PRISMTEST5", "all")
 #' 
-ecis_export_prism = function (data, filename, units, frequency = 0)
+vascr_export_prism = function (data, filename, units, frequency = 0)
 {
     if(units == "all") # Populate the units and frequencies correctly if all is selected
     {
@@ -124,7 +125,7 @@ ecis_export_prism = function (data, filename, units, frequency = 0)
         for(frequency in frequencies)
         {
           unitdata = subset(data, Frequency == frequency)
-          unitdata = ecis_prism(unitdata, unit = unit, frequency = frequency)
+          unitdata = vascr_prism(unitdata, unit = unit, frequency = frequency)
           if (length(unitdata)>2) # skip saving it if no data (modeled units have only one frequency)
           {
           write.csv(unitdata, paste(paste(filename,unit, frequency, sep = "_"),".csv", sep = ""))

@@ -5,32 +5,34 @@
 #'
 #' @param model The location of modeled data exported from the cellZscope data
 #' @param key Optional, a keyfile containing data on which well contains which sample
+#' @param experimentname Name of the experiment to be built into the dataset
 #' 
 #' @importFrom stringr str_remove str_split
 #' @importFrom tidyr separate fill pivot_longer
 #' @importFrom magrittr %>%
 #' @importFrom textclean replace_non_ascii
 #'
-#' @return An ecisr compatable dataset
-#' @export
+#' @return An vascr compatable dataset
+#'
+#' @keywords internal
 #'
 #' @examples
-#' model = system.file("extdata/mdckmodel.txt", package = "ecisr")
-#' key = system.file("extdata/mdckkey.csv", package = "ecisr")
+#' #model = system.file("extdata/mdckmodel.txt", package = "vascr")
+#' #key = system.file("extdata/mdckkey.csv", package = "vascr")
 #' 
-#' output = cellzscope_import_model(model, key)
-#' output = ecis_subset(output, time = c(0,50))
-#' ecis_plot(output, unit = "TER", frequency = 0,replication = "wells")
+#' #output = cellzscope_import_model(model, key)
+#' #output = vascr_subset(output, time = c(0,50))
+#' #vascr_plot(output, unit = "TER", frequency = 0,replication = "wells")
 #' 
-cellzscope_import_model  = function(model, key)
+cellzscope_import_model  = function(model, key, experimentname)
 {
   
 # Check that the file is correct
-  ecis_validate_file(model, "txt")
+  vascr_validate_file(model, "txt")
   
   if(!missing(key))
   {
-  ecis_validate_file(key, "csv")
+  vascr_validate_file(key, "csv")
   }
 
 # Read in the file to a data table
@@ -68,7 +70,17 @@ separatedata = subset(separatedata, separatedata$Time !="")
 separatedata = pivot_longer(separatedata, c(-Unit, -Time), names_to = "Well", values_to = "Value")
 
 # Add variables fixed throughout the import
-separatedata$Experiment = model
+if(!missing(experimentname))
+{
+  separatedata$Experiment = basename(model)
+}
+else
+{
+  separatedata$Experiment = experimentname
+}
+
+
+
 separatedata$Sample = "NA"
 separatedata$Frequency = 0
 separatedata$Instrument = "cellZscope"
@@ -76,13 +88,13 @@ separatedata$Instrument = "cellZscope"
 # Fix data types
 separatedata$Time = as.numeric(separatedata$Time)
 separatedata$Value = as.numeric(separatedata$Value)
-separatedata$Well = ecis_standardise_wells(separatedata$Well)
+separatedata$Well = vascr_standardise_wells(separatedata$Well)
 
 # Add keyfile
 if(!missing(key))
 {
   separatedata$Sample = NULL
-  separatedata = ecis_assign_samples(separatedata, key)
+  separatedata = vascr_assign_samples(separatedata, key)
 }
 
 return(separatedata)
@@ -96,6 +108,7 @@ return(separatedata)
 #'
 #' @param raw the locaiton of spectral data exported from the cellZscope software.
 #' @param key Optional, allows for sample names to be assigned to wells
+#' @param experimentname Name of the experiment to be built into the dataset
 #'
 #' @return A vascar compatable dataset
 #' 
@@ -105,23 +118,23 @@ return(separatedata)
 #' @importFrom textclean replace_non_ascii
 #' 
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
-#' raw = system.file("extdata/mdckspectra.txt", package = "ecisr")
-#' key = system.file("extdata/mdckkey.csv", package = "ecisr")
+#' #raw = system.file("extdata/mdckspectra.txt", package = "vascr")
+#' #key = system.file("extdata/mdckkey.csv", package = "vascr")
 #' 
-#' output = cellzscope_import_raw(raw, key)
-#' output = ecis_subset(output, time = c(0,50))
-#' ecis_plot(output, unit = "R", frequency = 4000, replication = "wells")
-cellzscope_import_raw = function(raw, key)
+#' #output = cellzscope_import_raw(raw, key)
+#' #output = vascr_subset(output, time = c(0,50))
+#' #vascr_plot(output, unit = "R", frequency = 4000, replication = "wells")
+cellzscope_import_raw = function(raw, key, experimentname)
 {
   
-ecis_validate_file(raw, "txt")
+vascr_validate_file(raw, "txt")
   
   if(!(missing(key)))
   {
-    ecis_validate_file(key, "csv")
+    vascr_validate_file(key, "csv")
   }
 
 # Read into a data frame and remove garbage
@@ -155,7 +168,15 @@ dat = dat/60/60
 separatedata$Time = dat
 
 # Add experiment metadat
-separatedata$Experiment = raw
+if(!missing(experimentname))
+{
+  separatedata$Experiment = basename(raw)
+}
+else
+{
+  separatedata$Experiment = experimentname
+}
+
 separatedata$Instrument = "cellZscope"
 
 # Make longer
@@ -164,7 +185,7 @@ separatedata2 = pivot_longer(separatedata, cols = c("I", "P"), names_to = "Unit"
 # Clean up data types
 separatedata2$Value = as.numeric(separatedata2$Value)
 separatedata2$Frequency = as.numeric(separatedata2$Frequency)
-separatedata2$Well = ecis_standardise_wells(separatedata2$Well)
+separatedata2$Well = vascr_standardise_wells(separatedata2$Well)
 
 # Remove internal columns that are no longer required
 separatedata2$Date = NULL
@@ -197,7 +218,7 @@ longdata.df$Time = as.numeric(longdata.df$Time)
 if(!missing(key))
 {
 longdata.df$Sample = NULL
-longdata.df = ecis_assign_samples(longdata.df, key)
+longdata.df = vascr_assign_samples(longdata.df, key)
 }
 
 return(longdata.df)
@@ -211,44 +232,42 @@ return(longdata.df)
 #' @param raw File location of the raw dataset
 #' @param model File locaiton of the modeled dataset
 #' @param key Location of a vascar standard lookup table. Optional, but can be used to import more granular data than possible with the built in row names
+#' @param experimentname Name of the experiment to be built into the dataset
 #' 
 #' @importFrom dplyr select left_join 
+#' 
+#' @keywords internal
 #'
 #' @return a standard vascar dataset
 #' @export
 #'
 #' @examples
 #' 
-#' model = system.file("extdata/mdckmodel.txt", package = "ecisr")
-#' raw = system.file("extdata/mdckspectra.txt", package = "ecisr")
-#' key = system.file("extdata/mdckkey.csv", package = "ecisr")
+#' #model = system.file("extdata/mdckmodel.txt", package = "vascr")
+#' #raw = system.file("extdata/mdckspectra.txt", package = "vascr")
+#' #key = system.file("extdata/mdckkey.csv", package = "vascr")
 #' 
-#' alldata = cellzscope_import(raw, model)
-#' ecis_plot(alldata, unit = "TER", preprocessed = TRUE, frequency = 0,
-#'  time = c(0,50), replication = "experiments")
+#' #alldatakey = cellzscope_import(raw, model, key, "TEST")
+#' #alldatakey$Instrument = "CZSII"
+#' #vascr_plot(alldatakey, unit = "TER", frequency = 0, time = c(0,50))
 #' 
-#' alldatakey = cellzscope_import(raw, model, key)
-#' alldatakey$Instrument = "CZSII"
-#' ecis_plot(alldatakey, unit = "TER", frequency = 0, time = c(0,50), 
-#' replication = "experiments", preprocessed = TRUE)
-#' 
-cellzscope_import = function(raw, model, key)
+cellzscope_import = function(raw, model, key = NULL, experimentname = "NA")
 {
   
- ecis_validate_file(raw, "txt")
- ecis_validate_file(model, "txt")
+ vascr_validate_file(raw, "txt")
+ vascr_validate_file(model, "txt")
  
  if(!missing(key))
  {
- ecis_validate_file(key, "csv")
+ vascr_validate_file(key, "csv")
  }
  
 # Import both files. Don't specify a key as this will be applied globaly at the end
-modeleddata = cellzscope_import_model(model)
-rawdata = cellzscope_import_raw(raw)
+modeleddata = cellzscope_import_model(model, experimentname = experimentname)
+rawdata = cellzscope_import_raw(raw, experimentname = experimentname)
 
 # Combine and run checks
-alldata = ecis_combine(modeleddata, rawdata)
+alldata = vascr_combine(modeleddata, rawdata)
 
 
 
@@ -265,7 +284,7 @@ else
 {
   # Use the standard allocation code for this package
   alldata$Sample = NULL
-  alldatanamed = ecis_assign_samples(alldata, key)
+  alldatanamed = vascr_assign_samples(alldata, key)
 }
 
 

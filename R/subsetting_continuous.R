@@ -1,19 +1,18 @@
-#' Detect vehicles in an ecisr dataset
+#' Detect vehicles in an vascr dataset
 #'
-#' @param data An ecisr dataset
+#' @param data An vascr dataset
 #' @param force_replace Should vehicles be replaced, if they already exist. True replaces the column, false does not. Default FALSE.
 #'
-#' @return An ecisr dataset with an extra IsVehicleControl column
+#' @return An vascr dataset with an extra IsVehicleControl column
 #' 
 #' @importFrom stats var
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples
-#' # data = xcell
-#' # ecis_detect_vehicle(data)
+#' #vascr_detect_vehicle(growth.df)
 #' 
-ecis_detect_vehicle = function (data, force_replace = FALSE)
+vascr_detect_vehicle = function (data, force_replace = FALSE)
 {
   # Check if vehicle well exists, and we don't have to replace, and if so skip over this function
   if (isFALSE(force_replace) & col_exists(data, "IsVehicleControl"))
@@ -22,9 +21,9 @@ ecis_detect_vehicle = function (data, force_replace = FALSE)
   }
   
   # Make sure the data is exploded, if not fix it. Otherwise subsequent functions can't access approprate data
-  if(isFALSE(ecis_test_exploded(data)))
+  if(isFALSE(vascr_test_exploded(data)))
      {
-       data = ecis_explode(data)
+       data = vascr_explode(data)
      }
   
   
@@ -35,8 +34,8 @@ ecis_detect_vehicle = function (data, force_replace = FALSE)
     data$Vehicle = "Not Specified"
   }
   
-  subsetcols = select(data, ecis_exploded_cols(data))
-  subsetcols = select(subsetcols, ecis_cols(subsetcols, "continuous"))
+  subsetcols = select(data, vascr_exploded_cols(data))
+  subsetcols = select(subsetcols, vascr_cols(subsetcols, "continuous"))
   data$count_na = apply(subsetcols, 1, function(x) sum(x=="NA"))
   
   summary = data %>% group_by(Vehicle) %>% summarise(max = max(count_na))
@@ -59,24 +58,25 @@ ecis_detect_vehicle = function (data, force_replace = FALSE)
 
 #' Detect the wells R thinks contains vehicles
 #' 
-#' Convenience function. This first runs ecis_detect_vehicle on the dataset, then provides a summary table of which wells are associated with which vehicle. Provides a usefull check that vehicle detection has been preformed correctly.
+#' Convenience function. This first runs vascr_detect_vehicle on the dataset, then provides a summary table of which wells are associated with which vehicle. Provides a usefull check that vehicle detection has been preformed correctly.
 #'
 #' @param data The datset to search
 #' @param force_replace Should existing IsVehicleControl wells be replaced (if present)?
 #' 
 #' @importFrom dplyr select
+#' 
+#' @keywords internal
 #'
-#' @return
-#' @export
+#' @return A vector of vehicle control wells
 #'
 #' @examples
-#' #ecis_detect_vehicle_control_wells(data)
+#' #vascr_detect_vehicle_control_wells(xcell)
 #' 
-ecis_detect_vehicle_control_wells = function(data, force_replace = FALSE)
+vascr_detect_vehicle_control_wells = function(data, force_replace = FALSE)
 {
   # Find vehicle control wells. Function will automatically return the same data if re-generation is not required.
   
-    data = ecis_detect_vehicle(data, force_replace)
+    data = vascr_detect_vehicle(data, force_replace)
   
   # Grab only the wells that are vehicle controls
   datasummary = subset(data, IsVehicleControl)
@@ -96,11 +96,11 @@ ecis_detect_vehicle_control_wells = function(data, force_replace = FALSE)
 #'
 #' @return A boolean, true if the column is found, false if not
 #'
-#' @export
+#' @keywords internal
 #'
 #' @examples
-#' col_exists(growth.df, "Vector")
-#' col_exists(growth.df, "Unit")
+#' #col_exists(growth.df, "Vector")
+#' #col_exists(growth.df, "Unit")
 col_exists = function (data, col)
 {
   if(col %in% colnames(data))

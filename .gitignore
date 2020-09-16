@@ -1,6 +1,10 @@
 inst/doc
+inst/compare*
 .Rproj.user
 .Rhistory
 .Ruserdata
 .RData
 packrat/lib*/
+packrat/*
+compare/*
+

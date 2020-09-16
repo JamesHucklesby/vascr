@@ -4,40 +4,40 @@
 # 
 # #//////////// ECIS ////////////////////
 # 
-# library("ecisr")
+# library("vascr")
 # 
-# raw1.df = ecis_import_raw(system.file("/extdata/growth1_raw_TimeResample.abp", package = "ecisr"), system.file("/extdata/growth1_samples.csv", package = "ecisr"))
-# raw2.df = ecis_import_raw(system.file("/extdata/growth2_raw_TimeResample.abp", package = "ecisr"), system.file("/extdata/growth2_samples.csv", package = "ecisr"))
-# raw3.df = ecis_import_raw(system.file("/extdata/growth3_raw_TimeResample.abp", package = "ecisr"), system.file("/extdata/growth3_samples.csv", package = "ecisr"))
+# raw1.df = ecis_import_raw(system.file("/extdata/growth1_raw_TimeResample.abp", package = "vascr"), system.file("/extdata/growth1_samples.csv", package = "vascr"))
+# raw2.df = ecis_import_raw(system.file("/extdata/growth2_raw_TimeResample.abp", package = "vascr"), system.file("/extdata/growth2_samples.csv", package = "vascr"))
+# raw3.df = ecis_import_raw(system.file("/extdata/growth3_raw_TimeResample.abp", package = "vascr"), system.file("/extdata/growth3_samples.csv", package = "vascr"))
 # 
-# ecis_raw = ecis_combine(raw1.df, raw2.df, raw3.df)
+# ecis_raw = vascr_combine(raw1.df, raw2.df, raw3.df)
 # 
-# ecis_plot(rawcombined, unit = "R", replication = "summary")
+# vascr_plot(rawcombined, unit = "R", replication = "summary")
 # 
-# model1.df = ecis_import_model(system.file("/extdata/growth1_raw_TimeResample_RbA.csv", package = "ecisr"), system.file("/extdata/growth1_samples.csv", package = "ecisr"))
-# model2.df = ecis_import_model(system.file("/extdata/growth2_raw_TimeResample_RbA.csv", package = "ecisr"), system.file("/extdata/growth2_samples.csv", package = "ecisr"))
-# model3.df = ecis_import_model(system.file("/extdata/growth3_raw_TimeResample_RbA.csv", package = "ecisr"), system.file("/extdata/growth3_samples.csv", package = "ecisr"))
+# model1.df = ecis_import_model(system.file("/extdata/growth1_raw_TimeResample_RbA.csv", package = "vascr"), system.file("/extdata/growth1_samples.csv", package = "vascr"))
+# model2.df = ecis_import_model(system.file("/extdata/growth2_raw_TimeResample_RbA.csv", package = "vascr"), system.file("/extdata/growth2_samples.csv", package = "vascr"))
+# model3.df = ecis_import_model(system.file("/extdata/growth3_raw_TimeResample_RbA.csv", package = "vascr"), system.file("/extdata/growth3_samples.csv", package = "vascr"))
 # 
-# ecis_model = ecis_combine(model1.df, model2.df, model3.df)
-# ecis_combined = ecis_combine(rawcombined, modelcombined)
+# ecis_model = vascr_combine(model1.df, model2.df, model3.df)
+# ecis_combined = vascr_combine(rawcombined, modelcombined)
 # 
 # ############# CellZScope
 # 
-# cellzscope_raw = cellzscope_import_raw(system.file("/extdata/mdckspectra.txt", package = "ecisr"))
-# cellzscope_model = cellzscope_import_model(system.file("/extdata/mdckmodel.txt", package = "ecisr"))
+# cellzscope_raw = cellzscope_import_raw(system.file("/extdata/mdckspectra.txt", package = "vascr"))
+# cellzscope_model = cellzscope_import_model(system.file("/extdata/mdckmodel.txt", package = "vascr"))
 # 
-# cellzscope_combined = ecis_combine(cellzscope_raw, cellzscope_model)
-# cellzscope_combined= ecis_subset(cellzscope_combined, time = c(0,1000))
+# cellzscope_combined = vascr_combine(cellzscope_raw, cellzscope_model)
+# cellzscope_combined= vascr_subset(cellzscope_combined, time = c(0,1000))
 # 
-# ecis_plot(cellzscope_combined, unit = "TER", frequency = 0, preprocessed = TRUE)
+# vascr_plot(cellzscope_combined, unit = "TER", frequency = 0, preprocessed = TRUE)
 # 
 # 
 # 
 # ############ excelligence
 # 
-# excelligence_combined = excelligence_import(system.file("/extdata/xcell.txt", package = "ecisr"))
+# excelligence_combined = excelligence_import(system.file("/extdata/xcell.txt", package = "vascr"))
 # 
-# ecis_plot(excelligence_combined, unit = "CI", frequency = 0, samplecontains = "ATP")
+# vascr_plot(excelligence_combined, unit = "CI", frequency = 0, samplecontains = "ATP")
 # 
 # 
 # data.df = cellzscope_raw

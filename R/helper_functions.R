@@ -3,14 +3,66 @@
 #' @param v Vector of numeric data to find the mode of
 #'
 #' @return The mode of the vector
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' 
-#' getmode(c(1,3,3,4,7))
+#' #getmode(c(1,3,3,4,7))
 getmode <- function(v) {
   uniqv <- unique(v)
   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+
+#' Calculate the median well in a set of wells
+#' 
+#' This function finds the well that is the median of a set. This will be the most spacially central well on a plate. Using median eliminates the risk of well locations clashing, as the returned well will always be one of the set input. This also eliminates the noise associated with single replicates that need to be moved to the edge of a plate for technical reasons, however it will also mask that this movement has happened.
+#' 
+#' Works for both vertical, horrosontal and diffuse well configurations
+#'
+#' @param wells A vector of wells to find the median of
+#'
+#' @return The name of the median well
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' #vascr_median_well (c("A1", "B2", "C3"))
+#' #vascr_median_well(c("A1", "NA", "NA", "NA"))
+vascr_median_well = function(wells)
+{
+  
+  # First we create a temporary data frame to hold the transformations. Each well entered is a row
+  Well = vascr_standardise_wells(wells)
+  Well = as.data.frame(Well)
+  
+  if(any("NA" %in% Well$Well))
+  {
+    warning("NA's in averaged wells, these will be removed")
+    Well = subset(Well, Well != "NA")
+  }
+  
+  # Explode out rows and columns
+  explodedwells = vascr_explode_wells(Well)
+  
+  # Convert row letters on the plate into numbers for finding the median
+  letternums <- letters[1:26]
+  explodedwells$lowerrow = casefold(explodedwells$row, upper = FALSE)
+  explodedwells$numberrow = match(explodedwells$lowerrow, letternums)
+  
+  # Check everything is numeric to avoid errors
+  explodedwells$numberrow = as.numeric(explodedwells$numberrow)
+  explodedwells$numbercol = as.numeric(explodedwells$col)
+  
+  medianrow = median(explodedwells$numberrow)
+  mediancol = median(explodedwells$numbercol)
+  
+  medianrow = letternums[medianrow]
+  
+  finalwell = paste(medianrow, mediancol)
+  finalwell = vascr_standardise_wells(finalwell)
+  
+  return(finalwell)
 }
 
 
@@ -22,15 +74,15 @@ getmode <- function(v) {
 #'
 #' @return Standardised well names
 #' 
-#' @export
+#' @keywords internal
 #'
 #' @examples 
-#' ecis_standardise_wells('A01')
-#' ecis_standardise_wells('A 1')
-#' ecis_standardise_wells('tortoise') # Non-standardisable becomes NA
-#' ecis_standardise_wells(growth.df$Well)
+#' #vascr_standardise_wells('A01')
+#' #vascr_standardise_wells('A 1')
+#' #vascr_standardise_wells('tortoise') # Non-standardisable becomes NA
+#' #vascr_standardise_wells(growth.df$Well)
 #' 
-ecis_standardise_wells = function(well) {
+vascr_standardise_wells = function(well) {
   
   # First try and fix the user input
   well = toupper(well) # Make it upper case
@@ -41,7 +93,7 @@ ecis_standardise_wells = function(well) {
   # Check that it now conforms
 
   
-  if(is.na(match(well[1],ecis_96_well_names())))
+  if(is.na(match(well[1],vascr_96_well_names())))
   {
     return ("NA")
   }
@@ -52,12 +104,13 @@ ecis_standardise_wells = function(well) {
 #' All the well names of a 96 well plate
 #'
 #' @return Vector containing all wells of a 96 well plate
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' ecis_96_well_names()
+#' #vascr_96_well_names()
 #' 
-ecis_96_well_names = function()
+vascr_96_well_names = function()
 {
   
   wells = expand.grid(LETTERS[1:8],c(1:12))
@@ -69,66 +122,24 @@ ecis_96_well_names = function()
 }
 
 
-#' Align times
-#' 
-#' When running analyasis, you can only run stats on a timepoint that exists in the dataset. These are not always logical or easy to remember. This function rounds the number given to the nearest timepoint that is actually in the dataset.
-#'
-#' @param data.df A standard ECIS data frame
-#' @param time The time point that needs rounding
-#'
-#' @return A timepoint that exactly aligns with a measured datapoint
-#'
-#' @export
-#'
-#' @examples
-#' ecis_find_time(growth.df, 146.2)
-#' 
-ecis_find_time = function(data.df, time) {
-  times = unique(data.df$Time)
-  numberinlist = which.min(abs(times - time))
-  timetouse = times[numberinlist]
-  
-  return(timetouse)
-}
 
-#' Align frequencies
-#' 
-#' When running analyasis, you can only subset or plot a time that exists in the dataset. These are not always logical or easy to remember. This function rounds the number given to the nearest frequency that is actually in the dataset.
-#'
-#' @param data.df A standard ECIS data frame
-#' @param frequency The tfrequency that needs rounding
-#'
-#' @return A timepoint that exactly aligns with a measured datapoint
-#'
-#' @export
-#'
-#' @examples
-#' ecis_find_frequency(growth.df, 4382)
-#' 
-ecis_find_frequency = function(data.df, frequency) {
-  data.df$Frequency = as.numeric(data.df$Frequency)
-  times = unique(data.df$Frequency)
-  numberinlist = which.min(abs(times - frequency))
-  timetouse = times[numberinlist]
-  
-  return(timetouse)
-}
 
 #' Detect if an ECIS dataset has been normalised
 #'
 #' @param data.df an ECIS dataset
 #'
 #' @return The time the data was normalised to, or FALSE if not normalised
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' growth.df$Instrument = "ECIS"
-#' standard = growth.df
-#' normal = ecis_normalise(growth.df, 100)
-#' ecis_detect_normal(standard)
-#' ecis_detect_normal(normal)
+#' #growth.df$Instrument = "ECIS"
+#' #standard = growth.df
+#' #normal = vascr_normalise(growth.df, 100)
+#' #vascr_detect_normal(standard)
+#' #vascr_detect_normal(normal)
 
-ecis_detect_normal = function(data.df)
+vascr_detect_normal = function(data.df)
 {
   timecrushed = data.df %>% group_by(Time) %>% 
     summarise(deviation = sd(Value))
@@ -138,6 +149,34 @@ ecis_detect_normal = function(data.df)
     return (FALSE)
   }
   return(timecrushed$Time)
+}
+
+#' Check the level of a vascr data frame
+#'
+#' @param data The data frame to analyse
+#'
+#' @return The level of the dataset analysed
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' #vascr_detect_level(growth.df)
+#' #vascr_detect_level(vascr_summarise(growth.df, level = "experiments"))
+#' #vascr_detect_level(vascr_summarise(growth.df, level = "summary"))
+vascr_detect_level = function(data)
+{
+  if("totaln" %in% colnames(data))
+  {
+    return("summary")
+  }
+  else if ("n" %in% colnames(data))
+  {
+    return("experiments")
+  }
+  else
+  {
+    return("wells")
+  }
 }
 
 
@@ -151,28 +190,203 @@ ecis_detect_normal = function(data.df)
 #' @importFrom stringr str_trim
 #'
 #' @return A dataset containing only the core ECIS columns
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' growth.df$Instrument = "ECIS"
-#' exploded.df = ecis_explode(growth.df)
-#' cleaned.df = ecis_remove_metadata(exploded.df)
-#' identical(growth.df,cleaned.df)
-ecis_remove_metadata = function(data.df, subset = "all")
+#' #growth.df$Instrument = "ECIS"
+#' #exploded.df = vascr_explode(growth.df)
+#' #cleaned.df = vascr_remove_metadata(exploded.df)
+#' #identical(growth.df,cleaned.df)
+vascr_remove_metadata = function(data.df, subset = "all")
 {
   
-  summary_level = ecis_test_summary_level(data.df)
+  summary_level = vascr_test_summary_level(data.df)
   
   if(summary_level == "summary" || summary_level == "experiment")
   {
-    warning("You are removing some summary statistics. These are not re-generatable using ecis_explode alone, and must be regenerated with ecis_summarise.")
+    warning("You are removing some summary statistics. These are not re-generatable using vascr_explode alone, and must be regenerated with vascr_summarise.")
   }
   
-  removed.df = data.df %>% select(ecis_cols())
+  removed.df = data.df %>% select(vascr_cols())
   
   return(removed.df)
 }
 
+
+#' Calculate the variable priority for a vascr dataset
+#' 
+#' This function calculates the order of priority of variables in a vascr dataset so they can be plotted in the most meaningfull way
+#' 
+#' @param data The dataset to generate priorities for
+#' @param explicit Any varaibles that are explicity used in graph generation, and therefore are removed from the priority vector
+#' @param priority Non-standard priority order. All values in this will be returned, and supplimented with the default set if "..." is inserted into the list
+#'
+#' @return A vector of priorities to plot
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' #vascr_priority()
+#' #vascr_priority(growth.df)
+#' #vascr_priority(growth.df, priority = c("cells", "...", "Well"))
+#' 
+#' #vascr_priority(data = growth.df, priority = c("Sample"))
+#' 
+#' #vascr_priority(data = growth.df)
+#' 
+#' #missing.df = growth.df
+#' #missing.df$Value = NULL
+#' 
+#' #vascr_priority(missing.df)
+#' 
+#' # vascr_priority(filtered.df)
+#' 
+#' # vascr_priority(data)
+vascr_priority = function(data = NULL, explicit = NULL, priority = NULL)
+{
+  
+  # Load in the default built-in priority order
+  builtin = c("Value","Time","Frequency", "Sample",  "Experiment", "Instrument", "Unit", "Well")
+  
+  level = vascr_detect_level(data)
+  
+  if(level == "experiments" || level=="summary")
+  {
+    data$Well = "NA"
+  }
+  
+  # Return this list if no data was provided to compare against, or that data is an inappropriate format
+  if(!is.data.frame(data))
+  {
+    if(is.null(data))
+    {
+      builtin = builtin
+    }else
+    {
+      warning("Data is not a data frame, the whole priority vector has been returned")
+      bulitin = builtin
+    }
+  } 
+  
+  
+  
+  # Modify the default list to suit the request
+  if(is.null(priority))
+  {
+    defaultstack = builtin # Use default, as no priority given
+  } else
+  {
+    
+   #We must use what the user gave us, adding in the default where "..." is seen
+    
+   dot = match("...",priority)
+   dot = as.numeric(min(dot))
+   
+   if(is.na(dot))
+   {
+     defaultstack = priority
+   }else if(dot == length(priority))
+   {
+     defaultstack = c(priority,builtin)
+   }
+   else if(dot == 1)
+   {
+     defaultstack = c(builtin, priority)
+   }else
+   {
+     defaultstack = c(priority[1:(dot-1)], builtin, priority[(dot+1):length(priority)])
+   }
+   
+   # Check that each priority is only in there once
+   defaultstack = unique(defaultstack)
+   
+  }
+  
+  # Remove explicit variables, if not specified use the defaultstack
+  if(!is.null(explicit))
+  {
+    stack = defaultstack[!defaultstack %in% explicit]
+  }else
+  {
+    stack = defaultstack
+  }
+  
+  
+  # Stop here if not a data frame
+  if(!is.data.frame(data))
+  {
+    return (stack)
+  }
+  
+  # Strip out anything from the stack that is not actually in the data
+  datacols = colnames(data)
+  cols = stack[stack %in% datacols]
+  unique = c()
+  
+  for(val in cols)
+  { # Stack not generated yet
+    unique = c(unique, as.vector(unique(data[val])))
+  }
+  
+  # Then calculate if the length of each one is greater than 1 (IE it's worth plotting as they're not all the same)
+  lengths = c()
+  for (val in unique){
+    lengths = c(lengths,(length(val))>1)
+  }
+  
+  #Filter out the columns that are relevant
+  stack = cols[lengths]
+  
+  return(stack)
+  
+}
+
+
+
+
+#' Remove columns if they exist in a dataset, otherwise do nothing
+#'
+#' @param data.df The dataset to remove
+#' @param cols The name, or names, of cols to remove
+#'
+#' @return The truncated data set
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' #remove_cols_if_exists(growth.df, c("Unit", "Sample", "Donkey"))
+remove_cols_if_exists = function(data.df, cols)
+{
+  
+  for(col in cols)
+  {
+    if(col %in% colnames(data.df))
+    {
+      data.df = select(data.df, -col)
+    }
+  }
+  
+  return(data.df)
+}
+
+
+#' Clean the statistics off a vascr dataset
+#'
+#' @param data.df The dataset to clean
+#'
+#' @return A vascr dataset, without any statistical columns
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' #vascr_remove_stats(vascr_summarise(growth.df,level = "summary"))
+#' 
+vascr_remove_stats = function(data.df)
+{
+  data.df = remove_cols_if_exists(data.df, cols = c("sd", "sem", "min", "max", "ymin", "ymax", "sd", "n", "totaln"))
+  return(data.df)
+}
 
 
 #' Generate human readable versions of the unit variable for graphing
@@ -181,13 +395,16 @@ ecis_remove_metadata = function(data.df, subset = "all")
 #' @param frequency The frequency to submit
 #'
 #' @return An expression containing the correct data label for the unit
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' 
-#' ecis_titles("Rb")
+#' #vascr_titles("Rb")
+#' #vascr_titles("R")
 #' 
-ecis_titles = function (unit, frequency = 0)
+#' 
+vascr_titles = function (unit, frequency = 0)
 {
   # Electrical quantaties
   if(unit == "C") { return(expression(paste("Capacitance (",mu,"F)")))}
@@ -220,6 +437,182 @@ ecis_titles = function (unit, frequency = 0)
 }
 
 
+
+#' Convert a vector of titles into full names of units
+#'
+#' @param units A vector of units to return
+#'
+#' @return A vector of names of the units returned
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' #vascr_titles_vector(c("Rb", "R", "Cm"))
+#' 
+vascr_titles_vector = function(units)
+{
+return = c()
+
+for(uni in units)
+{
+  
+  if(uni == "Rb"){parsed = "Rb (chm cm squared)"}
+  else if(uni == "Cm"){parsed = "Cm (microfarad / cm squared)"}
+  else if(uni == "Alpha"){parsed = "Alpha (ohm cm squared)"}
+  else if(uni == "C"){parsed = "Capacatance (microfarad)"}
+else if(uni == "CPE_A"){parsed = "Capacatance (microfarad)"}
+else if(uni == "TER"){parsed = "TER (ohm cm squared)"}
+  
+  else {parsed = vascr_titles(uni)}
+
+  
+  return = c(return, parsed)
+}
+
+return(return)
+
+}
+
+
+#' Table of units used in the vascr package
+#'
+#' @return A data frame of units, their content and if they are modeled
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' #vascr_units_table()
+#' 
+vascr_units_table = function()
+{
+allunits = vascr_instrument_units("all")
+vascr_unit_table = data.frame(allunits)
+colnames(vascr_unit_table) = "Unit"
+
+vascr_unit_table$Content = vascr_titles_vector(vascr_unit_table$Unit)
+
+vascr_unit_table$Modeled = vascr_is_modeled_unit(vascr_unit_table$Unit)
+
+vascr_unit_table$Instrument = vascr_instrument_from_unit(vascr_unit_table$Unit)
+
+
+return(vascr_unit_table)
+}
+
+
+#' Check if a selected unit is modelled
+#'
+#' @param unit The vascr symbol for the unit
+#'
+#' @return A boolean, true if it is modelled, false if it is raw electrical data
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' #vascr_is_modeled_unit("R")
+#' #vascr_is_modeled_unit("Rb")
+#' #vascr_is_modeled_unit(c("R", "Rb"))
+#' 
+vascr_is_modeled_unit = function(unit)
+{
+  return = c()
+  model_units = c("Rb","Cm","Alpha","RMSE","Drift","CPE_A" ,"CPE_n" ,"TER" , "Ccl", "Rmed")
+  
+  for(uni in unit)
+  {
+    return = c(return, uni %in% model_units)
+  }
+  
+  return(return)
+}
+
+#' Return the units created by a certain instrument
+#'
+#' @param instrument The instrument to find the units for
+#'
+#' @return a vector of units provided by an instrument
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' #vascr_instrument_units("ECIS")
+#' #vascr_instrument_units("xCELLigence")
+#' #vascr_instrument_units("cellZscope")
+#' 
+vascr_instrument_units =  function(instrument)
+{
+  instrument = tolower(instrument)
+  
+  if(instrument =="ecis") {return (c("Alpha" ,"Cm"   , "Drift", "Rb"   , "RMSE" , "C"   ,  "P"     ,"R"   ,  "X"  ,   "Z"))}
+  if(instrument =="xcelligence") {return(xcelligence = c("Z", "CI"))}
+  if(instrument =="cellzscope") { return(c("CPE_A", "CPE_n", "TER", "Ccl", "Rmed", "C"   ,  "P"     ,"R"   ,  "X"  ,   "Z"))}
+  
+  # If all are selected, build the full list by calling this same funciton recusivley
+  if(instrument =="all"){return(unique(c(vascr_instrument_units("ecis"), vascr_instrument_units("xcelligence"), vascr_instrument_units("cellzscope"))))}
+}
+
+#' Work out which instrument(s) generated a unit
+#'
+#' @param unit The unit(s) to test
+#'
+#' @return The instrument(s) separated by "+" that could have generated that value. If more than one unit was entered a stirng will be generated for each unit.
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' 
+#' #vascr_instrument_from_unit("Rb")
+#' #vascr_instrument_from_unit("CI")
+#' #vascr_instrument_from_unit("TER")
+#' 
+#' #vascr_instrument_from_unit(c("Rb", "TER"))
+#' 
+#' #vascr_instrument_from_unit("NA")
+vascr_instrument_from_unit = function(unit)
+{
+  
+  ecis = vascr_instrument_units("ecis")
+  xcelligence = vascr_instrument_units("xcelligence")
+  cellzscope = vascr_instrument_units("cellzscope")
+  instruments = c()
+  return = c()
+  
+for (uni in unit)
+  {
+  if (uni %in% ecis)
+  {
+    instruments = c(instruments, "ECIS")
+  }
+  if (uni %in% xcelligence)
+  {
+    instruments = c(instruments, "xCELLigence")
+  }
+  if (uni %in% cellzscope)
+  {
+    instruments = c(instruments, "cellZscope")
+  }
+
+  return = c(return,(paste(instruments, collapse = " + ")))
+  instruments = c()
+  }
+ 
+  return(return) 
+}
+
+#' Returns a list of the instruments supported by the VASCR package
+#'
+#' @return A vector of all the supported instrument names
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' # vascr_instrument_list()
+vascr_instrument_list = function()
+{
+  return(c("ECIS", "xCELLigence", "cellZscope"))
+}
+
+
 #' #' Fix typographical errors in an ECIS dataframe
 #' #' 
 #' #' This function will go through all the sample and experiment names and replace all the values that are incorrect. Usefull for fixing up typographical errors, or places where you have named things differently inadvertently.
@@ -234,9 +627,9 @@ ecis_titles = function (unit, frequency = 0)
 #' #'
 #' #' @examples
 #' #' 
-#' #' #ecis_fix_error(growth.df, "cells", "cells plated")
+#' #' #vascr_fix_error(growth.df, "cells", "cells plated")
 #' #' 
-#' ecis_fix_error = function (data.df, incorrect, correct, limit = "None")
+#' vascr_fix_error = function (data.df, incorrect, correct, limit = "None")
 #' {
 #'   
 #'   if (limit == "None" || limit == "Sample")
@@ -258,10 +651,11 @@ ecis_titles = function (unit, frequency = 0)
 #' @param x vector to find mode of
 #'
 #' @return the most commonly occouring character 
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' categorical_mode(c("Cat", "Cat", "Monkey"))
+#' #categorical_mode(c("Cat", "Cat", "Monkey"))
 #' 
 categorical_mode = function(x){
   
@@ -303,21 +697,21 @@ categorical_mode = function(x){
 #'
 #' @examples
 #' 
-#' unique(growth.df$Sample)
-#' excludedgrowth.df = ecis_exclude(growth.df, samples = c("35,000 cells", "0 cells"))
-#' unique(excludedgrowth.df$Sample)
+#' #unique(growth.df$Sample)
+#' #excludedgrowth.df = vascr_exclude(growth.df, samples = c("35,000 cells", "0 cells"))
+#' #unique(excludedgrowth.df$Sample)
 #' 
-#' unique(growth.df$Well)
-#' excludedgrowth.df = ecis_exclude(growth.df, wells = c("A1", "B1", "C1"))
-#' unique(excludedgrowth.df$Well)
+#' #unique(growth.df$Well)
+#' #excludedgrowth.df = vascr_exclude(growth.df, wells = c("A1", "B1", "C1"))
+#' #unique(excludedgrowth.df$Well)
 #' 
-#' unique(growth.df$Experiment)
-#' excludedgrowth.df = ecis_exclude(growth.df, experiment = c(1,2))
-#' unique(excludedgrowth.df$Experiment)
+#' #unique(growth.df$Experiment)
+#' #excludedgrowth.df = vascr_exclude(growth.df, experiment = c(1,2))
+#' #unique(excludedgrowth.df$Experiment)
 #' 
 
 
-ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = FALSE, times = FALSE, values = FALSE, vars = FALSE, vals = FALSE, vs = FALSE)
+vascr_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = FALSE, times = FALSE, values = FALSE, vars = FALSE, vals = FALSE, vs = FALSE)
 {
   
   for (sample in samples)
@@ -354,7 +748,6 @@ ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = F
 
 # Worker functions for importing files ------------------------------------
 
-
 #' Combine ECIS data frames end to end
 #' 
 #' This funciton will combine ECIS datasets end to end. Preferential to use over a simple rbind command as it runs additional checks to ensure that datapoints are correctly generated
@@ -370,18 +763,16 @@ ecis_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = F
 #' 
 #' #Make two fake experiments worth of data
 #' 
-#' experiment1.df = ecis_subset(growth.df, experiment = "1")
-#' experiment2.df = ecis_subset(growth.df, experiment = "2")
-#' experiment3.df = ecis_subset(growth.df, experiment = "3")
+#' #experiment1.df = vascr_subset(growth.df, experiment = "1")
+#' #experiment2.df = vascr_subset(growth.df, experiment = "2")
+#' #experiment3.df = vascr_subset(growth.df, experiment = "3")
 #' 
-#' data = ecis_combine(experiment1.df, experiment2.df, experiment3.df)
-#' head(data)
+#' #data = vascr_combine(experiment1.df, experiment2.df, experiment3.df)
+#' #head(data)
 #' 
-ecis_combine = function(..., resample = FALSE) {
+vascr_combine = function(..., resample = FALSE) {
   
   dataframes = list(...)
-  
-  # Test filler variables dataframes = list(child1.df, child2.df, child3.df) i = 1
   
   # Generate an empty data frame with the correct columns to fill later
   alldata = dataframes[[1]][0, ]
@@ -414,8 +805,8 @@ ecis_combine = function(..., resample = FALSE) {
   
   if(isTRUE(resample))
   {
-    frequency = ecis_current_frequency(alldata)
-    
+    frequency = vascr_current_frequency(alldata)
+    alldata = vascr_resample(alldata, frequency, min(alldata$Time), max(alldata$Time))
   }
   
   
@@ -424,11 +815,14 @@ ecis_combine = function(..., resample = FALSE) {
 }
 
 
+
 #' Retitle
 #' 
 #' Recapitulation of the funciton in tidyR, allows the re-titling of a data frame from the top row of a dataset. Used in import funcitons to set titles from the content of ABP files. For internal use only.
 #'
 #' @param df A data frame containing the desired values in the top row
+#' 
+#' @keywords internal
 #'
 #' @return A dataframe where the top row has been converted to titles.
 # 
@@ -447,14 +841,15 @@ retitle = function(df) {
 #' @param comma_array The array (and hence column of a data frame also works) containing comma separated values to process
 #'
 #' @return An array containing numeric data. NA will be returned if not numeric, and a warning will be generated
+#' 
+#' @keywords internal
 #'
 #' @examples
+#' # A working dataset
+#' # comma_to_numeric(c("100.001", "10,839", "882,292,939"))
 #' 
-# # A working dataset
-# # comma_to_numeric(c("100.001", "10,839", "882,292,939"))
-# 
-# # And one with non-numeric and broken data
-# # comma_to_numeric(c("Foo", "77,00", "88.88.88"))
+#' # And one with non-numeric and broken data
+#' # comma_to_numeric(c("Foo", "77,00", "88.88.88"))
 #' 
 comma_to_numeric = function(comma_array)
 {
@@ -476,13 +871,14 @@ comma_to_numeric = function(comma_array)
 #'
 #' @param data The dataset to derrive the instrument type from
 #'
-#' @return
-#' @export
+#' @return The default frequency and unit in a list
+#' 
+#' @keywords internal
 #'
 #' @examples
-#' ecis_default(growth.df)
+#' # vascr_default(growth.df)
 #' 
-ecis_default = function (data)
+vascr_default = function (data)
 {
 
   instrument = categorical_mode(data$Instrument)
@@ -514,3 +910,104 @@ ecis_default = function (data)
 }
 
 
+#' Execute do.call for all variables that exist in the funciton being called
+#'
+#' @param name Name of the funciton to call
+#' @param payload The key data frame or graph to be passed on
+#' @param arguments Any arguements to apply
+#' 
+#' @importFrom ggplot2 is.ggplot
+#'
+#' @return The returned value from the function applied
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' # Not relevant here
+#' 
+do.call_relevant = function(name, payload, arguments)
+{
+  function_args = formals(name)
+  
+  toforward = names(function_args) %in% names(arguments)
+  
+  toforwardnames = as.vector(names(function_args))[toforward]
+  
+  present_args = arguments[toforwardnames]
+  
+  if(is.data.frame(payload))
+  {
+    present_args[["data.df"]] = payload
+  }
+  else if(is.ggplot(payload))
+  {
+    present_args[["plot"]] = payload
+  }
+  
+  return(do.call(name, present_args))
+}
+
+
+
+#' Generate ggplot colour hues, for manually specifiying colours that match the default theme
+#'
+#' @param n Number of variables to access
+#' 
+#' @importFrom grDevices hcl
+#'
+#' @return A vector of ggplot colours
+#' 
+#' @keywords internal
+#' 
+#' @examples
+vascr_gg_color_hue <- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
+}
+
+
+#' Rename a column - cleanup of the built in funciton
+#'
+#' @param data.df The datset to rename
+#' @param old Old column name
+#' @param new Replacement column name
+#'
+#' @return The updated dataset
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' # vascr_rename_columns(data.df, "Unit", "Measurement")
+#' 
+vascr_rename_columns = function(data.df, old, new)
+{
+  names(data.df)[names(data.df) == old] <- new
+  return(data.df)
+}
+
+
+#' Remove an item from a vector
+#' 
+#' This function cleans up the default R syntax
+#'
+#' @param values The value(s) to remove
+#' @param vector The vector to search and modify
+#'
+#' @return The modified vector
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' 
+#' #vector = unique(growth.df$Unit)
+#' #vector = vascr_remove_from_vector("Rb", vector)
+#' 
+vascr_remove_from_vector = function(values, vector)
+{
+  for (value in values)
+  {
+    vector = vector[!(vector == value)]
+  }
+  
+  return(vector)
+}

@@ -4,9 +4,9 @@
 # cleanreplicates = TRUE
 # 
 # 
-# # First we describe the experiment with a variety of tests derrived from the  ecis_test suite
+# # First we describe the experiment with a variety of tests derrived from the  vascr_test suite
 # 
-# design = ecis_test_design(data)
+# design = vascr_test_design(data)
 # 
 # # Setup the data structures required
 # 
@@ -25,7 +25,7 @@
 #     if(cleanreplicates == TRUE) # If needed, we remove unbalanced samples
 #     {
 #       removalvector = as.vector(design$unbalanced_replicates["Sample"])
-#       subsetdata = ecis_subset(growth.df, sample = removalvector$Sample)
+#       subsetdata = vascr_subset(growth.df, sample = removalvector$Sample)
 # 
 #       print("Replicates cleaned: ")
 #       replicateshr = paste(removalvector$Sample, collapse = " , ")
