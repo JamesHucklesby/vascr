@@ -201,7 +201,7 @@ vascr_detect_level = function(data)
 vascr_remove_metadata = function(data.df, subset = "all")
 {
   
-  summary_level = vascr_test_summary_level(data.df)
+  summary_level = vascr_detect_level(data.df)
   
   if(summary_level == "summary" || summary_level == "experiment")
   {
@@ -303,12 +303,12 @@ vascr_priority = function(data = NULL, explicit = NULL, priority = NULL)
    
   }
   
+  
   # Remove explicit variables, if not specified use the defaultstack
   if(!is.null(explicit))
   {
     stack = defaultstack[!defaultstack %in% explicit]
-  }else
-  {
+  }else {
     stack = defaultstack
   }
   
@@ -319,26 +319,11 @@ vascr_priority = function(data = NULL, explicit = NULL, priority = NULL)
     return (stack)
   }
   
-  # Strip out anything from the stack that is not actually in the data
-  datacols = colnames(data)
+  # Strip out anything from the stack that is not actually changing in the data
+  datacols = vascr_find_changing_cols(data)
   cols = stack[stack %in% datacols]
-  unique = c()
-  
-  for(val in cols)
-  { # Stack not generated yet
-    unique = c(unique, as.vector(unique(data[val])))
-  }
-  
-  # Then calculate if the length of each one is greater than 1 (IE it's worth plotting as they're not all the same)
-  lengths = c()
-  for (val in unique){
-    lengths = c(lengths,(length(val))>1)
-  }
-  
-  #Filter out the columns that are relevant
-  stack = cols[lengths]
-  
-  return(stack)
+
+  return(cols)
   
 }
 

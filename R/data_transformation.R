@@ -43,9 +43,14 @@ vascr_summarise = function(data.df, level = "wells")
   for(lev in level)
   {
     
-    if(lev=="summary" | lev == "experiments" | lev =="wells")
+    if(lev == "summary")
     {
-      data.df = vascr_summarise_mean(data.df, lev)
+      data.df = vascr_summarise_summary(data.df)
+    }
+    
+    if(lev == "experiments")
+    {
+      data.df = vascr_summarise_experiments(data.df)
     }
     
   }
@@ -56,88 +61,82 @@ vascr_summarise = function(data.df, level = "wells")
 
 
 
-
-
-#' Create the means from differnet wells, experiments or an overall summary
-#' 
-#' Creates and ECIS dataset that has had all samples of the same type averaged together. Assumes that each sample is independent, IE that this function has already been run on individual experiments
+#' Title
 #'
-#' @param data.df An ECIS dataset in standard format
-#' @param level The level of replication to generate the summary at. Options are "experiment" or "summary"
+#' @param data.df 
 #'
-#' @return An ECIS dataset supplimented with summary statistics
+#' @return
 #' 
-#' @export
-#' @importFrom dplyr summarise group_by n
-#' @importFrom magrittr "%>%"
+#' @importFrom dplyr n
+#' 
+#' @keywords internal
 #'
 #' @examples
+#' vascr_summarise_experiments(data.df = growth.df)
 #' 
-#' vascr_summarise_mean(growth.df, "summary")
-#' vascr_summarise_mean(growth.df, "experiments")
-#' vascr_summarise_mean(growth.df, "wells")
-#' 
-#' vascr_test_summary_level(growth.df)
-#' 
-vascr_summarise_mean <- function(data.df, level = "summary") {
+vascr_summarise_experiments = function(data.df)
+{
   
-  # Use a test to check what the current summary level of the data is
-  summary_level = vascr_test_summary_level(data.df)
-  
-  if(summary_level == level)
-  {
-    return(data.df)
-  }
-  
+  summary_level = vascr_detect_level(data.df)
+ 
   if(summary_level == "wells")
   {
     experiment.df = data.df %>%
       group_by(Time, Unit, Frequency, Sample, Experiment, Instrument) %>%
       summarise(sd = sd(Value), n = n(),min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","),Value = mean(Value), .groups = "drop")
+
     
-    othervars.df = select(data.df, -Value, -Well) %>% distinct()
+    experiment.df = experiment.df %>% ungroup()
     
-    experiment.df = experiment.df %>% ungroup() %>% left_join(othervars.df, by = c("Time", "Unit", "Frequency", "Sample", "Experiment", "Instrument"))
   }else if(summary_level == "experiments")
   {
     experiment.df = data.df
+  } else
+  {
+    stop("Requested data is less summarised than the data input, try again")
   }
   
-  # If possible, make summary resolution
-  
-  if (summary_level == "experiments" || summary_level == "wells")
-  {
-    summary.df = experiment.df %>%
-      group_by(Time, Unit, Frequency, Sample, Instrument) %>%
-      summarise(sd = sd(Value), totaln = sum(n), n = n(), min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","), Value = mean(Value), Experiment = "Summary",  .groups = "drop")
-    
-    othervars.df = select(experiment.df, -'Value', -'Well', -'Experiment', -'n', -'sd', -'min', -'max') %>% distinct()
-    
-    summary.df = left_join(summary.df, othervars.df, by = c("Time", "Unit", "Frequency", "Sample", "Instrument"))
-  }
-  else
-  {
-    warning ("Can't determine summary level, check data frame integrity")
-    return ("NA")
-  }
-  
-  
-  if(level == "summary" && exists ("summary.df"))
-  {
-    summary.df = ungroup(summary.df)
-    return(summary.df)
-  }else if(level == "experiments" && exists ("experiment.df"))
-  {
-    experiment.df = ungroup(experiment.df)
-    return(experiment.df)
-  }else
-  {
-    warning("Invalid level requested. Please check level is valid and you have presented a data frame that has a higher resolution than the summary you have requested")
-    return("NA")
-  }
-  
+  return(experiment.df)
 }
 
+
+#' Title
+#'
+#' @param data.df 
+#'
+#' @return
+#' @export
+#' 
+#' @keywords internal
+#'
+#' @examples
+vascr_summarise_summary = function(data.df)
+{
+  
+  summary_level = vascr_detect_level(data.df)
+  
+  if(summary_level == "wells")
+  {
+    data.df = vascr_summarise_experiments(data.df)
+    summary_level = vascr_detect_level(data.df)
+  }
+  
+  if(summary_level == "experiments")
+  {
+  summary.df = data.df %>%
+          group_by(Time, Unit, Frequency, Sample, Instrument) %>%
+          summarise(sd = sd(Value), totaln = sum(n), n = n(), min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","), Value = mean(Value), Experiment = "Summary",  .groups = "drop")
+  return(summary.df)
+  }
+  
+  else if(summary_level == "summary")
+  {
+    return(data.df)
+  }
+  
+  stop("Invalid or impossible level detected")
+  
+}
 
 
 
@@ -275,19 +274,20 @@ vascr_align_key = function(data.df, point, discrepancy = 5) {
 #'
 #' @examples
 #' 
-#' #data = vascr_subsample(growth.df, 50)
+#' #unique(vascr_subsample(growth.df, 10)$Time)
 #' #head(data)
 #' 
 vascr_subsample = function(data.df, nth) {
   
-   if(is.infinite(nth))
+  Time = unique(data.df$Time)
+  TimeID = c(1:length(Time))
+  
+   if(is.infinite(nth) || nth == 1 || length(Time)==1)
    {
      return(data.df)
    }
   
     
-    Time = unique(data.df$Time)
-    TimeID = c(1:length(Time))
     time.df = data.frame(TimeID, Time)
     
     withid.df = dplyr::left_join(data.df, time.df, by = "Time")
@@ -344,7 +344,6 @@ vascr_current_frequency = function (data.df)
 #'
 #' @return An ECIS dataset with re-located time points
 #' 
-#' @keywords internal
 #'
 #' @examples
 #' 
@@ -591,61 +590,53 @@ vascr_prep_graphdata = function(data.df, unit = "", frequency = Inf, time = NULL
     return(data.df)
   }
   
-  if(error>1 && error)
-  
   # First subset away what we don't need for normalising to a particular point (speeds up things a lot)
     #If requested
-  data.df = vascr_subset(data.df, unit = unit, frequency = frequency, experiment = experiment)
+  data2.df = vascr_subset(data.df, unit = unit, frequency = frequency, experiment = experiment)
     #And if error is low
-  data.df = vascr_subset(data.df, subsample = max(subsample, error,1))
+  data2.df = vascr_subsample(data2.df, max(subsample, error,1))
+  
   
   # Then normalise or align key points, if required. Alignment then normalisation are preformed, as the final data, not the transposed data is usually what is requested. This behaviour can be changed by manually formulating the data ahead of time.
   if(!is.null(alignkey))
   {
-    data.df = vascr_align_key(data.df, alignkey)
+    data2.df = vascr_align_key(data2.df, alignkey)
   }
   # 
   if(!is.null(normtime))
   {
-    data.df = vascr_normalise(data.df, normtime, divide)
+    data2.df = vascr_normalise(data2.df, normtime, divide)
   }
 
   # Then subset down to the timepoints that are required
-  data.df = vascr_subset(data.df, time = time)
-
-
-  # If data is not preprocessed and data is not exploded already, explode the dataset
-  if (isFALSE(vascr_test_exploded(data.df)))
-  {
-    data.df = vascr_explode(data.df)
-  }
+  data2.df = vascr_subset(data2.df, time = time)
 
 
   if(stripidentical)
   {
-    data.df$Sample = (vascr_implode(data.df, stripidentical = TRUE))$Sample
+    data2.df$Sample = (vascr_implode(data2.df, stripidentical = TRUE))$Sample
   }
   
-  data.df = vascr_summarise(data.df, level = level)
+  data2.df = vascr_summarise(data2.df, level = level)
 
    # Replace all the underscores in titles with spaces
-    data.df$Sample = str_replace(data.df$Sample, "_", " ")
+    data2.df$Sample = str_replace(data2.df$Sample, "_", " ")
 
 
     # Sort the order of titles as numbers
     if(!is.null(sortkeyincreasing))
     {
-      data.df$Sample = vascr_factorise_and_sort(data.df$Sample, sortkeyincreasing)
-      data.df$Frequency = vascr_factorise_and_sort(data.df$Frequency, sortkeyincreasing)
+      data2.df$Sample = vascr_factorise_and_sort(data2.df$Sample, sortkeyincreasing)
+      data2.df$Frequency = vascr_factorise_and_sort(data2.df$Frequency, sortkeyincreasing)
     }
 
   # Remove any values that are unplottable, IE generation of SD or SEM failed, likely due to missing values from modeling failures
-    data.df = drop_na(data.df, Value)
+  data2.df = drop_na(data2.df, Value)
 
-  data.df = vascr_summarise_errortype(data.df, errortype)
+  data2.df = vascr_summarise_errortype(data2.df, errortype)
 
   
-  return(data.df)
+  return(data2.df)
   
 }
 

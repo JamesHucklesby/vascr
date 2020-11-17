@@ -4,7 +4,12 @@
 \alias{vascr_summarise_cross_correlation}
 \title{Generate all cross-correlation pairs between sets of values}
 \usage{
-vascr_summarise_cross_correlation(data.df, reference = NULL, comparator = NULL)
+vascr_summarise_cross_correlation(
+  data.df,
+  reference = NULL,
+  comparator = NULL,
+  manualpairs = NULL
+)
 }
 \arguments{
 \item{data.df}{The vascr dataset to summarise}

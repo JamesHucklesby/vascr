@@ -4,7 +4,14 @@
 \alias{vascr_plot_cross_correlation}
 \title{Plot cross correlation data from a vascr dataset}
 \usage{
-vascr_plot_cross_correlation(data.df)
+vascr_plot_cross_correlation(
+  data.df,
+  reference = NULL,
+  comparator = NULL,
+  manualpairs = NULL,
+  show_index = NULL,
+  plot = "all"
+)
 }
 \arguments{
 \item{data.df}{The dataset to plot}

@@ -50,7 +50,7 @@ xcelligence_lengthen_platemap = function(data)
 #' @examples
 #' # This file is used in import_cellzScope exclisivley so can be tested with it
 #' 
-import_mdb = function(file, table)
+import_mdb = function(file, table, password)
 
 {
   
@@ -76,7 +76,7 @@ import_mdb = function(file, table)
       s$threads <- "Threads=4"
       s$buffer <- "MaxBufferSize=4096"
       s$timeout <- "PageTimeout=5"
-      s$pwd <- "PWD=RTCaDaTa"
+      s$pwd <- paste("PWD=", password, sep = "")
       paste(s, collapse=";")
     })
 
@@ -135,7 +135,7 @@ import_mdb = function(file, table)
 #' data7 = import_xcelligence(file = rawdata, key = sampledefine, "TEST7")
 #' 
 #'  
-import_xcelligence = function(file, key, experimentname = "NA")
+import_xcelligence = function(file, key, experimentname = "NA", password = "RTCaDaTa")
 {
   vascr_validate_file(file, "plt")
   
@@ -162,7 +162,7 @@ import_xcelligence = function(file, key, experimentname = "NA")
 # Import all the tables in the list, saving them back to global variables by the same name.
 for(table in tables)
 {
-  assign(table, import_mdb(file, table))
+  assign(table, import_mdb(file, table, password))
 }
 
 # Delete the temporary file now we have what we need in R
@@ -261,9 +261,9 @@ if(missing(key))
 # returndata = vascr_combine(xcellCI, finaldata)
 
 # Make CI
-returndata = xcelligence_import_generate_CI(finaldata)
+#returndata = xcelligence_import_generate_CI(finaldata)
 
-return(returndata)
+return(finaldata)
 }
 
 

@@ -20,4 +20,3 @@ Explode out continuous data from Sample
 
 
 }
-\keyword{internal}

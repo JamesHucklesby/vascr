@@ -20,18 +20,7 @@ timetouse = vascr_find_time(data.df, time)
 filtered.df = data.df
 filtered.df = vascr_subset(filtered.df, unit = unit, frequency = frequency, time = timetouse)
 
-if(!vascr_test_exploded(filtered.df))
-{
-  exploded = vascr_explode(filtered.df)
-}
-else
-{
-  exploded = filtered.df
-}
-
-imploded = vascr_implode(exploded, stripidentical = TRUE)
-
-return(imploded)
+return(filtered.df)
 }
 
 
@@ -71,7 +60,7 @@ vascr_prep_stat_priority = function(data.df,priority = NULL)
 #' # vascr_formula(c("cells","well"))
 vascr_formula = function(priority)
 {
-  formula = paste("Value ~ ",priority[[1]]," + ", priority[[2]])
+  formula = paste(priority[[1]]," ~ ",priority[[3]]," + ", priority[[2]])
   return(formula)
 }
 
@@ -94,11 +83,14 @@ vascr_formula = function(priority)
 #' 
 vascr_lm = function(data.df, unit, frequency, time, priority = NULL)
 {
-  data = vascr_prep_statdata(data.df, unit, frequency, time)
-  priority = vascr_prep_stat_priority(data, priority)
+  data.df = vascr_prep_statdata(data.df = data.df, unit = unit, frequency = frequency, time = time)
+  
+  priority = vascr_priority(data.df, priority)
   
   formula = vascr_formula(priority)
-  fit <- lm(formula, data = data)
+  print(formula)
+  
+  fit <- lm(formula, data = data.df)
   return(fit)
 }
 
@@ -251,9 +243,9 @@ vascr_plot_normality = function(data.df, unit, frequency, time, priority = NULL)
 vascr_levene = function(data.df, unit, frequency, time, priority = NULL)
 {
   data.df = vascr_prep_statdata(data.df, unit, frequency, time)
-  fpriority = vascr_prep_stat_priority(data.df, priority)
+  fpriority = vascr_priority(data.df, priority)
   
-  leveneformula = paste("Value ~ ",fpriority[[1]]," * ", fpriority[[2]])
+  leveneformula = paste("Value ~ ",fpriority[[2]]," * ", fpriority[[3]])
   modeltest = lm(leveneformula, data = data.df)
   levenetest = leveneTest(modeltest)
   
@@ -324,22 +316,18 @@ vascr_plot_levene = function(data.df, unit, frequency, time, priority = NULL)
 #' @examples
 #' # vascr_plot_time_vline(growth.df, "R", 4000, 100)
 #' 
-vascr_plot_time_vline = function(data.df, unit, frequency, time, priority = NULL, ...)
+vascr_plot_time_vline = function(data.df, unit, frequency, time, priority = NULL)
 {
   
-  dots = list(...)
-  
   # Round the number given to the function to the nearest actual measurement
-  timetouse = vascr_find_time(data.df, time)
-  
-  filtered.df = data.df
-  filtered.df = vascr_subset(filtered.df, unit = unit, frequency = frequency)
+   timetouse = vascr_find_time(data.df, time)
   
   
-    timeplot = vascr_plot_line(data.df, unit = unit, frequency = frequency, title = "Time Selected", level = "summary")
+    dataset = vascr_prep_graphdata(data.df,unit = unit, frequency = frequency, level = "summary")
+    timeplot = vascr_plot_line(dataset)
     timeplot = timeplot + geom_vline(xintercept = timetouse, color = "blue")
     timeplot = timeplot + labs(title = "Timepoint selected")
-    timeplot = do.call_relevant("vascr_polish_plot", timeplot, dots)
+    timeplot = vascr_polish_plot(timeplot)
   
     return(timeplot)
 }
@@ -354,6 +342,7 @@ vascr_plot_time_vline = function(data.df, unit, frequency, time, priority = NULL
 #' @param priority vascr priority, if empty default will be used
 #' 
 #' @importFrom ggplot2 ggplot aes geom_boxplot labs
+#' @importFrom stringr 
 #'
 #' @return A ggplot2 box plot of replicate experiments
 #' @keywords internal
@@ -365,10 +354,12 @@ vascr_plot_box_replicate = function(data.df, unit, frequency, time, priority = N
 {
   
   data = vascr_prep_statdata(data.df, unit, frequency, time)
-  fpriority = vascr_prep_stat_priority(data, priority)
+  fpriority = vascr_priority(data, priority)
   
-data$Sample = vascr_factorise_and_sort(data$Sample)
- overallplot <- ggplot(data, aes_string(x=fpriority[1], y="Value", color = fpriority[2])) + 
+  data$Sample = str_replace_all(data$Sample, "\\+", "\\\n")
+  data$Sample = vascr_factorise_and_sort(data$Sample)
+  
+ overallplot <- ggplot(data, aes_string(x=fpriority[2], y="Value", color = fpriority[3])) + 
   geom_boxplot() + labs(title = "Replicate data")
 
 return(overallplot)
@@ -404,7 +395,7 @@ qqplot = vascr_plot_qq(data.df, unit, frequency, time, priority)
 normaloverlayplot = vascr_plot_normality(data.df, unit, frequency, time, priority)
 leveneplot = vascr_plot_levene(data.df, unit, frequency, time, priority)
 
-differences = vascr_plot_bar(data.df, unit = unit, time = time, frequency = frequency, confidence = 0.0499)
+differences = vascr_plot_bar_anova(data.df, unit = unit, time = time, frequency = frequency, confidence = 0.95, priority = NULL)
 
 grid =  plot_grid(arrangeGrob(timeplot, overallplot, ncol = 2),
                   arrangeGrob(qqplot, normaloverlayplot, leveneplot, ncol = 3),
@@ -441,7 +432,6 @@ vascr_tukey = function(data.df, unit, frequency, time, priority = NULL, raw = FA
   }
   else
   {
-  data.df = vascr_implode(data.df, stripidentical = TRUE)
   sigtable = vascr_make_significance_table(data.df, time, unit, frequency, 1, format = "Tukey_data")
   sigtable = arrange(sigtable, "Tukey.levels")
   }
@@ -469,17 +459,32 @@ vascr_tukey = function(data.df, unit, frequency, time, priority = NULL, raw = FA
 #' 
 vascr_summarise_anova = function(data.df, unit, frequency, time, priority = NULL)
 {
-  data2.df = vascr_prep_statdata(data.df, unit, frequency, time)
-  priority = vascr_priority(data2.df, priority)
-  model = vascr_formula(priority)
-  lm = vascr_lm(data.df, unit, frequency, time, priority)
-  anova = anova(lm)
-  tukey =  vascr_tukey(data.df, unit, frequency, time, priority)
-  levene = vascr_levene(data.df, unit, frequency, time, priority)
-  shapiro = vascr_shapiro(data.df, unit, frequency, time, priority)
+  data21.df = vascr_prep_statdata(data.df, unit, frequency, time)
+  filledpriority = vascr_priority(data = data21.df, priority)
   
-  print(priority)
-  print(anova)
+  model = vascr_formula(filledpriority)
+  
+  newlm = lm(Value~ Experiment + Sample,
+             contrasts=list(Sample='contr.sum', Experiment ='contr.sum'), data = data21.df)
+
+  newanova = Anova(newlm, type='III')
+  
+  # 
+   # fit.lm2<- aov(Value~Sample + Experiment, data = data21.df)  
+   # thsd<-TukeyHSD(fit.lm2)
+  
+  
+  lm = vascr_lm(data21.df, unit, frequency, time, priority)
+  anova = anova(lm)
+  
+  tukey =  vascr_tukey(data21.df, unit, frequency, time, priority, raw = TRUE)
+  levene = vascr_levene(data21.df, unit, frequency, time, priority)
+  shapiro = vascr_shapiro(data21.df, unit, frequency, time, priority)
+  
+  print(data21.df)
+  print(filledpriority)
+  print(model)
+  print(newanova)
   print(levene)
   print(shapiro)
   print(tukey)

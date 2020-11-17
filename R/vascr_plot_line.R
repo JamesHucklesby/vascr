@@ -28,27 +28,9 @@
 #' #vascr_plot_line(growth.df, unit = "R", frequency = "raw", time = 50,
 #' # level = "experiments", title = "AAA", error = 0, logscale = "x")
 #' 
-vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1, ...)
+vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1)
 {
   data = data.df
-  
-  dots = list(...)
-  if(dots["level"] == "deviation")
-  {
-    plot = vascr_plot_deviation(data, visualisation = "line", priority = priority, ...)
-    plot = do.call_relevant("vascr_polish_plot", plot, dots)
-    return(plot)
-  }
-  
-  
-  # Gather graph data based on the ...
-  dots = list(...)
-  if(error>1 && error<Inf)
-  {
-  data = vascr_subsample(data, error)
-  }
-  
-  data = do.call_relevant("vascr_prep_graphdata", data, dots)
   
   # Search for priority if it's not found
   priority = vascr_priority(data, c("Value"), priority = priority)
@@ -74,13 +56,16 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1, .
     
     priority = priority[!priority == "Well"] # Remove well from the priority as it's no longer required
     
+    data = unite(data, col = "wellstamp", Well, priority[2], priority[3], remove = FALSE)
+    wellstamp = "wellstamp"
+    
     if(length(priority) ==2)
     {
-      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = interaction(data$Well, priority[2]), colour = priority[2])) + geom_line()
+      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2])) + geom_line()
     }
     else if (length(priority)>2)
     {
-      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = interaction(data$Well, priority[3], priority[2]), colour = priority[2], linetype = priority[3])) + geom_line()
+      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2], linetype = priority[3])) + geom_line()
     }
     
   }
@@ -97,7 +82,7 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1, .
       
     }else if (length(priority)>2) {
       
-      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, colour = priority[2], linetype = priority[3], fill = priority[2])) + geom_line()
+      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, colour = priority[2], linetype = priority[3], fill = priority[2], ymax = ymax, ymin = ymin)) + geom_line()
     }
   }
   
@@ -110,8 +95,7 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1, .
     plot = plot + geom_errorbar()
   }
   
-  plot = do.call_relevant("vascr_polish_plot", plot, dots)
-  
   return(plot)
   
 }
+

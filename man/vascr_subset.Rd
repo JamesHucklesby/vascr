@@ -96,4 +96,6 @@ Subset a vascr datset based on a numebr of factors
 
 # vascr_subset(growth.df, time = c(5,20))
 
+vascr_subset(growth.df, unit = "Rb")
+
 }

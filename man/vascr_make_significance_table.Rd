@@ -9,6 +9,7 @@ vascr_make_significance_table(
   time,
   unit,
   frequency,
+  priority,
   confidence = 0.95,
   format = "toplot"
 )

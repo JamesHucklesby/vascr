@@ -198,26 +198,27 @@
 #' #vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95)
 #' #vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95, format = "Tukey_data")
 #' 
-vascr_make_significance_table = function(data.df, time, unit, frequency, confidence = 0.95, format = "toplot")
+vascr_make_significance_table = function(data.df, time, unit, frequency, priority, confidence = 0.95, format = "toplot")
 {
   
-  data = vascr_subset(data.df, time = time, unit = unit)
-  
-  vascr_find_frequency(data.df, 4000)
-  
+  data.df$Sample = str_replace(data.df$Sample, "-", "~")
   
   # What is the effect of the treatment on the value ?
-  model=lm(data$Value ~ data$Experiment + data$Sample)
-  ANOVA=aov(model)
+  lm = vascr_lm(data.df, unit, frequency, time)
+  
+  data.df$Sample = as.factor(data.df$Sample)
+  ANOVA = Anova(lm, type = "III")
+  
   
   # Tukey test to study each pair of treatment :
-  TUKEY <- TukeyHSD(x=ANOVA,conf.level=0.95)
+  tukeyanova = aov(lm)
+  TUKEY <- TukeyHSD(x=tukeyanova)
   
   # Tuckey test representation :, shouldn't be included here
   #plot(TUKEY , las=1 , col="brown")
   
   # Extract labels and factor levels from Tukey post-hoc 
-  Tukey.levels <- TUKEY[["data$Sample"]][,4] # pull out the tukey significance levels
+  Tukey.levels <- TUKEY[[2]][,4] # pull out the tukey significance levels
   Tukey.labels <- data.frame(Tukey.levels)
   
   

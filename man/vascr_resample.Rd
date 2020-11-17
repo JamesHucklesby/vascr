@@ -29,4 +29,3 @@ This will currently over-sample data, use with care
 #head (data)
 
 }
-\keyword{internal}

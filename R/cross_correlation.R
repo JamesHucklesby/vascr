@@ -50,6 +50,8 @@ vascr_find_changing_cols = function(data.df)
 vascr_summarise_change = function(data.df, showblank = FALSE)
 {
 
+data.df$sample = NULL
+  
 datalevel = vascr_detect_level(data.df)
 
 data.df = vascr_remove_stats(data.df)
@@ -95,7 +97,7 @@ deltadata$deltacols = NULL
 
 if(col_exists(deltadata, "well"))
 {
-  deltadata$sample = paste (deltadata$well,"+", deltadata$sample)
+  #deltadata$sample = paste (deltadata$well,"+", deltadata$sample)
   deltadata$well = NULL
 }
 
@@ -142,9 +144,11 @@ vascr_ccf_vectors = function(v1, v2, plot = FALSE)
 #' ret = vascr_ccf_pairs(deltadata, reference = "internal")
 #' ret = vascr_ccf_pairs(deltadata, reference = "[ 1 : Experiment 1 | 35000 ]")
 #' ret = vascr_ccf_pairs(deltadata, reference = "[ 1 : Experiment 1 | 25000 ]", comparator = "[ 1 : Experiment 1 | 30000 ]")
+#' 
+#' 
 vascr_ccf_pairs = function(data.df, reference = NULL, comparator = NULL)
 {
-   deltadata = data.df
+    deltadata = data.df
   
     uniquesamples = unique(deltadata$sample)
   
@@ -232,6 +236,9 @@ deltadata = vascr_summarise_change(data.df)
 if(is.null(manualpairs))
 {
 combinations = vascr_ccf_pairs(deltadata, reference, comparator)
+}else
+{
+  combinations = manualpairs
 }
 
 coeffs =c()
@@ -246,6 +253,9 @@ for(current in combinations$id)
   
   t1 = subset(deltadata, deltadata$sample == s1)
   t2 = subset(deltadata, deltadata$sample == s2)
+  
+  t1 = arrange(t1, time)
+  t2 = arrange(t2, time)
   
   if(!isTRUE(all.equal(t1$time, t2$time)))
     {
@@ -268,6 +278,10 @@ for(current in combinations$id)
 
 combinations$coeffs = coeffs
 combinations$sample = paste(combinations$V1, combinations$V2, sep = "\n")
+
+combinations$sample = str_replace_all(combinations$sample, "Frequency", "Hz")
+combinations$sample = str_replace_all(combinations$sample, "Instrument", "")
+combinations$sample = str_replace_all(combinations$sample, "Unit", "")
 
 ret = separate(combinations, V1 ,into = c("W1", "S1"), sep = " \\+ ", remove = FALSE)
 ret = separate(ret, V2, into = c("W2", "S2"), sep =  "\\+ ", remove = FALSE)
@@ -313,7 +327,7 @@ return(ret)
 #' @examples
 #' # vascr_plot_cross_correlation(growth.df)
 #' 
-vascr_plot_cross_correlation = function(data.df, reference = NULL, comparator = NULL, manualpairs = NULL, show_index = NULL, plot = "all")
+vascr_plot_cross_correlation = function(data.df, reference = NULL, comparator = NULL, manualpairs = NULL, show_index = NULL, plot = "all", order = TRUE)
 {
   
 deltadata = vascr_summarise_change(data.df)
@@ -321,7 +335,16 @@ deltadata$value = replace_na(deltadata$value, 0)
 deltadata = deltadata %>% group_by(sample) %>% mutate(value = value/max(value))
 
 combinations = vascr_summarise_cross_correlation(data.df, reference, comparator, manualpairs)
+
+if(isTRUE(order))
+{
 pcombinations = arrange(combinations, coeffs)
+} else
+{
+  pcombinations = combinations
+}
+
+
 pcombinations = mutate(pcombinations, sample=factor(sample, levels=sample)) 
 
 if(!is.null(show_index))
@@ -350,11 +373,10 @@ pcombinations$V2 = factor(pcombinations$V2, levels = colourtable$sample)
 
 
  lineplot = ggplot(deltadata, aes(x = time, y = value, group = sample)) + geom_line(aes(color = sample))
- barplot = ggplot(pcombinations, aes(x = sample, y = coeffs, color = V1, fill = V2)) + geom_col(size = 2, width = 0.8) + coord_flip() + ylim(-1,1)
+ barplot = ggplot(pcombinations, aes(x = sample, y = coeffs, color = V1, fill = V1)) + geom_col(size = 2, width = 0.8) + coord_flip() + ylim(-1,1) + xlab("CCF")
 
  
  p1 = lineplot + scale_color_manual(values = colourtable$colours)
- p2 = barplot + scale_fill_manual(values = v2colours) + scale_color_manual(values = v1colours)
 
  p2 = barplot+ scale_fill_manual(values = colourtable$colours,
                                  limits = colourtable$sample,

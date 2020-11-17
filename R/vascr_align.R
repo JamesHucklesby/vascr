@@ -92,6 +92,7 @@ vascr_subset = function(data.df,
   subset.df = subset(subset.df, subset.df$Value %in% values)
   
   # Frequency
+  subset.df$Frequency = as.numeric(subset.df$Frequency)
   frequencies = vascr_find_frequency(subset.df, frequency)
   subset.df = subset(subset.df, subset.df$Frequency %in% frequencies)
   

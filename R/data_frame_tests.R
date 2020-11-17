@@ -107,34 +107,5 @@ vascr_test_design = function(data.df, verbose = FALSE)
 }
 
 
-#' Test the summary level of an ECIS dataframe
-#'
-#' @param data.df A standard ECIS dataframe
-#'
-#' @return A summarised standard ECIS dataframe
-#'
-#' @keywords internal
-#'
-#' @examples
-#' # vascr_test_summary_level(growth.df)
-#' 
-vascr_test_summary_level = function(data.df)
-{
-  if(identical(unique(data.df$Experiment),"Summary"))
-  {
-    return ("summary")
-  }
-  
-  else if(identical(unique(data.df$Well),"Z00"))
-  {
-    return ("experiments")
-  }
-  else
-  {
-  return("wells")
-  }
-  
-  
-}
 
 

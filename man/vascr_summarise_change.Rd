@@ -4,7 +4,7 @@
 \alias{vascr_summarise_change}
 \title{Create a data frame summarising the changing variables in a dataset in a single column}
 \usage{
-vascr_summarise_change(data.df)
+vascr_summarise_change(data.df, showblank = FALSE)
 }
 \arguments{
 \item{data.df}{The dataset to summarise}
@@ -16,8 +16,10 @@ A full dataset
 Create a data frame summarising the changing variables in a dataset in a single column
 }
 \examples{
-data.df = growth.df
-dat = vascr_summarise_change(data.df)
+data.df = vascr_subset(unifiedr, unit = "Rb")
+data.df = vascr_summarise(data.df, level = "experiments")
 
+dat = vascr_summarise_change(data.df)
+dat = vascr_summarise_change(data.df = mini3)
 }
 \keyword{internal}

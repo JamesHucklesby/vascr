@@ -4,7 +4,7 @@
 \alias{vascr_make_panel}
 \title{Combine mulitple VASCR plots into a single pannel}
 \usage{
-vascr_make_panel(..., plots = NULL, legend_from_index = 1)
+vascr_make_panel(..., plots = NULL, legend_from_index = 1, ncols = 1)
 }
 \arguments{
 \item{...}{The plots that need to be combined}
