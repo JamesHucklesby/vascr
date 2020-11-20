@@ -4,7 +4,7 @@
 \alias{vascr_plot_time_vline}
 \title{Plot a line graph with a vertical line on it}
 \usage{
-vascr_plot_time_vline(data.df, unit, frequency, time, priority = NULL, ...)
+vascr_plot_time_vline(data.df, unit, frequency, time, priority = NULL)
 }
 \arguments{
 \item{data.df}{A vascr dataset}

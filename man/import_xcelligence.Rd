@@ -4,7 +4,7 @@
 \alias{import_xcelligence}
 \title{Import an xcelligence file}
 \usage{
-import_xcelligence(file, key, experimentname = "NA")
+import_xcelligence(file, key, experimentname = "NA", password = "RTCaDaTa")
 }
 \arguments{
 \item{file}{The file to import}

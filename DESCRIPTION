@@ -23,7 +23,7 @@ Imports: ggplot2,
         tibble, 
         gifski, graphics, 
         stats, utils, 
-         data.table, purrr, ggpubr, car, cowplot, textclean, svSocket, RODBC, tidyselect
+         data.table, purrr, ggpubr, car, cowplot, textclean, svSocket, RODBC, tidyselect, plotly
 Suggests: 
     knitr,
     rmarkdown,

@@ -4,7 +4,7 @@
 \alias{import_mdb}
 \title{Internal Function to import MDB files from access}
 \usage{
-import_mdb(file, table)
+import_mdb(file, table, password)
 }
 \arguments{
 \item{file}{Path to the file to import}

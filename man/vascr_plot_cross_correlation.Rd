@@ -10,7 +10,8 @@ vascr_plot_cross_correlation(
   comparator = NULL,
   manualpairs = NULL,
   show_index = NULL,
-  plot = "all"
+  plot = "all",
+  order = TRUE
 )
 }
 \arguments{

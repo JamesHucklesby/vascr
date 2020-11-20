@@ -153,7 +153,7 @@ vascr_summarise_summary = function(data.df)
 #'
 #' @return A standard ECIS dataset with each value normalised to the selected point.
 #' 
-#' @keywords internal
+#' @export
 #' 
 #' @importFrom dplyr left_join
 #'
@@ -344,6 +344,7 @@ vascr_current_frequency = function (data.df)
 #'
 #' @return An ECIS dataset with re-located time points
 #' 
+#' @export
 #'
 #' @examples
 #' 

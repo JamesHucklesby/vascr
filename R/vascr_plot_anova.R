@@ -192,7 +192,7 @@
 #' @importFrom magrittr "%>%"
 #'
 #' @return A table of what is significant
-#' @keywords internal
+#' @export
 #'
 #' @examples
 #' #vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95)

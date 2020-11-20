@@ -38,4 +38,3 @@ Make a dataframe of what is statistically significant
 #vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95, format = "Tukey_data")
 
 }
-\keyword{internal}

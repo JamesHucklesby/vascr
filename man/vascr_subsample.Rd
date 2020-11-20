@@ -19,7 +19,7 @@ Returns a subset of the original data set that has only every nth value. Greatly
 }
 \examples{
 
-#data = vascr_subsample(growth.df, 50)
+#unique(vascr_subsample(growth.df, 10)$Time)
 #head(data)
 
 }

@@ -25,4 +25,3 @@ This function normalises each unique experiment/well combination to it's value a
 #head(data)
 
 }
-\keyword{internal}

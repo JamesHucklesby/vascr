@@ -5,7 +5,7 @@
 \title{Plot a bar chart with ANOVA statistics superimposed on it}
 \usage{
 vascr_plot_bar_anova(
-  data,
+  data.df,
   priority,
   confidence,
   time,
@@ -17,8 +17,6 @@ vascr_plot_bar_anova(
 )
 }
 \arguments{
-\item{data}{A vascr dataset}
-
 \item{priority}{The priority of values to export}
 
 \item{confidence}{The minmum confidence level to display}
@@ -34,6 +32,8 @@ vascr_plot_bar_anova(
 \item{error}{The style of eror bars to plot}
 
 \item{...}{Any arguement to vascr_prep_graphdata or vascr_polish_plot. Use this to select values ect.}
+
+\item{data}{A vascr dataset}
 }
 \value{
 A vascr bar plot with statistics attached to it

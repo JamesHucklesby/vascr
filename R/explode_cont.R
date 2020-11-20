@@ -8,6 +8,8 @@
 #' @importFrom tidyr separate_rows pivot_wider separate pivot_wider
 #' @importFrom magrittr "%>%"
 #' @importFrom dplyr all_equal
+#' 
+#' @export
 #'
 #' @examples
 #' # growth.df$Instrument ="ECIS"

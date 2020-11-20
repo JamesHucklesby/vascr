@@ -342,7 +342,7 @@ vascr_plot_time_vline = function(data.df, unit, frequency, time, priority = NULL
 #' @param priority vascr priority, if empty default will be used
 #' 
 #' @importFrom ggplot2 ggplot aes geom_boxplot labs
-#' @importFrom stringr 
+#' @importFrom stringr str_replace_all
 #'
 #' @return A ggplot2 box plot of replicate experiments
 #' @keywords internal
@@ -449,6 +449,7 @@ vascr_tukey = function(data.df, unit, frequency, time, priority = NULL, raw = FA
 #' @param priority Priority list of variables to run tests on
 #' 
 #' @importFrom stats anova
+#' @importFrom car Anova
 #' 
 #' @keywords internal
 #'

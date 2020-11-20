@@ -6,10 +6,11 @@
 \usage{
 vascr_prism(
   data.df,
-  unit,
-  frequency = 0,
-  replication = "summary",
-  experiment = ""
+  filename = NULL,
+  select_cols = NULL,
+  remove_blank = TRUE,
+  fill_blank = "Control",
+  include_wells = FALSE
 )
 }
 \arguments{
@@ -30,8 +31,13 @@ A data frame that can be copied and pasted into prism
 This function will automatically average the wells in each experiment, to give a prism-compatable dataset at the experiment level. This allows prism to generate appropriate error bars.
 }
 \examples{
-#vascr_prism(growth.df, 'Rb', replication = "summary")
+#vascr_prism(data.df = growth.df, unit = 'Rb', replication = "summary")
 #prism = vascr_prism(growth.df, 'Rb', replication = "wells")
 
+data.df = vascr_subset(growth.df, unit = "Rb")
+prism1 = vascr_prism(data.df)
+data.df = vascr_summarise(data.df, level = "experiments")
+prism2 = vascr_prism(data.df, select_cols = c("Experiment", "cells"))
+prism3 = vascr_prism(data.df)
 }
 \keyword{internal}

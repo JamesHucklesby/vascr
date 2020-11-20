@@ -126,6 +126,8 @@ import_mdb = function(file, table, password)
 #' @return A vascr datafile
 #' 
 #' @keywords internal
+#' 
+#' @export
 #'
 #' @examples
 #' # xCELLigence test
