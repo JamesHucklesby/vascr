@@ -48,14 +48,23 @@
 # unifiedr$pg.ml.TNFa = vascr_make_numeric(unifiedr$pg.ml.TNFa)
 # 
 # # Figure 2 ##################################################################################
-# # 
+# #
 # 
-# 
-# mini = subset(unifiedr, unifiedr$pg.ml.TNFa ==0 & unifiedr$pg.ml.IL1b ==0)
+# mini = unifiedr
 # mini = vascr_subset(mini, unit = "Z")
-# mini = vascr_summarise(mini, level = "experiments")
-# mini$Frequency = as.numeric(mini$Frequency)
-# mini$HCMVEC = as.character(mini$HCMVEC)
+# mini = vascr_subset(mini, time = 48)
+# mini = vascr_summarise(mini, level = "summary")
+# mini = vascr_explode(mini)
+# mini = subset(mini, mini$pg.ml.TNFa == "NA" & mini$pg.ml.IL1b == "NA")
+# mini$HCMVEC = str_remove(mini$HCMVEC, ",")
+# 
+# mini$HCMVEC = str_replace(mini$HCMVEC, "80000", "cm^2")
+# mini = subset(mini, mini$HCMVEC != "20000")
+# 
+# 
+# ggplot(mini) + geom_point(aes(x = Frequency, y = Value, color = Instrument, shape = HCMVEC), size = 2) + scale_x_continuous(trans='log10') + scale_y_continuous(trans='log10') + labs(x = "Frequency (Hz)", y = "Impedance (ohm)", shape = "Seeding Type") + scale_shape_discrete(labels = c("Media Only",expression(paste("250,000 HCMVEC cells/",cm^2))))+ theme(legend.text.align = 0)
+# 
+# 
 # 
 # lowtime = 5
 # hightime = 48
@@ -206,7 +215,7 @@
 #              title5, p4, p5, blank,
 #              title6, p6, p7, blank,
 #              title7, p8, blank, legend,
-#              
+# 
 #              widths = c(0.6, 1, 1,1),
 #              heights = c(0.2, 1,1,1,1)
 # )
@@ -226,7 +235,7 @@
 # p2 = vascr_plot_cross_correlation(rdata2, plot = "bar") + labs(title = " ")
 # 
 # rdata2 = subset(rdata, HCMVEC == 20000)
-# p3 = vascr_plot_cross_correlation(rdata2, plot = "line") + 
+# p3 = vascr_plot_cross_correlation(rdata2, plot = "line") +
 #   scale_color_manual(values = c(r1[1], r1[2], r1[3], r1[4]))  + labs(title = "20,000 cells")
 # 
 # p4 = vascr_plot_cross_correlation(rdata2, plot = "bar") +
@@ -305,8 +314,8 @@
 # 
 # # grid.arrange(p1+ nol + lim, p1.5+ nol, p11 + nol+lim, p11.5 + nol,
 # #              p2+nol+lim, p2.5+nol, p21 + nol+lim, p21.5 + nol,
-# #              p3+nol+lim, p3.5+nol, p31 + nol+lim, p31.5 + nol, 
-# #              
+# #              p3+nol+lim, p3.5+nol, p31 + nol+lim, p31.5 + nol,
+# #
 # #              ncol = 4)
 # 
 # blank = vascr_plot_blank()
@@ -316,7 +325,7 @@
 #                      p1.5 + nol, p2.5+nol, p3.5 + nol,
 #                      title5, p11 + nol + lim, p21+nol+lim, p31+nol+lim,
 #                      p11.5 + nol, p21.5+nol, p31.5 + nol,
-#                      
+# 
 #                      heights = c(0.3,1,1,1,1),
 #                      widths = c(0.3, 1,1,1),
 #                      layout_matrix = rbind(c(1, 2, 3, 4),
@@ -423,28 +432,28 @@
 # # frequencycompare = data.frame(Frequency = as.numeric(mini$Frequency), Unit = mini$Unit, Instrument = mini$Instrument)
 # # frequencycompare = subset(frequencycompare, frequencycompare$Unit == "Z")
 # # frequencycompare = unique(frequencycompare)
-# # 
-# # 
+# #
+# #
 # # # Compare growth curves between experiments, split by unit
 # # mini = subset(unifiedr, unifiedr$pg.ml.TNFa ==0 & unifiedr$pg.ml.IL1b ==0 & HCMVEC >0)
-# # 
+# #
 # # p1 = vascr_plot(mini, unit = "Rb", level = "experiments", title = "ECIS, Rb")
 # # p2 = vascr_plot(mini, unit = "TER", level = "experiments", title = "cellZscope, TER")
 # # p3 = vascr_plot(mini, unit = "CI", level = "experiments", title = "xCELLigence, CI")
 # # vascr_make_panel(p1, p2, p3)
-# # 
+# #
 # # mini = subset(unifiedr, unifiedr$pg.ml.TNFa ==0 & unifiedr$pg.ml.IL1b ==0 & HCMVEC >0)
 # # mini = vascr_subset(mini, unit = c("Rb", "CI", "TER"), time = c(1,90), frequency = c(0,10000))
 # # mini = vascr_summarise(mini, level = "experiments")
-# # 
+# #
 # # vascr_summarise_cross_correlation(mini)
-# # 
+# #
 # # vascr_plot_cross_correlation(mini)
-# # 
-# # 
-# # 
-# # 
-# # 
+# #
+# #
+# #
+# #
+# #
 # # #Original offset
 # # mini = subset(unifiedr, HCMVEC==80000)
 # # mini1 = vascr_normalise(mini, normtime = 0)
@@ -452,78 +461,78 @@
 # # p2 = vascr_plot(mini, unit = "TER", level = "wells")
 # # p3 = vascr_plot(mini, unit = "Z", level = "wells")
 # # vascr_make_panel(p2, p3)
-# # 
+# #
 # # # Compare equivelent modeled units
 # # mini = subset(unifiedr, HCMVEC==80000)
 # # p1 = vascr_plot(mini, unit = "Rb", level = "experiments")
 # # p2 = vascr_plot(mini, unit = "TER", level = "experiments")
 # # p3 = vascr_plot(mini, unit = "CI", level = "experiments")
 # # vascr_make_panel(p1, p2, p3)
-# # 
+# #
 # # mini1 = vascr_subset(unifiedr, time = c(30,75))
-# # 
+# #
 # # mini = subset(mini1, HCMVEC==80000)
 # # p1a = vascr_plot(mini, unit = "Rb", level = "experiments", title = "Rb, 80,000 cells")
 # # p2a = vascr_plot(mini, unit = "TER", level = "experiments", title = "TER, 80,000 cells")
 # # p3a = vascr_plot(mini, unit = "CI", level = "experiments", title = "CI, 80,000 cells")
-# # 
-# # 
-# # 
+# #
+# #
+# #
 # # mini = subset(mini1, HCMVEC==20000)
 # # p1b = vascr_plot(mini, unit = "Rb", level = "experiments", title = "Rb, 20,000 cells")
 # # p2b = vascr_plot(mini, unit = "TER", level = "experiments", title = "TER, 20,000 cells")
 # # p3b = vascr_plot(mini, unit = "CI", level = "experiments", title = "CI, 20,000 cells")
-# # 
-# # 
+# #
+# #
 # # vascr_make_panel(p1a, p1b,p2a, p2b, p3a, p3b)
-# # 
-# # 
+# #
+# #
 # # # Do it again with normalisation
 # # mini1 = vascr_subset(unifiedr, time = c(30,75))
 # # mini1 = vascr_normalise(mini1, normtime = 40)
 # # mini1 = vascr_explode(mini1)
 # # mini1$HCMVEC = vascr_make_numeric(mini1$HCMVEC)
-# # 
+# #
 # # mini = subset(mini1, HCMVEC==80000)
 # # p1a = vascr_plot(mini, unit = "Rb", level = "experiments", title = "Rb, 80,000 cells")
 # # p1b = vascr_plot(mini, unit = "Cm", level = "experiments", title = "Cm, 80,000 cells")
 # # p1c = vascr_plot(mini, unit = "Alpha", level = "experiments", title = "Alpha, 80,000 cells")
-# # 
+# #
 # # p2a = vascr_plot(mini, unit = "TER", level = "experiments", title = "TER, 80,000 cells")
 # # p2b = vascr_plot(mini, unit = "Ccl", level = "experiments", title = "Ccl, 80,000 cells")
 # # p2c = ggplot()
-# # 
+# #
 # # p3a = vascr_plot(mini, unit = "CI", level = "experiments", title = "CI, 80,000 cells")
 # # p3b = ggplot()
 # # p3c = ggplot()
-# # 
+# #
 # # vascr_make_panel(p1a, p1b, p1c, p2a, p2b, p2c, p3a, p3b, p3c)
-# # 
+# #
 # # mini = subset(mini1, HCMVEC==20000)
 # # p1a = vascr_plot(mini, unit = "Rb", level = "experiments", title = "Rb, 20,000 cells")
 # # p1b = vascr_plot(mini, unit = "Cm", level = "experiments", title = "Cm, 20,000 cells")
 # # p1c = vascr_plot(mini, unit = "Alpha", level = "experiments", title = "Alpha, 20,000 cells")
-# # 
+# #
 # # p2a = vascr_plot(mini, unit = "TER", level = "experiments", title = "TER, 20,000 cells")
 # # p2b = vascr_plot(mini, unit = "Ccl", level = "experiments", title = "Ccl, 20,000 cells")
 # # p2c = ggplot()
-# # 
+# #
 # # p3a = vascr_plot(mini, unit = "CI", level = "experiments", title = "CI, 20,000 cells")
 # # p3b = vascr_plot_blank()
 # # p3c = vascr_plot_blank()
-# # 
+# #
 # # vascr_make_panel(p1a, p1b, p1c, p2a, p2b, p2c, p3a, p3b, p3c)
-# # 
-# # 
+# #
+# #
 # # mini = subset(mini1, HCMVEC==20000)
 # # p1b = vascr_plot(mini, unit = "Rb", level = "experiments", title = "Rb, 20,000 cells")
 # # p2b = vascr_plot(mini, unit = "TER", level = "experiments", title = "TER, 20,000 cells")
 # # p3b = vascr_plot(mini, unit = "CI", level = "experiments", title = "CI, 20,000 cells")
-# # 
-# # 
+# #
+# #
 # # vascr_make_panel(p1a, p1b,p2a, p2b, p3a, p3b)
-# # 
-# # 
+# #
+# #
 # # ## Plots to compare with Scott
 # # mini = subset(unifiedr, HCMVEC==20000)
 # # p1b = vascr_plot(mini, unit = "Rb", level = "experiments", title = "Rb, 20,000 cells")
@@ -534,7 +543,7 @@
 # # p2c = vascr_plot(mini, unit = "Alpha", level = "experiments", title = "Alpha, 80,000 cells")
 # # p3c = vascr_plot(mini, unit = "CI", level = "experiments", title = "CI, 80,000 cells")
 # # vascr_make_panel(p1b, p1c, p2b, p2c, p3b, p3c)
-# # 
+# #
 # # mini1 = vascr_subset(unifiedr, time = c(30,75))
 # # mini = subset(mini1, HCMVEC==20000)
 # # p1b = vascr_plot(mini, unit = "Rb", level = "experiments", title = "Rb, 20,000 cells")
@@ -545,8 +554,8 @@
 # # p2c = vascr_plot(mini, unit = "Alpha", level = "experiments", title = "Alpha, 80,000 cells")
 # # p3c = vascr_plot(mini, unit = "CI", level = "experiments", title = "CI, 80,000 cells")
 # # vascr_make_panel(p1b, p1c, p2b, p2c, p3b, p3c)
-# # 
-# # 
+# #
+# #
 # # mini1 = vascr_subset(unifiedr, time = c(30,75))
 # # mini2 = vascr_normalise(mini1, normtime = 40)
 # # mini2 = vascr_explode(mini2)
@@ -559,111 +568,111 @@
 # # p2c = vascr_plot(mini, unit = "Alpha", level = "experiments", title = "Alpha, 80,000 cells")
 # # p3c = vascr_plot(mini, unit = "CI", level = "experiments", title = "CI, 80,000 cells")
 # # vascr_make_panel(p1b, p1c, p2b, p2c, p3b, p3c)
-# # 
+# #
 # # vascr_plot(mini2)
-# # 
-# # 
+# #
+# #
 # # ## Prototypical work
-# # 
+# #
 # # ignore = function()
 # # {
-# #   
+# #
 # #   toplot = vascr_subset(unifiedr, variable_equal_to = c("HCMVEC",20000))
 # #   p1 = vascr_plot(toplot, unit = "Rb", title = "Rb")
 # #   p2 = vascr_plot(toplot, unit = "Alpha", title = "Alpha")
 # #   p3 = vascr_plot(toplot, unit = "CI", title = "CI")
 # #   p4 = vascr_plot(toplot, unit = "TER", title = "TER")
 # #   vascr_make_panel(p1, p2, p3, p4)
-# #   
+# #
 # #   # Cross correlation code
 # #   rb = vascr_subset(unifiedr, unit = c("Rb"), variable_equal_to = c("TNFa", "0", "IL1b", "0", "HCMVEC", 20000), time = c(0,80))
 # #   rb = vascr_summarise(rb, level = "experiments")
-# #   
+# #
 # #   vascr_summarise_cross_correlation(rb)
 # #   vascr_plot_cross_correlation(rb)
-# #   
+# #
 # #   data.df = rb
-# #   
+# #
 # #   alpha = vascr_subset(unifiedr, unit = "Alpha", variable_equal_to = c("HCMVEC", 20000, "TNFa", "0", "IL1b", "0"), time = c(0,80))
 # #   alpha = vascr_summarise(alpha, level = "experiments")
-# #   
+# #
 # #   CI = vascr_subset(unifiedr, unit = "CI", variable_equal_to = c("HCMVEC", 20000, "TNFa", "0", "IL1b", "0"), time = c(0,80), frequency = 10000)
 # #   CI = vascr_summarise(CI, level = "experiments")
-# #   
+# #
 # #   TER = vascr_subset(unifiedr, unit = c("TER"), variable_equal_to = c("HCMVEC", 20000, "TNFa", "0", "IL1b", "0"), time = c(0,80))
 # #   TER = vascr_summarise(TER, level = "experiments")
-# #   
+# #
 # #   # vascr_summarise_change(TER)
 # #   # vascr_summarise_cross_correlation(TER)
 # #   # vascr_plot_cross_correlation(TER)
-# #   # 
+# #   #
 # #   # combo = vascr_combine(TER, CI)
-# #   # 
+# #   #
 # #   # vascr_plot_cross_correlation(combo)
-# #   
+# #
 # #   r4000 = vascr_subset(unifiedr, unit = "R", variable_equal_to = c("HCMVEC", 20000, "TNFa", "0", "IL1b", "0"), time = c(0,80), frequency = 4000)
 # #   r4000 = vascr_summarise(r4000, level = "experiments")
-# #   
+# #
 # #   unified = vascr_combine(rb,CI,alpha, r4000)
 # #   unified$Experiment = "TEST"
 # #   unified$Sample = "TEST"
-# #   
+# #
 # #   unified = unique(unified)
-# #   
+# #
 # #   vascr_summarise_change(unified)
 # #   vascr_plot_cross_correlation(unified)
-# #   
+# #
 # #   rbts = as.ts(rb$Value)
 # #   alphats = as.ts(alpha$Value)
 # #   cits = as.ts(CI$Value)
 # #   r4000ts = as.ts(r4000$Value)
-# #   
+# #
 # #   nrbts = as.ts(rb$Value/max(rb$Value))
 # #   nr4000ts = as.ts(r4000$Value/max(r4000$Value[2:80]))
-# #   
+# #
 # #   plot(rbts)
 # #   plot(cits)
 # #   plot(alphats)
 # #   plot(r4000ts)
-# #   
-# #   
+# #
+# #
 # #   ccf(rbts, alphats, plot = FALSE)[0]
 # #   ccf(cits, alphats, plot = FALSE)[0]
 # #   ccf(rbts, cits, plot = FALSE)[0]
-# #   
+# #
 # #   ccf(rbts[2:80], r4000ts[2:80], plot = FALSE)[0]
 # #   ccf(nrbts[2:80], nr4000ts[2:80], plot = FALSE)[0]
-# #   
-# #   
+# #
+# #
 # #   vascr_summarise_change(rdata)
 # #   vascr_summarise_cross_correlation(rdata)
-# # 
-# #   
+# #
+# #
 # #   growth.df = rdata
-# #   
+# #
 # #   data.df = vascr_summarise(growthrb, level = "summary")
-# #   
+# #
 # #   vascr_plot_cross_correlation(growthrb)
-# #   
+# #
 # #   vascr_plot_cross_correlation(rb)
-# #   
-# #   
-# #   
-# #   
+# #
+# #
+# #
+# #
 # # }
-# # 
-# # 
-# # 
-# # 
-# # 
-# # 
+# #
+# #
+# #
+# #
+# #
+# #
 # # numbers = c(0.8, 0.9, 0.7, 1, 1)
 # # numbers2 = c(0.8, 0.9, 0.7, 1, 1)
 # # debug(t.test)
 # # t.test(numbers, mu = 1, alternative = "less")
-# # 
+# #
 # # 2 * (1 - pnorm(abs(max.cor), mean = 0, sd = 1/sqrt(ccf1$n.used)))
-# # 
+# #
 # # debug(ccf)
 # # ccf(numbers, numbers2)
 # 

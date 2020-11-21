@@ -50,7 +50,7 @@
 # # mini3 = vascr_explode(mini3)
 # # # Change this
 # # p1111.5 = vascr_plot_cross_correlation(mini3, plot = "bar")
-# # 
+# #
 # # vascr_make_panel(p1111, p1111.5)
 # 
 # 
@@ -92,7 +92,7 @@
 # # Change this
 # p3 = vascr_plot_line(p1data) + scale_colour_manual(values = c(rb[3], rb[1], rb[2])) + scale_fill_manual(values = c(rb[3], rb[1], rb[2])) + labs(title = "Ccl") +ylab("Ohm") + xlab("Time (hours)")
 # mini3 = vascr_summarise(mini2, level = "experiments")
-# mini3 = vascr_explode(mini3) 
+# mini3 = vascr_explode(mini3)
 # # Change this
 # p3.5 = vascr_plot_cross_correlation(mini3, plot = "bar")  + xlab("Cross Correlation Coefficent") + labs(title = "")
 # 
