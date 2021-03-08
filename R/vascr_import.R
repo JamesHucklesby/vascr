@@ -38,7 +38,7 @@
 #' masterdata = vascr_combine(data3, data6, data7)
 #' masterdata = vascr_resample(masterdata, 1)
 #' 
-vascr_import = function(instrument, raw = NULL, model = NULL, key = NULL, experimentname = "NA")
+vascr_import = function(instrument, raw = NULL, model = NULL, key = NULL, experimentname = "NA", password = "RTCaDaTa")
 {
   inst = vascr_match(instrument, vascr_instrument_list())
   
@@ -89,7 +89,7 @@ vascr_import = function(instrument, raw = NULL, model = NULL, key = NULL, experi
   }else if(inst == "xCELLigence")
   {
     
-    data.df = import_xcelligence(raw, key, experimentname)
+    data.df = import_xcelligence(raw, key, experimentname, password)
     return(data.df)
     
   }

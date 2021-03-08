@@ -1,69 +1,125 @@
-#' Calculate mode of a dataset
-#'
-#' @param v Vector of numeric data to find the mode of
-#'
-#' @return The mode of the vector
-#' 
-#' @keywords internal
-#'
-#' @examples
-#' #getmode(c(1,3,3,4,7))
-getmode <- function(v) {
-  uniqv <- unique(v)
-  uniqv[which.max(tabulate(match(v, uniqv)))]
-}
 
 
-#' Calculate the median well in a set of wells
-#' 
-#' This function finds the well that is the median of a set. This will be the most spacially central well on a plate. Using median eliminates the risk of well locations clashing, as the returned well will always be one of the set input. This also eliminates the noise associated with single replicates that need to be moved to the edge of a plate for technical reasons, however it will also mask that this movement has happened.
-#' 
-#' Works for both vertical, horrosontal and diffuse well configurations
+#' Title
 #'
-#' @param wells A vector of wells to find the median of
+#' @param dataframe 
 #'
-#' @return The name of the median well
-#' 
-#' @keywords internal
+#' @return
+#' @export
 #'
 #' @examples
-#' #vascr_median_well (c("A1", "B2", "C3"))
-#' #vascr_median_well(c("A1", "NA", "NA", "NA"))
-vascr_median_well = function(wells)
+vascr_find_defaults = function(dataframe)
 {
+  # Create a named list to fill
+  defaults = list()
   
-  # First we create a temporary data frame to hold the transformations. Each well entered is a row
-  Well = vascr_standardise_wells(wells)
-  Well = as.data.frame(Well)
+  # Create a mini version of the dataset, with only the distinct values this function deals with for speed
+  subset = dataframe %>% select(Instrument, Unit, Frequency, Time, Experiment, Sample, Well, Value) %>% distinct
   
-  if(any("NA" %in% Well$Well))
+  # Calcuate the default instrument, and subset the dataframe so clashes don't happen later
+  instrument_priority = c("ECIS", "xCELLigence","cellZscope")
+  defaults$Instrument = find_priority(instrument_priority, subset$Instrument)
+  subset = subset %>% filter(Instrument == defaults$Instrument)
+  
+  # Calculate the default unit
+  unit_priority = c("R", "Rb", "TER", "Z", "CI", "Alpha", "Cm", "Ccl",  "X", "C" , "P" , "Drift", "RMSE","CPE_A", "CPE_n","Rmed")
+  defaults$Unit = find_priority(unit_priority, subset$Unit)
+  subset = subset %>% filter(Unit == defaults$Unit) 
+  
+  # Find the default frequency, closest to 4000
+  defaults$Frequency = closest_value(4000, subset$Frequency)
+  subset = subset %>% filter(Frequency == defaults$Frequency) 
+  
+  # Default experiment, the one with the most values in the remaining dataset
+  defaults$Experiment = categorical_mode(subset$Experiment)
+  subset = subset %>% filter(Experiment == defaults$Experiment) 
+  
+  # Find the default time, at the middle of the dataset
+  defaults$Time = locked_median(subset$Time)
+  subset = subset %>% filter(Time == defaults$Time) 
+  
+  # Default Sample, the first one remaining in the dataset
+  defaults$Sample = subset$Sample[1]
+  subset = subset %>% filter(Sample == defaults$Sample) 
+  
+  # Default Well, the first one remaining in the dataset
+  defaults$Well = subset$Well[1]
+  subset = subset %>% filter(Well == defaults$Well) 
+  
+  # Default Value, the median remaining in the dataset
+  defaults$Value = locked_median(subset$Value)
+  subset = subset %>% filter(Value == defaults$Value)
+  
+  return(defaults)
+
+  }
+
+
+#' Title
+#'
+#' @param priority 
+#' @param data_vector 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+find_priority = function(priority, data_vector)
   {
-    warning("NA's in averaged wells, these will be removed")
-    Well = subset(Well, Well != "NA")
+  
+  # Generate unique values to speed up the match later if needed
+  data_vector = unique(data_vector)
+  
+  # Add all values of the data vector onto the end of the priority list in the order they appear, just in case there was an oversight in generating the priority listing
+  priority = unique(c(priority, data_vector))
+  
+  # Work through each priority until one is found that is in the current list
+  for(current in priority) 
+  {
+    if(current %in% data_vector)
+    {
+      return(current) # If the current priority is in the dataset, return it
+    } # otherwise keep working through
   }
   
-  # Explode out rows and columns
-  explodedwells = vascr_explode_wells(Well)
+  # This should never run, as everything in the data vector is by definition in the priority list
+  stop("Priority matching failure")
   
-  # Convert row letters on the plate into numbers for finding the median
-  letternums <- letters[1:26]
-  explodedwells$lowerrow = casefold(explodedwells$row, upper = FALSE)
-  explodedwells$numberrow = match(explodedwells$lowerrow, letternums)
-  
-  # Check everything is numeric to avoid errors
-  explodedwells$numberrow = as.numeric(explodedwells$numberrow)
-  explodedwells$numbercol = as.numeric(explodedwells$col)
-  
-  medianrow = median(explodedwells$numberrow)
-  mediancol = median(explodedwells$numbercol)
-  
-  medianrow = letternums[medianrow]
-  
-  finalwell = paste(medianrow, mediancol)
-  finalwell = vascr_standardise_wells(finalwell)
-  
-  return(finalwell)
 }
+
+#' Title
+#'
+#' @param data_vector 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+locked_median = function(data_vector)
+{
+  numeric_vector = as.numeric(data_vector)
+  median = median(as.numeric(data_vector)) # Find the median, however this may be between two values
+  locked_median = closest_value(median, data_vector)
+  return(locked_median)
+}
+
+#' Title
+#'
+#' @param target 
+#' @param data_vector 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+closest_value = function(target, data_vector)
+{
+  target_location = which.min(abs(data_vector - target)) # Find which value in the vector is closest to the actual median
+  return(data_vector[target_location])
+}
+
+
+
 
 
 #' Standardise well names accross import types
@@ -389,37 +445,40 @@ vascr_remove_stats = function(data.df)
 #' #vascr_titles("R")
 #' 
 #' 
-vascr_titles = function (unit, frequency = 0)
+vascr_titles= function (unit, frequency = 0, prefix = "")
 {
+
   # Electrical quantaties
-  if(unit == "C") { return(expression(paste("Capacitance (",mu,"F)")))}
-  if(unit == "R") { return("Resistance (ohm)")}
-  if(unit == "P") { return("Phase (degrees)")}
-  if(unit == "Pr") { return("Phase (radians)")}
-  if(unit == "X") { return("Reactance (ohm)")}
-  if(unit == "Z") { return("Impedance (ohm)")}
+  if(unit == "C") { return(bquote(.(prefix)~"Capacitance ("~mu~"F "~frequency~" Hz)"))}
+  if(unit == "R") { return(paste(prefix,"Resistance (ohm, ", frequency," Hz)"))}
+  if(unit == "P") { return(paste(prefix,"Phase (ohm, ", frequency," Hz)"))}
+  if(unit == "Pr") { return(paste(prefix,"Phase (radians, ", frequency," Hz)"))}
+  if(unit == "X") { return(paste(prefix,"Reactance (ohm, ", frequency," Hz)"))}
+  if(unit == "Z") { return(paste(prefix,"Impedance \n (ohm, ", frequency," Hz)"))}
   
   # ECIS paramaters
-  if (unit == "Rb"){return (expression(paste("Rb (",Omega," cm"^2, ")")))}
-  if (unit == "Cm"){return (expression(paste("Cm (",mu,"F/cm"^2, ")")))}
-  if (unit == "Alpha"){return (expression(paste("Alpha (",ohm," cm"^2, ")")))}
-  if(unit == "RMSE") {return("Model Fit RMSE")}
-  if(unit == "Drift") {return("Drift (%)")}
+  if (unit == "Rb"){return (bquote(atop(" ",.(prefix) ~ "Rb" ~ (Omega ~ cm ^2))))}
+  if (unit == "Cm"){return (bquote(atop(" ",.(prefix)~"Cm ("~mu~"F/cm"^2~")")))}
+  if (unit == "Alpha"){return (expression(paste(prefix,"Alpha (",ohm," cm"^2, ")")))}
+  if(unit == "RMSE") {return(paste(prefix,"Model Fit RMSE"))}
+  if(unit == "Drift") {return(paste(prefix,"Drift (%)"))}
   
   # xCELLigence
   if(unit == "CI") {return("Cell Index")}
   
   # cellZscope
-  if(unit == "CPE_A") {return(expression(paste("CPE_A (s"^(n-1),mu,"F/cm"^2, ")")))}
-  if(unit == "CPE_n") {return("CPE_n")}
-  if(unit == "TER") {return (expression(paste("TER (",Omega," cm"^2, ")")))}
-  if(unit == "CcL") {return(expression(paste("CcL (",mu,"F/cm"^2, ")")))}
-  if(unit == "Rmed") { return("Rmed (ohm)")}
+  if(unit == "CPE_A") {return(expression(paste(prefix,"CPE_A (s"^(n-1),mu,"F/cm"^2, ")")))}
+  if(unit == "CPE_n") {return(paste(prefix,"CPE_n"))}
+  if(unit == "TER") {return (bquote(atop(" ",.(prefix)~"TER ("~Omega~" cm"^2~")")))}
+  if(unit == "Ccl") {return(bquote(atop(" ",.(prefix)~C[CL]~ "("~mu~"F/cm"^2~ ")")))}
+  if(unit == "Rmed") { return(paste(prefix,"Rmed (ohm)"))}
   
   # If not found, return what was input
   return(unit)
   
 }
+
+
 
 
 
@@ -631,35 +690,7 @@ vascr_instrument_list = function()
 #' }
 
 
-#' Find the mode of a categorical variable
-#'
-#' @param x vector to find mode of
-#'
-#' @return the most commonly occouring character 
-#' 
-#' @keywords internal
-#'
-#' @examples
-#' #categorical_mode(c("Cat", "Cat", "Monkey"))
-#' 
-categorical_mode = function(x){
-  
-  if(length(unique(x))==1)
-  {
-    return (unique(x)) 
-  }
-  
-  ta = table(x)
-  tam = max(ta)
-  if (all(ta == tam))
-    mod = NA
-  else
-    if(is.numeric(x))
-      mod = as.numeric(names(ta)[ta == tam])
-  else
-    mod = names(ta)[ta == tam]
-  return(mod)
-}
+
 
 
 #' Exclude erronious data from an ECIS dataframe
@@ -850,49 +881,6 @@ comma_to_numeric = function(comma_array)
   return(processed_array)
 }
 
-#' Look up the default variable values for all supported instruments
-#' 
-#' Central source of lookup values for default graph settings for various instruments.
-#'
-#' @param data The dataset to derrive the instrument type from
-#'
-#' @return The default frequency and unit in a list
-#' 
-#' @keywords internal
-#'
-#' @examples
-#' # vascr_default(growth.df)
-#' 
-vascr_default = function (data)
-{
-
-  instrument = categorical_mode(data$Instrument)
-  
-  if(instrument == "ECIS")
-  {
-    defaults = list(
-      "frequency" = 4000,
-      "unit" = "R"
-    )
-  }
-  else if (instrument == "xCELLigence")
-  {
-    defaults = list(
-      "frequency" = 10000,
-      "unit" = "CI"
-    )
-  }
-  else if (instrument == "cellZscope")
-  {
-    defaults = list(
-      "frequency"  = 4000,
-      "unit" = "R"
-    )
-  }
-  
-  return(defaults)
-  
-}
 
 
 #' Execute do.call for all variables that exist in the funciton being called

@@ -123,22 +123,12 @@ vascr_plot_structure = function(data, title ="Title", stripidentical = TRUE, ...
 {
   
   # Cut out everythign we don't care about, and remove remaining duplicates
-  data$Time = 0
-  data$Value = 0
-  data$Unit = 0
-  data$Frequency = 0
-  data = vascr_remove_metadata(data)
-  data = distinct(data)
-  
-  # Prep graphdata, IE, re-consitute names for plotting
-  data = vascr_prep_graphdata(data, stripidentical = stripidentical)
+  graphdata = data %>% select(Well, Sample, Experiment) %>% distinct
   
   # Explode out wells, then select only the distinct data we need for plotting
-  data = vascr_explode_wells(data, separate_rows = TRUE)
-  data = data %>% select(col, row, Sample, Experiment) %>% distinct()
-  data$Sample = as.factor(data$Sample)
+  graphdata = vascr_explode_wells(graphdata, separate_rows = TRUE)
   
-  plot = ggplot(data, aes(col, row)) + 
+  plot = ggplot(graphdata, aes(col, row)) + 
     geom_tile(aes(fill = Sample), colour = "white")+
     xlab("Column") +
     ylab("Row")+

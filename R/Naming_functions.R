@@ -1,13 +1,13 @@
 
 
-#' Title
+#' Carry down names in selected columns
 #'
-#' @param data.df 
-#' @param cols_to_carry 
-#' @param remove_blank 
+#' @param data.df The data frame to carry down columns in
+#' @param cols_to_carry The columns to carry down, default is the whole lot
+#' @param remove_blank Should blank names (starting with _, 0_ or NA_) be removed
 #'
-#' @return
-#' @export
+#' @return A data frame with columns carried down
+#' @keywords internal
 #'
 #' @examples
 vascr_carry_down_names = function(data.df, cols_to_carry = NULL, remove_blank = TRUE)
@@ -37,19 +37,17 @@ vascr_carry_down_names = function(data.df, cols_to_carry = NULL, remove_blank = 
 
 
 
-#' Title
+#' Implode multiple columns from a data frame
 #'
-#' @param data.df 
-#' @param cols_to_implode 
+#' @param data.df The dataset to implode
+#' @param cols_to_implode The columns to implode
 #'
-#' @return
+#' @returnn A data frame
 #' @export
 #'
 #' @examples
 vascr_full_implode = function(data.df, cols_to_implode = NULL)
 {
-
-  stripped = vascr_remove_metadata(data.df)
 
   if(is.null(cols_to_implode))
   {
@@ -57,7 +55,7 @@ vascr_full_implode = function(data.df, cols_to_implode = NULL)
   }
   
 
-  carrydown = vascr_carry_down_names(data.df = stripped, cols_to_carry = cols_to_implode)
+  carrydown = vascr_carry_down_names(data.df = data.df, cols_to_carry = cols_to_implode)
 
   full_implode = carrydown %>% unite("Title", all_of(cols_to_implode), sep = " + ")
 
@@ -79,7 +77,7 @@ vascr_full_implode = function(data.df, cols_to_implode = NULL)
 vascr_make_name = function(data.df, select_cols = NULL, remove_blank = TRUE, fill_blank = "Control")
 {
   imploded = vascr_full_implode(data.df, cols_to_implode = NULL)
-  names = vascr_clean_name(imploded$Title, select_cols = select_cols, remove_blank = remove_blank, fill_blank = fill_blank)
+  names = vascr_clean_name(name_vector = imploded$Title, select_cols = select_cols, remove_blank = remove_blank, fill_blank = fill_blank)
   return(names)
 }
 
@@ -132,7 +130,7 @@ vascr_clean_name = function(name_vector, select_cols = NULL, remove_blank = TRUE
 
   uniquedata = select(df4, all_of(select_cols))
   
-  if(isFALSE(include_wells))
+  if(isFALSE(include_wells) & "Well" %in% colnames(uniquedata))
   {
     uniquedata = select(uniquedata, -Well)
   }

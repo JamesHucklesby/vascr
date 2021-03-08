@@ -228,6 +228,8 @@ vascr_summarise_available_samples = function(data.df)
 #' 
 #' corr = vascr_summarise_cross_correlation(growthrb, reference = "[ 1 : Experiment 1 | 25000 ]", comparator = "[ 1 : Experiment 1 | 30000 ]")
 #' 
+#' 
+#' vascr_summarise_cross_correlation(mini2)
 vascr_summarise_cross_correlation = function(data.df, reference = NULL, comparator = NULL, manualpairs = NULL)
 {
   

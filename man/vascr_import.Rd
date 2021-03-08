@@ -9,7 +9,8 @@ vascr_import(
   raw = NULL,
   model = NULL,
   key = NULL,
-  experimentname = "NA"
+  experimentname = "NA",
+  password = "RTCaDaTa"
 )
 }
 \arguments{

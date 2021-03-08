@@ -277,6 +277,11 @@ ecis_import_model = function(modeleddata, sampledefine, experimentname = "NA") {
     unit.df = subset(file.df, str_detect(file.df$Data, "Time "))
     data.df = subset(file.df, str_detect(file.df$Data, "^[0-9]"))
     
+    if(nrow(unit.df)==0)
+    {
+      warning("No data imported, check the modeled data you are trying to import is correctly specified and an intact file")
+    }
+    
     cells = cells.df[1, 1]
     cells = unlist(strsplit(cells, split = ","))
     cells = base::trimws(cells)

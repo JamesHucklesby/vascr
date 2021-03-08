@@ -28,5 +28,7 @@ corr = vascr_summarise_cross_correlation(vascr_summarise(growthrb, level = "summ
 
 corr = vascr_summarise_cross_correlation(growthrb, reference = "[ 1 : Experiment 1 | 25000 ]", comparator = "[ 1 : Experiment 1 | 30000 ]")
 
+
+vascr_summarise_cross_correlation(mini2)
 }
 \keyword{internal}

@@ -491,17 +491,13 @@ vascr_plot_isolate= function(data.df, well, ...)
 #' @examples
 #' #vascr_plot_matrix(growth.df, unit = "Rb")
 #' 
-vascr_plot_matrix = function(data.df, unit = "R", frequency = 4000, ...)
+vascr_plot_matrix = function(data.df)
 {
-  # Gather graph data based on the ...
-  dots = as.list(environment())
-  data = do.call_relevant("vascr_prep_graphdata", data.df, dots)
+
+  well_exploded = vascr_explode_wells(data.df)
   
-  # Grab the column and row components from each well to allow plate separation
-  data$col = substr(data$Well,1,1)
-  data$row = substr(data$Well,2,3)
-  
-  plot =  ggplot(data=data, aes(x=Time, y = Value, colour = Sample, linetype = Experiment)) + geom_line() + facet_grid(col~row) + labs(x = "Time(hours)", y=vascr_titles(unit,frequency))
+  plot =  ggplot(data=well_exploded, aes(x=Time, y = Value, colour = Sample, linetype = Experiment)) + geom_line() + facet_grid(col~row) + 
+            labs(x = "Time(hours)", y = "Unit")
   
   return (plot)
 }

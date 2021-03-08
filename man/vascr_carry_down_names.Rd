@@ -2,20 +2,21 @@
 % Please edit documentation in R/Naming_functions.R
 \name{vascr_carry_down_names}
 \alias{vascr_carry_down_names}
-\title{Title}
+\title{Carry down names in selected columns}
 \usage{
 vascr_carry_down_names(data.df, cols_to_carry = NULL, remove_blank = TRUE)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The data frame to carry down columns in}
 
-\item{cols_to_carry}{}
+\item{cols_to_carry}{The columns to carry down, default is the whole lot}
 
-\item{remove_blank}{}
+\item{remove_blank}{Should blank names (starting with _, 0_ or NA_) be removed}
 }
 \value{
-
+A data frame with columns carried down
 }
 \description{
-Title
+Carry down names in selected columns
 }
+\keyword{internal}

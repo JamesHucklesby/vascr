@@ -43,8 +43,8 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1)
   xaxis = priority[1]
   yaxis = "Value"
   well = "Well"
-  ymax = "ymax"
-  ymin = "ymin"
+  ymax = "max"
+  ymin = "min"
   
   # First we deal with plotting single wells, as these pan out quite differently to the other levels of replication
   replication = vascr_detect_level(data)
@@ -78,21 +78,21 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1)
       
     }else if (length(priority) == 2) {
       
-      plot = ggplot(data = data, aes_string(x = priority[1], y = "Value", colour = priority[2],fill = priority[2], ymax = ymax, ymin = ymin)) + geom_line()
+      plot = ggplot(data = data, aes_string(x = priority[1], y = "Value", colour = priority[2],fill = priority[2])) + geom_line()
       
     }else if (length(priority)>2) {
       
-      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, colour = priority[2], linetype = priority[3], fill = priority[2], ymax = ymax, ymin = ymin)) + geom_line()
+      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, colour = priority[2], linetype = priority[3], fill = priority[2])) + geom_line()
     }
   }
   
   if(is.infinite(error))
   {
-    plot = plot + geom_ribbon(alpha = alpha)
+    plot = plot + geom_ribbon(aes(ymin = data.df$Value -(data.df$sd/sqrt(data.df$n)), ymax = data.df$Value + (data.df$sd/sqrt(data.df$n))),alpha = alpha)
   }
   else if(error>0)
   {
-    plot = plot + geom_errorbar()
+    plot = plot + geom_errorbar(aes(ymin = data.df$Value -(data.df$sd/sqrt(data.df$n)), ymax = data.df$Value + (data.df$sd/sqrt(data.df$n))))
   }
   
   return(plot)

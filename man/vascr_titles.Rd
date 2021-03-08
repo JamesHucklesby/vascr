@@ -4,7 +4,7 @@
 \alias{vascr_titles}
 \title{Generate human readable versions of the unit variable for graphing}
 \usage{
-vascr_titles(unit, frequency = 0)
+vascr_titles(unit, frequency = 0, prefix = "")
 }
 \arguments{
 \item{unit}{The unit to submit}
