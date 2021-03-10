@@ -91,8 +91,7 @@ vascr_make_name = function(data.df, select_cols = NULL, remove_blank = TRUE, fil
 #' @param fill_blank 
 #' 
 #' @importFrom dplyr summarise_all n_distinct
-#' 
-#' @keywords internal
+#' @export
 #'
 #' @return
 
