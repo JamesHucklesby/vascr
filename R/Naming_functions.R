@@ -83,8 +83,6 @@ vascr_make_name = function(data.df, select_cols = NULL, remove_blank = TRUE, fil
 
 
 
-
-
 #' Title
 #'
 #' @param name_vector 
@@ -93,15 +91,25 @@ vascr_make_name = function(data.df, select_cols = NULL, remove_blank = TRUE, fil
 #' @param fill_blank 
 #' 
 #' @importFrom dplyr summarise_all n_distinct
+#' 
+#' @keywords internal
 #'
 #' @return
-#' @export
-#'
-#' @examples
-vascr_clean_name = function(name_vector, select_cols = NULL, remove_blank = TRUE, fill_blank = "Control", include_wells = FALSE)
-{
 
-  data_vector = name_vector
+#' @examples
+vascr_shorten_name = function(name_vector, select_cols = NULL, remove_blank = TRUE, fill_blank = "Control", include_wells = FALSE)
+{
+  
+  datastart = FALSE
+  
+  if(is.data.frame(name_vector) || is_tibble(name_vector))
+  {
+    raw_data_frame = name_vector
+    datastart = TRUE
+    name_vector = name_vector$Sample
+  }
+
+  data_vector = unique(name_vector)
 
   df1 = data.frame(Sample = data_vector, row_number = c(1:length(data_vector)))
 
@@ -140,7 +148,20 @@ vascr_clean_name = function(name_vector, select_cols = NULL, remove_blank = TRUE
   uniquedata = unite(uniquedata, "Combined", sep = " + ", na.rm = TRUE)
   
   uniquedata$Combined = ifelse(uniquedata$Combined == "", fill_blank, uniquedata$Combined)
+  
+  namelookup = data.frame(Sample = data_vector, Short = uniquedata$Combined)
+  namevector = data.frame(Sample = name_vector)
+  
+  allnames = left_join(namevector, namelookup, by = "Sample")
 
-  return(uniquedata$Combined)
+  if(datastart)
+  {
+    raw_data_frame$Sample = allnames$Short
+    return(raw_data_frame)
+  }
+  else
+  {
+  return(allnames$Short)
+  }
 
 }

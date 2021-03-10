@@ -88,11 +88,11 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1)
   
   if(is.infinite(error))
   {
-    plot = plot + geom_ribbon(aes(ymin = data.df$Value -(data.df$sd/sqrt(data.df$n)), ymax = data.df$Value + (data.df$sd/sqrt(data.df$n))),alpha = alpha)
+    plot = plot + geom_ribbon(aes(ymin = data$Value - data$sem, ymax = data$Value + data$sem),alpha = alpha)
   }
   else if(error>0)
   {
-    plot = plot + geom_errorbar(aes(ymin = data.df$Value -(data.df$sd/sqrt(data.df$n)), ymax = data.df$Value + (data.df$sd/sqrt(data.df$n))))
+    plot = plot + geom_errorbar(aes(ymin = data.df$Value - data.df$sem, ymax = data.df$Value + data.df$sem))
   }
   
   return(plot)

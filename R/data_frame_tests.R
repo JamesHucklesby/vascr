@@ -108,4 +108,29 @@ vascr_test_design = function(data.df, verbose = FALSE)
 
 
 
+#' Check if there are any standard 96 well plate wells missing from a 96 well plate
+#'
+#' @param wells A vector of wells to test, or a vascr dataset that will be truncated
+#'
+#' @return A vector of the well names that are missing from the dataset
+#' 
+#' @keywords internal
+#'
+#' @examples
+vascr_missing_wells = function(wells)
+{
+  
+  if(is.data.frame(wells))
+  {
+    wells = wells$Well
+  }
+  
+  uwells = unique(wells)
+  awells = vascr:::vascr_96_well_names()
+  mwells = subset(awells, !(awells %in% uwells))
+  return(mwells)
+}
+
+
+
 

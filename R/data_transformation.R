@@ -83,7 +83,7 @@ vascr_summarise_experiments = function(data.df)
   {
     experiment.df = data.df %>%
       group_by(Time, Unit, Frequency, Sample, Experiment, Instrument) %>%
-      summarise(sd = sd(Value), n = n(),min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","),Value = mean(Value), .groups = "drop")
+      summarise(sd = sd(Value), n = n(),min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","),Value = mean(Value), sem = sd/sqrt(n), .groups = "drop")
 
     
     experiment.df = experiment.df %>% ungroup()
@@ -125,7 +125,7 @@ vascr_summarise_summary = function(data.df)
   {
   summary.df = data.df %>%
           group_by(Time, Unit, Frequency, Sample, Instrument) %>%
-          summarise(sd = sd(Value), totaln = sum(n), n = n(), min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","), Value = mean(Value), Experiment = "Summary",  .groups = "drop")
+          summarise(sd = sd(Value), totaln = sum(n), n = n(), min = min(Value), max = max(Value), Well = paste0(unique(Well), collapse = ","), Value = mean(Value), Experiment = "Summary", sem = sd/sqrt(n),  .groups = "drop")
   return(summary.df)
   }
   
