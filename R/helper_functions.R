@@ -459,7 +459,7 @@ vascr_titles= function (unit, frequency = 0, prefix = "")
   # ECIS paramaters
   if (unit == "Rb"){return (bquote(atop(" ",.(prefix) ~ "Rb" ~ (Omega ~ cm ^2))))}
   if (unit == "Cm"){return (bquote(atop(" ",.(prefix)~"Cm ("~mu~"F/cm"^2~")")))}
-  if (unit == "Alpha"){return (expression(paste(prefix,"Alpha (",ohm," cm"^2, ")")))}
+  if (unit == "Alpha"){return (expression(paste("Alpha (",ohm," cm"^2, ")")))}
   if(unit == "RMSE") {return(paste(prefix,"Model Fit RMSE"))}
   if(unit == "Drift") {return(paste(prefix,"Drift (%)"))}
   

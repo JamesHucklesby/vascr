@@ -20,15 +20,4 @@ A dataset contining values from each cross correlation pair
 \description{
 Generate all cross-correlation pairs between sets of values
 }
-\examples{
-growthrb = vascr_subset(growth.df, unit = "Rb", time = c(5,150))
-corr = vascr_summarise_cross_correlation(growthrb)
-corr = vascr_summarise_cross_correlation(growthrb, reference = "internal")
-corr = vascr_summarise_cross_correlation(vascr_summarise(growthrb, level = "summary"))
-
-corr = vascr_summarise_cross_correlation(growthrb, reference = "[ 1 : Experiment 1 | 25000 ]", comparator = "[ 1 : Experiment 1 | 30000 ]")
-
-
-vascr_summarise_cross_correlation(mini2)
-}
 \keyword{internal}

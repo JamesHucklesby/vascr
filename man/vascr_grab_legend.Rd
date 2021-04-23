@@ -15,11 +15,3 @@ vascr_grab_legend(aplot, position = "left")
 \description{
 Title
 }
-\examples{
-ledgend = grid.arrange(vascr_grab_legend(p1, position = "right"))
-grid.arrange(vascr_grab_legend(p1, position = "top"))
-
-ggplotGrob(ledgend)
-
-
-}

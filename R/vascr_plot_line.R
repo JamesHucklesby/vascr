@@ -62,10 +62,12 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1)
     if(length(priority) ==2)
     {
       plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2])) + geom_line()
+      return(plot)
     }
     else if (length(priority)>2)
     {
       plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2], linetype = priority[3])) + geom_line()
+      return(plot)
     }
     
   }

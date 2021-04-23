@@ -72,8 +72,7 @@ vascr_summarise = function(data.df, level = "wells")
 #' @keywords internal
 #'
 #' @examples
-#' vascr_summarise_experiments(data.df = growth.df)
-#' 
+# vascr_summarise_experiments(data.df = growth.df)
 vascr_summarise_experiments = function(data.df)
 {
   

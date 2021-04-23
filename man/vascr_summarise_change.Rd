@@ -16,10 +16,8 @@ A full dataset
 Create a data frame summarising the changing variables in a dataset in a single column
 }
 \examples{
-data.df = vascr_subset(unifiedr, unit = "Rb")
+data.df = vascr_subset(growth.df, unit = "Rb")
 data.df = vascr_summarise(data.df, level = "experiments")
 
 dat = vascr_summarise_change(data.df)
-dat = vascr_summarise_change(data.df = mini3)
 }
-\keyword{internal}

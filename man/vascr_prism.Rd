@@ -38,6 +38,5 @@ data.df = vascr_subset(growth.df, unit = "Rb")
 prism1 = vascr_prism(data.df)
 data.df = vascr_summarise(data.df, level = "experiments")
 prism2 = vascr_prism(data.df, select_cols = c("Experiment", "cells"))
-prism3 = vascr_prism(data.df)
 }
 \keyword{internal}

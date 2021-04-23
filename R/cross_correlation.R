@@ -39,14 +39,13 @@ vascr_find_changing_cols = function(data.df)
 #' @importFrom dplyr select all_of
 #' @importFrom tidyr unite separate
 #' 
-#' @keywords internal
+#' @export
 #'
 #' @examples
-#' data.df = vascr_subset(unifiedr, unit = "Rb")
+#' data.df = vascr_subset(growth.df, unit = "Rb")
 #' data.df = vascr_summarise(data.df, level = "experiments")
 #' 
 #' dat = vascr_summarise_change(data.df)
-#' dat = vascr_summarise_change(data.df = mini3)
 vascr_summarise_change = function(data.df, showblank = FALSE)
 {
 
@@ -138,14 +137,12 @@ vascr_ccf_vectors = function(v1, v2, plot = FALSE)
 #' @export
 #'
 #' @examples
-#' growthrb = vascr_subset(growth.df, unit = "Rb", time = c(5,150))
-#' deltadata = vascr_summarise_change(growthrb)
-#' ret = vascr_ccf_pairs(deltadata)
-#' ret = vascr_ccf_pairs(deltadata, reference = "internal")
-#' ret = vascr_ccf_pairs(deltadata, reference = "[ 1 : Experiment 1 | 35000 ]")
-#' ret = vascr_ccf_pairs(deltadata, reference = "[ 1 : Experiment 1 | 25000 ]", comparator = "[ 1 : Experiment 1 | 30000 ]")
-#' 
-#' 
+# growthrb = vascr_subset(growth.df, unit = "Rb", time = c(5,150))
+# deltadata = vascr_summarise_change(growthrb)
+# ret = vascr_ccf_pairs(deltadata)
+# ret = vascr_ccf_pairs(deltadata, reference = "internal")
+# ret = vascr_ccf_pairs(deltadata, reference = "[ 1 : Experiment 1 | 35000 ]")
+# ret = vascr_ccf_pairs(deltadata, reference = "[ 1 : Experiment 1 | 25000 ]", comparator = "[ 1 : Experiment 1 | 30000 ]")
 vascr_ccf_pairs = function(data.df, reference = NULL, comparator = NULL)
 {
     deltadata = data.df
@@ -221,15 +218,15 @@ vascr_summarise_available_samples = function(data.df)
 #' @importFrom utils combn
 #'
 #' @examples
-#' growthrb = vascr_subset(growth.df, unit = "Rb", time = c(5,150))
-#' corr = vascr_summarise_cross_correlation(growthrb)
-#' corr = vascr_summarise_cross_correlation(growthrb, reference = "internal")
-#' corr = vascr_summarise_cross_correlation(vascr_summarise(growthrb, level = "summary"))
-#' 
-#' corr = vascr_summarise_cross_correlation(growthrb, reference = "[ 1 : Experiment 1 | 25000 ]", comparator = "[ 1 : Experiment 1 | 30000 ]")
-#' 
-#' 
-#' vascr_summarise_cross_correlation(mini2)
+# growthrb = vascr_subset(growth.df, unit = "Rb", time = c(5,150))
+# corr = vascr_summarise_cross_correlation(growthrb)
+# corr = vascr_summarise_cross_correlation(growthrb, reference = "internal")
+# corr = vascr_summarise_cross_correlation(vascr_summarise(growthrb, level = "summary"))
+# 
+# corr = vascr_summarise_cross_correlation(growthrb, reference = "[ 1 : Experiment 1 | 25000 ]", comparator = "[ 1 : Experiment 1 | 30000 ]")
+# 
+# 
+# vascr_summarise_cross_correlation(mini2)
 vascr_summarise_cross_correlation = function(data.df, reference = NULL, comparator = NULL, manualpairs = NULL)
 {
   
@@ -413,12 +410,10 @@ pcombinations$V2 = factor(pcombinations$V2, levels = colourtable$sample)
 #' @export
 #'
 #' @examples
-#' ledgend = grid.arrange(vascr_grab_legend(p1, position = "right"))
-#' grid.arrange(vascr_grab_legend(p1, position = "top"))
-#' 
-#' ggplotGrob(ledgend)
-#' 
-#' 
+# ledgend = vascr_grab_legend(p1, position = "right")
+# grid.arrange(vascr_grab_legend(p1, position = "top"))
+# 
+# ggplotGrob(ledgend)
 vascr_grab_legend = function(aplot, position = "left")
 {
   g <- ggplotGrob(aplot + theme(legend.position=position))$grobs

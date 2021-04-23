@@ -1,5 +1,4 @@
 
-
 #' Carry down names in selected columns
 #'
 #' @param data.df The data frame to carry down columns in
@@ -77,7 +76,7 @@ vascr_full_implode = function(data.df, cols_to_implode = NULL)
 vascr_make_name = function(data.df, select_cols = NULL, remove_blank = TRUE, fill_blank = "Control")
 {
   imploded = vascr_full_implode(data.df, cols_to_implode = NULL)
-  names = vascr_clean_name(name_vector = imploded$Title, select_cols = select_cols, remove_blank = remove_blank, fill_blank = fill_blank)
+  names = vascr_shorten_name(name_vector = imploded$Title, select_cols = select_cols, remove_blank = remove_blank, fill_blank = fill_blank)
   return(names)
 }
 
@@ -91,6 +90,7 @@ vascr_make_name = function(data.df, select_cols = NULL, remove_blank = TRUE, fil
 #' @param fill_blank 
 #' 
 #' @importFrom dplyr summarise_all n_distinct
+#' @importFrom tibble is_tibble
 #' @export
 #'
 #' @return

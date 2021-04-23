@@ -26,13 +26,12 @@
 #' prism1 = vascr_prism(data.df)
 #' data.df = vascr_summarise(data.df, level = "experiments")
 #' prism2 = vascr_prism(data.df, select_cols = c("Experiment", "cells"))
-#' prism3 = vascr_prism(data.df)
 vascr_prism = function(data.df, filename = NULL, select_cols = NULL, remove_blank = TRUE, fill_blank = "Control", include_wells = FALSE){
     
     # Cut the data frame down to what can reasonably be represented on one prism table
 
     imploded = vascr_full_implode(data.df)
-    imploded$ShortName = vascr_clean_name(name_vector = imploded$Title, select_cols = select_cols, remove_blank = remove_blank, fill_blank = fill_blank, include_wells = include_wells)
+    imploded$ShortName = vascr_shorten_name(name_vector = imploded$Title, select_cols = select_cols, remove_blank = remove_blank, fill_blank = fill_blank, include_wells = include_wells)
     
     imploded$Well = data.df$Well
     

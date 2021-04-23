@@ -16,14 +16,15 @@ Imports: ggplot2,
         gridExtra, 
         dplyr,
         devtools, 
-        tidyr, 
+        tidyr, tibble,
         stringr, 
         magrittr, 
         grid, 
         tibble, 
         gifski, graphics, 
         stats, utils, 
-         data.table, purrr, ggpubr, car, cowplot, textclean, svSocket, RODBC, tidyselect, plotly
+        data.table, purrr, ggpubr, car, cowplot, textclean, 
+        svSocket, RODBC, tidyselect, plotly
 Suggests: 
     knitr,
     rmarkdown,

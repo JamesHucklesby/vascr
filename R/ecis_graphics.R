@@ -496,8 +496,9 @@ vascr_plot_matrix = function(data.df)
 
   well_exploded = vascr_explode_wells(data.df)
   
-  plot =  ggplot(data=well_exploded, aes(x=Time, y = Value, colour = Sample, linetype = Experiment)) + geom_line() + facet_grid(col~row) + 
-            labs(x = "Time(hours)", y = "Unit")
+  well_exploded$row <- factor(well_exploded$row, levels=sort(levels(well_exploded$row)))
+  
+  plot =  ggplot(data=well_exploded, aes(x=Time, y = Value, colour = Sample, linetype = Experiment)) + geom_line() + facet_grid(row~col, switch = "y") + labs(x = "Time(hours)", y = "Unit") + scale_y_continuous(position = "right")
   
   return (plot)
 }

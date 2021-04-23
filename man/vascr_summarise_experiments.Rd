@@ -15,8 +15,4 @@ vascr_summarise_experiments(data.df)
 \description{
 Title
 }
-\examples{
-vascr_summarise_experiments(data.df = growth.df)
-
-}
 \keyword{internal}
