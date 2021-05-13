@@ -63,3 +63,151 @@ utils::globalVariables(c("Distance", "Delta_Length", "value", "coeffs", "data"))
 #' ,"instruments.df"
 
 
+
+# # Build example data
+# 
+# 
+# 
+# #//////////// ECIS ////////////////////
+# 
+# library("vascr")
+# 
+# raw1.df = ecis_import_raw(system.file("/extdata/growth1_raw_TimeResample.abp", package = "vascr"), system.file("/extdata/growth1_samples.csv", package = "vascr"))
+# raw2.df = ecis_import_raw(system.file("/extdata/growth2_raw_TimeResample.abp", package = "vascr"), system.file("/extdata/growth2_samples.csv", package = "vascr"))
+# raw3.df = ecis_import_raw(system.file("/extdata/growth3_raw_TimeResample.abp", package = "vascr"), system.file("/extdata/growth3_samples.csv", package = "vascr"))
+# 
+# ecis_raw = vascr_combine(raw1.df, raw2.df, raw3.df)
+# 
+# vascr_plot(rawcombined, unit = "R", replication = "summary")
+# 
+# model1.df = ecis_import_model(system.file("/extdata/growth1_raw_TimeResample_RbA.csv", package = "vascr"), system.file("/extdata/growth1_samples.csv", package = "vascr"))
+# model2.df = ecis_import_model(system.file("/extdata/growth2_raw_TimeResample_RbA.csv", package = "vascr"), system.file("/extdata/growth2_samples.csv", package = "vascr"))
+# model3.df = ecis_import_model(system.file("/extdata/growth3_raw_TimeResample_RbA.csv", package = "vascr"), system.file("/extdata/growth3_samples.csv", package = "vascr"))
+# 
+# ecis_model = vascr_combine(model1.df, model2.df, model3.df)
+# ecis_combined = vascr_combine(rawcombined, modelcombined)
+# 
+# ############# CellZScope
+# 
+# cellzscope_raw = cellzscope_import_raw(system.file("/extdata/mdckspectra.txt", package = "vascr"))
+# cellzscope_model = cellzscope_import_model(system.file("/extdata/mdckmodel.txt", package = "vascr"))
+# 
+# cellzscope_combined = vascr_combine(cellzscope_raw, cellzscope_model)
+# cellzscope_combined= vascr_subset(cellzscope_combined, time = c(0,1000))
+# 
+# vascr_plot(cellzscope_combined, unit = "TER", frequency = 0, preprocessed = TRUE)
+# 
+# 
+# 
+# ############ excelligence
+# 
+# excelligence_combined = excelligence_import(system.file("/extdata/xcell.txt", package = "vascr"))
+# 
+# vascr_plot(excelligence_combined, unit = "CI", frequency = 0, samplecontains = "ATP")
+# 
+# 
+# data.df = cellzscope_raw
+# 
+# units_used = unique(data.df$Unit)
+# 
+# eraw = c("C","P", "R", "X", "Z")
+# emodel = c("Alpha", "Cm", "Drift", "Rb", "RMSE")
+# eall = c(eraw, emodel)
+# 
+# excelligence = c("CI")
+# 
+# zraw = c("I", "P")
+# zmodel = c("CPE_A", "CPE_n", "TER",   "Ccl",   "Rmed")
+# 
+# data = cellzscope_raw
+# data = ecis_raw
+# 
+# 
+# units = unique(units)
+# frequencies = unique(data$Frequency)
+# isint = all((frequencies == floor(frequencies)))
+# 
+# if(isint)
+# {
+#   
+# }
+# 
+# 
+
+# Save the file down to be opened with the package
+
+#save(file = "growth.df.rda", list = "growth.df", compress = "xz")
+
+# 
+# 
+# # Count how many lines are in this package, cos
+# 
+# library(dplyr)
+# library(stringr)
+# # Count your lines of R code
+# list.files(path = "/Users/jhuc964/Desktop/ECIS R/ECISR/R", recursive = T, full.names = T) %>%
+#   str_subset("[.][R]$") %>%
+#   sapply(function(x) x %>% readLines() %>% length()) %>%
+#   sum()
+
+
+# 
+# toplot2.df = vascr_prep_graphdata(growth.df, unit = "Rb")
+# 
+# toplot2.df = vascr_summarise(toplot2.df, level = "summary")
+# 
+# plot = ggplot2::ggplot(data = toplot2.df, ggplot2::aes(x = Time, y = Value, colour = Sample, ymin = Value - sd/sqrt(n), ymax = Value + sd/sqrt(n), fill = Sample)) + ggplot2::geom_line()
+# 
+# plot = plot + geom_ribbon(alpha = 0.1)
+# 
+# plot = plot + geom_errorbar()
+# 
+# 
+# install.packages("CodeDepends")
+# install.packages("Rgraphviz")
+# library(graph)
+# library(CodeDepends)
+# 
+# 
+# 
+# gg = makeCallGraph("function:vascr_plot")
+# if(require(Rgraphviz)) {
+#   gg = layoutGraph(gg, layoutType = "circo")
+#   graph.par(list(nodes = list(fontsize=55)))
+#   renderGraph(gg) ## could also call plot directly
+# }
+# 
+# f = system.file("samples", "R/heatmap_plot.R", package = "vascr")
+# sc = readScript(f)
+# g = makeVariableGraph( info = getInputs(sc))
+# if(require(Rgraphviz))
+#   plot(g)
+# 
+# 
+# 
+# devtools::install_github("datastorm-open/DependenciesGraphs")
+# 
+# 
+# library("DependenciesGraphs")
+# library(vascr) # A package I'm developing
+# 
+# dep <- envirDependencies("package:vascr")
+# plot(dep)
+# launch.app()
+# 
+# deps <- funDependencies("package:vascr", "vascr_plot")
+# plot(deps)
+# 
+# 
+# 
+# 
+# # library(rhub)
+# validate_email()
+# rhub::check()
+# 
+# cran_prep <- check_for_cran()
+# cran_prep$cran_summary()
+
+# 
+
+

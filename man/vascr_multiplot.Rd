@@ -2,7 +2,7 @@
 % Please edit documentation in R/ecis_graphics.R
 \name{vascr_multiplot}
 \alias{vascr_multiplot}
-\title{Plot multiple ggplots}
+\title{ECIS plot}
 \usage{
 vascr_multiplot(data, unit = "all", frequency = 0, time = Inf, ...)
 }
@@ -16,14 +16,108 @@ vascr_multiplot(data, unit = "all", frequency = 0, time = Inf, ...)
 \item{time}{The time to plot. Multiple time plots can be plotted with list(1,2) and multiple ranges can be plotted with list(c(1,2), c(3,4))}
 
 \item{...}{Other conditions to be passed into data conditioning and graph preparing steps}
+
+\item{level}{How much of the replicaiton to display. Options are 'all', 'experiment', 'summary" or "plate"}
+
+\item{samplecontains}{Optional, only samples that contain this string will be plotted. Standard search and wildcard}
+
+\item{experiment}{Optional, allows you to limit the experiment plotted. Experiment names should be separated with |
+searches apply.}
+
+\item{error}{Display error bars. 0 displays no error bars, 1 displays them all. Higher numbers will reduce the frequency of error bars plotted.}
+
+\item{linesize}{Width of mean lines shown on graphs}
+
+\item{normtime}{The time to normalise the data to}
+
+\item{divide}{Selector for if normalisation should be done by division or subtraction. Default is subtraction (FALSE)}
+
+\item{errorsize}{Width of error bars shown on graphs}
+
+\item{alphavalue}{Alpha value of area enclosed by error bars. May be lowered for buisy graphs}
+
+\item{confidence}{The confidence to use when generating basic significance plots}
+
+\item{xlab}{X axis value}
+
+\item{ylab}{Y axis value}
+
+\item{title}{The title of the ggplot}
+
+\item{stripidentical}{Remove cols from the data where all data points are identical. Default is true}
+
+\item{cols}{The columns of data to display in the names of plots. Allows for shortening of names where the automatic stripidentical fails}
+
+\item{verbose}{Outputs where in the funtion ploting is happening. Usefull for debugging as needed}
+
+\item{preprocessed}{Selects if the data is preprocessed. Will not run explosion and implosion if that is the case}
+
+\item{continuous}{Selects a continuous point for plotting}
+
+\item{alignkey}{Aligns key points (max, min ect). See vascr_align_key for details}
+
+\item{continuouscontains}{Subset of samplecontains, only returns data where the continuous value contains this data}
+
+\item{returndata}{Return the dataset, rather than the graph. Default FALSE, usefull for debugging}
+
+\item{showpoints}{Show the time points on the graph}
+
+\item{sortkeyincreasing}{Sort the data specified in an increasing way.}
+
+\item{singleplot}{Merge all the data specified into a single plot.}
+
+\item{priority}{The priority of variables to plot. Will be automatically filled if not available.}
+
+\item{errortype}{Type of error to plot. Can be SEM or SD.}
+
+\item{visualisation}{How to visualise the data}
+
+\item{threshold}{The threshold value to place on the graph}
 }
 \value{
+A ggplot2 object
+
 An array of requested ggplots
 }
 \description{
-This function splits out multiple ggplots into a grid when more than one is requested.
+The master function for generating ggplot2 objects from ECIS data. Incorporates all the summarising, testing and graphing operations into a single function.
 }
 \examples{
+
+
+
+#vascr_plot(growth.df, 'Rb', level = 'summary',
+#error = 2, linesize = 1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+#vascr_plot(growth.df, 'Rb', level = 'wells',
+#  error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", xlab = "Hours")
+# vascr_plot(growth.df, 'Rb', level = 'experiments',
+ #error = 2, linesize = .1, errorsize = 1, alphavalue = .1, title = "Cars", ylab = "Rb"
+ #, xlab = "Hours")
+#vascr_plot(growth.df, 'R', 4000, 'summary', time = 75)
+#vascr_plot(growth.df, "R", 4000, "summary", 50, confidence = 0.1, sortkeyincreasing = FALSE)
+
+#vascr_plot(growth.df, sortkeyincreasing = TRUE)
+
+#vascr_plot(growth.df, continuous = "cells", level = "summary", time = 50)
+
+#vascr_plot(growth.df, level = "plate", time = 100)
+
+#vascr_plot(growth.df, time = list(c(100,190)),
+#unit = list("Rb", "Cm", "Alpha", "R"),  frequency = 4000)
+
+#vascr_plot(growth.df, time = 100, unit = "Cm",  frequency = 4000, level = "summary")
+
+#vascr_plot(growth.df, level = "deviation")
+
+#vascr_plot(growth.df, visualisation = "line", level = "summary")
+
+
+#vascr_plot(growth.df)
+
+Plot multiple ggplots
+
+This function splits out multiple ggplots into a grid when more than one is requested.
+
 #vascr_multiplot(data = growth.df, frequency = 4000, time = list(50, 100))
 
 #vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100),100), level = "wells")
