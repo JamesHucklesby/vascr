@@ -142,8 +142,8 @@
 # # master = vascr_combine(xcell1r, ecis1m, czs1)
 # # master$HCMVEC = gsub(",", "", master$HCMVEC)
 # # master$HCMVEC = as.numeric(master$HCMVEC)
-# # 
-# # 
+# #
+# #
 # # masterm = subset(master, master$HCMVEC == 80000)
 # # masterm = vascr_subset(masterm, time = c(44,75))
 # 
@@ -166,6 +166,22 @@
 # mini1a = mini1
 # mini1a$Sample = str_remove(mini1a$HCMVEC, ",")
 # 
+# 
+# mini1b = mini1a %>% vascr_summarise(level = "experiments") %>% 
+#   group_by(Instrument, Frequency, Experiment) %>% arrange(Sample) %>%
+#   mutate(Value = Value-first(Value)) %>% group_by(Instrument, Frequency, Sample) %>% 
+#   summarise(Value = mean(Value), sem = sd(Value)/n())
+# 
+# mini1c = mini1b %>% select(Instrument, Frequency) %>% distinct()
+# 
+# 
+# hour47b = ggplot(mini1b) + geom_point(aes(x = Frequency, y = Value, color = Instrument, shape = Sample), size = 3) + geom_errorbar(aes(x = Frequency, y = Value, ymin=Value - sem, ymax= Value + sem, color = Instrument)) + scale_x_continuous(trans='log10') + scale_y_continuous(trans='log10') + labs(x = "Frequency (Hz)", y = "Log Impedance / Cell free impedance", title = "B) 47 Hours")
+# 
+# hour47b
+# 
+# hour47b + scale_shape_manual(values = c(16,3,1), name = "HCMVEC Seeding Density:  ", labels = c("Media Only",expression(paste("62,500 cells/",cm^2)),expression(paste("250,000 cells/",cm^2))))+ theme(legend.text.align = 0) + labs(Sample = "HCMVEC Seeding Density") + scale_color_discrete(name = "Instrument:  ")
+# 
+# ggplotly(hour47b)
 # 
 # 
 # mini1a = vascr_summarise(mini1a, level = "summary")
@@ -315,7 +331,7 @@
 #              title5, p4, p5, blank,
 #              title6, p6, p7, blank,
 #              title7, p8, blank, legend,
-#              
+# 
 #              widths = c(0.6, 1, 1,1),
 #              heights = c(0.2, 1,1,1,1)
 # )
@@ -328,50 +344,58 @@
 # 
 # make_multi_ccf = function(mini1, tomake)
 # {
-#   
+# 
 #   mini1 = vascr_normalise(mini1, 47, TRUE)
-#   
+# 
 #   totalexperiments = unique(mini1$Experiment)
-#   
+#  
+#   mergedminidf = data.frame()
 #   rm(mergedminidf)
 #   
+#   sensitivity_check(mini1)
+# 
 #   for(experiment in totalexperiments)
 #   {
 #     minidf = subset(mini1, mini1$Experiment == experiment)
 #     instrument = unique(minidf$Instrument)
+#     #sensitivity_check(minidf)
 #     minidf = vascr_summarise(minidf, level = "experiments")
 #     minidf = vascr_explode(minidf)
+#     minidf$Well = "NA"
 #     minidf = vascr_summarise_cross_correlation(minidf)
 #     minidf$Experiment = experiment
 #     minidf$Instrument = instrument
 #     mergedminidf = create_or_merge(mergedminidf, minidf)
+#     
 #   }
-#   
+# 
 #   ggplot(mergedminidf, aes(y = coeffs, x = sample)) + geom_point()
-#   
+# 
 #   pcombinations = mergedminidf %>% group_by(sample) %>% summarise(mean = mean(coeffs), sd = sd(coeffs), n = n(), sem = sd/n, V1 = categorical_mode(V1), V2 = categorical_mode(V2))
-#   
+# 
 #  pcombinations$sample = str_replace_all(pcombinations$sample, "pg.ml", "pg/ml")
 #  pcombinations$sample =   str_replace_all(pcombinations$sample, "[.]", " ")
-#  
+# 
 #  pcombinations$sample = str_replace_all(pcombinations$sample, "TNFa", "TNF\U03B1")
 #  pcombinations$sample = str_replace_all(pcombinations$sample, "IL1b", "IL1\U03B2")
-#  
+# 
 #   # linedata = vascr_normalise(mini1, 48, TRUE)
-#   
+# 
 #   linedata = mini1
 #   linedata = vascr_summarise(linedata, level = "summary")
-#   
+# 
 #   lineplot = ggplot(linedata, aes(x = Time, y = Value, ymax = Value + sd/n, ymin = Value - sd/n, fill = Sample, color = Sample)) + geom_line() + geom_ribbon(alpha = 0.3) + ylim(0.78, 1.1)
-#   
+# 
 #   pcombinations$sem = pcombinations$sd / sqrt(pcombinations$n)
-#   
+# 
 #   barplot = ggplot(pcombinations, aes(x = sample, y = mean, ymax = mean+sem, ymin = mean - sem)) + geom_errorbar(size = 0.8 , width  = 0.6, aes(colour = V1)) + geom_point(size = 5, aes(color = V2)) + coord_flip() + ylim(-1,1) + ylab("Cross Correlation") + xlab ("Sample") + scale_color_manual(values = c(vascr_gg_color_hue(3)[2], vascr_gg_color_hue(3)[1], vascr_gg_color_hue(3)[3]))
 #   
+#   barplot
+# 
 #   lineplot = lineplot + theme(legend.position = "none")
 #   barplot = barplot + theme(legend.position = "none")
-#   
-#   
+# 
+# 
 #   if(tomake == "line")
 #   {
 #     return(lineplot)
@@ -380,7 +404,7 @@
 #   {
 #     return(barplot)
 #   }
-#   
+# 
 # }
 # 
 # mini1 = vascr_subset(master, instrument = "ECIS", frequency = 8000, time = c(46, 96), unit = "Z")
@@ -403,6 +427,9 @@
 # mini1 = subset(mini1, mini1$HCMVEC=="20,000")
 # p5 = make_multi_ccf(mini1, "line")
 # p6 = make_multi_ccf(mini1, "bar")
+# 
+# mini1 %>% vascr_normalise(normtime = 47) %>% vascr_plot_line() %>% ggplotly()
+# 
 # 
 # mini1 = vascr_subset(master, instrument = "cellZscope", frequency = 10000, time = c(46, 96), unit = "Z")
 # mini1 = vascr_explode(mini1)
@@ -428,8 +455,8 @@
 # 
 # verticalline = geom_vline(aes(xintercept = c(47), linetype=""), color = "orange")
 # 
-#   
-#   p1 + ylab("Normalised Impedance \n (Ohm, 8,000 Hz)") + xlab("Time (hours)") + verticalline + theme(legend.position = "bottom")  + scale_linetype(name = "Treatment Time:  ") 
+# 
+#   p1 + ylab("Normalised Impedance \n (Ohm, 8,000 Hz)") + xlab("Time (hours)") + verticalline + theme(legend.position = "bottom")  + scale_linetype(name = "Treatment Time:  ")
 # 
 #   p1 = p3 + ylab("Normalised Impedance \n (Ohm, 8,000 Hz)") + xlab("Time (hours)") + verticalline
 # p3 = p3 + ylab("Normalised Impedance \n (Ohm, 8,000 Hz)") + xlab("Time (hours)") + verticalline
@@ -440,9 +467,9 @@
 # 
 # 
 # 
-# keygraph = p1 + theme(legend.position = "bottom") + 
-#   scale_colour_discrete(name = "Treatment:  ", labels = c(expression(paste(" 500 pg/ml TNF",alpha)),expression(paste(" 500 pg/ml IL1",beta)), "Control")) + 
-#   scale_fill_discrete(name = "Treatment:  ", labels = c(expression(paste(" 500 pg/ml TNF",alpha)),expression(paste(" 500 pg/ml IL1",beta)),  "Control")) + scale_linetype(name = "Treatment Time:  ") 
+# keygraph = p1 + theme(legend.position = "bottom") +
+#   scale_colour_discrete(name = "Treatment:  ", labels = c(expression(paste(" 500 pg/ml TNF",alpha)),expression(paste(" 500 pg/ml IL1",beta)), "Control")) +
+#   scale_fill_discrete(name = "Treatment:  ", labels = c(expression(paste(" 500 pg/ml TNF",alpha)),expression(paste(" 500 pg/ml IL1",beta)),  "Control")) + scale_linetype(name = "Treatment Time:  ")
 # 
 # 
 # g <- ggplotGrob(keygraph)$grobs
@@ -454,7 +481,7 @@
 #              text_grob("cellZscope"), p5, p6, p7,p8,
 #              text_grob("xCELLigence"), p9, p10, p11, p12,
 #              blank, legend,
-#              
+# 
 #              heights = c(0.1, 1, 1, 1, 0.1),
 #              widths = c(0.5, 1,1,1,1),
 #              layout_matrix = t(cbind(c(1,2,2,3,3), c(4,5,6,7,8), c(9,10,11,12,13), c(14,15,16,17,18),c(19, 20, 20, 20, 20)))
@@ -520,9 +547,9 @@
 # 
 # 
 # # keygraph = p1 + theme(legend.position = "bottom") + scale_colour_discrete(name = "Treatment", labels = c("500 pg/ml IL1B","500 pg/ml TNFa",  "Control")) + scale_fill_discrete(name = "Treatment", labels = c("500 pg/ml IL1B","500 pg/ml TNFa",  "Control"))
-# # 
+# #
 # # verticalline = geom_vline(xintercept = 47, linetype="dashed", color = "orange")
-# # 
+# #
 # # g <- ggplotGrob(keygraph)$grobs
 # # legend <- g[[which(sapply(g, function(x) x$name) == "guide-box")]]
 # 
@@ -543,7 +570,7 @@
 #              text_grob("Cell-cell interaction"), p5, p6, p7,p8,
 #              text_grob("Membrane\ncapacatance"), p9, p10, p11, p12,
 #              blank, legend,
-#              
+# 
 #              heights = c(0.1, 1, 1, 1, 0.1),
 #              widths = c(0.5, 1,1,1,1),
 #              layout_matrix = t(cbind(c(1,2,2,3,3), c(4,5,6,7,8), c(9,10,11,12,13), c(14,15,16,17,18),c(19, 20, 20, 20, 20)))
@@ -629,12 +656,12 @@
 # 
 # make_multi_ccf_changeinstrument = function(mini1, tomake)
 # {
-#   
+# 
 #   mini1 = vascr_normalise(mini1, 47, TRUE)
-#   
+# 
 #   totalexperiments = unique(mini1$Experiment)
 #   rm(mergedminidf)
-#   
+# 
 #   for(experiment in totalexperiments)
 #   {
 #     minidf = subset(mini1, mini1$Experiment == experiment)
@@ -644,39 +671,39 @@
 #     minidf$Experiment = experiment
 #     mergedminidf = create_or_merge(mergedminidf, minidf)
 #   }
-#   
+# 
 #   ggplotly(ggplot(mergedminidf, aes(y = coeffs, x = sample)) + geom_point())
-#   
+# 
 #   unique(mergedminidf$sample)
-#   
+# 
 #   mergedminidf = subset(mergedminidf, mergedminidf$V1 == "[ Z Unit | 10000 Frequency | xCELLigence Instrument ]" | mergedminidf$V2 == "[ Z Unit | 10000 Frequency | xCELLigence Instrument ]")
-#   
+# 
 #   ggplotly(ggplot(mergedminidf, aes(y = coeffs, x = sample)) + geom_point())
-#   
+# 
 #   # mergedminidf$sample = str_replace(mergedminidf$sample, "\\[ Rb  \\]" , "[ Rb  | ECIS  ]" )
 #   # mergedminidf$sample = str_replace(mergedminidf$sample, "\\[ Alpha  \\]" , "[ Alpha  | ECIS  ]" )
-#   
+# 
 #   pcombinations = mergedminidf %>% group_by(sample) %>% summarise(mean = mean(coeffs), sd = sd(coeffs), n = n(), sem = sd/n, V1 = categorical_mode(V1), V2 = categorical_mode(V2))
-#   
+# 
 #   # linedata = vascr_normalise(mini1, 48, TRUE)
-#   
+# 
 #   linedata = mini1
 #   linedata$Sample = vascr_make_name(mini1, select_cols = c("Instrument", "Frequency", "Unit"))
 #   linedata = vascr_summarise(linedata, level = "summary")
-#   
-#   
-#   
+# 
+# 
+# 
 #   lineplot = ggplot(linedata, aes(x = Time, y = Value, ymax = Value + sd/n, ymin = Value - sd/n, fill = Sample, color = Sample)) + geom_line() + geom_ribbon(alpha = 0.3) + ylab("Normalised Value")
 #   lineplot
-#   
+# 
 #   pcombinations$sem = pcombinations$sd / sqrt(pcombinations$n)
-#   
+# 
 #   barplot = ggplot(pcombinations, aes(x = sample, y = mean, ymax = mean+sem, ymin = mean - sem)) + geom_errorbar(size = 2, width  = 0.6, aes(colour = V2)) + geom_point(size = 5, aes(color = V1)) + coord_flip() + ylim(-1,1) + ylab("Cross Correlation") + xlab ("Measurement")
-#   
+# 
 #   lineplot = lineplot + theme(legend.position = "none")
 #   barplot = barplot + theme(legend.position = "none")
-#   
-#   
+# 
+# 
 #   if(tomake == "line")
 #   {
 #     return(lineplot)
@@ -685,10 +712,10 @@
 #   {
 #     return(barplot)
 #   }
-#   
+# 
 # }
 # 
-#  
+# 
 # 
 # }
 # 

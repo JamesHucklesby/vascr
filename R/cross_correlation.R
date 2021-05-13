@@ -57,7 +57,7 @@ data.df = vascr_remove_stats(data.df)
 
 deltacols = vascr_find_changing_cols(data.df)
 deltacols = vascr_remove_from_vector(c("Time", "Value", "Sample"), deltacols)
-deltacols = vascr_remove_from_vector(c("Well"), deltacols)
+#deltacols = vascr_remove_from_vector(c("Well"), deltacols)
 
 deltadata = select(data.df, all_of(deltacols))
 
