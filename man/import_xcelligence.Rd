@@ -24,7 +24,7 @@ Import an xcelligence file
 rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr')
 sampledefine = system.file('extdata/instruments/xcellkey.csv', package = 'vascr')
 
-data7 = import_xcelligence(file = rawdata, key = sampledefine, "TEST7")
+# data7 = import_xcelligence(file = rawdata, key = sampledefine, "TEST7")
 
  
 }

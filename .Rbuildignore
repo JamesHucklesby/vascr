@@ -2,6 +2,7 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^packrat/
+^.github/
 ^\.Rprofile$
 ^\.git$
 ^draft_functions\.R$

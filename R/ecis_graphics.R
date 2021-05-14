@@ -156,9 +156,9 @@
 # 
 # }
 
-#' Plot multiple ggplots
+#' # Plot multiple ggplots
 #' 
-#' This function splits out multiple ggplots into a grid when more than one is requested.
+#' # This function splits out multiple ggplots into a grid when more than one is requested.
 #'
 #' @param data A vascr dataset
 #' @param unit The unit to plot. "raw" will plot all raw units and "modeled" will plot all modeled units.

@@ -33,11 +33,11 @@
 #' rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr')
 #' sampledefine = system.file('extdata/instruments/xcellkey.csv', package = 'vascr')
 #' 
-#' data7 = vascr_import("xCELLigence", raw = rawdata, key = sampledefine, experimentname = "TEST7")
-#' 
-#' masterdata = vascr_combine(data3, data6, data7)
-#' masterdata = vascr_resample(masterdata, 1)
-#' 
+# data7 = vascr_import("xCELLigence", raw = rawdata, key = sampledefine, experimentname = "TEST7")
+# 
+# masterdata = vascr_combine(data3, data6, data7)
+# masterdata = vascr_resample(masterdata, 1)
+#
 vascr_import = function(instrument, raw = NULL, model = NULL, key = NULL, experimentname = "NA", password = "RTCaDaTa")
 {
   inst = vascr_match(instrument, vascr_instrument_list())

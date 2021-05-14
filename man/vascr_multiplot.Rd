@@ -114,9 +114,9 @@ The master function for generating ggplot2 objects from ECIS data. Incorporates 
 
 #vascr_plot(growth.df)
 
-Plot multiple ggplots
+# Plot multiple ggplots
 
-This function splits out multiple ggplots into a grid when more than one is requested.
+# This function splits out multiple ggplots into a grid when more than one is requested.
 
 #vascr_multiplot(data = growth.df, frequency = 4000, time = list(50, 100))
 
