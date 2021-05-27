@@ -40,6 +40,11 @@ vascr_summarise = function(data.df, level = "wells")
 {
   levels = vascr_match(level, vascr_levels(set = "all"))
   
+  if(!vascr_test_timebase(data.df))
+  {
+    data.df = vascr_interpolate_time(data.df)
+  }
+  
   for(lev in level)
   {
     

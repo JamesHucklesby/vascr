@@ -43,7 +43,7 @@
 #' 
 #' vascr_subset(growth.df, unit = "Rb")
 #' 
-vascr_subset = function(data.df, 
+vascr_subset = function(subset.df, 
                         time = NULL, 
                         unit = NULL, 
                         well = NULL, 
@@ -67,20 +67,14 @@ vascr_subset = function(data.df,
                         subsample = NULL,
                         return_lists = FALSE)
 {
-  subset.df = data.df
+  
   
   # Subsample (this is the cheapest so let's do it first)
   if(!is.null(subsample))
   {
-  subset.df = vascr_subsample(data.df, subsample)
+  subset.df = vascr_subsample(subset.df, subsample)
   }
   
-  # Time
-  if(!is.null(time))
-  {
-  times = vascr_find_time(subset.df, time)
-  subset.df = subset(subset.df, subset.df$Time %in% times)
-  }
   
   # Unit
   if(!is.null(unit))
@@ -89,6 +83,20 @@ vascr_subset = function(data.df,
   subset.df = subset(subset.df, subset.df$Unit %in% units)
   }
 
+  
+  # Frequency
+  if(!is.null(frequency))
+  {
+    if(typeof(alldata$Frequency) != "double")
+    {
+      subset.df = subset.df %>% convert(Frequency = as.double(Frequency))
+    }
+    
+    frequencies = vascr_find_frequency(subset.df, frequency)
+    subset.df = subset(subset.df, subset.df$Frequency %in% frequencies)
+  }
+  
+  
   # Well
   if(!is.null(well))
   {
@@ -103,12 +111,13 @@ vascr_subset = function(data.df,
   subset.df = subset(subset.df, subset.df$Value %in% values)
   }
   
-  # Frequency
-  if(!is.null(frequency))
+
+  
+  # Time
+  if(!is.null(time))
   {
-  subset.df$Frequency = as.numeric(subset.df$Frequency)
-  frequencies = vascr_find_frequency(subset.df, frequency)
-  subset.df = subset(subset.df, subset.df$Frequency %in% frequencies)
+    times = vascr_find_time(subset.df, time)
+    subset.df = subset(subset.df, subset.df$Time %in% times)
   }
   
   # Experiment
@@ -155,7 +164,7 @@ vascr_subset = function(data.df,
   }
   
   # Check if there is still some data here, and if not sound a warning
-  if(nrow(data.df)==0)
+  if(nrow(subset.df)==0)
   {
     warning("No data returned from dataset subset. Check your frequencies, times and units are present in the dataset")
   }
@@ -520,8 +529,8 @@ vascr_find_frequency = function(data.df, frequency) {
     
   } else
   {
-        
-      data.df$Frequency = as.numeric(as.character(data.df$Frequency))
+      
+     data.df = data.df %>% mutate(Frequency = as.double(Frequency))
       times = unique(data.df$Frequency)
       freq = as.numeric(freq)
       numberinlist = which.min(abs(times - freq))

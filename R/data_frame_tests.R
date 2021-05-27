@@ -132,5 +132,28 @@ vascr_missing_wells = function(wells)
 }
 
 
+#' Title
+#'
+#' @param dataset 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_test_timebase = function(dataset)
+{
+  timebases = dataset %>% group_by(across(c(-Value, -Time))) %>% summarise(times = sum(Time^2), .groups = "keep") %>% ungroup() %>% select(times) %>% distinct() %>% nrow()
+  
+  if(timebases>1)
+  {
+    return(FALSE)
+  }
+  else
+  {
+    return(TRUE)
+  }
+  
+}
+
 
 
