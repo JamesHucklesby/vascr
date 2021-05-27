@@ -76,35 +76,58 @@ vascr_subset = function(data.df,
   }
   
   # Time
+  if(!is.null(time))
+  {
   times = vascr_find_time(subset.df, time)
   subset.df = subset(subset.df, subset.df$Time %in% times)
+  }
   
   # Unit
+  if(!is.null(unit))
+  {
   units = vascr_find_unit(subset.df, unit)
   subset.df = subset(subset.df, subset.df$Unit %in% units)
+  }
 
   # Well
+  if(!is.null(well))
+  {
   wells = vascr_find_well(subset.df, well)
   subset.df = subset(subset.df, subset.df$Well %in% wells)
+  }
   
   # Value
+  if(!is.null(value_greater_than) | !is.null(value_less_than) | !is.null(value_equal_to))
+  {
   values = vascr_find_value(subset.df, value_greater_than, value_less_than, value_equal_to)
   subset.df = subset(subset.df, subset.df$Value %in% values)
+  }
   
   # Frequency
+  if(!is.null(frequency))
+  {
   subset.df$Frequency = as.numeric(subset.df$Frequency)
   frequencies = vascr_find_frequency(subset.df, frequency)
   subset.df = subset(subset.df, subset.df$Frequency %in% frequencies)
+  }
   
   # Experiment
+  if(!is.null(experiment))
+  {
   experiments = vascr_find_experiment(subset.df, experiment)
   subset.df = subset(subset.df, subset.df$Experiment %in% experiments)
+  }
   
   # Instrument
+  if(!is.null(instrument))
+  {
   instruments = vascr_find_instrument(subset.df, instrument)
   subset.df = subset(subset.df, subset.df$Instrument %in% instruments)
+  }
   
   # Sample (s) (this is second to last as it is highly CPU intensive, and therefore shoud be imposed on the smallest dataset)
+  if(!is.null(sample_contains) | !is.null(sample_not_contains) |!is.null(sample_equal_to) |!is.null(variable_set) |!is.null(variable_unset) |!is.null(variable_equal_to))
+  {
   samples = vascr_find_sample(subset.df,   sample_contains, sample_not_contains,
                               sample_equal_to,
                               variable_set,
@@ -115,6 +138,7 @@ vascr_subset = function(data.df,
                               variable_less_than,
                               include_vehicle)
   subset.df = subset(subset.df, Sample %in% samples)
+  }
   
   # Max deviation (This is last, as it is by far the most expensive operation computationally)
   if(!is.null(max_deviation))

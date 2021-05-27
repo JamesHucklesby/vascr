@@ -140,21 +140,27 @@ closest_value = function(target, data_vector)
 #' 
 vascr_standardise_wells = function(well) {
   
+  
+  uniquewell = unique(uniquewell)
+  original_unique = uniquewell
+  
   # First try and fix the user input
-  well = toupper(well) # Make it upper case
-  well = gsub(" ", "", well, fixed = TRUE) # Remove spaces
-  well = gsub("[^0-9A-Za-z///' ]","" , well ,ignore.case = TRUE)
-  well = gsub("(?<![0-9])([0-9])(?![0-9])", "0\\1", well, perl = TRUE) # Add 0's
+  uniquewell = toupper(uniquewell) # Make it upper case
+  uniquewell = gsub(" ", "", uniquewell, fixed = TRUE) # Remove spaces
+  uniquewell = gsub("[^0-9A-Za-z///' ]","" , uniquewell ,ignore.case = TRUE)
+  uniquewell = gsub("(?<![0-9])([0-9])(?![0-9])", "0\\1", uniquewell, perl = TRUE) # Add 0's
   
   # Check that it now conforms
-
   
-  if(is.na(match(well[1],vascr_96_well_names())))
-  {
-    return ("NA")
-  }
+  validnames = vascr_96_well_names()
+  uniquewell = if_else(uniquewell %in% validnames, uniquewell, "NA" )
   
-  return(well)
+  exchange = data.frame(well = original_unique, uniquewell)
+  wells = data.frame(well)
+  
+  return = wells %>% left_join(exchange,  by = "well")
+  
+  return(return$uniquewell)
 }
 
 #' All the well names of a 96 well plate

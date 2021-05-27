@@ -17,8 +17,7 @@ ecis_calculate_quantaties = function(data.df)
   # Wrangle data so it is in columns
   child1.df = data.df
   child1.df$Value = abs(child1.df$Value)
-  widedata.df = tidyr::spread(child1.df, Unit, Value)
-  widedata.df$Frequency = as.numeric(widedata.df$Frequency)
+  widedata.df = tidyr::spread(child1.df, Unit, Value) %>% mutate(Frequency = as.numeric(Frequency))
   
   # Calculate the new derrivative values
   widedata.df$Z = sqrt(widedata.df$X^2 + widedata.df$R^2)
@@ -31,9 +30,42 @@ ecis_calculate_quantaties = function(data.df)
   # Fix data types
   longdata.df$Unit = factor(longdata.df$Unit)
   longdata.df$Well = as.character(longdata.df$Well)
-  longdata.df$Time = as.numeric(longdata.df$Time)
+  longdata.df = longdata.df %>% mutate(Time = as.numeric(Time))
   
   return(longdata.df)
+}
+
+#' Title
+#'
+#' @param name_path 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_import_map = function(sampledefine)
+{
+  
+  file_content = read.csv(sampledefine)
+  
+  file_map = file_content %>% mutate(Row = trimws(Row), Column = trimws(Column)) %>%
+    separate_rows(Row, sep = " ") %>%
+    separate_rows(Column, sep = " ") %>%
+    mutate(Well = paste(Row, Column, sep = ""), Well = vascr_standardise_wells(Well)) %>%
+    mutate(Row = NULL, Column = NULL) %>%
+    relocate(Well)
+  
+  # Copy down the col name into each cell, separated by _
+  for (col in colnames(file_map)[2:length(colnames(file_map))])
+  {
+    file_map[[col]] = paste(file_map[[col]],col, sep ="_")
+  }
+  
+  file_map = file_map %>% unite("Sample", -Well, sep =" + ")
+  
+  
+  return(file_map)
+  
 }
 
 
@@ -63,29 +95,28 @@ vascr_assign_samples = function (data, sampledefine)
   vascr_validate_file(sampledefine, c("csv"))
   
   # Read in the data table created by the user
-  names.df = read.csv(sampledefine, as.is = TRUE)
+  names.df = vascr_import_map(sampledefine)
   
   # Standardise all wells
   names.df$Well = vascr_standardise_wells(names.df$Well)
-  data$Well = vascr_standardise_wells(data$Well)
   
   
   
   #Sanity check that the user has fed the right file
-  if(colnames(names.df)[1] != "Well")
+  if(!"Well" %in% colnames(names.df))
   {
     warning("The first column is not entitled 'Well'. Please check this and try to import again")
   }
-  
-  
-  # Copy down the col name into each cell, separated by _
-  for (col in colnames(names.df)[2:length(colnames(names.df))])
-  {
-    names.df[[col]] = paste(names.df[[col]],col, sep ="_")
-  }
-  
-  # Unite the columns with full names
-  names.df = names.df %>% unite(col = Sample,colnames(names.df)[2:length(colnames(names.df))], sep = " + ")
+
+
+  # # Copy down the col name into each cell, separated by _
+  # for (col in colnames(names.df)[2:length(colnames(names.df))])
+  # {
+  #   names.df[[col]] = paste(names.df[[col]],col, sep ="_")
+  # }
+  # 
+  # # Unite the columns with full names
+  # names.df = names.df %>% unite(col = Sample,colnames(names.df)[2:length(colnames(names.df))], sep = " + ", remove = TRUE)
   combined.df = left_join(data, names.df, by = "Well")
   
   
@@ -186,19 +217,24 @@ ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
     
     fulldata.df$ID = as.integer(fulldata.df$ID)
     
+    id_to_well.df$Well = vascr_standardise_wells(id_to_well.df$Well)
+    
     
     # Correlate the generated cell lookup table to ECIS's internal well id's
     fulldata.df = left_join(fulldata.df, id_to_well.df, by = "ID")
     
+    
     # Make the wide dataset long
     fulldata_long.df = fulldata.df %>% tidyr::gather("Type", Value, -Well, -Time, -"ID")
-    fulldata_long.df$Value = as.numeric(fulldata_long.df$Value)
+    fulldata_long.df = fulldata_long.df %>% mutate(Value = as.numeric(Value))
+    
+    separate = fulldata_long.df %>% select(Type) %>% distinct() %>% tidyr::separate("Type", c("Unit", "Frequency"), remove = FALSE)
     
     # Split out frequency and R/C as needed
-    fulldata_long.df = fulldata_long.df %>% tidyr::separate("Type", c("Unit", "Frequency"), 
-        " ")
+    fulldata_long.df = fulldata_long.df %>% left_join(separate, by = "Type")
     
     fulldata_long.df$ID = NULL
+    fulldata_long.df$Type = NULL
     
     # Generate the other physical quantaties
     
@@ -217,9 +253,10 @@ ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
     
     
     longdata.df$Instrument = "ECIS"
-    longdata.df$Well = vascr_standardise_wells(longdata.df$Well)
+
     combined.df = vascr_assign_samples(longdata.df, sampledefine)
     
+    gc(verbose = FALSE)
     
     # Explicitly return
     return(combined.df)
@@ -365,6 +402,8 @@ ecis_import_model = function(modeleddata, sampledefine, experimentname = "NA") {
     combined.df$Unit = factor(combined.df$Unit)
     combined.df$Well = factor(combined.df$Well)
     
+    
+    
     # import the naming tags
     combined2.df = vascr_assign_samples(combined.df, sampledefine)
     
@@ -427,3 +466,4 @@ ecis_import = function(rawdata, modeled, key, experimentname = "NA") {
     
     return(masterdata.df)
 }
+

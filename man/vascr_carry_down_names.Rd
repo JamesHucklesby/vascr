@@ -19,4 +19,8 @@ A data frame with columns carried down
 \description{
 Carry down names in selected columns
 }
+\examples{
+# Used as part of various import functions
+
+}
 \keyword{internal}

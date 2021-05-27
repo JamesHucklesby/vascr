@@ -2,7 +2,7 @@
 % Please edit documentation in R/Naming_functions.R
 \name{vascr_full_implode}
 \alias{vascr_full_implode}
-\title{Implode multiple columns from a data frame}
+\title{Implode multiple columns from a data frame into a single title}
 \usage{
 vascr_full_implode(data.df, cols_to_implode = NULL)
 }
@@ -12,5 +12,10 @@ vascr_full_implode(data.df, cols_to_implode = NULL)
 \item{cols_to_implode}{The columns to implode}
 }
 \description{
-Implode multiple columns from a data frame
+Implode multiple columns from a data frame into a single title
+}
+\examples{
+vascr_full_implode(growth.df)
+vascr_full_implode(growth.df, c("cells", "Experiment"))
+
 }

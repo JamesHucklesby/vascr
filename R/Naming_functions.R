@@ -9,6 +9,8 @@
 #' @keywords internal
 #'
 #' @examples
+#' # Used as part of various import functions
+#' 
 vascr_carry_down_names = function(data.df, cols_to_carry = NULL, remove_blank = TRUE)
 {
   uniquedata = data.df
@@ -36,7 +38,7 @@ vascr_carry_down_names = function(data.df, cols_to_carry = NULL, remove_blank = 
 
 
 
-#' Implode multiple columns from a data frame
+#' Implode multiple columns from a data frame into a single title
 #'
 #' @param data.df The dataset to implode
 #' @param cols_to_implode The columns to implode
@@ -45,6 +47,9 @@ vascr_carry_down_names = function(data.df, cols_to_carry = NULL, remove_blank = 
 #' @export
 #'
 #' @examples
+#' vascr_full_implode(growth.df)
+#' vascr_full_implode(growth.df, c("cells", "Experiment"))
+#' 
 vascr_full_implode = function(data.df, cols_to_implode = NULL)
 {
 
@@ -82,16 +87,18 @@ vascr_make_name = function(data.df, select_cols = NULL, remove_blank = TRUE, fil
 
 
 
-#' Title
+#' Shorten a name down to only some variables, and write out those that change
 #'
-#' @param name_vector 
-#' @param select_cols 
-#' @param remove_blank 
-#' @param fill_blank 
+#' @param name_vector A vector of names to implode
+#' @param select_cols  The columns to incorportate
+#' @param remove_blank Should blank columns be removed, default TRUE
+#' @param fill_blank Text to fill blanks in with, default "Control"
+#' @param include_wells Should well id's be included
 #' 
 #' @importFrom dplyr summarise_all n_distinct
 #' @importFrom tibble is_tibble
-#' @export
+#' 
+#' @export 
 #'
 #' @return
 

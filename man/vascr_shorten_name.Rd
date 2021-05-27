@@ -2,7 +2,7 @@
 % Please edit documentation in R/Naming_functions.R
 \name{vascr_shorten_name}
 \alias{vascr_shorten_name}
-\title{Title}
+\title{Shorten a name down to only some variables, and write out those that change}
 \usage{
 vascr_shorten_name(
   name_vector,
@@ -13,17 +13,19 @@ vascr_shorten_name(
 )
 }
 \arguments{
-\item{name_vector}{}
+\item{name_vector}{A vector of names to implode}
 
-\item{select_cols}{}
+\item{select_cols}{The columns to incorportate}
 
-\item{remove_blank}{}
+\item{remove_blank}{Should blank columns be removed, default TRUE}
 
-\item{fill_blank}{}
+\item{fill_blank}{Text to fill blanks in with, default "Control"}
+
+\item{include_wells}{Should well id's be included}
 }
 \value{
 
 }
 \description{
-Title
+Shorten a name down to only some variables, and write out those that change
 }

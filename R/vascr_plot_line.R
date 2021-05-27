@@ -56,7 +56,7 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1)
     
     priority = priority[!priority == "Well"] # Remove well from the priority as it's no longer required
     
-    data = unite(data, col = "wellstamp", Well, priority[2], priority[3], remove = FALSE)
+    data = unite(data, col = "wellstamp", Well, priority[2], remove = FALSE)
     wellstamp = "wellstamp"
     
     if(length(priority) ==2)
