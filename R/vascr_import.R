@@ -5,6 +5,8 @@
 #' @param model Path to the modeled dataset. Ignored if not set
 #' @param key Key file, containing data on which well contains what data
 #' @param experimentname Name to assign to the experiment
+#' 
+#' @importFrom dplyr if_else
 #'
 #' @return A full vascr dataset
 #' @export

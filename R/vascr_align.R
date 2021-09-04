@@ -65,7 +65,9 @@ vascr_subset = function(subset.df,
                         instrument = NULL,
                         max_deviation = NULL,
                         subsample = NULL,
-                        return_lists = FALSE)
+                        return_lists = FALSE,
+                        sampleid = NULL,
+                        remake_name = FALSE)
 {
   
   
@@ -87,9 +89,9 @@ vascr_subset = function(subset.df,
   # Frequency
   if(!is.null(frequency))
   {
-    if(typeof(alldata$Frequency) != "double")
+    if(typeof(subset.df$Frequency) != "double")
     {
-      subset.df = subset.df %>% convert(Frequency = as.double(Frequency))
+      subset.df = subset.df %>% mutate(Frequency = as.double(Frequency))
     }
     
     frequencies = vascr_find_frequency(subset.df, frequency)
@@ -149,6 +151,12 @@ vascr_subset = function(subset.df,
   subset.df = subset(subset.df, Sample %in% samples)
   }
   
+  
+  if(!is.null(sampleid))
+  {
+    subset.df = subset.df %>% filter(SampleID %in% sampleid)
+  }
+  
   # Max deviation (This is last, as it is by far the most expensive operation computationally)
   if(!is.null(max_deviation))
   {
@@ -167,6 +175,11 @@ vascr_subset = function(subset.df,
   if(nrow(subset.df)==0)
   {
     warning("No data returned from dataset subset. Check your frequencies, times and units are present in the dataset")
+  }
+  
+  if(isTRUE(remake_name) & vascr_detect_level(subset.df) == "wells")
+  {
+    subset.df = vascr_make_name(subset.df)
   }
   
   return(subset.df)
@@ -1169,4 +1182,22 @@ samplecols.df = select(data.df, all_of(samplecols))
 samplecols.df = distinct(samplecols.df)
 
 return(samplecols.df)
+}
+
+
+#' Title
+#'
+#' @param data.df 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_number_sample = function(data.df)
+{
+  sample_list = tibble(Sample = unique(data.df$Sample), SampleID = 1:length(Sample))
+  data.df$SampleID = NULL
+  data.df = left_join(data.df, sample_list, by = "Sample")
+  
+  return(data.df)
 }

@@ -168,31 +168,31 @@ vascr_summarise_summary = function(data.df)
 #' 
 vascr_normalise = function(data.df, normtime, divide = FALSE) {
     
+    data.df = ungroup(data.df)
+  
     # Create a table that contains the full dataset at the time we are normalising to
-    mininormaltable = vascr_subset(data.df, time = normtime)
+    mininormaltable = data.df %>% filter(Time == vascr_find_time(data.df, normtime))
+    mininormaltable$NormValue = mininormaltable$Value
+    mininormaltable$Value = NULL
+    mininormaltable$NormTime = normtime
+    mininormaltable$Time = NULL
     
     # Now use left_join to match this time point to every other time point.This creates a table with an additional column that everything needs to be    normalised to, allowing for the actual normalisation to be done via vector maths. Not the most memory efficent, but is explicit and clean.
     
-    fulltable = left_join(data.df, mininormaltable, by = c('Well' = "Well", 'Frequency' = "Frequency", 
-        Experiment = "Experiment", Unit = "Unit", Sample = "Sample", Instrument = "Instrument"))
-    
-    #Adjust naming so that the time variable is set to the time of each timepoint, not the time we are normalising to
-    fulltable$Time = fulltable$Time.x
+    fulltable = right_join(data.df, mininormaltable)
     
     
     # Run the actual maths for each row
     
     if (divide == TRUE) {
-        fulltable$Value = fulltable$Value.x/fulltable$Value.y
+        fulltable$Value = fulltable$Value/fulltable$NormValue
     } else {
-        fulltable$Value = fulltable$Value.x - fulltable$Value.y
+        fulltable$Value = fulltable$Value - fulltable$NormValue
     }
     
     # Clean up temporary rows
-    fulltable$Time.y = NULL
-    fulltable$Time.x = NULL
-    fulltable$Value.x = NULL
-    fulltable$Value.y = NULL
+    fulltable$NormTime = NULL
+    fulltable$NormValue = NULL
     
     
     # Warn if maths errors have occoured
@@ -620,7 +620,7 @@ vascr_prep_graphdata = function(data.df, unit = "", frequency = Inf, time = NULL
   
   # First subset away what we don't need for normalising to a particular point (speeds up things a lot)
     #If requested
-  data2.df = vascr_subset(data.df, unit = unit, frequency = frequency, experiment = experiment)
+  data2.df = vascr_subset(data.df, unit = unit, frequency = frequency, experiment = experiment, remake_name = FALSE)
     #And if error is low
   data2.df = vascr_subsample(data2.df, max(subsample, error,1))
   
@@ -637,7 +637,7 @@ vascr_prep_graphdata = function(data.df, unit = "", frequency = Inf, time = NULL
   }
 
   # Then subset down to the timepoints that are required
-  data2.df = vascr_subset(data2.df, time = time)
+  data2.df = vascr_subset(data2.df, time = time, remake_name = FALSE)
 
 
   if(stripidentical)

@@ -201,7 +201,11 @@
 vascr_make_significance_table = function(data.df, time, unit, frequency, priority, confidence = 0.95, format = "toplot")
 {
   
+  data.df = vascr_subset(data.df, unit = unit, time = time, frequency = frequency, remake_name = FALSE)
+  
   data.df$Sample = str_replace(data.df$Sample, "-", "~")
+  
+  data.df = ungroup(data.df)
   
   # What is the effect of the treatment on the value ?
   lm = vascr_lm(data.df, unit, frequency, time)

@@ -4,7 +4,13 @@
 \alias{vascr_plot_line}
 \title{Plot a line graph from a vascr dataset}
 \usage{
-vascr_plot_line(data.df, priority = NULL, error = Inf, alpha = 0.1)
+vascr_plot_line(
+  data.df,
+  priority = NULL,
+  error = Inf,
+  alpha = 0.1,
+  level = NULL
+)
 }
 \arguments{
 \item{data.df}{Vascr dataset to plot}

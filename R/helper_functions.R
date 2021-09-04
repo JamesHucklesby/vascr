@@ -141,7 +141,7 @@ closest_value = function(target, data_vector)
 vascr_standardise_wells = function(well) {
   
   
-  uniquewell = unique(uniquewell)
+  uniquewell = unique(well)
   original_unique = uniquewell
   
   # First try and fix the user input
@@ -149,6 +149,7 @@ vascr_standardise_wells = function(well) {
   uniquewell = gsub(" ", "", uniquewell, fixed = TRUE) # Remove spaces
   uniquewell = gsub("[^0-9A-Za-z///' ]","" , uniquewell ,ignore.case = TRUE)
   uniquewell = gsub("(?<![0-9])([0-9])(?![0-9])", "0\\1", uniquewell, perl = TRUE) # Add 0's
+  uniquewell = gsub("00", "0", uniquewell)
   
   # Check that it now conforms
   
@@ -270,7 +271,7 @@ vascr_remove_metadata = function(data.df, subset = "all")
     warning("You are removing some summary statistics. These are not re-generatable using vascr_explode alone, and must be regenerated with vascr_summarise.")
   }
   
-  removed.df = data.df %>% select(vascr_cols())
+  removed.df = data.df %>% select(any_of(vascr_cols()))
   
   return(removed.df)
 }
@@ -818,6 +819,7 @@ vascr_combine = function(..., resample = FALSE) {
   
   for (i in dataframes) {
     indata = i
+    indata = vascr_remove_metadata(indata)
     indata$Experiment = paste(loops, ":", indata$Experiment)
     loops = loops + 1
     alldata = rbind(alldata, indata)
@@ -939,8 +941,9 @@ do.call_relevant = function(name, payload, arguments)
 #' @keywords internal
 #' 
 #' @examples
-vascr_gg_color_hue <- function(n) {
-  hues = seq(15, 375, length = n + 1)
+vascr_gg_color_hue <- function(n, start = 15) {
+  hues = seq(0,365, length = n + 1)
+  hues = hues + start
   hcl(h = hues, l = 65, c = 100)[1:n]
 }
 

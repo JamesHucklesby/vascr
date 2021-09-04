@@ -168,12 +168,10 @@ vascr_plot_bar = function(data, priority = NULL, error = Inf, confidence = NULL,
 #' @importFrom ggplot2 geom_errorbar aes ggplot geom_text geom_bar
 #'
 #' @examples
-#' #vascr_plot_bar(data = growth.df, confidence = 0.95, unit = "R",
-#' # time = 100, frequency = 4000, rotate_x_angle = 45)
-#' #vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R",
-#' #  time = 100, frequency = 4000, rotate_x_angle = 45)
+#' #vascr_plot_bar(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45)
+#' #vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45)
 #' 
-vascr_plot_bar_anova = function(data.df ,priority,confidence, time, unit, frequency, format = toplot, error = Inf, ...)
+vascr_plot_bar_anova = function(data.df ,priority = NULL ,confidence, time, unit, frequency, format = toplot, error = Inf, ...)
 {
   
   # Gather graph data based on the ...
@@ -196,8 +194,8 @@ vascr_plot_bar_anova = function(data.df ,priority,confidence, time, unit, freque
   
   labeltable = vascr_make_significance_table(data.df = datum, time, unit, frequency, priority = NULL, confidence, format = "toplot")
   
-  summary$Sample = as.character(summary$Sample)
-  labeltable$Sample = as.character(labeltable$Sample)
+  summary$Sample = as.factor(summary$Sample)
+  labeltable$Sample = as.factor(labeltable$Sample)
   
   filtered2.df = left_join(summary, labeltable, by = "Sample")
   
@@ -206,7 +204,10 @@ vascr_plot_bar_anova = function(data.df ,priority,confidence, time, unit, freque
     filtered2.df$Label = "NS"
   }
   
+  # filtered2.df$Sample = reorder(filtered2.df$Sample, sort = mixedsort)
   print(filtered2.df)
+  
+  
   
   plot = ggplot(filtered2.df, aes(x = Sample, y = Value, label = Label)) + geom_bar(stat = "identity") +
     geom_text(aes(label=Label),position=position_stack(0.8)) 

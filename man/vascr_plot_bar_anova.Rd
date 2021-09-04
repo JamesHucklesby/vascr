@@ -6,7 +6,7 @@
 \usage{
 vascr_plot_bar_anova(
   data.df,
-  priority,
+  priority = NULL,
   confidence,
   time,
   unit,
@@ -42,10 +42,8 @@ A vascr bar plot with statistics attached to it
 Plot a bar chart with ANOVA statistics superimposed on it
 }
 \examples{
-#vascr_plot_bar(data = growth.df, confidence = 0.95, unit = "R",
-# time = 100, frequency = 4000, rotate_x_angle = 45)
-#vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R",
-#  time = 100, frequency = 4000, rotate_x_angle = 45)
+#vascr_plot_bar(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45)
+#vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45)
 
 }
 \keyword{internal}

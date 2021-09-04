@@ -41,12 +41,20 @@ ecis_calculate_quantaties = function(data.df)
 #'
 #' @return
 #' @export
+#' 
+#' @importFrom dplyr relocate mutate
 #'
 #' @examples
 vascr_import_map = function(sampledefine)
 {
   
   file_content = read.csv(sampledefine)
+  file_content$SampleID = c(1:nrow(file_content))
+  
+  if("Well" %in% colnames(file_content))
+  {
+    file_map = file_content %>% mutate(Well = vascr_standardise_wells(Well))
+  }else{
   
   file_map = file_content %>% mutate(Row = trimws(Row), Column = trimws(Column)) %>%
     separate_rows(Row, sep = " ") %>%
@@ -54,6 +62,7 @@ vascr_import_map = function(sampledefine)
     mutate(Well = paste(Row, Column, sep = ""), Well = vascr_standardise_wells(Well)) %>%
     mutate(Row = NULL, Column = NULL) %>%
     relocate(Well)
+  }
   
   # Copy down the col name into each cell, separated by _
   for (col in colnames(file_map)[2:length(colnames(file_map))])
@@ -254,7 +263,7 @@ ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
     
     longdata.df$Instrument = "ECIS"
 
-    combined.df = vascr_assign_samples(longdata.df, sampledefine)
+    combined.df = vascr_assign_samples(data = longdata.df, sampledefine)
     
     gc(verbose = FALSE)
     
@@ -463,6 +472,8 @@ ecis_import = function(rawdata, modeled, key, experimentname = "NA") {
     combined.df = ecis_import_model(modeled, key, experimentname)
     raw.df = ecis_import_raw(rawdata, key, experimentname)
     masterdata.df = vascr_combine(combined.df, raw.df)
+    
+    masterdata.df$Experiment = experimentname
     
     return(masterdata.df)
 }

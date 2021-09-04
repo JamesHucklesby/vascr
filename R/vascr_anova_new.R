@@ -18,7 +18,7 @@ timetouse = vascr_find_time(data.df, time)
 
 # Cut the dataset down to a useable size (IE, only pull out the timepoint we want to analyse)
 filtered.df = data.df
-filtered.df = vascr_subset(filtered.df, unit = unit, frequency = frequency, time = timetouse)
+filtered.df = vascr_subset(filtered.df, unit = unit, frequency = frequency, time = timetouse, remake_name = FALSE)
 
 return(filtered.df)
 }
@@ -383,7 +383,7 @@ return(overallplot)
 #'
 #' @examples
 #' 
-#' # vascr_plot_anova(growth.df, "R", 4000, 100)
+#' # vascr_plot_anova(data.df = growth.df, unit = "R", frequency = 4000, time = 100)
 #' 
 vascr_plot_anova = function(data.df, unit, frequency, time, priority = NULL, ...)
 {

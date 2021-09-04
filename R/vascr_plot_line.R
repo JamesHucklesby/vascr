@@ -28,9 +28,20 @@
 #' #vascr_plot_line(growth.df, unit = "R", frequency = "raw", time = 50,
 #' # level = "experiments", title = "AAA", error = 0, logscale = "x")
 #' 
-vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1)
+vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1, level = NULL)
 {
-  data = data.df
+  
+ 
+  
+  if(!is.null(level))
+  {
+  data = vascr_summarise(data.df, level)
+  }
+  else
+  {
+    data = data.df
+  }
+
   
   # Search for priority if it's not found
   priority = vascr_priority(data, c("Value"), priority = priority)
@@ -61,12 +72,12 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1)
     
     if(length(priority) ==2)
     {
-      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2])) + geom_line()
+      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2])) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
       return(plot)
     }
     else if (length(priority)>2)
     {
-      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2], linetype = priority[3])) + geom_line()
+      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2], linetype = priority[3])) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
       return(plot)
     }
     
@@ -76,25 +87,25 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1)
     
     if (length(priority) == 1) {
       
-      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis)) + geom_line()
+      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis)) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
       
     }else if (length(priority) == 2) {
       
-      plot = ggplot(data = data, aes_string(x = priority[1], y = "Value", colour = priority[2],fill = priority[2])) + geom_line()
+      plot = ggplot(data = data, aes_string(x = priority[1], y = "Value", colour = priority[2],fill = priority[2])) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
       
     }else if (length(priority)>2) {
       
-      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, colour = priority[2], linetype = priority[3], fill = priority[2])) + geom_line()
+      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, colour = priority[2], linetype = priority[3], fill = priority[2])) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
     }
   }
   
   if(is.infinite(error))
   {
-    plot = plot + geom_ribbon(aes(ymin = data$Value - data$sem, ymax = data$Value + data$sem),alpha = alpha)
+    plot = plot + geom_ribbon(aes(ymin = Value - sem, ymax = Value + sem),alpha = alpha) + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
   }
   else if(error>0)
   {
-    plot = plot + geom_errorbar(aes(ymin = data.df$Value - data.df$sem, ymax = data.df$Value + data.df$sem))
+    plot = plot + geom_errorbar(aes(ymin = data.df$Value - data.df$sem, ymax = data.df$Value + data.df$sem)) + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
   }
   
   return(plot)

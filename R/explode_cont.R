@@ -22,37 +22,34 @@
 # 
 # # Show that the re-created data is identical to the original dataset
 # # all.equal(growth.df, processed)
+
+# data = growth.df
+
 #' 
 vascr_explode = function(data)
 {
   # Clean out any existing explosion data to give a clean slate
-  df1 = vascr_remove_metadata(data)
+  df1 = data %>% select(-vascr_exploded_cols(data))
+  
+  df1$SampleID = NULL
+  
+  samples = data.frame(Sample = df1$Sample) %>% distinct() %>% mutate(ID = row_number())
+  
   #Separate each condition at each data point into it's own row
-  df2 = df1 %>% separate_rows("Sample", sep = " \\+ ")
+  df2 = samples %>% separate_rows("Sample", sep = " \\+ ")
   # Separate out the numbers and conditions into separate columns
   df3 = separate(df2, "Sample", sep ="_", into = c("num", "col"))
   # # Pivot each individual row wider to make an exploded dataset
   # df3$num = as.numeric(gsub(",","",df3$num))
-  df4 = pivot_wider(df3, c("num","col"), names_from = "col", values_from = "num",  id_cols = -c("col", "num"), names_prefix = "")
+  df4 = pivot_wider(df3, c("num","col"), names_from = "col", values_from = "num",  id_cols = ID, names_prefix = "")
+  df4$SampleID = NULL
+  df4$Sample = NULL
   
-  # Warn if any data is lost in this transfer
-  # Pull out the core datasets, then check they're identical
-  originalcore = vascr_remove_metadata(data)
-  originalcore$Sample = NULL
-  newcore = df4
-  newcore$Sample = "NA"
-  newcore = vascr_remove_metadata(newcore)
-  newcore$Sample = NULL
+  df5 = left_join(df4, samples, by = "ID") %>% mutate(ID = NULL)
   
-  if(!all_equal(originalcore, newcore, ignore_row_order = FALSE, ignore_col_order = FALSE))
-     {
-       errorCondition("Explosion match failed, check all rows are unique and repeat analyasis")
-     }
+  df6 = left_join(df1, df5, by = "Sample")
   
-  # Then patch the original samples that we destroyed back on
-  df4$Sample = data$Sample
-  
-  return(df4)
+  return(df6)
   
 }
 

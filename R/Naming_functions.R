@@ -52,128 +52,94 @@ vascr_carry_down_names = function(data.df, cols_to_carry = NULL, remove_blank = 
 #' 
 vascr_full_implode = function(data.df, cols_to_implode = NULL)
 {
+  
+  if("Sample" %in% colnames(data.df))
+  {
+  data.df = data.df %>% ungroup() %>% select(-Sample)
+  }
+  
 
   if(is.null(cols_to_implode))
   {
     cols_to_implode = colnames(select(data.df, -Time, -Value))
   }
   
+  gdata = data.df %>% group_by(all_of(across(cols_to_implode)))
+  gdata$ID = group_indices(gdata)
+  
+  smalldata = gdata %>% select(cols_to_implode, "ID") %>% distinct()
 
-  carrydown = vascr_carry_down_names(data.df = data.df, cols_to_carry = cols_to_implode)
+  carrydown = vascr_carry_down_names(data.df = smalldata, cols_to_carry = cols_to_implode)
 
-  full_implode = carrydown %>% unite("Title", all_of(cols_to_implode), sep = " + ")
+  full_implode = carrydown %>% unite("Sample", all_of(cols_to_implode), sep = " + ", na.rm = TRUE) 
+  
+  recombined = gdata %>% left_join(full_implode, by = "ID")%>% mutate(ID = NULL)
 
-  return(full_implode)
+  return(recombined)
 }
 
 
 #' Title
 #'
 #' @param data.df 
-#' @param select_cols 
-#' @param remove_blank 
-#' @param fill_blank 
 #'
 #' @return
 #' @export
 #'
 #' @examples
-vascr_make_name = function(data.df, select_cols = NULL, remove_blank = TRUE, fill_blank = "Control")
+vascr_implode = function(data.df, stripidentical = TRUE)
 {
-  imploded = vascr_full_implode(data.df, cols_to_implode = NULL)
-  names = vascr_shorten_name(name_vector = imploded$Title, select_cols = select_cols, remove_blank = remove_blank, fill_blank = fill_blank)
-  return(names)
+  data.df = ungroup(data.df)
+  
+  exploded_cols = vascr_exploded_cols(data.df)
+  
+  data_names = data.df %>% select(all_of(exploded_cols)) %>% mutate(Time = 0, Value = 0) %>% vascr_full_implode()
+  
+  data.df$Sample = data_names$Sample
+  
+  return(data.df)
 }
 
 
 
-#' Shorten a name down to only some variables, and write out those that change
-#'
-#' @param name_vector A vector of names to implode
-#' @param select_cols  The columns to incorportate
-#' @param remove_blank Should blank columns be removed, default TRUE
-#' @param fill_blank Text to fill blanks in with, default "Control"
-#' @param include_wells Should well id's be included
-#' 
-#' @importFrom dplyr summarise_all n_distinct
-#' @importFrom tibble is_tibble
-#' 
-#' @export 
-#'
-#' @return
-
-#' @examples
-vascr_shorten_name = function(name_vector, select_cols = NULL, remove_blank = TRUE, fill_blank = "Control", include_wells = FALSE)
+#' #' Title
+#' #'
+#' #' @param data.df 
+#' #' @param select_cols 
+#' #' @param remove_blank 
+#' #' @param fill_blank 
+#' #'
+#' #' @return
+#' #' @export
+#' #'
+#' #' @examples
+#' vascr_make_name = function(data.df, select_cols = NULL, remove_blank = TRUE, fill_blank = "Control")
+#' {
+#'   imploded = vascr_full_implode(data.df, cols_to_implode = NULL)
+#'   return(imploded)
+#' }
+vascr_make_name = function(data.df, clean_output = TRUE, fill_blank = "Control")
 {
+  exploded = vascr_explode(data.df)
+  deltacols = exploded %>% select(vascr_exploded_cols(exploded)) %>% vascr_find_changing_cols()
+  imploded = vascr_full_implode(exploded, cols_to_implode = deltacols)
   
-  datastart = FALSE
+  imploded = imploded %>% mutate(Sample = ifelse(Sample == "", fill_blank, Sample))
   
-  if(is.data.frame(name_vector) || is_tibble(name_vector))
+  
+  if(isTRUE(clean_output))
   {
-    raw_data_frame = name_vector
-    datastart = TRUE
-    name_vector = name_vector$Sample
+   imploded = imploded %>% mutate(Sample = str_replace_all(Sample, "\\.", " ")) %>%
+      mutate(Sample = str_replace_all(Sample, "_", " "))
   }
-
-  data_vector = unique(name_vector)
-
-  df1 = data.frame(Sample = data_vector, row_number = c(1:length(data_vector)))
-
-  df2 = df1 %>% separate_rows("Sample", sep = " \\+ ")
-  # Separate out the numbers and conditions into separate columns
-  df3 = separate(df2, "Sample", sep ="_", into = c("num", "col"))
-
-  df3 = subset(df3, !is.na(df3$col))
-  # # Pivot each individual row wider to make an exploded dataset
-  # df3$num = as.numeric(gsub(",","",df3$num))
-  df4 = pivot_wider(df3, names_from = col, values_from = num, id_cols = row_number)
-
-  if(is.null(select_cols))
-  {
-    uniques = df4 %>% dplyr::summarise_all(n_distinct)
-    uniques$row_number = NULL
-
-    uniques = t(uniques)
-    colnames(uniques)[1] = "Count"
-    uniques = as.data.frame(uniques)
-    uniques$Row = rownames(uniques)
-
-    uniques = subset(uniques, uniques$Count != 1)
-    select_cols = uniques$Row
-  }
-
-  uniquedata = select(df4, all_of(select_cols))
   
-  if(isFALSE(include_wells) & "Well" %in% colnames(uniquedata))
-  {
-    uniquedata = select(uniquedata, -Well)
-  }
-
-  uniquedata = vascr_carry_down_names(uniquedata, colnames(uniquedata), remove_blank = remove_blank)
-
-  uniquedata = unite(uniquedata, "Combined", sep = " + ", na.rm = TRUE)
+  # Sort the samples into a sensible numerical order
+  samplelist = unique(imploded$Sample)
+  sampleorder = str_sort(samplelist, numeric = TRUE)
+  imploded$Sample = fct_relevel(imploded$Sample, sampleorder)
   
-  uniquedata$Combined = ifelse(uniquedata$Combined == "", fill_blank, uniquedata$Combined)
-  
-  namelookup = data.frame(Sample = data_vector, Short = uniquedata$Combined)
-  namevector = data.frame(Sample = name_vector)
-  
-  allnames = left_join(namevector, namelookup, by = "Sample")
-
-  if(datastart)
-  {
-    raw_data_frame$Sample = allnames$Short
-    return(raw_data_frame)
-  }
-  else
-  {
-  return(allnames$Short)
-  }
-
+  return(imploded)
 }
-
-
-
 
 
 #' Find which R columns change accross the dataset
@@ -411,7 +377,7 @@ vascr_cols  = function(data, set = "core")
 {
   if(set == "core")
   {
-    return(c("Time", "Unit", "Value", "Well", "Sample", "Frequency", "Experiment", "Instrument"))
+    return(c("Time", "Unit", "Value", "Well", "Sample", "Frequency", "Experiment", "Instrument", "SampleID"))
   }
   
   else if(set == "is_continuous")
@@ -475,6 +441,23 @@ vascr_cols  = function(data, set = "core")
     return(NULL)
   }
   
+}
+
+
+
+#' Title
+#'
+#' @param data.df 
+#' @param time 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_zero_time = function(data.df, time = 0)
+{
+  data.df = data.df %>% mutate(Time = Time - time)
+  return(data.df)
 }
 
 

@@ -5,7 +5,7 @@
 \title{Subset a vascr datset based on a numebr of factors}
 \usage{
 vascr_subset(
-  data.df,
+  subset.df,
   time = NULL,
   unit = NULL,
   well = NULL,
@@ -27,12 +27,12 @@ vascr_subset(
   instrument = NULL,
   max_deviation = NULL,
   subsample = NULL,
-  return_lists = FALSE
+  return_lists = FALSE,
+  sampleid = NULL,
+  remake_name = FALSE
 )
 }
 \arguments{
-\item{data.df}{Vascr dataset to subset}
-
 \item{time}{Specified times. Individual values in a list will be subset out. If vectors are present in the list, values between the two most extreme values will be returned.}
 
 \item{unit}{Units to subset. These are checked for integrity against possible units and the dataset itself}
@@ -76,6 +76,8 @@ vascr_subset(
 \item{subsample}{Frequency values shoud be subsampled to}
 
 \item{return_lists}{Return lists of the varibles to select rather than the subset dataset}
+
+\item{data.df}{Vascr dataset to subset}
 }
 \value{
 The subset dataset, based on the values selected

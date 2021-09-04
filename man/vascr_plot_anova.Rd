@@ -27,7 +27,7 @@ Make a display with all the anova analyasis pre-conducted
 }
 \examples{
 
-# vascr_plot_anova(growth.df, "R", 4000, 100)
+# vascr_plot_anova(data.df = growth.df, unit = "R", frequency = 4000, time = 100)
 
 }
 \keyword{internal}
