@@ -1,3 +1,4 @@
+
 # Graphics generation
 
 
@@ -257,7 +258,15 @@ vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1, ncols = 1
   }
   
   
-  g <- ggplotGrob(plots[[legend_from_index]] + theme(legend.position="bottom"))$grobs
+  
+  legendplot = plots[[legend_from_index]] +
+    theme(legend.spacing =  unit(10, "cm"), legend.position="bottom",
+          legend.title = element_text(face="bold"),
+          ) 
+  
+  legendplot
+  
+  g <- ggplotGrob(legendplot)$grobs
   
   
   if(any(sapply(g, function(x) x$name) == "guide-box"))

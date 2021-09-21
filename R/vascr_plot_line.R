@@ -31,6 +31,10 @@
 vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1, level = NULL)
 {
   
+  if(is.finite(error) && error != 0)
+  {
+    return(vascr_plot_line_suberror(data.df, subsampling = error, priority = priority, alpha = alpha))
+  }
  
   
   if(!is.null(level))
@@ -110,5 +114,26 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1, l
   
   return(plot)
   
+}
+
+
+#' Title
+#'
+#' @param data.df 
+#' @param subsampling 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_plot_line_suberror = function(data.df, subsampling = 10, priority = NULL, alpha = 0.1)
+{
+  
+  data.df_small = vascr_subsample(data.df, subsampling)
+  
+  returnplot = vascr_plot_line(data.df, error = 0, priority = priority, alpha = alpha) +
+    geom_errorbar(aes(ymin = Value - sem, ymax = Value+sem, x = Time, color = Sample), data = data.df_small, width = 1)
+  
+  return(returnplot)
 }
 

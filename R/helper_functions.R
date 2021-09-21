@@ -464,9 +464,9 @@ vascr_titles= function (unit, frequency = 0, prefix = "")
   if(unit == "Z") { return(paste(prefix,"Impedance \n (ohm, ", frequency," Hz)"))}
   
   # ECIS paramaters
-  if (unit == "Rb"){return (bquote(atop(" ",.(prefix) ~ "Rb" ~ (Omega ~ cm ^2))))}
-  if (unit == "Cm"){return (bquote(atop(" ",.(prefix)~"Cm ("~mu~"F/cm"^2~")")))}
-  if (unit == "Alpha"){return (expression(paste("Alpha (",ohm," cm"^2, ")")))}
+  if (unit == "Rb"){return (bquote(bold(atop(" ",.(prefix) ~ "Rb" ~ (Omega ~ cm ^2)))))}
+  if (unit == "Cm"){return (bquote(bold(atop(" ",.(prefix)~"Cm ("~mu~"F/cm"^2~")"))))}
+  if (unit == "Alpha"){return (expression(bold(paste("Alpha (",ohm," cm"^2, ")"))))}
   if(unit == "RMSE") {return(paste(prefix,"Model Fit RMSE"))}
   if(unit == "Drift") {return(paste(prefix,"Drift (%)"))}
   
