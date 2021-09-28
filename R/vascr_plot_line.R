@@ -69,19 +69,25 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1, l
     
     error = 0
     
-    priority = priority[!priority == "Well"] # Remove well from the priority as it's no longer required
-    
-    data = unite(data, col = "wellstamp", Well, priority[2], remove = FALSE)
-    wellstamp = "wellstamp"
     
     if(length(priority) ==2)
+    {
+      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, colour = priority[[2]])) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
+      return(plot)
+    }
+    
+    priority = priority[!priority == "Well"] # Remove well from the priority as it's no longer required
+    data = unite(data, col = "wellstamp", priority[[2]], Well, remove = FALSE)
+    wellstamp = "wellstamp"
+
+   if(length(priority) ==2)
     {
       plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2])) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
       return(plot)
     }
     else if (length(priority)>2)
     {
-      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2], linetype = priority[3])) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
+      ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2], linetype = priority[3])) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
       return(plot)
     }
     
