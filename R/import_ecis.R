@@ -93,9 +93,11 @@ vascr_import_map = function(sampledefine)
 #' 
 vascr_assign_samples = function (data, sampledefine)
 {
+  
+  data$Well = vascr_standardise_wells(data$Well)
+  
   if(is.null(sampledefine)) # If samples are not defined, bypass this and just spit out well id's as names
   {
-    data$Well = vascr_standardise_wells(data$Well)
     data$Sample = paste(data$Well, "Well", sep = "_")
     warning("The argument 'sampledefine' is not set. Defaulting to using well ID's as sample names")
     return(data)
@@ -410,6 +412,8 @@ ecis_import_model = function(modeleddata, sampledefine, experimentname = "NA") {
     combined.df$Value = as.numeric(combined.df$Value)
     combined.df$Unit = factor(combined.df$Unit)
     combined.df$Well = factor(combined.df$Well)
+    
+    combined.df$Well = vascr_standardise_wells(combined.df$Well)
     
     
     

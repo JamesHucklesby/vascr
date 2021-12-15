@@ -1,10 +1,10 @@
-#' Title
+#' Sub setting function for sample IDs
 #'
 #' @param data.df 
 #' @param samplelist 
 #'
-#' @return
-#' @export
+#' @return A subset data frame
+#' @noRd
 #'
 #' @examples
 vascr_subset_sampleid = function(data.df, samplelist)
@@ -17,6 +17,48 @@ vascr_subset_sampleid = function(data.df, samplelist)
   return(toreturn)
   
 }
+
+
+#' Output a list of Sample ID and Sample pairs
+#'
+#' @param data.df Vascr dataset to handle
+#'
+#' @return A table of samples and thier corresponding pairs
+#' @export
+#'
+#' @examples
+#' growth.df %>% vascr_samples()
+vascr_samples = function(data.df)
+{
+  if(!("SampleID" %in% colnames(data.df)))
+  {
+    stop("SampleID not assigned")
+  }
+  
+  data.df %>% select(SampleID, Sample) %>% distinct() %>% return()
+}
+
+#' Title
+#'
+#' @param data.df 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_assign_sampleid  = function(data.df)
+{
+  
+  samplelist = unique(data.df$Sample)
+  
+  sampleframe = data.frame(SampleID = c(1:length(samplelist)), Sample = samplelist)
+  
+  combineddata = data.df %>% left_join(sampleframe, by = "Sample")
+  
+  return(combineddata)
+}
+
+
 
 
 #' Title
@@ -75,42 +117,14 @@ vascr_vline = function(plot1, ..., list = NA)
   time_table = as.data.frame(time_table)
   time_table$Colour = replace_na(time_table$Colour,"black")
   
-  time_table$Event = time_table$Name
+  maxtime =  max(plot1$data$Time)
+  mintime =  min(plot1$data$Time)
+  
+  time_table = time_table %>% filter(as.numeric(Time)<maxtime) %>% filter(as.numeric(Time)>mintime)
+  
+  time_table$Event = factor(time_table$Name, unique(time_table$Name))
   
   plot2 = plot1 + ggnewscale::new_scale_color() + geom_vline(data = time_table, aes(xintercept = as.numeric(Time), colour = Event), linetype = 2) 
-  
-  # scale_colour_manual(values = c("blue", "green"))
-  # 
-  # 
-  # find_separate_point(c(1,20))
-  # 
-  # find_separate_point = function(vector)
-  # {
-  # alldeg = c(1:360)
-  # 
-  # min_deg_distance = function(val1, val2)
-  # {
-  #   dist1 = min(abs(val1 - val2), abs(val2 - val1))
-  #   dist2 = 360-dist1
-  #   return(min(dist1, dist2))
-  # }
-  # 
-  # 
-  # distances = function(val) {unlist(lapply(alldeg,min_deg_distance, val))}
-  # 
-  # alldist = lapply(vector, distances)
-  # 
-  # alldist = data.frame(alldist)
-  # 
-  # rownames(alldist) = NULL
-  # 
-  # calcn = alldist %>% rowwise() %>% mutate(sum = sum(c_across(1:ncol(alldist))))
-  # 
-  # degree = which.max(calcn$sum)
-  # 
-  # return(degree)
-  # 
-  # }
   
   
   return(plot2)

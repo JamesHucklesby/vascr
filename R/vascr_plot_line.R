@@ -28,7 +28,7 @@
 #' #vascr_plot_line(growth.df, unit = "R", frequency = "raw", time = 50,
 #' # level = "experiments", title = "AAA", error = 0, logscale = "x")
 #' 
-vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1, level = NULL)
+vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.3, level = NULL, line_width = 1)
 {
   
   if(is.finite(error) && error != 0)
@@ -69,25 +69,18 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1, l
     
     error = 0
     
-    
-    if(length(priority) ==2)
-    {
-      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, colour = priority[[2]])) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
-      return(plot)
-    }
-    
     priority = priority[!priority == "Well"] # Remove well from the priority as it's no longer required
     data = unite(data, col = "wellstamp", priority[[2]], Well, remove = FALSE)
     wellstamp = "wellstamp"
 
    if(length(priority) ==2)
     {
-      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2])) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
+      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2])) + geom_line(size = line_width) + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
       return(plot)
     }
     else if (length(priority)>2)
     {
-      ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2], linetype = priority[3])) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
+      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, group = wellstamp, colour = priority[2], linetype = priority[3])) + geom_line(size = line_width) + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
       return(plot)
     }
     
@@ -97,21 +90,21 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1, l
     
     if (length(priority) == 1) {
       
-      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis)) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
+      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis)) + geom_line(size = line_width) + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
       
     }else if (length(priority) == 2) {
       
-      plot = ggplot(data = data, aes_string(x = priority[1], y = "Value", colour = priority[2],fill = priority[2])) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
+      plot = ggplot(data = data, aes_string(x = priority[1], y = "Value", colour = priority[2],fill = priority[2])) + geom_line(size = line_width) + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
       
     }else if (length(priority)>2) {
       
-      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, colour = priority[2], linetype = priority[3], fill = priority[2])) + geom_line() + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
+      plot = ggplot(data = data, aes_string(x = xaxis, y = yaxis, colour = priority[2], linetype = priority[3], fill = priority[2])) + geom_line(size = line_width) + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
     }
   }
   
   if(is.infinite(error))
   {
-    plot = plot + geom_ribbon(aes(ymin = Value - sem, ymax = Value + sem),alpha = alpha) + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
+    plot = plot + geom_ribbon(aes(ymin = Value - sem, ymax = Value + sem),alpha = alpha, color = NA) + ylab(vascr_titles(unique(data$Unit), unique(data$Frequency))) + xlab("Time (hours)")
   }
   else if(error>0)
   {
@@ -123,13 +116,13 @@ vascr_plot_line = function(data.df, priority = NULL, error = Inf, alpha = 0.1, l
 }
 
 
-#' Title
+#' Sub-sample the number of error bars on a graph
 #'
 #' @param data.df 
 #' @param subsampling 
 #'
-#' @return
-#' @export
+#' @return A sub sampled plot for error bars
+#' @noRd
 #'
 #' @examples
 vascr_plot_line_suberror = function(data.df, subsampling = 10, priority = NULL, alpha = 0.1)
