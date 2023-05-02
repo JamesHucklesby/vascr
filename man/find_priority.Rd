@@ -11,9 +11,6 @@ find_priority(priority, data_vector)
 
 \item{data_vector}{}
 }
-\value{
-
-}
 \description{
 Title
 }

@@ -9,9 +9,6 @@ vascr_cleanup_sample(data.df)
 \arguments{
 \item{data.df}{}
 }
-\value{
-
-}
 \description{
 Title
 }

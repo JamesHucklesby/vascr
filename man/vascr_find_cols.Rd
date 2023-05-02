@@ -9,9 +9,6 @@ vascr_find_cols(cols)
 \arguments{
 \item{cols}{}
 }
-\value{
-
-}
 \description{
 Title
 }

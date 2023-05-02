@@ -9,9 +9,6 @@ vascr_ggplotly(graph)
 \arguments{
 \item{graph}{}
 }
-\value{
-
-}
 \description{
 Title
 }

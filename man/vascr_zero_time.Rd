@@ -11,9 +11,6 @@ vascr_zero_time(data.df, time = 0)
 
 \item{time}{}
 }
-\value{
-
-}
 \description{
 Title
 }

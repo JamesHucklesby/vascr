@@ -9,9 +9,6 @@ cleanup_samplename(raw_name)
 \arguments{
 \item{raw_name}{}
 }
-\value{
-
-}
 \description{
 Title
 }

@@ -9,9 +9,6 @@ vascr_assign_sampleid(data.df, replaceid = FALSE)
 \arguments{
 \item{data.df}{}
 }
-\value{
-
-}
 \description{
 Title
 }

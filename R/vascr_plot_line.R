@@ -16,6 +16,8 @@ vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3)
   
   data_level = vascr_detect_level(data.df)
   
+  data.df = data.df %>% filter(!is.na(Value))
+  
   
   
   if(data_level == "wells")
@@ -142,7 +144,7 @@ vascr_plot_keyrange_labeled = function(plot, key_events, labelx = TRUE)
 #' @param plot 
 #' @param key_events 
 #' 
-#' @importFrom ggplot2 geom_rect theme scale_x_continuous dup_axis
+#' @importFrom ggplot2 geom_rect theme scale_x_continuous dup_axis element_line
 #'
 #' @return
 #' @export

@@ -11,9 +11,6 @@ create_or_merge(df1, df2)
 
 \item{df2}{}
 }
-\value{
-
-}
 \description{
 Title
 }

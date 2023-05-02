@@ -350,9 +350,9 @@ vascr_current_frequency = function (data.df)
 #' @export
 #'
 #' @examples
-#' data.df = ecis1 %>% vascr_subset(time = c(1,2), unit = "R", frequency = 4000, well = c("D01", "D02", "D03"))
-#' from = 0.03613
-#' to = 0.5767
+#' # data.df = ecis1 %>% vascr_subset(time = c(1,2), unit = "R", frequency = 4000, well = c("D01", "D02", "D03"))
+#' # from = 0.03613
+#' # to = 0.5767
 #' 
 vascr_interpolate_time = function(data.df, npoints = vascr_time_samples(data.df), from = min(floor(data.df$Time)), to = max(ceiling(data.df$Time)))
 {
@@ -499,105 +499,6 @@ masterdata %>% vascr_subset(unit = "R", experiment = 1, frequency = 4000) %>%
   select(Time) %>%
   distinct()
 }
-
-#' #' Resample ECIS data onto a constant time base
-#' #' 
-#' #' This will currently over-sample data, use with care
-#' #'
-#' #' @param data.df A standard ECIS data frame
-#' #' @param by  The frequency at which to resample
-#' #' @param from The value at which to start resampling
-#' #' @param to  The max value to resample
-#' #' @param zero_time The value that will be set as 0 after the normalisation is done. Usefull for aligning treatment times of multiple experiments.
-#' #' 
-#' #' @importFrom stringr str_remove
-#' #' @importFrom tidyr unite spread gather separate
-#' #' @importFrom stats approxfun
-#' #' @importFrom magrittr "%>%"
-#' #'
-#' #' @return An ECIS dataset with re-located time points
-#' #' 
-#' #' @export
-#' #'
-#' #' @examples
-#' #' 
-#' #' #data = vascr_resample(data.df = growth.df, by = 10)
-#' #' #head (data)
-#' #' 
-#' vascr_resample = function (data.df, by, from = -Inf, to = Inf, zero_time = 0)
-#' {
-#'   
-#'   if(from == -Inf)
-#'   {
-#'     from = min(data.df$Time)
-#'   }
-#'   if(to == Inf)
-#'   {
-#'     to = max(data.df$Time)
-#'   }
-#'   
-#'   if(from<min(data.df$Time))
-#'   {
-#'     warning(paste("From is below than the minimum time in the dataset. Please select a number above", min(data.df$Time)))
-#'   }
-#'   
-#'   if(to>max(data.df$Time))
-#'   {
-#'     warning(paste("To is greater than the maximum of the dataset. Please select a number below", max(data.df$Time)))
-#'   }
-#'   
-#'   movedata = vascr_remove_metadata(data.df)
-#'   movedata = vascr_subset(movedata, time = c(from,to))
-#'   
-#'   movedata$Time = movedata$Time - zero_time
-#'   
-#'   combinedcolnames = colnames(movedata)
-#'   cleancolnames = str_remove(combinedcolnames, "Time")
-#'   cleancolnames = str_remove(cleancolnames, "Value")
-#'   cleancolnames = cleancolnames[cleancolnames!= ""]
-#'   
-#'   movedata = unite(movedata, col = "Stream", -Value, -Time, sep = "#")
-#'   movedata = unique(movedata)
-#'   movedata2 = spread(movedata, Stream, Value)
-#'   
-#'   # Generate new times
-#'   newtimepoints= seq(from=from,to=to,by=by)
-#'   oldtimepoints = movedata2$Time
-#'   
-#'   # Construct an empty data frame to take the new data
-#'   movedata3 <- movedata2[0,]
-#'   movedata3 = as.data.frame(movedata3)
-#'   movedata3[nrow(movedata3)+length(newtimepoints),] <- NA
-#'   movedata3$Time = newtimepoints
-#'   
-#'   currentcol = 2
-#'   totalcols = length(colnames(movedata2))
-#'   
-#'   movedata2 = as.data.frame(movedata2)
-#'   
-#'   while(currentcol<(totalcols+1))
-#'   {
-#'     oldtp = as.vector(oldtimepoints)
-#'     oldval = as.vector(movedata2[,currentcol])
-#'     replot = approxfun(oldtp, oldval)
-#'     movedata3[,currentcol] = replot(newtimepoints)
-#'     currentcol = currentcol + 1
-#'   }
-#'   
-#'   movedata4 = gather(movedata3, Stream, Value, -Time)
-#'   movedata5 = movedata4 %>% separate(Stream, cleancolnames, sep = "#")
-#'   
-#'   if (length(unique(movedata5$Time))>length(unique(data.df$Time)))
-#'   {
-#'     warning("You have oversampled your data, meaning that you now have more datapoints than you originally collected. This may be misleading, use with care.")
-#'   }
-#'   
-#'   movedata6 = vascr_remove_metadata(movedata5)
-#'   movedata6 = vascr_explode(movedata6)
-#'   
-#'   return(movedata6)
-#'   
-#' }
 
 
 

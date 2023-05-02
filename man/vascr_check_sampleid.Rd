@@ -9,9 +9,6 @@ vascr_check_sampleid(data.df)
 \arguments{
 \item{data.df}{}
 }
-\value{
-
-}
 \description{
 Title
 }

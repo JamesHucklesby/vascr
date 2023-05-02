@@ -9,9 +9,6 @@ vascr_test_normalised(data.df)
 \arguments{
 \item{data.df}{}
 }
-\value{
-
-}
 \description{
 Title
 }

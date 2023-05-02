@@ -17,9 +17,6 @@ vascr_plot_keylines(
 
 \item{key_events}{}
 }
-\value{
-
-}
 \description{
 Title
 }

@@ -9,9 +9,6 @@ vascr_plot_treatment_grid(data)
 \arguments{
 \item{data}{}
 }
-\value{
-
-}
 \description{
 Title
 }

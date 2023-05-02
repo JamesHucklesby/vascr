@@ -4,7 +4,7 @@
 \alias{do.call_relevant}
 \title{Execute do.call for all variables that exist in the funciton being called}
 \usage{
-\method{do}{call_relevant}(name, payload, arguments)
+do.call_relevant(name, payload, arguments)
 }
 \arguments{
 \item{name}{Name of the funciton to call}

@@ -11,9 +11,6 @@ vascr_plot_line_panel(data.df, key_points = NULL)
 
 \item{key_points}{}
 }
-\value{
-
-}
 \description{
 Title
 }

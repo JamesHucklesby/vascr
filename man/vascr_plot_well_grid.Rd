@@ -9,9 +9,6 @@ vascr_plot_well_grid(data)
 \arguments{
 \item{data}{}
 }
-\value{
-
-}
 \description{
 Title
 }

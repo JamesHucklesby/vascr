@@ -11,9 +11,6 @@ vascr_ccf_pairs(data.df, reference = NULL, comparator = NULL)
 
 \item{type}{}
 }
-\value{
-
-}
 \description{
 Title
 }

@@ -15,9 +15,6 @@ vascr_plot_anova_grid(data.df, unit = "R", frequency = 4000, time = 100)
 
 \item{time}{}
 }
-\value{
-
-}
 \description{
 Title
 }

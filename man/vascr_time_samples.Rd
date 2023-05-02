@@ -9,9 +9,6 @@ vascr_time_samples(data.df)
 \arguments{
 \item{data.df}{}
 }
-\value{
-
-}
 \description{
 Title
 }

@@ -9,9 +9,6 @@ vascr_test_resampled(dataset)
 \arguments{
 \item{dataset}{}
 }
-\value{
-
-}
 \description{
 Title
 }

@@ -9,9 +9,6 @@ vascr_find_defaults(dataframe)
 \arguments{
 \item{dataframe}{}
 }
-\value{
-
-}
 \description{
 Title
 }

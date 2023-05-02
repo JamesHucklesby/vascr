@@ -13,9 +13,6 @@ vascr_sample_replace(data.df, target, replacement = "")
 
 \item{replacement}{}
 }
-\value{
-
-}
 \description{
 Title
 }

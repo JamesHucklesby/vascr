@@ -9,9 +9,6 @@ vascr_df_title(data.df)
 \arguments{
 \item{data.df}{}
 }
-\value{
-
-}
 \description{
 Title
 }

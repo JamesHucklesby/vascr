@@ -11,9 +11,6 @@ closest_value(target, data_vector)
 
 \item{data_vector}{}
 }
-\value{
-
-}
 \description{
 Title
 }

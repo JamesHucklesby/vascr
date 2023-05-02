@@ -20,6 +20,9 @@ utils::globalVariables(c("commaarray", "lsf.str", "Deviation", "Max_Deviation", 
 
 utils::globalVariables(c("Distance", "Delta_Length", "value", "coeffs", "data"))
 
+utils::globalVariables(c("name","Type","SampleID"))
+
+
 
 #' Example data set from an ECIS growth experiment
 #'

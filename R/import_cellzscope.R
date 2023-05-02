@@ -50,7 +50,7 @@ data.df$spectrafile = str_remove(data.df$spectrafile, "\\(A\\)")
 
 
 # Make a dedicated column for the units (expressed as titles) and copy them down
-separatedata = separate(data.df, "spectrafile", into = c("Data", "Unit"), remove = TRUE, sep = "Parameter : ")
+separatedata = separate(data.df, "spectrafile", into = c("Data", "Unit"), remove = TRUE, sep = "Parameter : ", fill = "right")
 separatedata = separatedata %>% fill(names(separatedata), .direction = "down")
 
 # Generate the new column titles and use them to split the main dataset
@@ -143,10 +143,10 @@ data.df = as.data.frame(spectrafile)
 data.df$spectrafile = replace_non_ascii(data.df$spectrafile, "")
 
 #Separate out the data that needs to be carried down
-separatedata = separate(data.df, "spectrafile", into = c("Data", "Well"), remove = TRUE, sep = "Well: ")
-separatedata = separate(separatedata, "Data", into = c("Data", "Time"), remove = FALSE, sep = "Spectrum:")
+separatedata = separate(data.df, "spectrafile", into = c("Data", "Well"), remove = TRUE, sep = "Well: ", fill = "right")
+separatedata = separate(separatedata, "Data", into = c("Data", "Time"), remove = FALSE, sep = "Spectrum:", fill = "right")
 separatedata = separate(separatedata, "Time", into = c("Run", "Date"), remove = FALSE, sep = "measured at ")
-separatedata = separate(separatedata, "Data", into = c("Frequency", "I", "P"), sep = ",")
+separatedata = separate(separatedata, "Data", into = c("Frequency", "I", "P"), sep = ",", fill = "right")
 separatedata = separate(separatedata, "Well", into = c("Well", "Sample"), sep = "-")
 
 #Copy down the data
@@ -267,7 +267,7 @@ modeleddata = cellzscope_import_model(model, experimentname = experimentname)
 rawdata = cellzscope_import_raw(raw, experimentname = experimentname)
 
 # Combine and run checks
-alldata = vascr_combine(modeleddata, rawdata)
+alldata = rbind(modeleddata, rawdata)
 
 
 

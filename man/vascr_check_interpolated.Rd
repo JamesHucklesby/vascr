@@ -9,9 +9,6 @@ vascr_check_interpolated(data.df)
 \arguments{
 \item{data.df}{}
 }
-\value{
-
-}
 \description{
 Title
 }

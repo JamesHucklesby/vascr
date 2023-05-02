@@ -11,9 +11,6 @@ vascr_summarise(data.df, level = "wells")
 
 \item{level}{}
 }
-\value{
-
-}
 \description{
 Title
 }

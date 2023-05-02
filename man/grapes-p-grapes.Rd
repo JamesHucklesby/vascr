@@ -11,9 +11,6 @@ string1 \%p\% string2
 
 \item{string2}{}
 }
-\value{
-
-}
 \description{
 Title
 }

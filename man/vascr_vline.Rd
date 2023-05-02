@@ -11,9 +11,6 @@ vascr_vline(plot1, ..., list = NA)
 
 \item{...}{}
 }
-\value{
-
-}
 \description{
 Title
 }

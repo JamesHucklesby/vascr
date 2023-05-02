@@ -9,8 +9,8 @@ License: GPL-3 + file LICENSE
 Language: en-US
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
-Depends: R (>= 3.6)
+RoxygenNote: 7.2.3
+Depends: R (>= 3.6), patchwork
 Imports: ggplot2, 
         gridExtra, 
         dplyr,
@@ -18,14 +18,14 @@ Imports: ggplot2,
         stringr, 
         magrittr, 
         grid,
-        graphics, 
         stats, utils, 
         data.table, purrr, ggpubr, car, cowplot, textclean, 
-        svSocket, RODBC,foreach, forcats,
+        DBI, odbc ,foreach, forcats,
         ggnewscale, mdthemes,
         plotly,
 Suggests: 
     knitr,
     rmarkdown,
-    testthat (>= 2.1.0)
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3

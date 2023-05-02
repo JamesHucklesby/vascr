@@ -13,9 +13,6 @@ vascr_plot_line(data.df, errorbars = Inf, alpha = 0.3)
 
 \item{alpha}{}
 }
-\value{
-
-}
 \description{
 Title
 }

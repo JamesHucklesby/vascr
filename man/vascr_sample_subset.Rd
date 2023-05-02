@@ -11,9 +11,6 @@ vascr_sample_subset(data.df, sampleid = NULL)
 
 \item{sampleid}{}
 }
-\value{
-
-}
 \description{
 Subset a vascr dataset by sampleID
 }

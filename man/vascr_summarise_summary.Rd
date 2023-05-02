@@ -9,9 +9,6 @@ vascr_summarise_summary(data.df)
 \arguments{
 \item{data.df}{}
 }
-\value{
-
-}
 \description{
 Title
 }

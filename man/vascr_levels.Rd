@@ -9,9 +9,6 @@ vascr_levels(set = "all")
 \arguments{
 \item{set}{}
 }
-\value{
-
-}
 \description{
 Title
 }

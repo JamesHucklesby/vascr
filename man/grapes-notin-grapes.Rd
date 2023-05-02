@@ -11,9 +11,6 @@ x \%notin\% table
 
 \item{table}{}
 }
-\value{
-
-}
 \description{
 Title
 }

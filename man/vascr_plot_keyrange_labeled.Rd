@@ -11,9 +11,6 @@ vascr_plot_keyrange_labeled(plot, key_events, labelx = TRUE)
 
 \item{key_events}{}
 }
-\value{
-
-}
 \description{
 Title
 }

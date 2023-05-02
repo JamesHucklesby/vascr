@@ -11,9 +11,6 @@ vascr_switch_legend(donor, recipient)
 
 \item{recipient}{}
 }
-\value{
-
-}
 \description{
 Title
 }

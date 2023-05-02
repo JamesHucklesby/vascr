@@ -9,9 +9,6 @@ vascr_grab_legend(aplot, position = "left")
 \arguments{
 \item{aplot}{}
 }
-\value{
-
-}
 \description{
 Title
 }

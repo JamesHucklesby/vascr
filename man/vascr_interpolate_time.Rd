@@ -16,9 +16,12 @@ vascr_interpolate_time(
 
 \item{npoints}{}
 }
-\value{
-
-}
 \description{
 Title
+}
+\examples{
+# data.df = ecis1 \%>\% vascr_subset(time = c(1,2), unit = "R", frequency = 4000, well = c("D01", "D02", "D03"))
+# from = 0.03613
+# to = 0.5767
+
 }

@@ -9,9 +9,6 @@ locked_median(data_vector)
 \arguments{
 \item{data_vector}{}
 }
-\value{
-
-}
 \description{
 Title
 }

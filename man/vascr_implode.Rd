@@ -17,9 +17,6 @@ vascr_implode(
 \arguments{
 \item{data.df}{}
 }
-\value{
-
-}
 \description{
 Title
 }

@@ -9,9 +9,6 @@ remove_if_exists(df)
 \arguments{
 \item{df}{}
 }
-\value{
-
-}
 \description{
 Title
 }

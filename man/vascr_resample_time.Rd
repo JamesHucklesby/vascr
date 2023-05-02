@@ -11,9 +11,6 @@ vascr_resample_time(data.df, npoints = vascr_time_samples(data.df))
 
 \item{npoints}{}
 }
-\value{
-
-}
 \description{
 Title
 }
