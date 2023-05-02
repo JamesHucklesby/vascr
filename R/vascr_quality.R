@@ -23,7 +23,7 @@
 #' 
 #' 
 #' 
-vascr_summarise_deviation = function(data.df, frequency = NA, unit = NA)
+vascr_summarise_deviation = function(data.df, frequency = NA, unit = NA, ...)
 {
   cleandata.df = subset(data.df, !is.na(Value)) # Exclude wells where there is no data available (IE connection lost)
   
@@ -145,25 +145,11 @@ vascr_detect_max_deviation = function(data.df, max_deviation = 0, frequency = 40
 #' #vascr_plot_deviation(growth.df, visualisation = "line")
 #' #vascr_plot_deviation(growth.df, max_deviation = 0.2)
 #' 
-vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority = NULL, unit = "R", frequency = 4000, visualisation = NULL, title = "",  ...)
+#' data = growth.df %>% subset(unit = "R", frequency = 4000)
+#' 
+vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,visualisation = NULL, title = "")
 {
   
-  # Gather graph data based on the ... and pass it all through to vascr_prep_graphdata
-  dots = list(...)
-  dots$replication = "wells"
-  dots$frequency = frequency
-  dots$unit = unit
-  data = do.call_relevant("vascr_prep_graphdata", data, dots) 
-  
-  # If there is no deviation set, set this equal to max_deviation. Will ensure plotting is consistent.
-  if(deviation == 0)
-  {
-    deviation = max_deviation
-  }
-  
-  # Calculate priorities for plotting variables
-  priority = c("Deviation",priority,"...")
-  priority = vascr_priority(data, priority = priority, explicit = c("Time","Value"))
   
   
   # Generate the line visualisation ##########################################################
@@ -174,43 +160,20 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
     
     # Run the deviation calculation
     
-    deviationdata = vascr_detect_deviation(data)
+    deviationdata = vascr_detect_deviation(data) %>% mutate(Sample = factor(Sample, unique(data$Sample)))
     
-    if(length(priority)==1)
-    {
-      grouping = interaction(deviationdata$Well, priority[[1]])
-      plot = ggplot(deviationdata, aes_string(x = "Time", y = "Deviation", group = grouping, color = priority[[1]])) + 
-        geom_line()
-    }
-    else if(length(priority)>=2)
-    {
-      grouping = interaction(deviationdata$Well, priority[[1]], priority[[2]])
+      grouping = interaction(deviationdata$Well, deviationdata$Sample)
+      plot = ggplot(deviationdata, aes(x = Time, y = Deviation, group = grouping, color = Sample, fill = Sample)) + 
+        geom_line() +
+        ggnewscale::new_scale_color()+
+        facet_wrap(vars(Experiment),scales = "free_x") +
+        geom_hline(aes(yintercept = deviation, color = "Threshold deviation specified"))
+        
       
-      if(is.null(visualisation))
-      {
-        plot = ggplot(deviationdata, aes_string(x = "Time", y = "Deviation", ymax = "Deviation", ymin = "Deviation", group = "grouping", color = priority[[1]], linetype = priority[[2]], fill = priority[[1]]))+ geom_line() + geom_ribbon(alpha = 0.5) + ggtitle(title)
-      }
-      else # Make line style represent the second priority
-      {
-        plot = ggplot(deviationdata, aes_string(x = "Time", y = "Deviation", group = grouping, color = priority[[1]], linetype = priority[[2]]))+
-          geom_line()
-      }
-    }
+
+
     
-    # If deviation is specified, plot it on the graph (this will be equal to max_deviation if only that was specified)
-    if(deviation>0)
-    {
-      plot = plot + geom_hline(yintercept = deviation, color = "red")
-    }
-    
-    # If experiment is priority 1, and we're in a matrix, facet out the different experiments. This maintains the separation in the whole experiment matrix, and keeps things tidy. However, we don't facet outside of this, as comparasins on failure time may become important. This could be up for debate in future revisions.
-    
-    #if(priority[[1]] != "Experiment" & is.null(visualisation))
-    #{
-    #  plot = plot + facet_wrap(vars(Experiment))
-    #}
-    
-    p0 = do.call_relevant("vascr_polish_plot", plot, dots)
+      p0 = plot
     
     if(!is.null(visualisation))
     {
@@ -219,39 +182,28 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
   }
   
   # Calculate the Max_Deviations for all wells
-  scores = vascr_detect_max_deviation(data, max_deviation = 0)
+  scores = vascr_detect_max_deviation(data, max_deviation = 0) %>% 
+    mutate(Sample = factor(Sample, unique(data$Sample)))
   
   if(visualisation == "bar" || is.null(visualisation))
   {
     
-      if(length(priority) == 0)
-      {
-        # Plot out the graph, sorting the Y axis by the score of each well to make a pretty waterfall
-        plot = ggplot(scores, aes(x=reorder(Well,-Max_Deviation), y=Max_Deviation)) +
-          geom_bar(stat="identity") + xlab("Well")
-      }else if (length(priority) > 0)
-      {
-        
+
         x = reorder(scores$Well, -scores$Max_Deviation)
         
-        plot = ggplot(scores, aes_string(x=x, y="Max_Deviation", fill = priority[1], group = "Well")) +
-          geom_bar(stat="identity") + xlab("Well")
-        
-        if(priority[[1]] != "Experiment")
-        {
-          plot = plot + facet_wrap(vars(Experiment),scales = "free_x")
-        }
-      }
-      
-      # Add a horosontal line if a threshold has been specified
-      if(max_deviation>0)
-      {
-        plot = plot + geom_hline(yintercept = max_deviation, color = "red")
-      }
+        plot = ggplot(scores, aes(x=x, y= Max_Deviation, fill = Sample, color = Sample, group = Well)) +
+          geom_bar(stat="identity") + xlab("Well") +
+          facet_wrap(vars(Experiment),scales = "free_x") + 
+          ggnewscale::new_scale_color() +
+          geom_hline(aes(yintercept = deviation, color = "Threshold deviation specified")) +
+          labs(color = "", y = "Maximum deviation")
+          
       
       plot = plot + theme(axis.text.x = element_text(angle = 90))
       
-      p1 = do.call_relevant("vascr_polish_plot", plot, dots) 
+      plot
+      
+      p1 = plot
       
       if(!is.null(visualisation))
       {
@@ -260,14 +212,16 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
 
   }
   
+  
   if(visualisation == "plate" || is.null(visualisation))
   {
   
   scores = vascr_explode_wells(scores)
     
   plot = ggplot(scores, aes(col, row, fill= Max_Deviation)) + 
-    xlab("Column") +
-    ylab("Row")+
+    geom_tile() +
+    xlab("Plate Column") +
+    ylab("Plate Row")+
     scale_x_discrete(position = "top") +
     facet_wrap(vars(Experiment),scales = "free_x")
   
@@ -278,9 +232,9 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
      max_deviation = max(scores$Max_Deviation)
   }
   
-  plot =  plot + scale_fill_gradient2(low = "white", mid = "blue", midpoint = max_deviation, high = "red")
+  plot =  plot + scale_fill_gradient2(low = "white", mid = "blue", midpoint = deviation, high = "red")
   
-  p2 = do.call_relevant("vascr_polish_plot", plot, dots)
+  p2 = plot
   
   
   if(!is.null(visualisation))
@@ -294,12 +248,53 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,priority =
   {
     stop("Invalid visualisation type selected")
   }
+  
   else
   {
     
-    grid = vascr_make_panel(p0, p1, p2)
+    p1 = p1 + labs(tag = "B")
+    p0 = p0 + labs(tag = "C")
+    p2 = p2 + labs(tag = "A")
     
-    return(grid)
+    p2 = p2 + labs(fill = "Maximum Deviation")
+    
+    if(length(unique(data$Experiment)) == 1)
+    {
+    
+    p1 = p1 + theme(strip.text.x = element_blank(), strip.background = element_blank())
+    p0 = p0 + theme(strip.text.x = element_blank(), strip.background = element_blank())
+    p2 = p2 + theme(strip.text.x = element_blank(), strip.background = element_blank())
+    
+    }
+    
+    extract_legend <- function(my_ggp) {
+      step1 <- ggplot_gtable(ggplot_build(my_ggp))
+      step2 <- which(sapply(step1$grobs, function(x) x$name) == "guide-box")
+      step3 <- step1$grobs[[step2]]
+      return(step3)
+    }
+    
+  
+    # legend = grid.arrange(extract_legend(p2), extract_legend(p1))
+    # 
+    # grid = ggarrange(p1, p0, ncol = 1, common.legend = TRUE, legend = "right", legend.grob = legend)
+    # 
+    # grid
+    # 
+    # grid2 = ggarrange(p2, grid, ncol = 1, heights = c(0.33, 0.66))
+    # 
+    # grid2
+    
+    grid2 = (p2 + p1 + p0 + get_legend(p2) + get_legend(p1) & theme(legend.position = "none")) + plot_layout(design = "
+                                                                            AAAD
+                                                                            BBBE
+                                                                            CCCE")
+    
+
+    
+    
+    
+    return(grid2)
   }
   
   
@@ -379,3 +374,7 @@ vascr_exclude_deviation = function(data.df, deviation = 0.5, max_deviation = 0, 
   
   
 }
+
+
+
+

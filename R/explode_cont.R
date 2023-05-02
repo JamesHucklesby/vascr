@@ -7,7 +7,7 @@
 #' 
 #' @importFrom tidyr separate_rows pivot_wider separate pivot_wider
 #' @importFrom magrittr "%>%"
-#' @importFrom dplyr all_equal
+#' @importFrom dplyr all_equal row_number
 #' 
 #' @export
 #'
@@ -41,7 +41,7 @@ vascr_explode = function(data)
   df3 = separate(df2, "Sample", sep ="_", into = c("num", "col"))
   # # Pivot each individual row wider to make an exploded dataset
   # df3$num = as.numeric(gsub(",","",df3$num))
-  df4 = pivot_wider(df3, c("num","col"), names_from = "col", values_from = "num",  id_cols = ID, names_prefix = "")
+  df4 = pivot_wider(df3, names_from = "col", values_from = "num",  id_cols = ID, names_prefix = "")
   df4$SampleID = NULL
   df4$Sample = NULL
   

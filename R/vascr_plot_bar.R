@@ -171,11 +171,12 @@ vascr_plot_bar = function(data, priority = NULL, error = Inf, confidence = NULL,
 #' #vascr_plot_bar(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45)
 #' #vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45)
 #' 
-vascr_plot_bar_anova = function(data.df ,priority = NULL ,confidence, time, unit, frequency, format = toplot, error = Inf, ...)
+
+vascr_plot_bar_anova = function(data.df ,priority = NULL ,confidence = 0.95, time, unit, frequency, format = toplot, error = Inf, ...)
 {
   
   # Gather graph data based on the ...
-  datum = vascr_prep_graphdata(data.df, frequency = frequency, time = time, unit = unit, level = "wells")
+  datum = vascr_subset(data.df, unit = unit, frequency = frequency, time = time)
   priority = vascr_priority(datum, priority)
   
   # if(!length(unique(c(data$Time, data$Unit, data$Frequency, data$Instrument)))==4)
@@ -190,7 +191,10 @@ vascr_plot_bar_anova = function(data.df ,priority = NULL ,confidence, time, unit
     warning("Normalised dataset detected, ANOVA results may be invalid")
   }
 
-  summary = vascr_prep_graphdata(data.df, frequency = frequency, time = time, unit = unit, level = "summary")
+  summary = vascr_subset(data.df, frequency = frequency, time = time, unit = unit) %>%
+    vascr_summarise(level = "summary")
+  
+  datum = arrange(datum, Sample)
   
   labeltable = vascr_make_significance_table(data.df = datum, time, unit, frequency, priority = NULL, confidence, format = "toplot")
   
@@ -209,16 +213,21 @@ vascr_plot_bar_anova = function(data.df ,priority = NULL ,confidence, time, unit
   
   
   
-  plot = ggplot(filtered2.df, aes(x = Sample, y = Value, label = Label)) + geom_bar(stat = "identity") +
-    geom_text(aes(label=Label),position=position_stack(0.8)) 
+  plot = ggplot(filtered2.df, aes(x = Sample, y = Value, label = Label, fill = Sample)) + 
+    geom_bar(stat = "identity") +
+    geom_text(aes(label=Label, y = min(Value)/2), fill = NA, label.color = NA) 
+  
+  plot
+  
   
   if(error>0)
     { 
-    plot = plot + geom_errorbar(aes(ymax = ymax, ymin = ymin))
+    plot = plot + geom_errorbar(aes(ymax = Value + sem, ymin = Value - sem), width = 0.6)
   }
   
   dots = list(...)
-  plot = do.call_relevant("vascr_polish_plot", payload = plot, arguments = dots)
+  
+  plot
   
   return(plot)
 }

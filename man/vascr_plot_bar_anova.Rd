@@ -7,7 +7,7 @@
 vascr_plot_bar_anova(
   data.df,
   priority = NULL,
-  confidence,
+  confidence = 0.95,
   time,
   unit,
   frequency,

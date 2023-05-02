@@ -4,12 +4,15 @@
 \alias{vascr_full_implode}
 \title{Implode multiple columns from a data frame into a single title}
 \usage{
-vascr_full_implode(data.df, cols_to_implode = NULL)
+vascr_full_implode(data.df, cols_to_implode = NULL, remove_blank = TRUE)
 }
 \arguments{
 \item{data.df}{The dataset to implode}
 
 \item{cols_to_implode}{The columns to implode}
+}
+\value{
+A data frame
 }
 \description{
 Implode multiple columns from a data frame into a single title

@@ -43,37 +43,46 @@ vascr_carry_down_names = function(data.df, cols_to_carry = NULL, remove_blank = 
 #' @param data.df The dataset to implode
 #' @param cols_to_implode The columns to implode
 #'
-#' @returnn A data frame
+#' @return A data frame
 #' @export
 #'
 #' @examples
 #' vascr_full_implode(growth.df)
 #' vascr_full_implode(growth.df, c("cells", "Experiment"))
 #' 
-vascr_full_implode = function(data.df, cols_to_implode = NULL)
+vascr_full_implode = function(data.df, cols_to_implode = NULL, remove_blank = TRUE)
 {
   
-  if("Sample" %in% colnames(data.df))
-  {
-  data.df = data.df %>% ungroup() %>% select(-Sample)
-  }
+  workingdata =  vascr_check_sampleid(data.df)
+  
+  # workingdata = data.df %>% vascr_sample_subset(c(3:1)) %>%
+  #   vascr_subset(unit = "Rb")
   
 
   if(is.null(cols_to_implode))
   {
-    cols_to_implode = colnames(select(data.df, -Time, -Value))
+    cols_to_implode = colnames(select(workingdata, -Time, -Value, -Sample, -SampleID))
+    warning("No cols selected, guessing all")
   }
-  
-  gdata = data.df %>% group_by(all_of(across(cols_to_implode)))
-  gdata$ID = group_indices(gdata)
-  
-  smalldata = gdata %>% select(cols_to_implode, "ID") %>% distinct()
 
-  carrydown = vascr_carry_down_names(data.df = smalldata, cols_to_carry = cols_to_implode)
+  
+  
+  smalldata = workingdata %>% 
+    select(all_of(c(cols_to_implode, "Sample", "SampleID"))) %>% 
+    distinct() %>%
+    arrange(Sample) %>%
+    mutate(Sample = NULL)
+
+  carrydown = vascr_carry_down_names(data.df = smalldata, 
+                                     cols_to_carry = cols_to_implode,
+                                     remove_blank = remove_blank)
 
   full_implode = carrydown %>% unite("Sample", all_of(cols_to_implode), sep = " + ", na.rm = TRUE) 
+
+  workingdata = workingdata %>% mutate(Sample = NULL)
   
-  recombined = gdata %>% left_join(full_implode, by = "ID")%>% mutate(ID = NULL)
+  recombined = workingdata %>% left_join(full_implode, by = "SampleID") %>% 
+    mutate(Sample = factor(Sample, unique(Sample)))
 
   return(recombined)
 }
@@ -86,60 +95,117 @@ vascr_full_implode = function(data.df, cols_to_implode = NULL)
 #' @return
 #' @export
 #'
+#'@importFrom dplyr summarise_all select distinct all_of everything filter n_distinct
+#'@importFrom tidyr pivot_longer
+#'
 #' @examples
-vascr_implode = function(data.df, stripidentical = TRUE)
+vascr_implode = function(data.df, stripidentical = TRUE, colnames = NULL, 
+                         addcols = NULL, dropcols = NULL, fill_blank = "Control",
+                         cleanup_sample = FALSE)
 {
+  
+  data.df = data.df %>% arrange(Sample)
+  
+  colnames = vascr_find_cols(colnames)
+  addcols = vascr_find_cols(addcols)
+  dropcols = vascr_find_cols(dropcols)
+  
+  
   data.df = ungroup(data.df)
   
-  exploded_cols = vascr_exploded_cols(data.df)
+  exploded_cols = vascr_exploded_cols(data.df) 
   
-  data_names = data.df %>% select(all_of(exploded_cols)) %>% mutate(Time = 0, Value = 0) %>% vascr_full_implode()
-  
-  data.df$Sample = data_names$Sample
-  
-  return(data.df)
-}
-
-
-
-#' #' Title
-#' #'
-#' #' @param data.df 
-#' #' @param select_cols 
-#' #' @param remove_blank 
-#' #' @param fill_blank 
-#' #'
-#' #' @return
-#' #' @export
-#' #'
-#' #' @examples
-#' vascr_make_name = function(data.df, select_cols = NULL, remove_blank = TRUE, fill_blank = "Control")
-#' {
-#'   imploded = vascr_full_implode(data.df, cols_to_implode = NULL)
-#'   return(imploded)
-#' }
-vascr_make_name = function(data.df, clean_output = TRUE, fill_blank = "Control")
-{
-  exploded = vascr_explode(data.df)
-  deltacols = exploded %>% select(vascr_exploded_cols(exploded)) %>% vascr_find_changing_cols()
-  imploded = vascr_full_implode(exploded, cols_to_implode = deltacols)
-  
-  imploded = imploded %>% mutate(Sample = ifelse(Sample == "", fill_blank, Sample))
-  
-  
-  if(isTRUE(clean_output))
+  if(length(exploded_cols)==0)
   {
-   imploded = imploded %>% mutate(Sample = str_replace_all(Sample, "\\.", " ")) %>%
-      mutate(Sample = str_replace_all(Sample, "_", " "))
+    data.df = vascr_explode(data.df)
+    exploded_cols = vascr_exploded_cols(data.df)
+    exploded_cols = subset(exploded_cols, exploded_cols != "NA")
   }
   
-  # Sort the samples into a sensible numerical order
-  samplelist = unique(imploded$Sample)
-  sampleorder = str_sort(samplelist, numeric = TRUE)
-  imploded$Sample = fct_relevel(imploded$Sample, sampleorder)
+  if(is.null(colnames))
+  {
+  summary = data.df %>% select(all_of(exploded_cols)) %>% distinct() %>% 
+       summarise_all(n_distinct) %>% 
+       pivot_longer(cols = everything()) %>%
+        filter(value>1)
   
-  return(imploded)
+  colnames = summary$name
+  }
+  
+  colnames = c(colnames, addcols) %>% unique()
+  
+  colnames = subset(colnames, !colnames %in% c(dropcols, "NA"))
+  
+  toreturn = vascr_full_implode(data.df, cols_to_implode = colnames)
+  
+  toreturn = vascr_sample_replace_match(data.df = toreturn, "", fill_blank)
+  
+  if(cleanup_sample)
+  {
+    toreturn = vascr_cleanup_sample(toreturn)
+  }
+  
+  
+  toreturn = toreturn %>% mutate(Sample = factor(Sample, unique(Sample)))
+  
+  return(toreturn)
 }
+
+
+
+#' Title
+#'
+#' @param cols 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_find_cols = function(cols)
+{
+  
+  if(is.null(cols))
+  {
+    return(NULL)
+  }
+  
+  coltable = vascr_col_id(data.df)
+  
+  output = foreach(currcol = cols) %do%
+    {
+      if(is.numeric(currcol))
+      {
+        output = (coltable %>% filter(ColID == currcol))$Variable
+      } else
+      {
+        output = vascr_match(currcol, coltable$Variable)
+      }
+      
+      return (output)
+    }
+  
+  return(unlist(output))
+}
+
+
+
+#' Title
+#'
+#' @param data.df 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_col_id = function(data.df)
+{
+  expcols = masterdata %>% vascr_exploded_cols() %>% data.frame()
+  colnames(expcols)[1] = "Variable"
+  expcols$ColID = c(1:nrow(expcols))
+  
+  return(expcols)
+}
+
 
 
 #' Find which R columns change accross the dataset
@@ -456,9 +522,75 @@ vascr_cols  = function(data, set = "core")
 #' @examples
 vascr_zero_time = function(data.df, time = 0)
 {
+  if(vascr_is_resampled(data.df))
+  {
+    warning("Data may not be resampled, this may cause issues downstream")
+  }
+  
   data.df = data.df %>% mutate(Time = Time - time)
   return(data.df)
 }
+
+
+
+
+
+#' Title
+#'
+#' @param raw_name 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+cleanup_samplename = function(raw_name)
+{
+  
+  raw_name %>%
+    str_replace_all("_", " ") %>%
+    str_replace_all("\\.", " ")
+  
+  # raw_sample = "50_nM.tPA + 100_percent.serum + Y_washed"
+}
+
+
+#' Title
+#'
+#' @param data.df 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_cleanup_sample = function(data.df)
+{
+  
+  data.df = vascr_check_sampleid(data.df)
+  
+  small = data.df %>% select(Sample, SampleID) %>%
+    distinct () %>%
+    arrange(Sample)
+    
+  small2 = vascr_explode(small)
+  small2$SampleID = small$SampleID
+  
+  small3 = small2 %>% vascr_implode() %>%
+  mutate(Sample = cleanup_samplename(Sample)) %>%
+  mutate(Sample = factor(Sample, unique(Sample)))
+  
+  toreturn = data.df %>% select(-Sample) %>%
+    left_join(small3, by = "SampleID")
+  
+  return(toreturn)
+}
+
+
+
+
+
+
+
+
 
 
 

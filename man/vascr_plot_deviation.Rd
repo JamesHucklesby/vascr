@@ -8,12 +8,8 @@ vascr_plot_deviation(
   data,
   max_deviation = 0,
   deviation = 0,
-  priority = NULL,
-  unit = "R",
-  frequency = 4000,
   visualisation = NULL,
-  title = "",
-  ...
+  title = ""
 )
 }
 \arguments{
@@ -23,15 +19,15 @@ vascr_plot_deviation(
 
 \item{deviation}{The maximum allowable deviation at any one time point. Defaults to the same as max_deviation.}
 
+\item{visualisation}{The visualisation you want to focus in on. Options are "bar", "plate" or "line". The default is to tile all three.}
+
+\item{title}{The title to place on the plot}
+
 \item{priority}{The priority of vascr (or other) variables should be displayed in. See vascr_priority for details.}
 
 \item{unit}{The unit you wish to run the analyasis on. A raw unit is usually best. Default is R.}
 
 \item{frequency}{The frequency you want to run the analyasis on. Default is 4000.}
-
-\item{visualisation}{The visualisation you want to focus in on. Options are "bar", "plate" or "line". The default is to tile all three.}
-
-\item{title}{The title to place on the plot}
 
 \item{...}{Any other arguements to be passed on to either vascr_subset or vascr_polish_plot}
 }
@@ -47,6 +43,8 @@ This function by default outputs three sets of diagnostic plots that describe wh
 #vascr_plot_deviation(growth.df, visualisation = "plate")
 #vascr_plot_deviation(growth.df, visualisation = "line")
 #vascr_plot_deviation(growth.df, max_deviation = 0.2)
+
+data = growth.df \%>\% subset(unit = "R", frequency = 4000)
 
 }
 \keyword{internal}

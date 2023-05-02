@@ -35,5 +35,6 @@ Import raw modeled data
 #head(data)
 #vascr_plot(data, unit = "Rb", level = "wells")
 
+# ecis_import_model(modeleddata, sampledefine)
 }
 \keyword{internal}

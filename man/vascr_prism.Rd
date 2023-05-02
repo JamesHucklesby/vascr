@@ -34,9 +34,9 @@ This function will automatically average the wells in each experiment, to give a
 #vascr_prism(data.df = growth.df, unit = 'Rb', replication = "summary")
 #prism = vascr_prism(growth.df, 'Rb', replication = "wells")
 
-data.df = vascr_subset(growth.df, unit = "Rb")
-prism1 = vascr_prism(data.df)
-data.df = vascr_summarise(data.df, level = "experiments")
-prism2 = vascr_prism(data.df, select_cols = c("Experiment", "cells"))
+#data.df = vascr_subset(growth.df, unit = "Rb")
+#prism1 = vascr_prism(data.df)
+#data.df = vascr_summarise(data.df, level = "experiments")
+#prism2 = vascr_prism(data.df, select_cols = c("Experiment", "cells"))
 }
 \keyword{internal}

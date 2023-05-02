@@ -210,7 +210,7 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, priorit
   # What is the effect of the treatment on the value ?
   lm = vascr_lm(data.df, unit, frequency, time)
   
-  data.df$Sample = as.factor(data.df$Sample)
+  data.df$Sample = factor(data.df$Sample, unique(data.df$Sample))
   ANOVA = Anova(lm, type = "III")
   
   
@@ -222,13 +222,14 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, priorit
   #plot(TUKEY , las=1 , col="brown")
   
   # Extract labels and factor levels from Tukey post-hoc 
-  Tukey.levels <- TUKEY[[2]][,4] # pull out the tukey significance levels
+  Tukey.levels <- TUKEY[[2]][] # pull out the tukey significance levels
   Tukey.labels <- data.frame(Tukey.levels)
   
+  Tukey.labels$Samplepair = rownames(Tukey.labels)
   
-  Tukey.labels = setDT(Tukey.labels, keep.rownames = TRUE)[]
+  Tukey.labels = Tukey.labels %>% separate(Samplepair, c("A", "B"), sep = "-")
   
-  Tukey.labels = Tukey.labels %>% separate(rn, c("A", "B"), sep = "-")
+  Tukey.labels$Tukey.level = Tukey.labels$p.adj
   
   Tukey.labels$Significance <- symnum(Tukey.labels$Tukey.level, corr = FALSE, na = FALSE, 
                                       cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 
@@ -241,12 +242,15 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, priorit
   }
   else if (format == "toplot")
   {
+    
+    #Generate a list of all the row names
+    alllabels = c(Tukey.labels$A, Tukey.labels$B)
+    alllabels = unique(data.df$Sample) %>% as.character()
+    
   # Reformat for graphics
-  Tukey.labels = subset(Tukey.labels, Tukey.levels<(1-confidence))
+  # Tukey.labels = subset(Tukey.labels, Tukey.levels<(1-confidence))
   
-  #Generate a list of all the row names
-  alllabels = c(Tukey.labels$A, Tukey.labels$B)
-  alllabels = unique(alllabels)
+
   
   sources = c()
   sinks = c()
@@ -256,15 +260,20 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, priorit
   
   for(label in alllabels)
   {
-    source = (label)
-    sink = (c(subset(Tukey.labels, A == label)$Bsig,subset(Tukey.labels, B == label)$Asig))
-    sink = str_c(sink, collapse = "\n")
-    sources = append(sources, source)
-    sinks = append(sinks, sink)
+    sink1 = subset(Tukey.labels, B == label) %>% mutate(samp = A, lab = Asig, source = B) %>% select(samp, lab, source)
+    sink2 = subset(Tukey.labels, A == label) %>% mutate(samp = B, lab = Bsig, source = A) %>% select(samp, lab, source)
+    sink = rbind(sink1, sink2)
+    sink = sink %>% mutate(samp = factor(samp, alllabels)) %>% arrange(samp) %>% mutate(samp = as.character(samp))
+    sinktext = str_c("",sink$lab, collapse = "\n")
+    sources = append(sources, unique(sink$source))
+    sinks = append(sinks, sinktext)
     
   }
   
-  labeltable = data.frame("Sample" = sources, "Label" = sinks)
+  labeltable = data.frame("Sample" = alllabels, "Label" = sinks)
+  
+  labeltable
+  
   return(labeltable)
   }
   else

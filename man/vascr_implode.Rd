@@ -4,7 +4,15 @@
 \alias{vascr_implode}
 \title{Title}
 \usage{
-vascr_implode(data.df, stripidentical = TRUE)
+vascr_implode(
+  data.df,
+  stripidentical = TRUE,
+  colnames = NULL,
+  addcols = NULL,
+  dropcols = NULL,
+  fill_blank = "Control",
+  cleanup_sample = FALSE
+)
 }
 \arguments{
 \item{data.df}{}

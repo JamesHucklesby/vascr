@@ -4,7 +4,7 @@
 \alias{vascr_gg_color_hue}
 \title{Generate ggplot colour hues, for manually specifiying colours that match the default theme}
 \usage{
-vascr_gg_color_hue(n, start = 15)
+vascr_gg_color_hue(n, start = 15, values_needed = c(1:n), l = 65, c = 100)
 }
 \arguments{
 \item{n}{Number of variables to access}

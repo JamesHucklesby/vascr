@@ -1,22 +1,48 @@
-#' Sub setting function for sample IDs
-#'
-#' @param data.df 
-#' @param samplelist 
-#'
-#' @return A subset data frame
-#' @noRd
-#'
-#' @examples
-vascr_subset_sampleid = function(data.df, samplelist)
-{
+#' #' Sub setting function for sample IDs
+#' #'
+#' #' @param data.df 
+#' #' @param samplelist 
+#' #'
+#' #' @return A subset data frame
+#' #' @noRd
+#' #'
+#' #' @examples
+#' 
+#' vascr_subset_sampleid = function(data.df, samplelist)
+#' {
+#'   
+#'   ided = data.df %>% select(Sample) %>% distinct() %>% mutate(SampleID = row_number()) %>% 
+#'     right_join(data.df, by = "Sample")
+#'   
+#'   toreturn = ided %>% subset(SampleID %in% samplelist)
+#'   
+#'   return(toreturn)
+#'   
+#' }
+
+# data.df = plnall2 %>%
+#   vascr_subset(unit = c("R"), frequency = 4000, time = c(-10,24)) %>%
+#   vascr_normalise(-2, divide = TRUE)
+# 
+# samplelist = c(1,2,6,4,7)
+
+vascr_subset_sampleid = function (data.df, samplelist){
   
-  ided = data.df %>% select(Sample) %>% distinct() %>% mutate(SampleID = row_number()) %>% right_join(data.df, by = "Sample")
+  # First subset the dataset
+  subset.df = data.df %>% subset(SampleID %in% samplelist)
   
-  toreturn = ided %>% subset(SampleID %in% samplelist)
+  id_list = subset.df %>% select(Sample, SampleID) %>% distinct()
   
-  return(toreturn)
+  id_list$order = match(id_list$SampleID,samplelist)
+
+  id_list = id_list %>% arrange(order)
+  
+  subset.df = subset.df %>% mutate(Sample = factor(Sample, id_list$Sample))
+  
+  return(subset.df)
   
 }
+
 
 
 #' Output a list of Sample ID and Sample pairs
@@ -27,7 +53,7 @@ vascr_subset_sampleid = function(data.df, samplelist)
 #' @export
 #'
 #' @examples
-#' growth.df %>% vascr_samples()
+#' # growth.df %>% vascr_samples()
 vascr_samples = function(data.df)
 {
   if(!("SampleID" %in% colnames(data.df)))
@@ -35,7 +61,7 @@ vascr_samples = function(data.df)
     stop("SampleID not assigned")
   }
   
-  data.df %>% select(SampleID, Sample) %>% distinct() %>% return()
+  data.df %>% select(SampleID, Sample) %>% distinct() %>%  arrange(SampleID)%>%  return()
 }
 
 #' Title
@@ -46,12 +72,18 @@ vascr_samples = function(data.df)
 #' @export
 #'
 #' @examples
-vascr_assign_sampleid  = function(data.df)
+vascr_assign_sampleid  = function(data.df, replaceid = FALSE)
 {
   
   samplelist = unique(data.df$Sample)
   
   sampleframe = data.frame(SampleID = c(1:length(samplelist)), Sample = samplelist)
+  
+  if("SampleID" %in% colnames(data.df))
+  {
+    data.df = data.df %>% select(-SampleID)
+  }
+  
   
   combineddata = data.df %>% left_join(sampleframe, by = "Sample")
   
@@ -59,11 +91,94 @@ vascr_assign_sampleid  = function(data.df)
 }
 
 
+#' Title
+#'
+#' @param data.df 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_check_sampleid = function(data.df)
+{
+  
+  if("SampleID" %notin% colnames(data.df))
+  {
+    data.df = vascr_assign_sampleid(data.df)
+    warning("No SampleID in input data frame, adding it automatically")
+  }
+  
+  return(data.df)
+  
+}
 
 
 #' Title
 #'
 #' @param data.df 
+#' @param target 
+#' @param replacement 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_sample_replace = function(data.df, target, replacement = "")
+{
+  
+  data.df = vascr_check_sampleid(data.df)
+  
+  levels = data.df %>% ungroup() %>% select(Sample, SampleID) %>% distinct()
+  
+  newlevels = levels %>% mutate(Sample = as.character(Sample)) %>%
+    mutate(Sample = str_replace_all(Sample, target, replacement)) %>%
+    mutate(Sample = factor(Sample, unique(Sample)))
+  
+  output = data.df %>% select(-Sample) %>%
+    left_join(newlevels, by = "SampleID")
+  
+  return(output)
+  
+}
+
+#' Title
+#'
+#' @param data.df 
+#' @param target 
+#' @param replacement 
+#' 
+#' @importFrom dplyr if_else mutate left_join select ungroup distinct
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_sample_replace_match = function(data.df, target, replacement = "")
+{
+  
+  data.df = vascr_check_sampleid(data.df)
+  
+  levels = data.df %>% ungroup() %>% select(Sample, SampleID) %>% distinct()
+  
+  newlevels = levels %>% mutate(Sample = as.character(Sample)) %>%
+    mutate(Sample = if_else(Sample == target, replacement, Sample)) %>%
+    mutate(Sample = factor(Sample, unique(Sample)))
+  
+  output = data.df %>% select(-Sample) %>%
+    left_join(newlevels, by = "SampleID")
+  
+  return(output)
+  
+}
+
+
+
+#' Title
+#'
+#' @param data.df 
+#' 
+#' @importFrom forcats fct_rev
+#' @importFrom ggplot2 ggplot geom_tile geom_text theme scale_colour_brewer
 #'
 #' @return
 #' @export
@@ -73,7 +188,9 @@ vascr_plot_sampleid = function(data.df)
 {
   sample_setup = data.df %>% select(Sample) %>% distinct() %>% vascr_explode() %>% mutate(SampleID = row_number()) %>% select(-Sample) %>% pivot_longer(cols = -SampleID, values_transform = as.character)
   
-  ggplot(sample_setup) + geom_tile(aes(x = name, fill = value, y = fct_rev(as.factor(SampleID)))) + geom_text(aes(x = name, label = value, y = fct_rev(as.factor(SampleID)))) + scale_fill_brewer(palette = "Spectral") + xlab("Treatment") + ylab("Sample ID") + 
+  ggplot(sample_setup) + geom_tile(aes(x = name, fill = value, y = fct_rev(as.factor(SampleID)))) + 
+    geom_text(aes(x = name, label = value, y = fct_rev(as.factor(SampleID)))) + 
+    scale_fill_brewer(palette = "Spectral") + xlab("Treatment") + ylab("Sample ID") + 
     theme(axis.text.y = element_text(size=14, face="bold"))
 }
 
@@ -84,6 +201,11 @@ vascr_plot_sampleid = function(data.df)
 #'
 #' @param plot1 
 #' @param ... 
+#' 
+#' @importFrom ggnewscale new_scale_color
+#' @importFrom tidyr replace_na
+#' @importFrom data.table as.data.table
+#' @importFrom dplyr filter
 #'
 #' @return
 #' @export
@@ -124,8 +246,10 @@ vascr_vline = function(plot1, ..., list = NA)
   
   time_table$Event = factor(time_table$Name, unique(time_table$Name))
   
-  plot2 = plot1 + ggnewscale::new_scale_color() + geom_vline(data = time_table, aes(xintercept = as.numeric(Time), colour = Event), linetype = 2) 
+  plot2 = plot1 + ggnewscale::new_scale_color() + 
+    geom_vline(data = time_table, aes(xintercept = as.numeric(Time), colour = Event), linetype = 2) 
   
+  plot2
   
   return(plot2)
   
@@ -134,5 +258,45 @@ vascr_vline = function(plot1, ..., list = NA)
 
 
 
+#' Subset a vascr dataset by sampleID
+#'
+#' @param data.df 
+#' @param sampleid 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_sample_subset= function(data.df, sampleid = NULL)
+{
+  
+  if(is.null(sampleid))
+  {
+    return(data.df)
+  }
+  
+  if(!("SampleID" %in% colnames(data.df)))
+  {
+    data.df = vascr_assign_sampleid(data.df)
+  }
+  
+  
+  working.df = data.df %>% filter(SampleID %in% sampleid)
+  
+  target_order = tibble(order = 1:length(sampleid), SampleID = sampleid)
+  
+  working.df = working.df %>% left_join(target_order, by = "SampleID")
+  
+  working.df = working.df %>% arrange(order)
+  
+  unique(working.df$Sample)
+  
+  working.df$Sample = factor(working.df$Sample, unique(working.df$Sample))
+  
+  working.df$order = NULL
+  
+  return(working.df)
+  
+}
 
 

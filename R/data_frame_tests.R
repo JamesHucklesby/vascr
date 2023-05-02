@@ -19,6 +19,43 @@ vascr_test_exploded = function(data.df)
   return(length(vascr_exploded_cols(data.df))>1)
 }
 
+
+
+
+#' Title
+#'
+#' @param data.df 
+#'
+#' @return
+#' @export
+#' 
+#' @importFrom dplyr group_by
+#' @importFrom tidyr replace_na
+#'
+#' @examples
+#' vascr_test_normalised(growth.df)
+#' 
+#' normdata  = vascr_normalise(growth.df, 100)
+#' 
+#' vascr_test_normalised(normdata)
+#' 
+vascr_test_normalised = function(data.df)
+{
+  
+  timesplit = data.df %>% group_by(Time) %>%
+    summarise(sd = sd(Value, na.rm = TRUE)) %>%
+    mutate(sd = signif(sd, 4)) %>%
+    mutate(normtime = (sd ==0)) %>%
+    mutate(normtime = replace_na(normtime, FALSE))
+  
+  
+  return(any(timesplit$normtime))
+  
+}
+
+
+
+
 #' Test the integrity of an ECIS dataframe
 #' 
 #' This function will run a whole suite of tests on an ECIS dataframe, to check that it is both well designed for statistical analysis as well as technically intact
@@ -126,7 +163,7 @@ vascr_missing_wells = function(wells)
   }
   
   uwells = unique(wells)
-  awells = vascr:::vascr_96_well_names()
+  awells = vascr_96_well_names()
   mwells = subset(awells, !(awells %in% uwells))
   return(mwells)
 }
@@ -140,7 +177,7 @@ vascr_missing_wells = function(wells)
 #' @export
 #'
 #' @examples
-vascr_test_timebase = function(dataset)
+vascr_test_resampled = function(dataset)
 {
   timebases = dataset %>% group_by(across(c(-Value, -Time))) %>% summarise(times = sum(Time^2), .groups = "keep") %>% ungroup() %>% select(times) %>% distinct() %>% nrow()
   

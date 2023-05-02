@@ -15,6 +15,7 @@
 #' @importFrom tidyr spread
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr summarise group_by
+#' @importFrom utils write.csv
 #' 
 #' @export
 #'
@@ -22,10 +23,10 @@
 #' #vascr_prism(data.df = growth.df, unit = 'Rb', replication = "summary")
 #' #prism = vascr_prism(growth.df, 'Rb', replication = "wells")
 #' 
-#' data.df = vascr_subset(growth.df, unit = "Rb")
-#' prism1 = vascr_prism(data.df)
-#' data.df = vascr_summarise(data.df, level = "experiments")
-#' prism2 = vascr_prism(data.df, select_cols = c("Experiment", "cells"))
+#' #data.df = vascr_subset(growth.df, unit = "Rb")
+#' #prism1 = vascr_prism(data.df)
+#' #data.df = vascr_summarise(data.df, level = "experiments")
+#' #prism2 = vascr_prism(data.df, select_cols = c("Experiment", "cells"))
 vascr_prism = function(data.df, filename = NULL, select_cols = NULL, remove_blank = TRUE, fill_blank = "Control", include_wells = FALSE){
     
     # Cut the data frame down to what can reasonably be represented on one prism table

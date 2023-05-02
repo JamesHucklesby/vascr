@@ -40,11 +40,13 @@ vascr_summarise = function(data.df, level = "wells")
 {
   levels = vascr_match(level, vascr_levels(set = "all"))
   
-  if(!vascr_test_timebase(data.df))
+
+  if(length(unique(data.df$Time))>1 & !vascr_test_resampled(data.df))
   {
     data.df = vascr_interpolate_time(data.df)
   }
-  
+
+    
   for(lev in level)
   {
     
@@ -111,6 +113,8 @@ vascr_summarise_experiments = function(data.df)
 #' @return
 #' @export
 #' 
+#' @importFrom dplyr group_by summarise
+#' 
 #' @keywords internal
 #'
 #' @examples
@@ -159,7 +163,7 @@ vascr_summarise_summary = function(data.df)
 #' 
 #' @export
 #' 
-#' @importFrom dplyr left_join
+#' @importFrom dplyr left_join right_join filter
 #'
 #' @examples
 #' 
@@ -167,6 +171,8 @@ vascr_summarise_summary = function(data.df)
 #' #head(data)
 #' 
 vascr_normalise = function(data.df, normtime, divide = FALSE) {
+  
+    data.df = vascr_check_interpolated(data.df)
     
     data.df = ungroup(data.df)
   
@@ -304,11 +310,12 @@ vascr_subsample = function(data.df, nth) {
 }
 
 
-#' Current aquisition rate
+#' Current acquisition rate
 #'
 #' @param data.df The dataframe to compute the current data aquisition frequency of
 #'
 #' @return The current aquisition rate of the data frame
+#' 
 #' 
 #' @keywords internal
 #'
@@ -335,24 +342,163 @@ vascr_current_frequency = function (data.df)
 #'
 #' @param data.df 
 #' @param npoints 
+#' 
+#' @importFrom stats approx
+#' @importFrom dplyr summarise rename ungroup mutate group_by
 #'
 #' @return
 #' @export
 #'
 #' @examples
-vascr_interpolate_time = function(data.df, npoints = 50)
+#' data.df = ecis1 %>% vascr_subset(time = c(1,2), unit = "R", frequency = 4000, well = c("D01", "D02", "D03"))
+#' from = 0.03613
+#' to = 0.5767
+#' 
+vascr_interpolate_time = function(data.df, npoints = vascr_time_samples(data.df), from = min(floor(data.df$Time)), to = max(ceiling(data.df$Time)))
 {
   
-  xout = seq(from = min(floor(data.df$Time)), to = max(ceiling(data.df$Time)), length.out = npoints)
+  if(length(unique(data.df$Frequency))>1 || length(unique(data.df$Unit))>1)
+  {
+    stop("vascr_interpolate_time only supports one unit and frequency at a time")
+  }
+  
+  
+  originalsample = unique(data.df$Sample)
+  
+  xout = seq(from = from, to = to, length.out = npoints)
   
   processed = data.df %>% group_by(across(c(-Value, -Time))) %>%
     summarise(New_Value = approx(Time, Value, xout = xout, rule = 2)$y, New_Time = approx(Time, Value, xout = xout, rule = 2)$x) %>%
     rename(Value = New_Value, Time = New_Time) %>%
-    ungroup()
+    ungroup() %>%
+    mutate(Sample = factor(Sample, as.character(originalsample)))
+  
+
   
   return(processed)
 }
 
+#' Title
+#'
+#' @param data.df 
+#' @param npoints 
+#' 
+#' @importFrom foreach foreach `%do%`
+#' @importFrom dplyr group_split group_by
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_resample_time = function(data.df, npoints = vascr_time_samples(data.df))
+{
+  
+  datasplit = data.df %>% group_by(Frequency, Unit) %>% group_split()
+  
+  baseline_times = vascr_time_samples(data.df)
+  start = min(floor(data.df$Time))
+  end = max(ceiling(data.df$Time))
+  
+  resampled = foreach(i = datasplit, .combine = rbind) %do%
+  {
+    vascr_interpolate_time(i, baseline_times, start, end)
+  }
+  
+  return(resampled)
+  
+}
+
+#' Title
+#'
+#' @param data.df 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_check_interpolated = function(data.df)
+{
+  if(!vascr_is_resampled(data.df))
+  {
+    warning("Data is not resampled, resampling to allow further analytics")
+    data.df = vascr_resample_time(data.df)
+  }
+  
+  return(data.df)
+}
+
+
+
+#' Title
+#'
+#' @param data.df 
+#'
+#' @return
+#' @export
+#' 
+#' @importFrom dplyr group_by summarise
+#'
+#' @examples
+vascr_time_samples = function(data.df)
+{
+
+experiment_times = data.df %>% group_by(Unit, Experiment, Well, Instrument, Sample) %>% 
+  summarise(n = n())
+
+samples = min(experiment_times$n)
+
+return(samples)
+
+}
+
+#' Title
+#'
+#' @param data.df 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_is_resampled = function(data.df)
+{
+  
+  experiment_times = data.df %>% group_by(Unit, Experiment, Well, Instrument, Sample) %>% 
+    summarise(n = n())
+  
+  samples = sd(experiment_times$n) == 0
+  
+  return(samples)
+  
+}
+
+
+
+#' Title
+#'
+#' @param data.df 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_sync_time = function(data.df)
+{
+
+experiment_times = masterdata %>% select(Time, Unit, Experiment, Well) %>% distinct()
+
+data.frame(Unit = unique(experiment_times$Unit)) %>%
+  mutate(Modeled = vascr_is_modeled_unit(Unit)) %>%
+  right_join(experiment_times) %>%
+  mutate(Time = signif(Time, 4)) %>%
+  select(Modeled, Time, Experiment, Unit, Well) %>%
+  distinct() %>%
+  group_by(Experiment, Modeled, Unit, Well)
+
+
+masterdata %>% vascr_subset(unit = "R", experiment = 1, frequency = 4000) %>%
+  select(Time) %>%
+  distinct()
+}
 
 #' #' Resample ECIS data onto a constant time base
 #' #' 

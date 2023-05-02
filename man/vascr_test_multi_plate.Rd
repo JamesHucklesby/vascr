@@ -2,7 +2,75 @@
 % Please edit documentation in R/vascr_plot_plate.R
 \name{vascr_test_multi_plate}
 \alias{vascr_test_multi_plate}
-\title{Test if multiple plates are present in a dataset}
+\title{#' Plot a heatmap of a particular timepoint
+#'
+#' @param data Vascr dataset to plot
+#' @param priority Vascr priority to plot
+#' @param ... Other values to pass on to data conditioning funcions
+#' 
+#' @importFrom ggplot2 ggplot geom_tile scale_fill_gradient xlab ylab scale_x_discrete facet_wrap
+#'
+#' @return A vascr platemap of the selected data
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' 
+#' #vascr_plot_plate(growth.df, time = 100, unit = "Rb")
+#' #vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = "4000")
+#' #vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = "4000", level = "deviation")
+#' #vascr_plot_plate(growth.df, time = 100, unit = "R", frequency = 4000, level = "structure")
+#' 
+vascr_plot_plate= function(data, priority = NULL,  ...)
+{
+  
+  
+  dots = list(...)
+  
+  if(dots["level"] == "structure")
+  {
+    return(vascr_plot_structure(data))
+  }
+  
+  
+  if(dots["level"] == "deviation")
+  {
+    plot = vascr_plot_deviation(data, visualisation = "plate", priority = priority, ...)
+    plot = do.call_relevant("vascr_polish_plot", plot, dots)
+    return(plot)
+  }
+  
+  # Gather graph data based on the ...
+  dots = list(...)
+  data = do.call_relevant("vascr_prep_graphdata", data, dots)
+  
+  priority = vascr_priority(data, priority = priority)
+  
+  # Warn and fix if more than one time is selected (deal with this in a bit) -------------------------------------
+  if(var(data$Time)>0)
+  {
+    warning("More than one time point selected. This function can only plot one time point at a time. Plotting mean time point in range")
+    time = vascr_find_time(data,mean(time))
+  }
+  
+  data = vascr_explode_wells(data)
+  
+  legendtitle = vascr_titles(dots["unit"])
+  
+  plot = ggplot(data, aes_string("col", "row", fill= priority[1])) + 
+    geom_tile()  +
+    scale_fill_gradient(low="white", high="blue")+
+    xlab("Column") +
+    ylab("Row")+
+    scale_x_discrete(position = "top")+
+    facet_wrap(vars(Experiment), scales = "free_x")
+  
+  plot = plot + guides(fill=guide_legend(title=legendtitle))
+  
+  plot = do.call_relevant("vascr_polish_plot", plot, dots)
+  
+  return(plot)
+}}
 \usage{
 vascr_test_multi_plate(data)
 }

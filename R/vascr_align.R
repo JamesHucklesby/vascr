@@ -82,7 +82,8 @@ vascr_subset = function(subset.df,
   if(!is.null(unit))
   {
   units = vascr_find_unit(subset.df, unit)
-  subset.df = subset(subset.df, subset.df$Unit %in% units)
+  subset.df = subset(subset.df, subset.df$Unit %in% unique(units))
+  subset.df$Unit = factor(subset.df$Unit, unique(units))
   }
 
   
@@ -137,25 +138,9 @@ vascr_subset = function(subset.df,
   }
   
   # Sample (s) (this is second to last as it is highly CPU intensive, and therefore shoud be imposed on the smallest dataset)
-  if(!is.null(sample_contains) | !is.null(sample_not_contains) |!is.null(sample_equal_to) |!is.null(variable_set) |!is.null(variable_unset) |!is.null(variable_equal_to))
-  {
-  samples = vascr_find_sample(subset.df,   sample_contains, sample_not_contains,
-                              sample_equal_to,
-                              variable_set,
-                              variable_unset,
-                             variable_equal_to,
-                              variable_not_equal_to,
-                              variable_greater_than,
-                              variable_less_than,
-                              include_vehicle)
-  subset.df = subset(subset.df, Sample %in% samples)
-  }
+
+  subset.df = vascr_sample_subset(subset.df, sampleid)
   
-  
-  if(!is.null(sampleid))
-  {
-    subset.df = subset.df %>% filter(SampleID %in% sampleid)
-  }
   
   # Max deviation (This is last, as it is by far the most expensive operation computationally)
   if(!is.null(max_deviation))
@@ -663,17 +648,6 @@ vascr_find_time = function(data.df, time = NULL) {
     return(times)
   }
   
-  if(all(is.infinite(time)))
-  {
-    return(unique(data.df$Time))
-  }
-  
-  if(all(is.na(time)))
-  {
-    times = unique(data.df$Time)
-    return(median(times))
-  }
-  
   
   if(is.list(time))
   {
@@ -686,6 +660,20 @@ vascr_find_time = function(data.df, time = NULL) {
     
     return(times)
   }
+  
+  if(all(is.infinite(time)))
+  {
+    return(unique(data.df$Time))
+  }
+  
+  if(all(is.na(time)))
+  {
+    times = unique(data.df$Time)
+    return(median(times))
+  }
+  
+  
+
   
   if (length(time) == 2) # If a vector of length 2 was submitted (ie two times) then we subset to that
   {
@@ -1188,6 +1176,8 @@ return(samplecols.df)
 #' Title
 #'
 #' @param data.df 
+#' 
+#' @importFrom dplyr tibble left_join
 #'
 #' @return
 #' @export

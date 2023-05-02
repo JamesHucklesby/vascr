@@ -464,7 +464,7 @@ vascr_titles= function (unit, frequency = 0, prefix = "")
   if(unit == "Z") { return(paste(prefix,"Impedance \n (ohm, ", frequency," Hz)"))}
   
   # ECIS paramaters
-  if (unit == "Rb"){return (bquote(bold(atop(" ",.(prefix) ~ "Rb" ~ (Omega ~ cm ^2)))))}
+  if (unit == "Rb"){return ("Rb (ohm cm^2)")}
   if (unit == "Cm"){return (bquote(bold(atop(" ",.(prefix)~"Cm ("~mu~"F/cm"^2~")"))))}
   if (unit == "Alpha"){return (expression(bold(paste("Alpha (",ohm," cm"^2, ")"))))}
   if(unit == "RMSE") {return(paste(prefix,"Model Fit RMSE"))}
@@ -485,6 +485,139 @@ vascr_titles= function (unit, frequency = 0, prefix = "")
   
 }
 
+# data.df = growth.df %>% vascr_subset(unit = "Rb") %>%
+#   vascr_normalise(normtime = 100)
+
+#' Title
+#'
+#' @param data.df 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' data.df = growth.df %>% vascr_subset(unit = "Rb") %>% 
+#' vascr_normalise(normtime = 100)
+#' 
+#' 
+vascr_df_title = function(data.df)
+{
+  
+  keyunit = data.df$Unit %>% unique() %>% as.character()
+  keyunit = keyunit[[1]]
+  
+  keyfrequency = data.df$Frequency %>% unique() %>% as.character()
+  keyfrequency = keyunit[[1]]
+  
+  basetitle = vascr_titles(keyunit, keyfrequency)
+  
+  is_normalised = vascr_test_normalised(data.df)
+  
+  if(is_normalised)
+  {
+    basetitle = paste("Fold change in", keyunit)
+  }
+  
+  return(basetitle)
+  
+}
+
+
+
+#' Title
+#'
+#' @param string1 
+#' @param string2 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+#' 
+#' "cat" %p% "hat"
+`%p%` = function(string1, string2)
+{
+  return(paste(string1, string2, sep = ""))
+}
+
+
+#' Generate human readable versions of the unit variable for graphing
+#'
+#' @param unit The unit to submit
+#' @param frequency The frequency to submit
+#'
+#' @return An expression containing the correct data label for the unit
+#' 
+#' @keywords internal
+#'
+#' @examples
+#' 
+#' #vascr_titles("Rb")
+#' #vascr_titles("R")
+#' 
+#' 
+vascr_graph_titles= function (data.df)
+{
+  
+  unit = unique(data.df$Unit) %>% as.character()
+  frequency = unique(data.df$Frequency) %>% as.character()
+  normalised = vascr_test_normalised(data.df)
+  
+  title = unit %p% " (" %p% frequency %p% " Hz)"
+  
+  if(unit == "R" & normalised)
+  {
+    title = "**Overall resistance**<br>Ohm (" %p% frequency %p% " Hz)"
+  }
+  
+  
+  if(unit == "Rb" & normalised)
+  {
+    title = "**Cell-Cell interaciton**<br>Fold change in Rb"
+  }
+  
+  if(unit == "Cm" & normalised)
+  {
+    title = "**Membrane capacatance**<br>Fold change in Cm"
+  }
+  
+  if(unit == "Alpha" & normalised)
+  {
+    title = "**Basolateral adhesion**<br>Fold change in Alpha"
+  }
+  
+
+  return(title)
+  
+  # # Electrical quantaties
+  # if(unit == "C") { return(bquote(.(prefix)~"Capacitance ("~mu~"F "~frequency~" Hz)"))}
+  # if(unit == "R") { return(paste(prefix,"Resistance (ohm, ", frequency," Hz)"))}
+  # if(unit == "P") { return(paste(prefix,"Phase (ohm, ", frequency," Hz)"))}
+  # if(unit == "Pr") { return(paste(prefix,"Phase (radians, ", frequency," Hz)"))}
+  # if(unit == "X") { return(paste(prefix,"Reactance (ohm, ", frequency," Hz)"))}
+  # if(unit == "Z") { return(paste(prefix,"Impedance \n (ohm, ", frequency," Hz)"))}
+  # 
+  # # ECIS paramaters
+  # if (unit == "Rb"){return ("Rb (ohm cm^2)")}
+  # if (unit == "Cm"){return (bquote(bold(atop(" ",.(prefix)~"Cm ("~mu~"F/cm"^2~")"))))}
+  # if (unit == "Alpha"){return (expression(bold(paste("Alpha (",ohm," cm"^2, ")"))))}
+  # if(unit == "RMSE") {return(paste(prefix,"Model Fit RMSE"))}
+  # if(unit == "Drift") {return(paste(prefix,"Drift (%)"))}
+  # 
+  # # xCELLigence
+  # if(unit == "CI") {return("Cell Index")}
+  # 
+  # # cellZscope
+  # if(unit == "CPE_A") {return(expression(paste(prefix,"CPE_A (s"^(n-1),mu,"F/cm"^2, ")")))}
+  # if(unit == "CPE_n") {return(paste(prefix,"CPE_n"))}
+  # if(unit == "TER") {return (bquote(atop(" ",.(prefix)~"TER ("~Omega~" cm"^2~")")))}
+  # if(unit == "Ccl") {return(bquote(atop(" ",.(prefix)~C[CL]~ "("~mu~"F/cm"^2~ ")")))}
+  # if(unit == "Rmed") { return(paste(prefix,"Rmed (ohm)"))}
+  # 
+  # # If not found, return what was input
+  # return(unit)
+  
+}
 
 
 
@@ -941,10 +1074,12 @@ do.call_relevant = function(name, payload, arguments)
 #' @keywords internal
 #' 
 #' @examples
-vascr_gg_color_hue <- function(n, start = 15) {
-  hues = seq(0,365, length = n + 1)
+vascr_gg_color_hue <- function(n, start = 15, values_needed = c(1:n), l = 65, c = 100) {
+  hues = seq(0,365+start, length = n + 1)
   hues = hues + start
-  hcl(h = hues, l = 65, c = 100)[1:n]
+  hue_codes = hcl(h = hues, l = l, c = c)[1:n]
+  
+  hue_codes[values_needed] %>% as.vector()
 }
 
 
@@ -1041,5 +1176,16 @@ remove_if_exists = function(df)
   }
 }
 
+
+#' Title
+#'
+#' @param x 
+#' @param table 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+"%notin%" <- function(x, table) { match(x, table, nomatch = 0) == 0}
 
 

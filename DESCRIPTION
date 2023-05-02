@@ -12,18 +12,18 @@ LazyData: true
 RoxygenNote: 7.1.1
 Depends: R (>= 3.6)
 Imports: ggplot2, 
-        gganimate, 
         gridExtra, 
         dplyr,
-        devtools, 
         tidyr, tibble,
         stringr, 
         magrittr, 
         grid,
-        gifski, graphics, 
+        graphics, 
         stats, utils, 
         data.table, purrr, ggpubr, car, cowplot, textclean, 
-        svSocket, RODBC, tidyselect, plotly
+        svSocket, RODBC,foreach, forcats,
+        ggnewscale, mdthemes,
+        plotly,
 Suggests: 
     knitr,
     rmarkdown,

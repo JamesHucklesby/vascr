@@ -4,7 +4,12 @@
 \alias{vascr_interpolate_time}
 \title{Title}
 \usage{
-vascr_interpolate_time(data.df, npoints = 50)
+vascr_interpolate_time(
+  data.df,
+  npoints = vascr_time_samples(data.df),
+  from = min(floor(data.df$Time)),
+  to = max(ceiling(data.df$Time))
+)
 }
 \arguments{
 \item{data.df}{}

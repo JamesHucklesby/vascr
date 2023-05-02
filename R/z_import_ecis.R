@@ -19,7 +19,7 @@ ecis_calculate_quantaties = function(data.df)
   child1.df$Value = abs(child1.df$Value)
   widedata.df = tidyr::spread(child1.df, Unit, Value) %>% mutate(Frequency = as.numeric(Frequency))
   
-  # Calculate the new derrivative values
+  # Calculate the new derivative values
   widedata.df$Z = sqrt(widedata.df$X^2 + widedata.df$R^2)
   widedata.df$C = 1/(2 * pi * widedata.df$Frequency * widedata.df$X) * 10^9
   widedata.df$P = 90 - (atan(widedata.df$X/widedata.df$R)/(2 * pi) * 360)
@@ -50,6 +50,11 @@ vascr_import_map = function(sampledefine)
   
   file_content = read.csv(sampledefine)
   file_content$SampleID = c(1:nrow(file_content))
+  
+  if(colnames(file_content) %>% str_count("Well") %>% sum() ==1)
+  {
+    colnames(file_content)[1] = "Well"
+  }
   
   if("Well" %in% colnames(file_content))
   {
@@ -108,9 +113,8 @@ vascr_assign_samples = function (data, sampledefine)
   # Read in the data table created by the user
   names.df = vascr_import_map(sampledefine)
   
-  # Standardise all wells
+  # Standardize all wells
   names.df$Well = vascr_standardise_wells(names.df$Well)
-  
   
   
   #Sanity check that the user has fed the right file
@@ -120,14 +124,6 @@ vascr_assign_samples = function (data, sampledefine)
   }
 
 
-  # # Copy down the col name into each cell, separated by _
-  # for (col in colnames(names.df)[2:length(colnames(names.df))])
-  # {
-  #   names.df[[col]] = paste(names.df[[col]],col, sep ="_")
-  # }
-  # 
-  # # Unite the columns with full names
-  # names.df = names.df %>% unite(col = Sample,colnames(names.df)[2:length(colnames(names.df))], sep = " + ", remove = TRUE)
   combined.df = left_join(data, names.df, by = "Well")
   
   
@@ -172,8 +168,18 @@ vascr_assign_samples = function (data, sampledefine)
 #' #head(data1)
 #' #vascr_plot(data1, unit = "X")
 #' 
+#' rawdata = "\\\\files.auckland.ac.nz\\myhome\\Plasminogen on D3\\plg_serum\\21_11_22.abp"
+#' modeleddata = "\\\\files.auckland.ac.nz\\myhome\\Plasminogen on D3\\plg_serum\\21_11_22_RbA.csv"
+#' sampledefine = "\\\\files.auckland.ac.nz\\myhome\\Plasminogen on D3\\plg_serum\\21_11_22_key.csv"
+#'
+#'
+#'rawdata = "E:\\Vascr demo\\growth1_raw_50.abp"
+#'sampledefine = "E:\\Vascr demo\\growth1_samples.csv"
+#'
+#' 
 ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
   
+  # check the files to be imported exist and are of the correct format
   vascr_validate_file(rawdata, "abp")
   vascr_validate_file(sampledefine, c("csv", "xlsx"))
     
@@ -195,7 +201,8 @@ ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
     fulldata.df = fulldata.df %>% tidyr::separate("Data", titles, ",|=")
     
     # Clean out the row data from each well's ID
-    fulldata.df = fulldata.df %>% tidyr::separate("Index", c("TimeID", "ID"), "W")
+    
+   fulldata.df = fulldata.df %>% tidyr::separate("Index", c("TimeID", "ID"), "W")
     fulldata.df$TimeID = NULL
     
     # Find the cell correlates
@@ -288,7 +295,7 @@ ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
 #' @keywords internal
 #' 
 #' @importFrom stringr str_detect
-#' @importFrom tidyr separate gather
+#' @importFrom tidyr separate gather pivot_longer
 #' @importFrom magrittr '%>%'
 #' @importFrom utils read.csv
 #' 
@@ -309,6 +316,10 @@ ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
 #' #head(data)
 #' #vascr_plot(data, unit = "Rb", level = "wells")
 #' 
+#' modeleddata = "E:\\Vascr demo\\growth1_model_50.csv"
+#'sampledefine = "E:\\Vascr demo\\growth1_samples.csv"
+#' 
+#' # ecis_import_model(modeleddata, sampledefine)
 ecis_import_model = function(modeleddata, sampledefine, experimentname = "NA") {
   
    # Validate that the files are readable
@@ -355,57 +366,13 @@ ecis_import_model = function(modeleddata, sampledefine, experimentname = "NA") {
     data.df = data.df %>% tidyr::separate("Data", uniquenamesvector, ",", extra = "drop")
     alldata.df = rbind(cells.df, data.df)
     
-    # Save the timestamps and rename the first one something sensible
-    timestamps.df = alldata.df$`Time (hrs)_Well ID`
-    timestamps.df[1] = "Time"
-    
-    # Split the dataframes
-    alldataframes <- split.default(alldata.df, sub(x = as.character(names(alldata.df)), pattern = "\\_.*", 
-        ""))
-    
-    Alpha.df = alldataframes$Alpha
-    Cm.df = alldataframes$Cm
-    Drift.df = alldataframes$Drift
-    Rb.df = alldataframes$Rb
-    RMSE.df = alldataframes$RMSE
-    
-    # Reattach the time stamps to each dataframe
-    Alpha.df$timestamps = timestamps.df
-    Cm.df$timestamps = timestamps.df
-    Drift.df$timestamps = timestamps.df
-    Rb.df$timestamps = timestamps.df
-    RMSE.df$timestamps = timestamps.df
-    
-    rm(timestamps.df)
+    alldata.df = alldata.df[-1,]
+    colnames(alldata.df)[1] = "Time"
     
     
-    # Re-adjust the headers
-    Alpha.df = retitle(Alpha.df)
-    Cm.df = retitle(Cm.df)
-    Drift.df = retitle(Drift.df)
-    Rb.df = retitle(Rb.df)
-    RMSE.df = retitle(RMSE.df)
+    combined.df = alldata.df %>% pivot_longer(cols = -Time, values_to = "Value") %>%
+      separate(name, into = c("Unit", "Well"))
     
-    # Set the title of each unit to that of it's dataframe
-    Alpha.df$Unit = "Alpha"
-    Cm.df$Unit = "Cm"
-    Drift.df$Unit = "Drift"
-    Rb.df$Unit = "Rb"
-    RMSE.df$Unit = "RMSE"
-    
-    # Split each well into it's own line of a long format dataset
-    
-    Alpha.df = Alpha.df %>% tidyr::gather(Well, Value, -Time, -Unit)
-    Cm.df = Cm.df %>% tidyr::gather(Well, Value, -Time, -Unit)
-    Drift.df = Drift.df %>% tidyr::gather(Well, Value, -Time, -Unit)
-    Rb.df = Rb.df %>% tidyr::gather(Well, Value, -Time, -Unit)
-    RMSE.df = RMSE.df %>% tidyr::gather(Well, Value, -Time, -Unit)
-    
-    
-    # Connect the datasets together end to end
-    combined.df = rbind(Alpha.df, Cm.df, Drift.df, Rb.df, RMSE.df)
-    
-    rm(Alpha.df, Cm.df, Drift.df, Rb.df, RMSE.df, alldataframes, alldata.df)
     
     # Fix up the data types
     combined.df$Time = as.numeric(combined.df$Time)
@@ -453,7 +420,7 @@ ecis_import_model = function(modeleddata, sampledefine, experimentname = "NA") {
 #'
 #' @return A dataframe containing all the data APB generated from an experiment 
 #' 
-#' @keywords internal
+#' @export
 #'
 #' @examples
 #' 

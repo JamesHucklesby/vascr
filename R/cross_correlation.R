@@ -46,9 +46,8 @@ vascr_ccf_pairs = function(data.df, reference = NULL, comparator = NULL)
     uniquesamples = unique(deltadata$sample)
   
   
-    combinations = combn(uniquesamples, 2)
-    combinations = t(combinations)
-    combinations = as.data.frame(combinations)
+    combinations = combn(uniquesamples, 2) %>% t()
+    combinations = data.frame(combinations[,1], combinations[,2])
     
   if(!is.null(reference))
   {
@@ -85,6 +84,7 @@ vascr_ccf_pairs = function(data.df, reference = NULL, comparator = NULL)
     
   }
   
+  colnames(combinations) = c("c1", "c2")
   combinations$id = c(1:nrow(combinations))
   return(combinations)
 }
@@ -125,8 +125,10 @@ vascr_summarise_available_samples = function(data.df)
 # vascr_summarise_cross_correlation(mini2)
 vascr_summarise_cross_correlation = function(data.df, reference = NULL, comparator = NULL, manualpairs = NULL)
 {
-  
-deltadata = vascr_summarise_change(data.df)
+
+deltadata = data.df %>%
+  vascr_summarise(level = "experiments") %>%
+  mutate(sample = Sample, value = Value, time = Time)
 
 if(is.null(manualpairs))
 {
@@ -137,17 +139,26 @@ combinations = vascr_ccf_pairs(deltadata, reference, comparator)
 }
 
 coeffs =c()
+expts = c()
+s1s = c()
+s2s = c()
+ids = c()
+
+experiments  = unique(deltadata$Experiment)
+
+for(expt in experiments)
+{
 
 for(current in combinations$id)
 {
   row = subset(combinations, combinations$id == current)
   
-  s1 = row$V1
-  s2 = row$V2
+  s1 = row[[1]]
+  s2 = row[[2]]
   
   
-  t1 = subset(deltadata, deltadata$sample == s1)
-  t2 = subset(deltadata, deltadata$sample == s2)
+  t1 = subset(deltadata, deltadata$sample == s1 & deltadata$Experiment == expt)
+  t2 = subset(deltadata, deltadata$sample == s2 & deltadata$Experiment == expt)
   
   t1 = arrange(t1, time)
   t2 = arrange(t2, time)
@@ -169,17 +180,14 @@ for(current in combinations$id)
   
  correlation = vascr_ccf_vectors(v1, v2)
  coeffs = c(coeffs, correlation)
+ expts = c(expts, expt)
+ s1s = c(s1s, as.character(s1))
+ s2s = c(s2s, as.character(s2))
+ ids = c(ids, current)
+}
 }
 
-combinations$coeffs = coeffs
-combinations$sample = paste(combinations$V1, combinations$V2, sep = "\n")
-
-combinations$sample = str_replace_all(combinations$sample, "Frequency", "Hz")
-combinations$sample = str_replace_all(combinations$sample, "Instrument", "")
-combinations$sample = str_replace_all(combinations$sample, "Unit", "")
-
-ret = separate(combinations, V1 ,into = c("W1", "S1"), sep = " \\+ ", remove = FALSE)
-ret = separate(ret, V2, into = c("W2", "S2"), sep =  "\\+ ", remove = FALSE)
+ret = data.frame(id = ids, s1 = s1s, s2 = s2s, expt = expts, coeff = coeffs)
 
 return(ret)
 
@@ -225,75 +233,94 @@ return(ret)
 vascr_plot_cross_correlation = function(data.df, reference = NULL, comparator = NULL, manualpairs = NULL, show_index = NULL, plot = "all", order = TRUE)
 {
   
-deltadata = vascr_summarise_change(data.df)
-deltadata$value = replace_na(deltadata$value, 0)
-deltadata = deltadata %>% group_by(sample) %>% mutate(value = value/max(value))
+# deltadata = data.df %>% mutate(sample = Sample, value = Value)
+# deltadata = deltadata %>% group_by(sample) %>% mutate(value = value/max(value))
 
 combinations = vascr_summarise_cross_correlation(data.df, reference, comparator, manualpairs)
 
-if(isTRUE(order))
-{
-pcombinations = arrange(combinations, coeffs)
-} else
-{
-  pcombinations = combinations
-}
+# if(isTRUE(order))
+# {
+# pcombinations = arrange(combinations, coeffs)
+# } else
+# {
+#   pcombinations = combinations
+# }
+
+# pcombinaionts = combinations
+# 
+# pcombinations = mutate(pcombinations, sample=factor(sample, levels=unique(sample)))
+# 
+# if(!is.null(show_index))
+# {
+#   indexes = data.frame(pcombinations$id, pcombinations$sample, pcombinations$id %in% show_index, pcombinations$coeffs)
+#   indexes = arrange(indexes, pcombinations.id)
+#   print(indexes)
+#   
+#   pcombinations = subset(pcombinations, pcombinations$id %in% show_index)
+# }
+
+# pcombinations$W1 = NULL
+# pcombinations$S1 = NULL
+# pcombinations$W2 = NULL
+# pcombinations$S2 = NULL
+# 
+# uniquesamples = unique(c(pcombinations$s1, pcombinations$s2))
+# 
+# rainbow = vascr_gg_color_hue(length(uniquesamples))
+# 
+# colourtable = data.frame(sample = uniquesamples, colours  = rainbow)
+# 
+# deltadata$sample = factor(deltadata$sample, levels = colourtable$sample)
+# pcombinations$v1 = factor(pcombinations$s1, levels = colourtable$sample)
+# pcombinations$v2 = factor(pcombinations$s2, levels = colourtable$sample)
 
 
-pcombinations = mutate(pcombinations, sample=factor(sample, levels=sample)) 
+output = combinations %>% group_by(s1, s2) %>%
+  summarise(mean = mean(coeff), sem = sd(coeff)/sqrt(n())) %>%
+  mutate(s1 = factor(s1, unique(c(s1, s2)))) %>%
+  mutate(s2 = factor(s2, unique(c(s1, s2)))) %>%
+  mutate(joined = paste("[",s1,"]<br>[", s2,"]", sep = "")) %>%
+  ggplot() +
+  geom_errorbar(aes(xmin = mean-sem, xmax = mean+sem, y = joined, color = s2), size = 1) +
+  geom_point(aes(x = mean, y = joined, color = s1), size = 3) +
+  lims (x = c(-1,1)) +
+  md_theme_gray()
 
-if(!is.null(show_index))
-{
-  indexes = data.frame(pcombinations$id, pcombinations$sample, pcombinations$id %in% show_index, pcombinations$coeffs)
-  indexes = arrange(indexes, pcombinations.id)
-  print(indexes)
-  
-  pcombinations = subset(pcombinations, pcombinations$id %in% show_index)
-}
-
-pcombinations$W1 = NULL
-pcombinations$S1 = NULL
-pcombinations$W2 = NULL
-pcombinations$S2 = NULL
-
-uniquesamples = unique(c(pcombinations$V1, pcombinations$V2))
-
-rainbow = vascr_gg_color_hue(length(uniquesamples))
-
-colourtable = data.frame(sample = uniquesamples, colours  = rainbow)
-
-deltadata$sample = factor(deltadata$sample, levels = colourtable$sample)
-pcombinations$V1 = factor(pcombinations$V1, levels = colourtable$sample)
-pcombinations$V2 = factor(pcombinations$V2, levels = colourtable$sample)
+output
 
 
- lineplot = ggplot(deltadata, aes(x = time, y = value, group = sample)) + geom_line(aes(color = sample))
- barplot = ggplot(pcombinations, aes(x = sample, y = coeffs, color = V1, fill = V1)) + geom_col(size = 2, width = 0.8) + coord_flip() + ylim(-1,1) + xlab("CCF")
+return(output)
 
- 
- p1 = lineplot + scale_color_manual(values = colourtable$colours)
-
- p2 = barplot+ scale_fill_manual(values = colourtable$colours,
-                                 limits = colourtable$sample,
-                                 labels = colourtable$sample, name = "Treatment")+
-   scale_colour_manual(values = colourtable$colours,
-                       limits = colourtable$sample,
-                       labels = colourtable$sample , guide = "none")
- 
- p2 = p2 + theme(axis.title.y=element_blank())
- 
- if(plot == "all")
- {
- return(vascr_make_panel(p1, p2))
- }
- if(plot == "line")
- {
-   return(p1)
- }
- if(plot == "bar")
- {
-   return(p2)
- }
+ # lineplot = ggplot(deltadata, aes(x = Time, y = value, group = Sample)) + geom_line(aes(color = Sample)) #+
+ #   #geom_ribbon(aes(x = Time, ymax = value+sem, ymin = value-sem))
+ # 
+ # barplot = ggplot(pcombinations, aes(x = sample, y = coeffs, color = V1, fill = V1)) + 
+ #   geom_col(size = 2, width = 0.8) + coord_flip() + ylim(-1,1) + xlab("CCF")
+ # 
+ # 
+ # p1 = lineplot + scale_color_manual(values = colourtable$colours)
+ # 
+ # p2 = barplot+ scale_fill_manual(values = colourtable$colours,
+ #                                 limits = colourtable$sample,
+ #                                 labels = colourtable$sample, name = "Treatment")+
+ #   scale_colour_manual(values = colourtable$colours,
+ #                       limits = colourtable$sample,
+ #                       labels = colourtable$sample , guide = "none")
+ # 
+ # p2 = p2 + theme(axis.title.y=element_blank())
+ # 
+ # if(plot == "all")
+ # {
+ # return(vascr_make_panel(p1, p2))
+ # }
+ # if(plot == "line")
+ # {
+ #   return(p1)
+ # }
+ # if(plot == "bar")
+ # {
+ #   return(p2)
+ # }
  
 }
 

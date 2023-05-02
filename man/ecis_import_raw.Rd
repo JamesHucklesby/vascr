@@ -36,5 +36,11 @@ Raw data importer, generates a r dataframe from a raw ABP file
 #head(data1)
 #vascr_plot(data1, unit = "X")
 
+rawdata = "\\\\\\\\files.auckland.ac.nz\\\\myhome\\\\Plasminogen on D3\\\\plg_serum\\\\21_11_22.abp"
+modeleddata = "\\\\\\\\files.auckland.ac.nz\\\\myhome\\\\Plasminogen on D3\\\\plg_serum\\\\21_11_22_RbA.csv"
+sampledefine = "\\\\\\\\files.auckland.ac.nz\\\\myhome\\\\Plasminogen on D3\\\\plg_serum\\\\21_11_22_key.csv"
+
+
+
 }
 \keyword{internal}

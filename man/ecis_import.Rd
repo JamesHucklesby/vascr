@@ -32,4 +32,3 @@ Import all ECIS values, a child of ecis_import_raw and ecis_import_model
 #data = ecis_import(rawdata,modeled,key, experimentname = "TEST")
 #head(data)
 }
-\keyword{internal}

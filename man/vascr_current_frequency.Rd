@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_transformation.R
 \name{vascr_current_frequency}
 \alias{vascr_current_frequency}
-\title{Current aquisition rate}
+\title{Current acquisition rate}
 \usage{
 vascr_current_frequency(data.df)
 }
@@ -13,7 +13,7 @@ vascr_current_frequency(data.df)
 The current aquisition rate of the data frame
 }
 \description{
-Current aquisition rate
+Current acquisition rate
 }
 \examples{
 

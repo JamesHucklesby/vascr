@@ -4,7 +4,7 @@
 \alias{vascr_summarise_deviation}
 \title{Detect the deviation between wells and the median well}
 \usage{
-vascr_summarise_deviation(data.df, frequency = NA, unit = NA)
+vascr_summarise_deviation(data.df, frequency = NA, unit = NA, ...)
 }
 \arguments{
 \item{data.df}{A vascr dataset to process}
