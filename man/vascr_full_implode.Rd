@@ -10,6 +10,8 @@ vascr_full_implode(data.df, cols_to_implode = NULL, remove_blank = TRUE)
 \item{data.df}{The dataset to implode}
 
 \item{cols_to_implode}{The columns to implode}
+
+\item{remove_blank}{Should blank ID's be removed}
 }
 \value{
 A data frame

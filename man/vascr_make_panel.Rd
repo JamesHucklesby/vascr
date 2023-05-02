@@ -12,6 +12,8 @@ vascr_make_panel(..., plots = NULL, legend_from_index = 1, ncols = 1)
 \item{plots}{A vector of plots, if not available in ... format}
 
 \item{legend_from_index}{Which plot in the list to clone the legend from}
+
+\item{ncols}{Number of colums}
 }
 \value{
 A panel with multiple plots on it

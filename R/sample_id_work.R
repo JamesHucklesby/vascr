@@ -1,31 +1,12 @@
-#' #' Sub setting function for sample IDs
-#' #'
-#' #' @param data.df 
-#' #' @param samplelist 
-#' #'
-#' #' @return A subset data frame
-#' #' @noRd
-#' #'
-#' #' @examples
-#' 
-#' vascr_subset_sampleid = function(data.df, samplelist)
-#' {
-#'   
-#'   ided = data.df %>% select(Sample) %>% distinct() %>% mutate(SampleID = row_number()) %>% 
-#'     right_join(data.df, by = "Sample")
-#'   
-#'   toreturn = ided %>% subset(SampleID %in% samplelist)
-#'   
-#'   return(toreturn)
-#'   
-#' }
-
-# data.df = plnall2 %>%
-#   vascr_subset(unit = c("R"), frequency = 4000, time = c(-10,24)) %>%
-#   vascr_normalise(-2, divide = TRUE)
-# 
-# samplelist = c(1,2,6,4,7)
-
+#' Sub setting function for sample IDs
+#'
+#' @param data.df
+#' @param samplelist
+#'
+#' @return A subset data frame
+#' @noRd
+#'
+#' @examples
 vascr_subset_sampleid = function (data.df, samplelist){
   
   # First subset the dataset
@@ -61,7 +42,7 @@ vascr_samples = function(data.df)
     stop("SampleID not assigned")
   }
   
-  data.df %>% select(SampleID, Sample) %>% distinct() %>%  arrange(SampleID)%>%  return()
+  data.df %>% select(SampleID, Sample) %>% distinct() %>%  arrange(Sample)%>%  return()
 }
 
 #' Title
@@ -184,6 +165,9 @@ vascr_sample_replace_match = function(data.df, target, replacement = "")
 #' @export
 #'
 #' @examples
+#' 
+#' growth.df %>% vascr_plot_sampleid
+#' 
 vascr_plot_sampleid = function(data.df)
 {
   sample_setup = data.df %>% select(Sample) %>% distinct() %>% vascr_explode() %>% mutate(SampleID = row_number()) %>% select(-Sample) %>% pivot_longer(cols = -SampleID, values_transform = as.character)
@@ -255,48 +239,5 @@ vascr_vline = function(plot1, ..., list = NA)
   
 }
 
-
-
-
-#' Subset a vascr dataset by sampleID
-#'
-#' @param data.df 
-#' @param sampleid 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-vascr_sample_subset= function(data.df, sampleid = NULL)
-{
-  
-  if(is.null(sampleid))
-  {
-    return(data.df)
-  }
-  
-  if(!("SampleID" %in% colnames(data.df)))
-  {
-    data.df = vascr_assign_sampleid(data.df)
-  }
-  
-  
-  working.df = data.df %>% filter(SampleID %in% sampleid)
-  
-  target_order = tibble(order = 1:length(sampleid), SampleID = sampleid)
-  
-  working.df = working.df %>% left_join(target_order, by = "SampleID")
-  
-  working.df = working.df %>% arrange(order)
-  
-  unique(working.df$Sample)
-  
-  working.df$Sample = factor(working.df$Sample, unique(working.df$Sample))
-  
-  working.df$order = NULL
-  
-  return(working.df)
-  
-}
 
 

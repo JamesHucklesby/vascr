@@ -43,6 +43,8 @@ ecis_calculate_quantaties = function(data.df)
 #' @export
 #' 
 #' @importFrom dplyr relocate mutate
+#' @importFrom tidyr separate_rows unite
+#' 
 #'
 #' @examples
 vascr_import_map = function(sampledefine)

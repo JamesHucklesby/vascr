@@ -42,6 +42,7 @@ vascr_carry_down_names = function(data.df, cols_to_carry = NULL, remove_blank = 
 #'
 #' @param data.df The dataset to implode
 #' @param cols_to_implode The columns to implode
+#' @param remove_blank Should blank ID's be removed
 #'
 #' @return A data frame
 #' @export
@@ -316,92 +317,6 @@ vascr_summarise_change = function(data.df, showblank = FALSE)
 
 
 
-
-#' Reconstitute incorrectly formed sample field
-#' 
-#' Uses string processing to guess what might be in an incorrectly formed string field to try and save things. It is generally better to go back and fix the import file than use this function. Legacy only as this is a very heavy function as it does tonnes of string maniuplations.
-#'
-#' @param string The string to be converted to a continuous vector
-#'
-#' @return A CSV separated list of continuous variables
-#' 
-#' @importFrom stringr str_length str_split
-#' @importFrom purrr as_vector
-#' 
-#' @keywords internal
-#'
-#' @examples
-#' #vascr_reconstitute_sample("1nm cheese + 1nm cars")
-#' #vascr_reconstitute_sample("   5,000.939 nM Oranges")
-#' #vascr_reconstitute_sample("35,000 cells")
-#' 
-vascr_reconstitute_sample = function(string)
-{
-  
-  samples = str_split(string, "[+]")
-  samples = as_vector(samples)
-  
-  samplestack = c()
-  
-  for(sample in samples)
-  {
-    
-    sample = trimws(sample)
-    
-    string2 = gsub(",", "", sample)     #Remove commas from numbers
-    string3 = paste( "#", string2, "#") #Add protective filler so we can strip off end characters later
-    string3.5 = gsub("[^0-9.-]", "#", string3) # Replace everything non-numeric with #'s 
-    string4 = vascr_collapse_hash(string3.5) # Remove duplicate #'s
-    string5 = substr(string4, 2, str_length(string4)-1) # Remove the protective #'s we added earlier
-    string6 = gsub("#", ",", string5) # Switch out the # for a , to be standard
-    
-    title1 = sample # Make a copy of the string
-    title1.5 = trimws(title1) # Trim off any leading or trailing white spaces. We can't just strip the lot as some will be in titles and we want to conserve these
-    title2 = gsub("[,:_*-]","#",title1.5) # Hash out any deliniators that might be used
-    title2.5 = paste( "#", title2, "#", sep = "") # Add protective endplates
-    title4 = gsub("[0-9.]", "#", title2.5) # Hash out all numbers, as these are effectivley deliniators
-    title4.6 = gsub("# ", "#", title4) # Remove any spaces between hashes, as they delineate nothing
-    title4.6 = gsub("# ", "#", title4) # Repeat a few times for completeness
-    title4.6 = gsub("# ", "#", title4) # Finish the job hash space job
-    title4.7 = gsub(" #", "#", title4.6) # Finish the job hash space job
-    title4.7 = gsub(" #", "#", title4.7) # Finish the job hash space job
-    title4.7 = gsub(" #", "#", title4.7) # Finish the job hash space job
-    title5 = vascr_collapse_hash(title4.7) # Itterativley delete all the hashes
-    title6 = substr(title5, 2, str_length(title5)-1) # Remove the protective #'s we added earlier
-    title7 = gsub("#", ",", title6) # Switch out the # for a , to be standard
-    
-    samplestack = c(samplestack, (paste(string6, title7, sep = "_")))
-  }
-  
-  return(paste(samplestack, collapse = " + "))
-}
-
-#' Collapse multiple hashes in a string down to a single hash
-#'
-#' @param string The string to collapse the hashes in
-#'
-#' @return A string with hashes collapsed
-#' 
-#' @keywords internal
-#'
-#' @examples
-#' #vascr_collapse_hash("###cat###andthe##hat####")
-#' 
-#' 
-vascr_collapse_hash = function(string)
-{
-  tempstring = "" # setup a placeholer to keep track of if the optimisation is still doing something
-  
-  while(!identical(tempstring,string)) # Itterate, removing all duplicate #'s
-  {
-    tempstring = string
-    string = gsub("##", "#", string)
-  }
-  
-  return(string)
-  
-}
-
 #' Return the exploded cols in a dataset
 #'
 #' @param data The ECIS dataset with exploded columns
@@ -513,13 +428,18 @@ vascr_cols  = function(data, set = "core")
 
 #' Title
 #'
-#' @param data.df 
-#' @param time 
+#' @param data.df The data frame to use
+#' @param time The time to set to zero
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#' zeroed = growth.df %>% vascr_subset(unit = "R", frequency = "4000") %>%
+#'           vascr_zero_time(100)
+#'           
+#' zeroed %>% vascr_plot_line()
+#' 
 vascr_zero_time = function(data.df, time = 0)
 {
   if(vascr_is_resampled(data.df))

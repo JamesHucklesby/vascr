@@ -12,3 +12,8 @@ vascr_plot_sampleid(data.df)
 \description{
 Title
 }
+\examples{
+
+growth.df \%>\% vascr_plot_sampleid
+
+}

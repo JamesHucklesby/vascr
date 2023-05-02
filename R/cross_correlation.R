@@ -30,7 +30,8 @@ vascr_ccf_vectors = function(v1, v2, plot = FALSE)
 #' @param type 
 #'
 #' @return
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 # growthrb = vascr_subset(growth.df, unit = "Rb", time = c(5,150))

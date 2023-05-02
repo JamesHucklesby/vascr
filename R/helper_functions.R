@@ -89,10 +89,10 @@ find_priority = function(priority, data_vector)
 
 #' Title
 #'
-#' @param data_vector 
+#' @param data_vector A vector of data to calculate the locked median of
 #'
 #' @return
-#' @export
+#' @keywords internal
 #'
 #' @examples
 locked_median = function(data_vector)
@@ -526,8 +526,8 @@ vascr_df_title = function(data.df)
 
 #' Title
 #'
-#' @param string1 
-#' @param string2 
+#' @param string1 First string
+#' @param string2 Second string
 #'
 #' @return
 #' @export

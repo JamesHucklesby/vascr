@@ -7,8 +7,9 @@
 locked_median(data_vector)
 }
 \arguments{
-\item{data_vector}{}
+\item{data_vector}{A vector of data to calculate the locked median of}
 }
 \description{
 Title
 }
+\keyword{internal}

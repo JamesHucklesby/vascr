@@ -342,12 +342,15 @@ vascr_current_frequency = function (data.df)
 #'
 #' @param data.df 
 #' @param npoints 
+#' @param from Time to start interpolation at
+#' @param to Time to end interpolation at
 #' 
 #' @importFrom stats approx
 #' @importFrom dplyr summarise rename ungroup mutate group_by
 #'
 #' @return
-#' @export
+#' 
+#' @keywords internal
 #'
 #' @examples
 #' # data.df = ecis1 %>% vascr_subset(time = c(1,2), unit = "R", frequency = 4000, well = c("D01", "D02", "D03"))

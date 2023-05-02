@@ -137,6 +137,8 @@ vascr_detect_max_deviation = function(data.df, max_deviation = 0, frequency = 40
 #' @importFrom stats reorder
 #' @importFrom gridExtra grid.arrange
 #' @importFrom grid unit.c
+#' @importFrom ggpubr get_legend
+#' @importFrom patchwork plot_layout
 #'
 #' @examples
 #' #grid = vascr_plot_deviation(growth.df)

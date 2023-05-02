@@ -23,6 +23,8 @@ vascr_import(
 \item{key}{Key file, containing data on which well contains what data}
 
 \item{experimentname}{Name to assign to the experiment}
+
+\item{password}{The password for protected xCELLigence files}
 }
 \value{
 A full vascr dataset

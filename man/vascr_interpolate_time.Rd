@@ -15,6 +15,10 @@ vascr_interpolate_time(
 \item{data.df}{}
 
 \item{npoints}{}
+
+\item{from}{Time to start interpolation at}
+
+\item{to}{Time to end interpolation at}
 }
 \description{
 Title
@@ -25,3 +29,4 @@ Title
 # to = 0.5767
 
 }
+\keyword{internal}

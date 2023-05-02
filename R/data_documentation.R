@@ -76,6 +76,7 @@ utils::globalVariables(c("name","Type","SampleID"))
 #' @keywords internal
 #' @export
 #' @importFrom magrittr %>%
+#' @importFrom rlang .data
 #' @usage lhs \%>\% rhs
 NULL
 

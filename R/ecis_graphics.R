@@ -226,6 +226,7 @@ vascr_multiplot = function(data, unit = "all", frequency = 0, time = Inf, ...)
 #' @param ... The plots that need to be combined
 #' @param plots A vector of plots, if not available in ... format
 #' @param legend_from_index Which plot in the list to clone the legend from
+#' @param ncols Number of colums
 #' 
 #' @importFrom gridExtra arrangeGrob grid.arrange
 #' @importFrom ggplot2 ggplotGrob theme

@@ -7,9 +7,9 @@
 string1 \%p\% string2
 }
 \arguments{
-\item{string1}{}
+\item{string1}{First string}
 
-\item{string2}{}
+\item{string2}{Second string}
 }
 \description{
 Title

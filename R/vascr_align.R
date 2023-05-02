@@ -139,7 +139,10 @@ vascr_subset = function(subset.df,
   
   # Sample (s) (this is second to last as it is highly CPU intensive, and therefore shoud be imposed on the smallest dataset)
 
-  subset.df = vascr_sample_subset(subset.df, sampleid)
+  if(!is.null(sampleid))
+  {
+   subset.df = vascr:::vascr_subset_sampleid(subset.df, sampleid)
+  }
   
   
   # Max deviation (This is last, as it is by far the most expensive operation computationally)
