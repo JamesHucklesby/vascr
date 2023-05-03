@@ -141,7 +141,7 @@ vascr_subset = function(subset.df,
 
   if(!is.null(sampleid))
   {
-   subset.df = vascr:::vascr_subset_sampleid(subset.df, sampleid)
+   subset.df = vascr_subset_sampleid(subset.df, sampleid)
   }
   
   

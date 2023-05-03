@@ -251,6 +251,7 @@ vascr_detect_level = function(data)
 #' @param subset What to strip off. Default is all, more options to come.
 #' 
 #' @importFrom stringr str_trim
+#' @importFrom dplyr any_of
 #'
 #' @return A dataset containing only the core ECIS columns
 #' 
@@ -963,7 +964,7 @@ vascr_combine = function(..., resample = FALSE) {
   if(isTRUE(resample))
   {
     frequency = vascr_current_frequency(alldata)
-    alldata = vascr_resample(alldata, frequency, min(alldata$Time), max(alldata$Time))
+    alldata = vascr_resample_time(alldata, frequency, min(alldata$Time), max(alldata$Time))
   }
   
   

@@ -22,10 +22,6 @@
 # 
 # # Show that the re-created data is identical to the original dataset
 # # all.equal(growth.df, processed)
-
-# data = growth.df
-
-#' 
 vascr_explode = function(data)
 {
   # Clean out any existing explosion data to give a clean slate

@@ -22,11 +22,12 @@ vascr_test_exploded = function(data.df)
 
 
 
-#' Title
+#' Test if a dataframe is normalised
 #'
-#' @param data.df 
+#' @param data.df A vascr dataframe
 #'
-#' @return
+#' @return TRUE if normalised, FALSE if not
+#' 
 #' @export
 #' 
 #' @importFrom dplyr group_by
@@ -151,7 +152,7 @@ vascr_test_design = function(data.df, verbose = FALSE)
 #'
 #' @return A vector of the well names that are missing from the dataset
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 vascr_missing_wells = function(wells)
@@ -169,14 +170,17 @@ vascr_missing_wells = function(wells)
 }
 
 
-#' Title
+#' Check if the dataset is resampled
 #'
-#' @param dataset 
+#' @param dataset the dataset to process
 #'
-#' @return
+#' @return boolean, if the dataset is resampled or not
+#' 
 #' @export
 #'
 #' @examples
+#' vascr_test_resampled(growth.df)
+#' 
 vascr_test_resampled = function(dataset)
 {
   timebases = dataset %>% group_by(across(c(-Value, -Time))) %>% summarise(times = sum(Time^2), .groups = "keep") %>% ungroup() %>% select(times) %>% distinct() %>% nrow()

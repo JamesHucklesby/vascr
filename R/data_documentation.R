@@ -31,6 +31,7 @@ utils::globalVariables(c("name","Type","SampleID"))
 #'   \item{Experiment}{Date the experiment was conducted}
 #'   \item{Frequency}{Frequency of colleciton, modeled units have a frequency of 0}
 #'   \item{Sample}{Name of the sample located in that well, formated in a standardised way}
+#'   \item{SampleID}{Numeric number of the sample}
 #'   \item{Time}{Capture time in hours since the start of the experiment}
 #'   \item{Unit}{Unit that the value is measured in}
 #'   \item{Value}{Numerical value in units}

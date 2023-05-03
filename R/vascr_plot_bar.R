@@ -27,7 +27,7 @@
 #' 
 #' #vascr_plot_bar(growth.df, frequency = 4000, unit = "R", time = 50, confidence = 0.5)
 
-vascr_plot_bar = function(data, priority = NULL, error = Inf, confidence = NULL, ...)
+vascr_plot_bar = function(data, error = Inf, confidence = NULL, ...)
 {
 
   # Gather graph data based on the ...
@@ -171,7 +171,6 @@ vascr_plot_bar = function(data, priority = NULL, error = Inf, confidence = NULL,
 #' #vascr_plot_bar(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45)
 #' #vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45)
 #' 
-
 vascr_plot_bar_anova = function(data.df ,priority = NULL ,confidence = 0.95, time, unit, frequency, format = toplot, error = Inf, ...)
 {
   

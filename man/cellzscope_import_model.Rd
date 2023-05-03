@@ -23,7 +23,7 @@ Imports modeled data previously exported from the cellZscope package. Will not a
 #model = system.file("extdata/mdckmodel.txt", package = "vascr")
 #key = system.file("extdata/mdckkey.csv", package = "vascr")
 
-#output = cellzscope_import_model(model, key)
+#output = cellzscope_import_model(model, key, "TEST")
 #output = vascr_subset(output, time = c(0,50))
 #vascr_plot(output, unit = "TER", frequency = 0,replication = "wells")
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/vascr_anova_new.R
 \name{vascr_plot_anova}
 \alias{vascr_plot_anova}
-\title{Make a display with all the anova analyasis pre-conducted}
+\title{Make a display with all the anova analysis pre-conducted}
 \usage{
 vascr_plot_anova(data.df, unit, frequency, time, priority = NULL, ...)
 }
@@ -23,7 +23,7 @@ vascr_plot_anova(data.df, unit, frequency, time, priority = NULL, ...)
 A matrix of different ANOVA tests
 }
 \description{
-Make a display with all the anova analyasis pre-conducted
+Make a display with all the anova analysis pre-conducted
 }
 \examples{
 

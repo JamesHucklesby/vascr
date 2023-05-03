@@ -2,7 +2,7 @@
 % Please edit documentation in R/vascr_anova_new.R
 \name{vascr_plot_anova_bar_reference}
 \alias{vascr_plot_anova_bar_reference}
-\title{Title}
+\title{Make a bar graph with ANOVA stars annotated against a set reference}
 \usage{
 vascr_plot_anova_bar_reference(
   data.df,
@@ -14,16 +14,21 @@ vascr_plot_anova_bar_reference(
 )
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{a vascr dataframe}
 
-\item{unit}{}
+\item{unit}{the unit to use}
 
-\item{frequency}{}
+\item{frequency}{the frequency to use}
 
-\item{time}{}
+\item{time}{the time to use for the bar plot and ANOVA}
 
-\item{reference}{}
+\item{reference}{SampleID of the sample to use as the reference for statistical analysis}
 }
 \description{
-Title
+Make a bar graph with ANOVA stars annotated against a set reference
+}
+\examples{
+
+vascr_plot_anova_bar_reference(growth.df, "R", 4000, 48)
+
 }

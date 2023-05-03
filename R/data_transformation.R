@@ -2,10 +2,10 @@
 
 #' Title
 #'
-#' @param set 
+#' @param set the set of variables to return
 #'
 #' @return
-#' @keywords internal- /py
+#' @noRd
 #'
 #' @examples
 vascr_levels = function(set = "all")
@@ -21,20 +21,22 @@ vascr_levels = function(set = "all")
 }
 
 
-# level = c("well", "explode")
-# 
-# vascr_summarise(growth.df, "summary")
-
-#' Title
+#' Summarise a vascr data set down to a particular level
 #'
-#' @param data.df 
-#' @param level 
+#' @param data.df Data set to summarize
+#' @param level Level to summarise to, either "summary", "experiment" or "wells"
 #'
-#' @return
+#' @return The summarized data set
+#' 
+#' @importFrom stringr str_length
+#' 
 #' @export
 #'
 #' @examples
+#' 
 #' vascr_summarise(growth.df, level = "summary")
+#' vascr_summarise(growth.df, level = "experiment")
+#' vascr_summarise(growth.df, level = "wells")
 #' 
 vascr_summarise = function(data.df, level = "wells")
 {
@@ -76,7 +78,7 @@ vascr_summarise = function(data.df, level = "wells")
 #' 
 #' @importFrom dplyr n
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 # vascr_summarise_experiments(data.df = growth.df)
@@ -115,7 +117,7 @@ vascr_summarise_experiments = function(data.df)
 #' 
 #' @importFrom dplyr group_by summarise
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 vascr_summarise_summary = function(data.df)
@@ -149,7 +151,7 @@ vascr_summarise_summary = function(data.df)
 
 
 
-# Normalisation function --------------------------------------------------
+# Normalization function --------------------------------------------------
 
 #' Normalise ECIS data to a single time point
 #' 
@@ -350,7 +352,7 @@ vascr_current_frequency = function (data.df)
 #'
 #' @return
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # data.df = ecis1 %>% vascr_subset(time = c(1,2), unit = "R", frequency = 4000, well = c("D01", "D02", "D03"))
@@ -476,32 +478,32 @@ vascr_is_resampled = function(data.df)
 
 
 
-#' Title
-#'
-#' @param data.df 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-vascr_sync_time = function(data.df)
-{
-
-experiment_times = masterdata %>% select(Time, Unit, Experiment, Well) %>% distinct()
-
-data.frame(Unit = unique(experiment_times$Unit)) %>%
-  mutate(Modeled = vascr_is_modeled_unit(Unit)) %>%
-  right_join(experiment_times) %>%
-  mutate(Time = signif(Time, 4)) %>%
-  select(Modeled, Time, Experiment, Unit, Well) %>%
-  distinct() %>%
-  group_by(Experiment, Modeled, Unit, Well)
-
-
-masterdata %>% vascr_subset(unit = "R", experiment = 1, frequency = 4000) %>%
-  select(Time) %>%
-  distinct()
-}
+#' #' Title
+#' #'
+#' #' @param data.df 
+#' #'
+#' #' @return
+#' #' @export
+#' #'
+#' #' @examples
+#' vascr_sync_time = function(data.df)
+#' {
+#' 
+#' experiment_times = masterdata %>% select(Time, Unit, Experiment, Well) %>% distinct()
+#' 
+#' data.frame(Unit = unique(experiment_times$Unit)) %>%
+#'   mutate(Modeled = vascr_is_modeled_unit(Unit)) %>%
+#'   right_join(experiment_times) %>%
+#'   mutate(Time = signif(Time, 4)) %>%
+#'   select(Modeled, Time, Experiment, Unit, Well) %>%
+#'   distinct() %>%
+#'   group_by(Experiment, Modeled, Unit, Well)
+#' 
+#' 
+#' masterdata %>% vascr_subset(unit = "R", experiment = 1, frequency = 4000) %>%
+#'   select(Time) %>%
+#'   distinct()
+#' }
 
 
 
@@ -520,14 +522,14 @@ masterdata %>% vascr_subset(unit = "R", experiment = 1, frequency = 4000) %>%
 #'
 #' @return A vascr dataset subsampled on a continuous variable
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # Sub code for breaking out continuous datasets
 #' #exploded = vascr_explode(xcell)
 #' #subset = vascr_subset_continuous(exploded, continuous = "ATP", strip_empty = FALSE)
 #' #vascr_plot(exploded, unit = "CI", frequency = "10000", replication = "experiments"
-#' # , normtime = 160, continuouscontains = "ATP")
+#' # normtime = 160, continuouscontains = "ATP")
 #'
 #'
 vascr_subset_continuous = function(data, continuous, exact_match = FALSE, strip_empty = TRUE, implode = TRUE)

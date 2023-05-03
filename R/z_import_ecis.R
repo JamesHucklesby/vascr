@@ -9,7 +9,7 @@
 #'
 #' @param data.df The dataset to calculate from
 #' 
-#' @keywords internal
+#' @noRD
 #'
 #' @return An ecis data frame, with calculated values included
 ecis_calculate_quantaties = function(data.df)
@@ -434,7 +434,7 @@ ecis_import_model = function(modeleddata, sampledefine, experimentname = "NA") {
 #' 
 #' #data = ecis_import(rawdata,modeled,key, experimentname = "TEST")
 #' #head(data)
-ecis_import = function(rawdata, modeled, key, experimentname = "NA") {
+ecis_import = function(rawdata = NULL, modeled = NULL, key = NULL, experimentname = "NA") {
   
   # Validate files exist and are correct. Will be done in the internal functions, but doing it here saves time on failure
   vascr_validate_file(rawdata, "abp")

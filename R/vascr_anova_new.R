@@ -1,68 +1,110 @@
-#' Prep data for statistical analyasis
-#'
-#' @param data.df The dataset to analyse
+#' Make a dataframe of what is statistically significant
+#' 
+#' @param data.df The dataframe to analyse
+#' @param time The time to analyse
 #' @param unit The unit to analyse
-#' @param frequency Frequency to use
-#' @param time  Timepoint to use
+#' @param frequency The frequency to analyse
+#' @param confidence The confidence level to analyse - default is 0.95
+#' @param format The format to return the data frame in
+#' 
+#' @importFrom stats aov lm TukeyHSD symnum
+#' @importFrom data.table setDT
+#' @importFrom tidyr separate
+#' @importFrom stringr str_c
+#' @importFrom magrittr "%>%"
 #'
-#' @return A conditioned vascr dataset
-#' @keywords internal
+#' @return A table of what is significant
+#' @export
 #'
 #' @examples
-#' #vascr_prep_statdata(growth.df, "R", 4000, 100)
+#' #vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95)
+#' #vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95, format = "Tukey_data")
 #' 
-vascr_prep_statdata = function(data.df, unit, frequency, time)
+vascr_make_significance_table = function(data.df, time, unit, frequency, priority, confidence = 0.95, format = "toplot")
 {
-# Round the number given to the function to the nearest actual measurement
-timetouse = vascr_find_time(data.df, time)
-
-# Cut the dataset down to a useable size (IE, only pull out the timepoint we want to analyse)
-filtered.df = data.df
-filtered.df = vascr_subset(filtered.df, unit = unit, frequency = frequency, time = timetouse, remake_name = FALSE)
-
-return(filtered.df)
-}
-
-
-#' Prep priority for statistical data
-#'
-#' @param data.df The dataset to use
-#' @param priority Manual priority (if set)
-#'
-#' @return A priority list for use in a vascr dataset
-#' 
-#' @keywords internal
-#'
-#' @examples
-#' #vascr_prep_stat_priority(growth.df)
-vascr_prep_stat_priority = function(data.df,priority = NULL)
-{
-  priority = vascr_priority(data = data.df, explicit = "Value", priority = priority)
   
- if (length(priority)<2)
+  data.df = vascr_subset(data.df, unit = unit, time = time, frequency = frequency, remake_name = FALSE)
+  
+  data.df$Sample = str_replace(data.df$Sample, "-", "~")
+  
+  data.df = ungroup(data.df)
+  
+  # What is the effect of the treatment on the value ?
+  lm = vascr_lm(data.df, unit, frequency, time)
+  
+  data.df$Sample = factor(data.df$Sample, unique(data.df$Sample))
+  ANOVA = Anova(lm, type = "III")
+  
+  
+  # Tukey test to study each pair of treatment :
+  tukeyanova = aov(lm)
+  TUKEY <- TukeyHSD(x=tukeyanova)
+  
+  # Tuckey test representation :, shouldn't be included here
+  #plot(TUKEY , las=1 , col="brown")
+  
+  # Extract labels and factor levels from Tukey post-hoc 
+  Tukey.levels <- TUKEY[[2]][] # pull out the tukey significance levels
+  Tukey.labels <- data.frame(Tukey.levels)
+  
+  Tukey.labels$Samplepair = rownames(Tukey.labels)
+  
+  Tukey.labels = Tukey.labels %>% separate(Samplepair, c("A", "B"), sep = "-")
+  
+  Tukey.labels$Tukey.level = Tukey.labels$p.adj
+  
+  Tukey.labels$Significance <- symnum(Tukey.labels$Tukey.level, corr = FALSE, na = FALSE, 
+                                      cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 
+                                      symbols = c("***", "**", "*", ".", " "))
+  
+  if (format == "Tukey_data")
   {
-    ## TODO One Way
-    error("Priority must be at least 2 values long for a 2 way ANOVA. One way not yet supported")
+    
+    return(Tukey.labels)
   }
-  return(priority)
+  else if (format == "toplot")
+  {
+    
+    #Generate a list of all the row names
+    alllabels = c(Tukey.labels$A, Tukey.labels$B)
+    alllabels = unique(data.df$Sample) %>% as.character()
+    
+    # Reformat for graphics
+    # Tukey.labels = subset(Tukey.labels, Tukey.levels<(1-confidence))
+    
+    
+    
+    sources = c()
+    sinks = c()
+    
+    Tukey.labels$Asig = paste(Tukey.labels$A, Tukey.labels$Significance)
+    Tukey.labels$Bsig = paste(Tukey.labels$B, Tukey.labels$Significance)
+    
+    for(label in alllabels)
+    {
+      sink1 = subset(Tukey.labels, B == label) %>% mutate(samp = A, lab = Asig, source = B) %>% select(samp, lab, source)
+      sink2 = subset(Tukey.labels, A == label) %>% mutate(samp = B, lab = Bsig, source = A) %>% select(samp, lab, source)
+      sink = rbind(sink1, sink2)
+      sink = sink %>% mutate(samp = factor(samp, alllabels)) %>% arrange(samp) %>% mutate(samp = as.character(samp))
+      sinktext = str_c("",sink$lab, collapse = "\n")
+      sources = append(sources, unique(sink$source))
+      sinks = append(sinks, sinktext)
+      
+    }
+    
+    labeltable = data.frame("Sample" = alllabels, "Label" = sinks)
+    
+    labeltable
+    
+    return(labeltable)
+  }
+  else
+  {
+    warning("Unknown output format. Check and try again")
+  }
+  
 }
 
-
-#' Generate an anova formula
-#'
-#' @param priority The priority to use
-#'
-#' @return An ANOVA formula
-#' 
-#' @keywords internal
-#'
-#' @examples
-#' # vascr_formula(c("cells","well"))
-vascr_formula = function(priority)
-{
-  formula = paste(priority[[1]]," ~ ",priority[[3]]," + ", priority[[2]])
-  return(formula)
-}
 
 #' Generate a linear model of vascr data
 #'
@@ -204,7 +246,7 @@ vascr_shapiro = function(data.df, unit, frequency, time, priority = NULL)
 #' 
 vascr_plot_normality = function(data.df, unit, frequency, time, priority = NULL)
 {
-  data = vascr_prep_statdata(data.df, unit, frequency, time)
+  data = vascr_subset(data.df, unit = unit, frequency = frequency, time = time)
   aov_residuals = vascr_residuals(data, unit, frequency, time, priority)
   
   filtered.df = data
@@ -245,7 +287,7 @@ vascr_plot_normality = function(data.df, unit, frequency, time, priority = NULL)
 #' 
 vascr_levene = function(data.df, unit, frequency, time, priority = NULL)
 {
-  data.df = vascr_prep_statdata(data.df, unit, frequency, time)
+  data.df = vascr_subset(data.df, unit = unit, frequency = frequency, time = time)
   fpriority = vascr_priority(data.df, priority)
   
   leveneformula = paste("Value ~ ",fpriority[[2]]," * ", fpriority[[3]])
@@ -309,7 +351,7 @@ vascr_plot_levene = function(data.df, unit, frequency, time, priority = NULL)
 #' @param frequency Frequency to plot
 #' @param time Time to plot
 #' @param priority Vascr priority list. Blank will use the baked in default.
-#' @param ... Other arguements to be passed on to vascr_plot_line
+#' @param ... Other arguments to be passed on to vascr_plot_line
 #'
 #' @importFrom ggplot2 geom_vline
 #'
@@ -334,7 +376,6 @@ vascr_plot_time_vline = function(data.df, unit, frequency, time, priority = NULL
     
     timeplot = timeplot + geom_vline(xintercept = timetouse, color = "blue")
     timeplot = timeplot + labs(title = "A) Timepoint selected")
-    timeplot = vascr_polish_plot(timeplot)
   
     return(timeplot)
 }
@@ -376,7 +417,7 @@ return(overallplot)
 }
 
 
-#' Make a display with all the anova analyasis pre-conducted
+#' Make a display with all the anova analysis pre-conducted
 #'
 #' @param data.df vascr dataset to plot
 #' @param unit unit to plot
@@ -388,6 +429,7 @@ return(overallplot)
 #' @return A matrix of different ANOVA tests
 #' 
 #' @importFrom cowplot plot_grid
+#' @importFrom ggtext element_markdown
 #' 
 #' @keywords internal
 #'
@@ -404,7 +446,7 @@ timeplot = vascr_plot_time_vline(data.df, unit, frequency, time, priority) + lab
 
 overallplot = vascr_plot_box_replicate(data.df, unit, frequency, time, priority) + labs(y = "Resistance  
                                                                                   (ohm, 4000 Hz)") + mdthemes::md_theme_grey() +
-  scale_color_manual(values=wes_palette(n=3, name="FantasticFox1"))
+  scale_color_manual(values=c("orange", "blue", "green"))
 
 qqplot = vascr_plot_qq(data.df, unit, frequency, time, priority)
 normaloverlayplot = vascr_plot_normality(data.df, unit, frequency, time, priority)
@@ -485,10 +527,10 @@ vascr_tukey = function(data.df, unit, frequency, time, priority = NULL, raw = FA
 
 vascr_summarise_anova = function(data.df, unit, frequency, time, priority = NULL)
 {
-  data21.df = vascr_prep_statdata(data.df, unit, frequency, time)
+  data21.df = vascr_subset(data.df, unit = unit, frequency = frequency, time = time)
   filledpriority = vascr_priority(data = data21.df, priority)
   
-  model = vascr_formula(c("Value", "Experiment","Sample"))
+  formula = "Value ~ Experiment + Sample"
   
   newlm = lm(Value~ Experiment + Sample,
              contrasts=list(Sample='contr.sum', Experiment ='contr.sum'), data = data21.df)
@@ -568,18 +610,23 @@ return(sigplot)
 
 
 
-#' Title
+#' Make a bar graph with ANOVA stars annotated against a set reference
 #'
-#' @param data.df 
-#' @param unit 
-#' @param frequency 
-#' @param time 
-#' @param reference 
+#' @param data.df a vascr dataframe
+#' @param unit the unit to use
+#' @param frequency the frequency to use
+#' @param time the time to use for the bar plot and ANOVA
+#' @param reference SampleID of the sample to use as the reference for statistical analysis
+#' 
+#' @importFrom mdthemes md_theme_gray
 #'
 #' @return
 #' @export
 #'
 #' @examples
+#' 
+#' vascr_plot_anova_bar_reference(growth.df, "R", 4000, 48)
+#' 
 vascr_plot_anova_bar_reference = function(data.df, unit, frequency, time, reference = min(data.df$SampleID), breaklines = TRUE)
 {
 
@@ -613,10 +660,6 @@ vascr_plot_anova_bar_reference = function(data.df, unit, frequency, time, refere
   
    reference_name = ((data2.df %>% filter(SampleID == reference) %>% select(SampleID, Sample) %>% distinct) %>% mutate(Sample = as.character(Sample)))[[2]]
     
-    
-    # vascr_resample_time() %>%
-    # normalise_experimental_sample(c(1,2), time) %>%
-    # mutate(Sample = factor(Sample, rawsamples))
 
   unique(pd1r3$Experiment)
 
@@ -653,47 +696,6 @@ vascr_plot_anova_bar_reference = function(data.df, unit, frequency, time, refere
 
   
   return(summdata)
-  
- #  ### Potential overarching lines
- # 
- #  summdata
- #  
- #  significance_2 = data.df %>% vascr_tukey(unit = unit, frequency = frequency, time = time, raw = FALSE) %>%
- #    left_join(ids, by = c("A"="Sample")) %>% mutate(SampleA = SampleID, SampleID = NULL) %>%
- #    left_join(ids, by = c("B"="Sample")) %>% mutate(SampleB = SampleID, SampleID = NULL) %>%
- #    filter(Tukey.level<0.05)
- #  
- #  ypos = 1.1
- #  
- #  
- #  
- #  overlaya = data.frame(Sample = data.df$Sample %>% unique() %>% sort())
- #  overlaya$rowA = c(1:nrow(overlay))
- #  overlaya$A = overlay$Sample %>% as.character()
- #  overlaya = overlaya %>% mutate(Sample = NULL)
- #  
- #  overlayb = data.frame(Sample = data.df$Sample %>% unique() %>% sort())
- #  overlayb$rowB = c(1:nrow(overlayb))
- #  overlayb$B = overlay$Sample %>% as.character()
- #  overlayb = overlayb %>% mutate(Sample = NULL)
- #  
- #  significance_2 = significance_2 %>% left_join(overlaya) %>% left_join(overlayb) %>% mutate(rownum = c(1:nrow(significance_2))) %>% mutate(yoffset = rownum*0.1 + 1)
- #  
- # 
- #  
- # pd1r4 %>% vascr_summarise("summary") %>%
- #    ggplot() +
- #    geom_col(aes(x = Sample, y = Value)) +
- #    geom_errorbar(aes(x = Sample, ymin = Value - sem, ymax = Value + sem)) +
- #    geom_text(aes(x = Sample, label = Significance), y = ymaxval ,data = significance) +
- #    md_theme_gray()+
- #    theme(legend.position = "none") +
- #    labs(x = "Plasmin (nM)") +
- #    geom_point(aes(x = Sample, y = Value, color = Sample), data = pd1r4) +
- #    annotate("segment", x = significance_2$A, xend = significance_2$B, y =significance_2$yoffset, yend = significance_2$yoffset) +
- #    annotate("label", label = significance_2$Significance, x = (as.numeric(significance_2$rowA) + as.numeric(significance_2$rowB))/2, y = significance_2$yoffset)
-
-
 
 }
 

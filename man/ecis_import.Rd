@@ -4,7 +4,7 @@
 \alias{ecis_import}
 \title{Import all ECIS values, a child of ecis_import_raw and ecis_import_model}
 \usage{
-ecis_import(rawdata, modeled, key, experimentname = "NA")
+ecis_import(rawdata = NULL, modeled = NULL, key = NULL, experimentname = "NA")
 }
 \arguments{
 \item{rawdata}{A raw ABP file to import}

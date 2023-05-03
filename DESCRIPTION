@@ -16,16 +16,17 @@ Imports: ggplot2,
         dplyr,
         tidyr, tibble,
         stringr, 
+        ggtext,
         magrittr, 
         grid,
         stats, utils, rlang,
-        data.table, purrr, ggpubr, car, cowplot, textclean, 
+        data.table, ggpubr, car, cowplot,
         DBI, odbc ,foreach, forcats,
-        ggnewscale, mdthemes, vdiffr, ggpubr,
-        plotly,
+        ggnewscale, mdthemes,
+        plotly
 Suggests: 
+   vdiffr, testthat,
     knitr,
-    rmarkdown,
-    testthat (>= 3.0.0)
+    rmarkdown
 VignetteBuilder: knitr
 Config/testthat/edition: 3

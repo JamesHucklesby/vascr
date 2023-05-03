@@ -18,4 +18,3 @@ ECIS instrments capure phase and impedance data. This needs to be converted in s
 \details{
 Function used by default as part of ecis_import_raw
 }
-\keyword{internal}

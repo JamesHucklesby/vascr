@@ -2,13 +2,20 @@
 % Please edit documentation in R/data_frame_tests.R
 \name{vascr_test_resampled}
 \alias{vascr_test_resampled}
-\title{Title}
+\title{Check if the dataset is resampled}
 \usage{
 vascr_test_resampled(dataset)
 }
 \arguments{
-\item{dataset}{}
+\item{dataset}{the dataset to process}
+}
+\value{
+boolean, if the dataset is resampled or not
 }
 \description{
-Title
+Check if the dataset is resampled
+}
+\examples{
+vascr_test_resampled(growth.df)
+
 }

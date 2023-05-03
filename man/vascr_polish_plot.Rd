@@ -16,7 +16,7 @@ vascr_polish_plot(plot, rotate_x_angle = 45, logscale = "", title = NULL)
 \item{title}{Title of the graph}
 }
 \value{
-A standardised ggplot2 object
+A standardized ggplot2 object
 }
 \description{
 Post-processing on ECIS plots to make them a bit more pretty

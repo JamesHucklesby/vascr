@@ -64,7 +64,9 @@ vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3)
 #' @param plot 
 #' @param key_events 
 #' 
-#' @importFrom ggplot2 geom_rect theme scale_x_continuous dup_axis
+#' @importFrom ggplot2 geom_rect theme scale_x_continuous dup_axis guide_axis scale_y_continuous
+#' @importFrom ggnewscale new_scale_fill
+#' @importFrom patchwork wrap_plots
 #'
 #' @return
 #' @export
@@ -144,7 +146,8 @@ vascr_plot_keyrange_labeled = function(plot, key_events, labelx = TRUE)
 #' @param plot 
 #' @param key_events 
 #' 
-#' @importFrom ggplot2 geom_rect theme scale_x_continuous dup_axis element_line
+#' @importFrom ggplot2 geom_rect theme scale_x_continuous dup_axis element_line guide_axis
+#' @importFrom ggnewscale new_scale_fill
 #'
 #' @return
 #' @export

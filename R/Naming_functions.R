@@ -7,6 +7,8 @@
 #'
 #' @return A data frame with columns carried down
 #' @keywords internal
+#' 
+#' @noRd
 #'
 #' @examples
 #' # Used as part of various import functions
@@ -160,6 +162,8 @@ vascr_implode = function(data.df, stripidentical = TRUE, colnames = NULL,
 #'
 #' @return
 #' @export
+#' 
+#' @noRd
 #'
 #' @examples
 vascr_find_cols = function(cols)
@@ -195,12 +199,13 @@ vascr_find_cols = function(cols)
 #' @param data.df 
 #'
 #' @return
-#' @export
+#' 
+#' @noRd
 #'
 #' @examples
 vascr_col_id = function(data.df)
 {
-  expcols = masterdata %>% vascr_exploded_cols() %>% data.frame()
+  expcols = data.df %>% vascr_exploded_cols() %>% data.frame()
   colnames(expcols)[1] = "Variable"
   expcols$ColID = c(1:nrow(expcols))
   
@@ -209,7 +214,7 @@ vascr_col_id = function(data.df)
 
 
 
-#' Find which R columns change accross the dataset
+#' Find which R columns change across the dataset
 #'
 #' @param data.df The dataset to analyse
 #' 
@@ -460,7 +465,8 @@ vascr_zero_time = function(data.df, time = 0)
 #' @param raw_name 
 #'
 #' @return
-#' @export
+#' 
+#' @noRd
 #'
 #' @examples
 cleanup_samplename = function(raw_name)

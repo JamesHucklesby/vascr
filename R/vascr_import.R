@@ -21,16 +21,19 @@
 #' #Then run the import
 #' data1 = vascr_import("ECIS", model = modeleddata, key = sampledefine, experimentname = "TEST1")
 #' data2 = vascr_import("ECIS", raw = rawdata, key = sampledefine, experimentname = "TEST2")
-#' data3 = vascr_import("ECIS",model = modeleddata, raw = rawdata, key = sampledefine, experimentname = "TEST3")
+#' data3 = vascr_import("ECIS",model = modeleddata, raw = rawdata, 
+#' key = sampledefine, experimentname = "TEST3")
 #' 
 #' # cellZscope test
 #' rawdata = system.file('extdata/instruments/zscoperaw.txt', package = 'vascr')
 #' modeleddata = system.file('extdata/instruments/zscopemodel.txt', package = 'vascr')
 #' sampledefine = system.file('extdata/instruments/zscopekey.csv', package = 'vascr')
 #' 
-#' data4 = vascr_import("cellZscope", model = modeleddata, key = sampledefine, experimentname = "TEST4")
+#' data4 = vascr_import("cellZscope", model = modeleddata, key = sampledefine, 
+#' experimentname = "TEST4")
 #' data5 = vascr_import("cellZscope", raw = rawdata, key = sampledefine, experimentname = "TEST5")
-#' data6 = vascr_import("cellZscope",model = modeleddata, raw = rawdata, key = sampledefine, experimentname = "TEST6")
+#' data6 = vascr_import("cellZscope",model = modeleddata, raw = rawdata, 
+#' key = sampledefine, experimentname = "TEST6")
 #' 
 #' # xCELLigence test
 #' rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr')

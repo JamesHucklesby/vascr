@@ -25031,17 +25031,17 @@
       czs
     Output
       # A tibble: 88,288 x 8
-          Time Unit             Well  Value Experiment     Frequency Instrument Sample
-         <dbl> <chr>            <chr> <dbl> <chr>              <dbl> <chr>      <chr> 
-       1  0.03 CPE_A(sa?a>>AAA) A01    NA   zscopemodel.t~         0 cellZscope 80,00~
-       2  0.03 CPE_A(sa?a>>AAA) A02    46.8 zscopemodel.t~         0 cellZscope 80,00~
-       3  0.03 CPE_A(sa?a>>AAA) A04    42.9 zscopemodel.t~         0 cellZscope 20,00~
-       4  0.03 CPE_A(sa?a>>AAA) A05    NA   zscopemodel.t~         0 cellZscope 20,00~
-       5  0.03 CPE_A(sa?a>>AAA) B01    NA   zscopemodel.t~         0 cellZscope 80,00~
-       6  0.03 CPE_A(sa?a>>AAA) B02    NA   zscopemodel.t~         0 cellZscope 80,00~
-       7  0.03 CPE_A(sa?a>>AAA) B04    NA   zscopemodel.t~         0 cellZscope 20,00~
-       8  0.03 CPE_A(sa?a>>AAA) B05    NA   zscopemodel.t~         0 cellZscope 20,00~
-       9  1.3  CPE_A(sa?a>>AAA) A01    46.1 zscopemodel.t~         0 cellZscope 80,00~
-      10  1.3  CPE_A(sa?a>>AAA) A02    51.8 zscopemodel.t~         0 cellZscope 80,00~
+          Time Unit  Well  Value Experiment Frequency Instrument Sample               
+         <dbl> <chr> <chr> <dbl> <chr>          <dbl> <chr>      <chr>                
+       1  0.03 CPE_A A01    NA   TEST               0 cellZscope 80,000_HCMVEC + 1_Sa~
+       2  0.03 CPE_A A02    46.8 TEST               0 cellZscope 80,000_HCMVEC + 2_Sa~
+       3  0.03 CPE_A A04    42.9 TEST               0 cellZscope 20,000_HCMVEC + 3_Sa~
+       4  0.03 CPE_A A05    NA   TEST               0 cellZscope 20,000_HCMVEC + 4_Sa~
+       5  0.03 CPE_A B01    NA   TEST               0 cellZscope 80,000_HCMVEC + 6_Sa~
+       6  0.03 CPE_A B02    NA   TEST               0 cellZscope 80,000_HCMVEC + 7_Sa~
+       7  0.03 CPE_A B04    NA   TEST               0 cellZscope 20,000_HCMVEC + 8_Sa~
+       8  0.03 CPE_A B05    NA   TEST               0 cellZscope 20,000_HCMVEC + 9_Sa~
+       9  1.3  CPE_A A01    46.1 TEST               0 cellZscope 80,000_HCMVEC + 1_Sa~
+      10  1.3  CPE_A A02    51.8 TEST               0 cellZscope 80,000_HCMVEC + 2_Sa~
       # i 88,278 more rows
 

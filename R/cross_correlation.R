@@ -8,7 +8,7 @@
 #' 
 #' @importFrom stats ccf as.ts
 #'
-#' @keywords internal
+#' @noRd
 #'
 #' @return A numeric value representing the CCF at time 0
 #' 
@@ -31,7 +31,7 @@ vascr_ccf_vectors = function(v1, v2, plot = FALSE)
 #'
 #' @return
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 # growthrb = vascr_subset(growth.df, unit = "Rb", time = c(5,150))
@@ -194,27 +194,6 @@ return(ret)
 
 }
 
-# T Test Code
-
-# reference = "[ 1 : Experiment 1 | 25000 ]"
-# comparator = c("[ 1 : Experiment 1 | 30000 ]", "[ 1 : Experiment 1 | 35000 ]")
-# 
-# corr = vascr_summarise_cross_correlation(growthrb, reference, comparator)
-# 
-# allvars = c(corr$S1, corr$S2)
-# totalvartable = table(allvars)
-# totalvars = unique(allvars)
-# 
-# ttestdata = tibble(pvalue = numeric(), mean= numeric())
-# 
-# for(comp in comparator)
-# {
-#    ldata = subset(corr, corr$S1 == comp | corr$S2 == comp)
-#    corrvector = ldata$coeffs
-#    ttest = t.test(corrvector, mu = 1, alternative = "less")
-#    
-# }
-
 
 #' Plot cross correlation data from a vascr dataset
 #'
@@ -224,56 +203,19 @@ return(ret)
 #' 
 #' @importFrom magrittr '%>%'
 #' @importFrom dplyr group_by mutate arrange left_join
-#' @importFrom ggplot2 ggplot aes geom_line geom_col coord_flip scale_colour_manual scale_color_manual scale_fill_manual
+#' @importFrom ggplot2 ggplot aes geom_line geom_col geom_errorbar coord_flip scale_colour_manual scale_color_manual scale_fill_manual lims
+#' @importFrom mdthemes md_theme_gray
 #' 
-#' @keywords internal
+#' @export
 #'
 #' @examples
-#' # vascr_plot_cross_correlation(growth.df)
+#' # vascr_plot_cross_correlation(growth.df %>% vascr_subset(unit = "R", frequency = 4000))
 #' 
 vascr_plot_cross_correlation = function(data.df, reference = NULL, comparator = NULL, manualpairs = NULL, show_index = NULL, plot = "all", order = TRUE)
 {
   
-# deltadata = data.df %>% mutate(sample = Sample, value = Value)
-# deltadata = deltadata %>% group_by(sample) %>% mutate(value = value/max(value))
 
 combinations = vascr_summarise_cross_correlation(data.df, reference, comparator, manualpairs)
-
-# if(isTRUE(order))
-# {
-# pcombinations = arrange(combinations, coeffs)
-# } else
-# {
-#   pcombinations = combinations
-# }
-
-# pcombinaionts = combinations
-# 
-# pcombinations = mutate(pcombinations, sample=factor(sample, levels=unique(sample)))
-# 
-# if(!is.null(show_index))
-# {
-#   indexes = data.frame(pcombinations$id, pcombinations$sample, pcombinations$id %in% show_index, pcombinations$coeffs)
-#   indexes = arrange(indexes, pcombinations.id)
-#   print(indexes)
-#   
-#   pcombinations = subset(pcombinations, pcombinations$id %in% show_index)
-# }
-
-# pcombinations$W1 = NULL
-# pcombinations$S1 = NULL
-# pcombinations$W2 = NULL
-# pcombinations$S2 = NULL
-# 
-# uniquesamples = unique(c(pcombinations$s1, pcombinations$s2))
-# 
-# rainbow = vascr_gg_color_hue(length(uniquesamples))
-# 
-# colourtable = data.frame(sample = uniquesamples, colours  = rainbow)
-# 
-# deltadata$sample = factor(deltadata$sample, levels = colourtable$sample)
-# pcombinations$v1 = factor(pcombinations$s1, levels = colourtable$sample)
-# pcombinations$v2 = factor(pcombinations$s2, levels = colourtable$sample)
 
 
 output = combinations %>% group_by(s1, s2) %>%
@@ -292,36 +234,6 @@ output
 
 return(output)
 
- # lineplot = ggplot(deltadata, aes(x = Time, y = value, group = Sample)) + geom_line(aes(color = Sample)) #+
- #   #geom_ribbon(aes(x = Time, ymax = value+sem, ymin = value-sem))
- # 
- # barplot = ggplot(pcombinations, aes(x = sample, y = coeffs, color = V1, fill = V1)) + 
- #   geom_col(size = 2, width = 0.8) + coord_flip() + ylim(-1,1) + xlab("CCF")
- # 
- # 
- # p1 = lineplot + scale_color_manual(values = colourtable$colours)
- # 
- # p2 = barplot+ scale_fill_manual(values = colourtable$colours,
- #                                 limits = colourtable$sample,
- #                                 labels = colourtable$sample, name = "Treatment")+
- #   scale_colour_manual(values = colourtable$colours,
- #                       limits = colourtable$sample,
- #                       labels = colourtable$sample , guide = "none")
- # 
- # p2 = p2 + theme(axis.title.y=element_blank())
- # 
- # if(plot == "all")
- # {
- # return(vascr_make_panel(p1, p2))
- # }
- # if(plot == "line")
- # {
- #   return(p1)
- # }
- # if(plot == "bar")
- # {
- #   return(p2)
- # }
  
 }
 

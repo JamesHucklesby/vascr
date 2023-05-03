@@ -2,7 +2,7 @@
 % Please edit documentation in R/ecis_graphics.R
 \name{vascr_plot_isolate}
 \alias{vascr_plot_isolate}
-\title{Animation removed due to compatabilty issues with CRAN. To be re-introduced later.}
+\title{Graph a single well that is misbehaving}
 \usage{
 vascr_plot_isolate(data.df, well, ...)
 }
@@ -17,45 +17,6 @@ vascr_plot_isolate(data.df, well, ...)
 A ggplot graph showing the isoated well and the experimental median well
 }
 \description{
-# Animate -----------------------------------------------------------------
-#' Animate frequency
-#' 
-#' Generate a gganimate graphic of frequency vs resistance. Each frame of the video represents a different time point
-#'
-#' @param alldata.df An ECIS dataframe
-#' @param unittoplot Which ECIS unit is to be plotted. Can't plot modeled variables as these are derrivative from ECIS models.
-#' @param frames Number of frames to render. More frames gives a smoother graphic, but is more computationaly expensive to generate.
-#'
-#' @return A gganimate gif. Future itteration may include the ability to return the un-rendered object.
-#' 
-#' @importFrom ggplot2 ggplot geom_line aes labs scale_x_log10 scale_y_log10 geom_errorbar position_stack
-#' @importFrom gganimate transition_time animate
-#' @importFrom dplyr n
-#' @importFrom stats sd
-#' 
-#' @export
-#'
-#' @examples
-#' #vascr_animatefrequency(growth.df, 'R', 3)
-#' 
-vascr_animatefrequency = function(alldata.df, unittoplot, frames) {
-    
-    alldatasum.df = summarise(group_by(alldata.df, Sample, Time, Unit, Frequency), sd = sd(Value), 
-        n = n(), Value = mean(Value))
-    
-    toplot.df = alldatasum.df
-    toplot.df = subset(toplot.df, Unit == unittoplot)
-    toplot.df$Frequency = as.numeric(toplot.df$Frequency)
-    
-    toplot2.df = toplot.df
-    
-    p = ggplot2::ggplot(toplot2.df, ggplot2::aes(Frequency, Value, colour = Sample)) + ggplot2::geom_line(show.legend = TRUE) + 
-        ggplot2::labs(title = "Days: {round(frame_time,1)}", x = "Frequency (Hz)", y = "Value (ohms)") + 
-        ggplot2::scale_x_log10() + ggplot2::scale_y_log10() + ggplot2::geom_errorbar(ggplot2::aes(ymin = Value - 
-        sd/sqrt(n), ymax = Value + sd/sqrt(n)), width = 0.1) + gganimate::transition_time(Time)
-    
-    gganimate::animate(p, nframes = frames)
-}
 Graph a single well that is misbehaving
 }
 \examples{

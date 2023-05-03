@@ -2,7 +2,7 @@
 % Please edit documentation in R/Naming_functions.R
 \name{vascr_find_changing_cols}
 \alias{vascr_find_changing_cols}
-\title{Find which R columns change accross the dataset}
+\title{Find which R columns change across the dataset}
 \usage{
 vascr_find_changing_cols(data.df)
 }
@@ -13,7 +13,7 @@ vascr_find_changing_cols(data.df)
 A vector of the column names that change in the dataset
 }
 \description{
-Find which R columns change accross the dataset
+Find which R columns change across the dataset
 }
 \examples{
 # vascr_find_changing_cols(data.df)

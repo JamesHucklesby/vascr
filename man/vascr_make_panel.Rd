@@ -2,7 +2,7 @@
 % Please edit documentation in R/ecis_graphics.R
 \name{vascr_make_panel}
 \alias{vascr_make_panel}
-\title{Combine mulitple VASCR plots into a single pannel}
+\title{Combine multiple VASCR plots into a single panel}
 \usage{
 vascr_make_panel(..., plots = NULL, legend_from_index = 1, ncols = 1)
 }
@@ -19,7 +19,7 @@ vascr_make_panel(..., plots = NULL, legend_from_index = 1, ncols = 1)
 A panel with multiple plots on it
 }
 \description{
-Combine mulitple VASCR plots into a single pannel
+Combine multiple VASCR plots into a single panel
 }
 \examples{
 #plots = list()

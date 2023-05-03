@@ -2,19 +2,25 @@
 % Please edit documentation in R/data_transformation.R
 \name{vascr_summarise}
 \alias{vascr_summarise}
-\title{Title}
+\title{Summarise a vascr data set down to a particular level}
 \usage{
 vascr_summarise(data.df, level = "wells")
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{Data set to summarize}
 
-\item{level}{}
+\item{level}{Level to summarise to, either "summary", "experiment" or "wells"}
+}
+\value{
+The summarized data set
 }
 \description{
-Title
+Summarise a vascr data set down to a particular level
 }
 \examples{
+
 vascr_summarise(growth.df, level = "summary")
+vascr_summarise(growth.df, level = "experiment")
+vascr_summarise(growth.df, level = "wells")
 
 }

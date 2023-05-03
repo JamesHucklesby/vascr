@@ -24,7 +24,6 @@ A plots of the cross correlation calculated
 Plot cross correlation data from a vascr dataset
 }
 \examples{
-# vascr_plot_cross_correlation(growth.df)
+# vascr_plot_cross_correlation(growth.df \%>\% vascr_subset(unit = "R", frequency = 4000))
 
 }
-\keyword{internal}

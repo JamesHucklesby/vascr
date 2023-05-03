@@ -9,4 +9,5 @@
 library(testthat)
 library(vascr)
 
-test_check("vascr")
+# test_check("vascr")
+

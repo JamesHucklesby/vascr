@@ -159,7 +159,7 @@ vascr_sample_replace_match = function(data.df, target, replacement = "")
 #' @param data.df 
 #' 
 #' @importFrom forcats fct_rev
-#' @importFrom ggplot2 ggplot geom_tile geom_text theme scale_colour_brewer
+#' @importFrom ggplot2 ggplot geom_tile geom_text theme scale_colour_brewer scale_fill_brewer
 #'
 #' @return
 #' @export

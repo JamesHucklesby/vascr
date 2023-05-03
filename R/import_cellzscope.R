@@ -10,7 +10,6 @@
 #' @importFrom stringr str_remove str_split
 #' @importFrom tidyr separate fill pivot_longer
 #' @importFrom magrittr %>%
-#' @importFrom textclean replace_non_ascii
 #'
 #' @return An vascr compatable dataset
 #'
@@ -20,7 +19,7 @@
 #' #model = system.file("extdata/mdckmodel.txt", package = "vascr")
 #' #key = system.file("extdata/mdckkey.csv", package = "vascr")
 #' 
-#' #output = cellzscope_import_model(model, key)
+#' #output = cellzscope_import_model(model, key, "TEST")
 #' #output = vascr_subset(output, time = c(0,50))
 #' #vascr_plot(output, unit = "TER", frequency = 0,replication = "wells")
 #' 
@@ -40,13 +39,13 @@ spectrafile = readLines(model)
 data.df = as.data.frame(spectrafile)
 
 # Clean out the strange encoding marks and units (not required, will be substituted in later)
-data.df$spectrafile = replace_non_ascii(data.df$spectrafile, replacement = "")
-data.df$spectrafile = str_remove(data.df$spectrafile, "saa>>AAA mu F/cmA")
-data.df$spectrafile = str_remove(data.df$spectrafile, "I\\(C\\)AcmA")
-data.df$spectrafile = str_remove(data.df$spectrafile, "I\\(C\\)")
-data.df$spectrafile = str_remove(data.df$spectrafile, "A mu F/cm")
+data.df$spectrafile = str_remove(data.df$spectrafile, "(s\u00e2\u0081\u00bf\u00e2\u0081\u00bb\u00c2\u00b9\u00c2\u00b7\u00c2\u00b5F/cm\u00c2\u00b2)")
+data.df$spectrafile = str_remove(data.df$spectrafile, "(\u00ce\u00a9\u00c2\u00b7cm\u00c2\u00b2)")
+data.df$spectrafile = str_remove(data.df$spectrafile, "(\u00c2\u00b5F/cm\u00c2\u00b2)")
+data.df$spectrafile = str_remove(data.df$spectrafile, "(\u00ce\u00a9\u00c2\u00b7cm\u00c2\u00b2)")
+data.df$spectrafile = str_remove(data.df$spectrafile, "(\u00c2\u00b5F/cm\u00c2\u00b2)")
+data.df$spectrafile = str_remove(data.df$spectrafile, "(\u00ce\u00a9)")
 data.df$spectrafile = str_remove(data.df$spectrafile, "\\(\\)")
-data.df$spectrafile = str_remove(data.df$spectrafile, "\\(A\\)")
 
 
 # Make a dedicated column for the units (expressed as titles) and copy them down
@@ -97,6 +96,8 @@ if(!missing(key))
   separatedata = vascr_assign_samples(separatedata, key)
 }
 
+separatedata$Unit %>% unique()
+
 return(separatedata)
 }
 
@@ -115,7 +116,6 @@ return(separatedata)
 #' @importFrom stringr str_remove
 #' @importFrom tidyr separate fill pivot_longer
 #' @importFrom magrittr %>%
-#' @importFrom textclean replace_non_ascii
 #' 
 #' 
 #' @keywords internal
@@ -140,7 +140,6 @@ vascr_validate_file(raw, "txt")
 # Read into a data frame and remove garbage
 spectrafile = readLines(raw)
 data.df = as.data.frame(spectrafile)
-data.df$spectrafile = replace_non_ascii(data.df$spectrafile, "")
 
 #Separate out the data that needs to be carried down
 separatedata = separate(data.df, "spectrafile", into = c("Data", "Well"), remove = TRUE, sep = "Well: ", fill = "right")
@@ -287,6 +286,7 @@ else
   alldatanamed = vascr_assign_samples(alldata, key)
 }
 
+alldatanamed$Experiment = experimentname
 
 return(alldatanamed)
 

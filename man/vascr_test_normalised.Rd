@@ -2,15 +2,18 @@
 % Please edit documentation in R/data_frame_tests.R
 \name{vascr_test_normalised}
 \alias{vascr_test_normalised}
-\title{Title}
+\title{Test if a dataframe is normalised}
 \usage{
 vascr_test_normalised(data.df)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{A vascr dataframe}
+}
+\value{
+TRUE if normalised, FALSE if not
 }
 \description{
-Title
+Test if a dataframe is normalised
 }
 \examples{
 vascr_test_normalised(growth.df)

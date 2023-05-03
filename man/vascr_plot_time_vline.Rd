@@ -17,7 +17,7 @@ vascr_plot_time_vline(data.df, unit, frequency, time, priority = NULL)
 
 \item{priority}{Vascr priority list. Blank will use the baked in default.}
 
-\item{...}{Other arguements to be passed on to vascr_plot_line}
+\item{...}{Other arguments to be passed on to vascr_plot_line}
 }
 \value{
 A ggplot2 object
