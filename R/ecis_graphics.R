@@ -1,70 +1,8 @@
 
 # Graphics generation
 
-#' # Plot multiple ggplots
-#' 
-#' # This function splits out multiple ggplots into a grid when more than one is requested.
-#'
-#' @param data A vascr dataset
-#' @param unit The unit to plot. "raw" will plot all raw units and "modeled" will plot all modeled units.
-#' @param frequency The frequency to plot
-#' @param time The time to plot. Multiple time plots can be plotted with list(1,2) and multiple ranges can be plotted with list(c(1,2), c(3,4))
-#' @param ... Other conditions to be passed into data conditioning and graph preparing steps
-#'
-#' @return An array of requested ggplots
-#' @export
-#'
-#' @examples
-#' #vascr_multiplot(data = growth.df, frequency = 4000, time = list(50, 100))
-#' 
-#' #vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100),100), level = "wells")
-#' 
-#' #vascr_multiplot(growth.df, frequency = c(2000,4000), unit = "R")
-#' 
-#' 
-vascr_multiplot = function(data, unit = "all", frequency = 0, time = Inf, ...)
-{
 
-  units =  vascr_realise_units(data, unit) 
-  frequencies = vascr_realise_frequencies(data, frequency)
-  
-  plots = list()
-  n = 1
-
- for(tim in time)
- {
-   tim = unlist(tim)
-  for(uni in units)
-  {
-    uni = unlist(uni)
-    if(vascr_is_modeled_unit(uni))
-    {
-      p = vascr_plot(data, unit = uni, time = tim, ...)
-      plots[[n]]= p
-      n=n+1
-    }else
-    {
-    for(fre in frequencies)
-    {
-      fre = unlist(fre)
-      if(as.numeric(fre)>0)
-      {
-
-        p = vascr_plot(data, unit = uni, frequency = as.numeric(fre), time = tim, ...)
-        plots[[n]] = p
-        n=n+1
-      }
-      
-    }
-    }
-  }
- }
-  panel = do.call(vascr_make_panel, plots)
-  return(panel)
-}
-
-
-#' Combine multiple VASCR plots into a single panel
+#' Combine multiple vascr plots into a single panel
 #' 
 #'
 #' @param ... The plots that need to be combined
@@ -80,16 +18,10 @@ vascr_multiplot = function(data, unit = "all", frequency = 0, time = Inf, ...)
 #' @export
 #'
 #' @examples
-#' #plots = list()
-# #plots[[1]] = vascr_plot(growth.df, "Rb")
-# #plots[[2]] = vascr_plot(growth.df, "Cm")
-# #vascr_make_panel(plots = plots)
-# 
-# #vascr_make_panel(vascr_plot(growth.df, unit = "Cm"), vascr_plot(growth.df, unit = "Rb"))
-# 
-# #vascr_multiplot(data = growth.df, frequency = 4000, time = c(100, 50))
-# 
-# #vascr_multiplot(data = growth.df, frequency = 4000, time = list(c(50, 100), 10))
+#' p1 = growth.df %>% vascr_subset(unit = "Rb") %>% vascr_plot_line()
+#' p2 = growth.df %>% vascr_subset(unit = "Cm") %>% vascr_plot_line()
+#' 
+#' vascr_make_panel(p1, p2)
 #' 
 vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1, ncols = 1) {
   
@@ -104,10 +36,7 @@ vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1, ncols = 1
   
   
   
-  legendplot = plots[[legend_from_index]] +
-    theme(legend.spacing =  unit(10, "cm"), legend.position="bottom",
-          legend.title = element_text(face="bold"),
-          ) 
+  legendplot = plots[[legend_from_index]] 
   
   legendplot
   
@@ -160,7 +89,7 @@ vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1, ncols = 1
 #'
 #' @return A standardized ggplot2 object
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @importFrom ggplot2 scale_x_log10 scale_y_log10
 #'
@@ -200,69 +129,6 @@ vascr_polish_plot = function(plot, rotate_x_angle = 45, logscale = "", title = N
 }
 
 
-#' Graph a single well that is misbehaving
-#'
-#' @param data.df The dataset the well is in
-#' @param well The well to be isolated
-#' @param ... Other conditions to pass on to the vascr_plot command that generates the graph
-#' 
-#' @importFrom magrittr "%>%"
-#' @importFrom dplyr group_by mutate ungroup
-#' 
-#' @keywords internal
-#' 
-#'
-#' @return A ggplot graph showing the isoated well and the experimental median well
-#' @export 
-#'
-#' @examples
-#' 
-#' #datum = vascr_plot_isolate(growth.df, well = "A3", unit = "R", frequency = 4000,
-#' # error = Inf, priority = NULL)
-#' 
-#' #vascr_plot_line(datum, preprocessed = TRUE, priority = c("Time", "Sample"))
-#' 
-vascr_plot_isolate= function(data.df, well, ...)
-{
-  data = data.df
-  
-  # Run the preparation command for a standard well
-  dots = list(...)
-  data = do.call_relevant("vascr_prep_graphdata", data, dots)
-  
-  if(length(unique(data$Frequency))>1)
-  {
-    warning("More than 1 frequency detected, use with care")
-  }
-  
-  if(unique(data$Unit)>1)
-  {
-    warning("More than 1 unit detected, use with care")
-  }
-  
-  # Standardise all wells
-  well = vascr_standardise_wells(well)
-  data$Well = vascr_standardise_wells(data$Well)
-
-  # Generate a data frame 
-  quality = vascr_subset(data, well = well)
-  quality$Sample = paste(quality$Well, quality$Sample,quality$Experiment)
-  
-  medianwell = data %>%
-    group_by(Time) %>%
-    mutate(Value = median(Value), Sample = "Experimental Mean Well", Well = "Z00") %>%
-    ungroup
-  
-  toplot.df = rbind(quality, medianwell)
-  
-  return(toplot.df)
-  
-  plot = vascr_plot_line(toplot.df, unit, frequency, "wells", title = title, ...)
-  
-  return (plot)
-}
-
-
 #' Plot the wells of a 96 well plate
 #'
 #' @param data.df A standard ECIS dataframe. Ideally this will contain only one experiment, but multiple experiments are supported.
@@ -274,7 +140,7 @@ vascr_plot_isolate= function(data.df, well, ...)
 #'
 #' @return A GGplot2 matrix
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_plot_matrix(growth.df, unit = "Rb")
@@ -302,7 +168,7 @@ vascr_plot_matrix = function(data.df)
 #'
 #' @return A factorised vector that can be saved directly back to a data frame
 #' 
-#' @keywords internal
+#' @noRd
 #' 
 #' @examples
 #' # vascr_factorise_and_sort(growth.df$Sample)

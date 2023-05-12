@@ -7,7 +7,7 @@
 #' 
 #' @importFrom stats var
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_detect_vehicle(growth.df)
@@ -65,7 +65,7 @@ vascr_detect_vehicle = function (data, force_replace = FALSE)
 #' 
 #' @importFrom dplyr select
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @return A vector of vehicle control wells
 #'
@@ -96,7 +96,7 @@ vascr_detect_vehicle_control_wells = function(data, force_replace = FALSE)
 #'
 #' @return A boolean, true if the column is found, false if not
 #'
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #col_exists(growth.df, "Vector")

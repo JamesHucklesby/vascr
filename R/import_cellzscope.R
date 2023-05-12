@@ -13,7 +13,7 @@
 #'
 #' @return An vascr compatable dataset
 #'
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #model = system.file("extdata/mdckmodel.txt", package = "vascr")
@@ -103,13 +103,13 @@ return(separatedata)
 
 
 
-#' Import a raw cellZScope dataset
+#' Import a raw cellZScope data set
 #'
 #' Data must first be exported from the cellZscope software. 
 #'
-#' @param raw the locaiton of spectral data exported from the cellZscope software.
+#' @param raw the location of spectral data exported from the cellZscope software.
 #' @param key Optional, allows for sample names to be assigned to wells
-#' @param experimentname Name of the experiment to be built into the dataset
+#' @param experimentname Name of the experiment to be built into the data set
 #'
 #' @return A vascar compatable dataset
 #' 
@@ -118,7 +118,7 @@ return(separatedata)
 #' @importFrom magrittr %>%
 #' 
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #raw = system.file("extdata/mdckspectra.txt", package = "vascr")
@@ -235,10 +235,9 @@ return(longdata.df)
 #' 
 #' @importFrom dplyr select left_join 
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @return a standard vascar dataset
-#' @export
 #'
 #' @examples
 #' 

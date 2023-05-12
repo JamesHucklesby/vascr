@@ -2,7 +2,7 @@
 % Please edit documentation in R/ecis_graphics.R
 \name{vascr_make_panel}
 \alias{vascr_make_panel}
-\title{Combine multiple VASCR plots into a single panel}
+\title{Combine multiple vascr plots into a single panel}
 \usage{
 vascr_make_panel(..., plots = NULL, legend_from_index = 1, ncols = 1)
 }
@@ -19,9 +19,12 @@ vascr_make_panel(..., plots = NULL, legend_from_index = 1, ncols = 1)
 A panel with multiple plots on it
 }
 \description{
-Combine multiple VASCR plots into a single panel
+Combine multiple vascr plots into a single panel
 }
 \examples{
-#plots = list()
+p1 = growth.df \%>\% vascr_subset(unit = "Rb") \%>\% vascr_plot_line()
+p2 = growth.df \%>\% vascr_subset(unit = "Cm") \%>\% vascr_plot_line()
+
+vascr_make_panel(p1, p2)
 
 }

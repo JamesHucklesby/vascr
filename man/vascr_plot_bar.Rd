@@ -4,12 +4,10 @@
 \alias{vascr_plot_bar}
 \title{Plot a vascr data set as a bar}
 \usage{
-vascr_plot_bar(data, priority = NULL, error = Inf, confidence = NULL, ...)
+vascr_plot_bar(data, error = Inf, confidence = NULL, ...)
 }
 \arguments{
 \item{data}{Vascr dataset to plot}
-
-\item{priority}{Priority of values to plot (blank uses the system default)}
 
 \item{error}{The level of error to display}
 

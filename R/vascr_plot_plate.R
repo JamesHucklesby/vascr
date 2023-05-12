@@ -3,10 +3,11 @@
 
 #' Title
 #'
-#' @param data 
+#' @param data The dataset to plot out
 #'
 #' @return
-#' @export
+#' 
+#' @noRd
 #'
 #' @examples
 vascr_plot_well_grid = function(data) {
@@ -24,7 +25,7 @@ vascr_plot_well_grid = function(data) {
 #' @param data 
 #'
 #' @return
-#' @export
+#' @noRd
 #'
 #' @examples
 vascr_plot_treatment_grid = function(data) {
@@ -133,7 +134,7 @@ vascr_plot_treatment_grid = function(data) {
 #'
 #' @return Boolean, true if multiple plates are present. Also returns an error if true.
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_test_multi_plate(growth.df)
@@ -170,7 +171,7 @@ vascr_test_multi_plate = function(data)
 #' @importFrom dplyr select
 #' @importFrom ggplot2 ggplot ylab xlab scale_x_discrete facet_wrap vars geom_tile scale_fill_gradient guides guide_legend
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 

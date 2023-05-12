@@ -2,38 +2,7 @@
 % Please edit documentation in R/helper_functions.R
 \name{vascr_exclude}
 \alias{vascr_exclude}
-\title{#' Fix typographical errors in an ECIS dataframe
-#' 
-#' This function will go through all the sample and experiment names and replace all the values that are incorrect. Usefull for fixing up typographical errors, or places where you have named things differently inadvertently.
-#'
-#' @param data.df the data to correct
-#' @param incorrect the error to be corrected
-#' @param correct the corrrect string
-#' @param limit can be set to "Sample or "Experiment" to limit the replacement to a single variable
-#'
-#' @return the repared dataframe
-#' @export
-#'
-#' @examples
-#' 
-#' #vascr_fix_error(growth.df, "cells", "cells plated")
-#' 
-vascr_fix_error = function (data.df, incorrect, correct, limit = "None")
-{
-  
-  if (limit == "None" || limit == "Sample")
-  {
-  data.df$Sample = gsub(incorrect, correct, data.df$Sample)
-  }
-  
-  if (limit == "None" || limit == "Experiment")
-  {
-  data.df$Experiment = gsub(incorrect, correct, data.df$Experiment)
-  }
-  
-  return(data.df)
-}
-Exclude erronious data from an ECIS dataframe}
+\title{Exclude erronious data from an ECIS dataframe}
 \usage{
 vascr_exclude(
   data.df,
@@ -70,37 +39,6 @@ vascr_exclude(
 The altered dataset
 }
 \description{
-#' Fix typographical errors in an ECIS dataframe
-#' 
-#' This function will go through all the sample and experiment names and replace all the values that are incorrect. Usefull for fixing up typographical errors, or places where you have named things differently inadvertently.
-#'
-#' @param data.df the data to correct
-#' @param incorrect the error to be corrected
-#' @param correct the corrrect string
-#' @param limit can be set to "Sample or "Experiment" to limit the replacement to a single variable
-#'
-#' @return the repared dataframe
-#' @export
-#'
-#' @examples
-#' 
-#' #vascr_fix_error(growth.df, "cells", "cells plated")
-#' 
-vascr_fix_error = function (data.df, incorrect, correct, limit = "None")
-{
-  
-  if (limit == "None" || limit == "Sample")
-  {
-  data.df$Sample = gsub(incorrect, correct, data.df$Sample)
-  }
-  
-  if (limit == "None" || limit == "Experiment")
-  {
-  data.df$Experiment = gsub(incorrect, correct, data.df$Experiment)
-  }
-  
-  return(data.df)
-}
 Exclude erronious data from an ECIS dataframe
 }
 \examples{

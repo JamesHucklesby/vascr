@@ -7,7 +7,7 @@
 #'
 #' @return TRUE if it passes, FALSE if it does not. Also spits out warnings that will help the user correct the error
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # check a file that does not exist fails

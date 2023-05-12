@@ -1,13 +1,16 @@
 
 
-#' Title
+#' Guess at what the default values are for a dataframe
 #'
-#' @param dataframe 
+#' @param dataframe The data frame to detect the defaults from
 #'
-#' @return
-#' @export
+#' @return A list of values with the recommended defaults
+#' 
+#' @noRd
 #'
 #' @examples
+#' vascr_find_defaults(growth.df)
+#' 
 vascr_find_defaults = function(dataframe)
 {
   # Create a named list to fill
@@ -61,7 +64,7 @@ vascr_find_defaults = function(dataframe)
 #' @param data_vector 
 #'
 #' @return
-#' @export
+#' @noRd
 #'
 #' @examples
 find_priority = function(priority, data_vector)
@@ -92,7 +95,7 @@ find_priority = function(priority, data_vector)
 #' @param data_vector A vector of data to calculate the locked median of
 #'
 #' @return
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 locked_median = function(data_vector)
@@ -109,7 +112,8 @@ locked_median = function(data_vector)
 #' @param data_vector 
 #'
 #' @return
-#' @export
+#' 
+#' @noRd
 #'
 #' @examples
 closest_value = function(target, data_vector)
@@ -130,7 +134,7 @@ closest_value = function(target, data_vector)
 #'
 #' @return Standardised well names
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples 
 #' #vascr_standardise_wells('A01')
@@ -168,7 +172,7 @@ vascr_standardise_wells = function(well) {
 #'
 #' @return Vector containing all wells of a 96 well plate
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_96_well_names()
@@ -193,7 +197,7 @@ vascr_96_well_names = function()
 #'
 #' @return The time the data was normalised to, or FALSE if not normalised
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #growth.df$Instrument = "ECIS"
@@ -220,7 +224,7 @@ vascr_detect_normal = function(data.df)
 #'
 #' @return The level of the dataset analysed
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_detect_level(growth.df)
@@ -255,7 +259,7 @@ vascr_detect_level = function(data)
 #'
 #' @return A dataset containing only the core ECIS columns
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #growth.df$Instrument = "ECIS"
@@ -288,7 +292,7 @@ vascr_remove_metadata = function(data.df, subset = "all")
 #'
 #' @return A vector of priorities to plot
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_priority()
@@ -401,7 +405,7 @@ vascr_priority = function(data = NULL, explicit = NULL, priority = NULL)
 #'
 #' @return The truncated data set
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #remove_cols_if_exists(growth.df, c("Unit", "Sample", "Donkey"))
@@ -426,7 +430,7 @@ remove_cols_if_exists = function(data.df, cols)
 #'
 #' @return A vascr dataset, without any statistical columns
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_remove_stats(vascr_summarise(growth.df,level = "summary"))
@@ -445,7 +449,7 @@ vascr_remove_stats = function(data.df)
 #'
 #' @return An expression containing the correct data label for the unit
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 
@@ -494,7 +498,8 @@ vascr_titles= function (unit, frequency = 0, prefix = "")
 #' @param data.df 
 #'
 #' @return
-#' @export
+#' 
+#' @noRd
 #'
 #' @examples
 #' data.df = growth.df %>% vascr_subset(unit = "Rb") %>% 
@@ -531,7 +536,7 @@ vascr_df_title = function(data.df)
 #' @param string2 Second string
 #'
 #' @return
-#' @export
+#' @noRd
 #'
 #' @examples
 #' 
@@ -663,7 +668,7 @@ return(return)
 #'
 #' @return A data frame of units, their content and if they are modeled
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_units_table()
@@ -691,7 +696,7 @@ return(vascr_unit_table)
 #'
 #' @return A boolean, true if it is modelled, false if it is raw electrical data
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_is_modeled_unit("R")
@@ -717,7 +722,7 @@ vascr_is_modeled_unit = function(unit)
 #'
 #' @return a vector of units provided by an instrument
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_instrument_units("ECIS")
@@ -742,7 +747,7 @@ vascr_instrument_units =  function(instrument)
 #'
 #' @return The instrument(s) separated by "+" that could have generated that value. If more than one unit was entered a stirng will be generated for each unit.
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 
@@ -788,7 +793,7 @@ for (uni in unit)
 #'
 #' @return A vector of all the supported instrument names
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_instrument_list()
@@ -796,41 +801,6 @@ vascr_instrument_list = function()
 {
   return(c("ECIS", "xCELLigence", "cellZscope"))
 }
-
-
-#' #' Fix typographical errors in an ECIS dataframe
-#' #' 
-#' #' This function will go through all the sample and experiment names and replace all the values that are incorrect. Usefull for fixing up typographical errors, or places where you have named things differently inadvertently.
-#' #'
-#' #' @param data.df the data to correct
-#' #' @param incorrect the error to be corrected
-#' #' @param correct the corrrect string
-#' #' @param limit can be set to "Sample or "Experiment" to limit the replacement to a single variable
-#' #'
-#' #' @return the repared dataframe
-#' #' @export
-#' #'
-#' #' @examples
-#' #' 
-#' #' #vascr_fix_error(growth.df, "cells", "cells plated")
-#' #' 
-#' vascr_fix_error = function (data.df, incorrect, correct, limit = "None")
-#' {
-#'   
-#'   if (limit == "None" || limit == "Sample")
-#'   {
-#'   data.df$Sample = gsub(incorrect, correct, data.df$Sample)
-#'   }
-#'   
-#'   if (limit == "None" || limit == "Experiment")
-#'   {
-#'   data.df$Experiment = gsub(incorrect, correct, data.df$Experiment)
-#'   }
-#'   
-#'   return(data.df)
-#' }
-
-
 
 
 
@@ -963,8 +933,7 @@ vascr_combine = function(..., resample = FALSE) {
   
   if(isTRUE(resample))
   {
-    frequency = vascr_current_frequency(alldata)
-    alldata = vascr_resample_time(alldata, frequency, min(alldata$Time), max(alldata$Time))
+    alldata = vascr_resample_time(alldata)
   }
   
   
@@ -980,7 +949,7 @@ vascr_combine = function(..., resample = FALSE) {
 #'
 #' @param df A data frame containing the desired values in the top row
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @return A dataframe where the top row has been converted to titles.
 # 
@@ -1000,7 +969,7 @@ retitle = function(df) {
 #'
 #' @return An array containing numeric data. NA will be returned if not numeric, and a warning will be generated
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # A working dataset
@@ -1035,7 +1004,7 @@ comma_to_numeric = function(comma_array)
 #'
 #' @return The returned value from the function applied
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # Not relevant here
@@ -1072,7 +1041,7 @@ do.call_relevant = function(name, payload, arguments)
 #'
 #' @return A vector of ggplot colours
 #' 
-#' @keywords internal
+#' @noRd
 #' 
 #' @examples
 vascr_gg_color_hue <- function(n, start = 15, values_needed = c(1:n), l = 65, c = 100) {
@@ -1092,7 +1061,7 @@ vascr_gg_color_hue <- function(n, start = 15, values_needed = c(1:n), l = 65, c 
 #'
 #' @return The updated dataset
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_rename_columns(data.df, "Unit", "Measurement")
@@ -1113,7 +1082,7 @@ vascr_rename_columns = function(data.df, old, new)
 #'
 #' @return The modified vector
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 
@@ -1130,33 +1099,6 @@ vascr_remove_from_vector = function(values, vector)
   return(vector)
 }
 
-#' Title
-#'
-#' @param df1 
-#' @param df2 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-create_or_merge = function(df1, df2)
-{
-  df1name = deparse(substitute(df1))
-  
-  if(!exists(df1name))
-  {
-    return(df2)
-  }
-  
-  return(rbind(df1, df2))
-  
-}
-
-# dataa = data.frame(num = c(1,2), let  = c("A","B"))
-# datab = data.frame(num = c(3,4), let = c("C","D"))
-# 
-# create_or_merge(dataa, datab)
-# create_or_merge(datac, datab)
 
 
 #' Title
@@ -1164,7 +1106,7 @@ create_or_merge = function(df1, df2)
 #' @param df 
 #'
 #' @return
-#' @export
+#' @noRd
 #'
 #' @examples
 #' remove_if_exists(m)
@@ -1184,7 +1126,7 @@ remove_if_exists = function(df)
 #' @param table 
 #'
 #' @return
-#' @export
+#' @noRd
 #'
 #' @examples
 "%notin%" <- function(x, table) { match(x, table, nomatch = 0) == 0}

@@ -10,13 +10,12 @@
 #' @param unit The unit to run calculations on. Only one unit should be selected, and generally this should be a raw frequency. Default R.
 #'
 #' @return A vascr dataset containing the deviaiton at each time point
-#' @export
 #' 
 #' @importFrom dplyr group_by mutate
 #' @importFrom stats median
 #' @importFrom magrittr "%>%"
 #'
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # example = vascr_summarise_deviation(growth.df)
@@ -79,7 +78,7 @@ vascr_detect_deviation = function(...)
 #' @return  A tibble containing the offending wells, which experiment they are from and the score they were removed with
 #' 
 #' 
-#' @keywords internal
+#' @noRd
 #' 
 #' @importFrom magrittr "%>%"
 #' @importFrom dplyr group_by summarise arrange select distinct left_join ungroup
@@ -131,10 +130,10 @@ vascr_detect_max_deviation = function(data.df, max_deviation = 0, frequency = 40
 #' @param ... Any other arguements to be passed on to either vascr_subset or vascr_polish_plot
 #'
 #' @return A ggplot object, or matrix of ggplot objects
-#' @keywords internal
+#' @noRd
 #' 
-#' @importFrom ggplot2 ggplot aes_string geom_line geom_hline facet_wrap geom_bar xlab ylab theme element_text scale_x_discrete vars scale_fill_gradient2 ggplotGrob ggtitle
-#' @importFrom stats reorder
+#' @importFrom ggplot2 ggplot aes_string geom_line geom_hline facet_wrap geom_bar xlab ylab theme element_text scale_x_discrete vars scale_fill_gradient2 ggplotGrob ggtitle ggplot_gtable ggplot_build
+#' @importFrom stats reorder 
 #' @importFrom gridExtra grid.arrange
 #' @importFrom grid unit.c
 #' @importFrom ggpubr get_legend
@@ -315,7 +314,7 @@ vascr_plot_deviation= function(data, max_deviation = 0, deviation =0 ,visualisat
 #' 
 #' @importFrom dplyr filter select
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 

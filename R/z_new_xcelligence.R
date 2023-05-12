@@ -2,14 +2,14 @@
 #' 
 #' Switches the xcelligence format of having each column as a column and each row as a row, then stacking timepoints to a standardised tidy data format
 #'
-#' @param data The raw xcelligence dataset to deal with
+#' @param data The raw xcelligence data set to deal with
 #' 
 #' @importFrom tidyr pivot_longer
 #' @importFrom stringr str_remove
 #' 
-#' @keywords internal
+#' @noRd
 #'
-#' @return A slighlty tidier dataset
+#' @return A slightly tidier dataset
 #' 
 xcelligence_lengthen_platemap = function(data)
 {
@@ -25,7 +25,23 @@ xcelligence_lengthen_platemap = function(data)
   return(lookuptable)
 }
 
-
+#' Generate CI from xcelligence data
+#'
+#' @param data.df The dataset to generate CI from
+#'
+#' @return An enlargened dataset
+#' 
+#' @noRd
+#'
+#' @examples
+xcelligence_import_generate_CI = function(data.df)
+{
+  cidata = vascr_normalise(data.df, normtime = 0)
+  cidata$Unit = "CI"
+  
+  returndata = vascr_combine(cidata, data.df)
+  return(returndata)
+}
 
 
 #' Import an xcelligence file
@@ -42,16 +58,14 @@ xcelligence_lengthen_platemap = function(data)
 #'
 #' @return A vascr datafile
 #' 
-#' @keywords internal
+#' @noRd
 #' 
-#' @export
 #'
 #' @examples
 #' # xCELLigence test
 #' rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr')
 #' sampledefine = system.file('extdata/instruments/xcellkey.csv', package = 'vascr')
-#' 
-#' import_xcelligence(file = rawdata, key = sampledefine, "TEST7")
+#' # import_xcelligence(file = rawdata, key = sampledefine, "TEST7")
 #' 
 #'  
 import_xcelligence = function(file, key, experimentname = "NA", password = "RTCaDaTa")
@@ -172,22 +186,6 @@ return(finaldata)
 }
 
 
-#' Generate CI from xcelligence data
-#'
-#' @param data.df The dataset to generate CI from
-#'
-#' @return An enlargened dataset
-#' 
-#' @keywords internal
-#'
-#' @examples
-xcelligence_import_generate_CI = function(data.df)
-{
-  cidata = vascr_normalise(data.df, normtime = 0)
-  cidata$Unit = "CI"
-  
-  returndata = vascr_combine(cidata, data.df)
-  return(returndata)
-}
+
 
 

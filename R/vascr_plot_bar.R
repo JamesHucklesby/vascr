@@ -1,7 +1,6 @@
 #' Plot a vascr data set as a bar
 #'
 #' @param data Vascr dataset to plot
-#' @param priority Priority of values to plot (blank uses the system default)
 #' @param error The level of error to display
 #' @param confidence Minimum confidence level of results to show on the graph
 #' @param ... Any argument to be passed to vascr_polish_plot or vascr_prep_graphdata
@@ -33,20 +32,19 @@ vascr_plot_bar = function(data, error = Inf, confidence = NULL, ...)
   # Gather graph data based on the ...
   dots = list(...)
   dots["error"] = error
-  dots["priority"] = priority
   dots["confidence"] = confidence
   
   level = dots["level"]
   
   if(!is.null(confidence))
   {
-    plot = vascr_plot_bar_anova(data, priority = priority, error = error, confidence = confidence, ...)
-    return(plot) # Pre polished in funciton
+    plot = vascr_plot_bar_anova(data, error = error, confidence = confidence, ...)
+    return(plot) # Pre polished in function
   }
   
   if(dots["level"] == "deviation")
   {
-    plot = vascr_plot_deviation(data, visualisation = "bar", priority = priority, ...)
+    plot = vascr_plot_deviation(data, visualisation = "bar", ...)
     return(plot)
   }
   
@@ -168,8 +166,10 @@ vascr_plot_bar = function(data, error = Inf, confidence = NULL, ...)
 #' @importFrom ggplot2 geom_errorbar aes ggplot geom_text geom_bar
 #'
 #' @examples
-#' #vascr_plot_bar(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45)
-#' #vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45)
+#' #vascr_plot_bar(data = growth.df, confidence = 0.95, unit = "R", time = 100, 
+#' #  frequency = 4000, rotate_x_angle = 45)
+#' #vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", 
+#' # time = 100, frequency = 4000, rotate_x_angle = 45)
 #' 
 vascr_plot_bar_anova = function(data.df ,priority = NULL ,confidence = 0.95, time, unit, frequency, format = toplot, error = Inf, ...)
 {
@@ -195,7 +195,7 @@ vascr_plot_bar_anova = function(data.df ,priority = NULL ,confidence = 0.95, tim
   
   datum = arrange(datum, Sample)
   
-  labeltable = vascr_make_significance_table(data.df = datum, time, unit, frequency, priority = NULL, confidence, format = "toplot")
+  labeltable = vascr_make_significance_table(data.df = datum, time, unit, frequency, confidence, format = "toplot")
   
   summary$Sample = as.factor(summary$Sample)
   labeltable$Sample = as.factor(labeltable$Sample)
@@ -214,7 +214,7 @@ vascr_plot_bar_anova = function(data.df ,priority = NULL ,confidence = 0.95, tim
   
   plot = ggplot(filtered2.df, aes(x = Sample, y = Value, label = Label, fill = Sample)) + 
     geom_bar(stat = "identity") +
-    geom_text(aes(label=Label, y = min(Value)/2), fill = NA, label.color = NA) 
+    geom_text(aes(label=Label, y = min(Value)/2)) 
   
   plot
   

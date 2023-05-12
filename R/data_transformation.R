@@ -33,10 +33,11 @@ vascr_levels = function(set = "all")
 #' @export
 #'
 #' @examples
+#' rbgrowth.df = vascr_subset(growth.df, unit = "Rb")
 #' 
-#' vascr_summarise(growth.df, level = "summary")
-#' vascr_summarise(growth.df, level = "experiment")
-#' vascr_summarise(growth.df, level = "wells")
+#' vascr_summarise(rbgrowth.df, level = "summary")
+#' vascr_summarise(rbgrowth.df, level = "experiment")
+#' vascr_summarise(rbgrowth.df, level = "wells")
 #' 
 vascr_summarise = function(data.df, level = "wells")
 {
@@ -113,7 +114,6 @@ vascr_summarise_experiments = function(data.df)
 #' @param data.df 
 #'
 #' @return
-#' @export
 #' 
 #' @importFrom dplyr group_by summarise
 #' 
@@ -232,7 +232,7 @@ vascr_normalise = function(data.df, normtime, divide = FALSE) {
 #' @importFrom stringr str_detect
 #' @importFrom dplyr group_by arrange mutate
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 
@@ -282,7 +282,7 @@ vascr_align_key = function(data.df, point, discrepancy = 5) {
 #' 
 #' @importFrom dplyr left_join
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 
@@ -319,7 +319,7 @@ vascr_subsample = function(data.df, nth) {
 #' @return The current aquisition rate of the data frame
 #' 
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 
@@ -385,8 +385,8 @@ vascr_interpolate_time = function(data.df, npoints = vascr_time_samples(data.df)
 
 #' Title
 #'
-#' @param data.df 
-#' @param npoints 
+#' @param data.df The vascr dataset to resample
+#' @param npoints Manually specifiiy the number of points to resample at, default is the same frequency as the input dataset
 #' 
 #' @importFrom foreach foreach `%do%`
 #' @importFrom dplyr group_split group_by
@@ -418,7 +418,8 @@ vascr_resample_time = function(data.df, npoints = vascr_time_samples(data.df))
 #' @param data.df 
 #'
 #' @return
-#' @export
+#' 
+#' @noRd
 #'
 #' @examples
 vascr_check_interpolated = function(data.df)
@@ -439,7 +440,7 @@ vascr_check_interpolated = function(data.df)
 #' @param data.df 
 #'
 #' @return
-#' @export
+#' @noRd
 #' 
 #' @importFrom dplyr group_by summarise
 #'
@@ -456,12 +457,13 @@ return(samples)
 
 }
 
-#' Title
+#' Check if a vascr data set is re sampled
 #'
-#' @param data.df 
+#' @param data.df The vascr data set to check if it has been re sampled
 #'
-#' @return
-#' @export
+#' @return A boolean, TRUE if re sampled otherwise FALSE
+#' 
+#' @noRd
 #'
 #' @examples
 vascr_is_resampled = function(data.df)
@@ -475,35 +477,6 @@ vascr_is_resampled = function(data.df)
   return(samples)
   
 }
-
-
-
-#' #' Title
-#' #'
-#' #' @param data.df 
-#' #'
-#' #' @return
-#' #' @export
-#' #'
-#' #' @examples
-#' vascr_sync_time = function(data.df)
-#' {
-#' 
-#' experiment_times = masterdata %>% select(Time, Unit, Experiment, Well) %>% distinct()
-#' 
-#' data.frame(Unit = unique(experiment_times$Unit)) %>%
-#'   mutate(Modeled = vascr_is_modeled_unit(Unit)) %>%
-#'   right_join(experiment_times) %>%
-#'   mutate(Time = signif(Time, 4)) %>%
-#'   select(Modeled, Time, Experiment, Unit, Well) %>%
-#'   distinct() %>%
-#'   group_by(Experiment, Modeled, Unit, Well)
-#' 
-#' 
-#' masterdata %>% vascr_subset(unit = "R", experiment = 1, frequency = 4000) %>%
-#'   select(Time) %>%
-#'   distinct()
-#' }
 
 
 
@@ -599,7 +572,9 @@ vascr_subset_continuous = function(data, continuous, exact_match = FALSE, strip_
 #'
 #' @return A vascr dataset with rows and columns exploded
 #' 
-#' @keywords internal
+#' @importFrom stringr str_count
+#' 
+#' @noRd
 #'
 #' @examples
 #' #vascr_explode_wells(growth.df)
@@ -649,7 +624,7 @@ vascr_explode_wells = function(data.df, separate_rows = FALSE)
 #'
 #' @return A vascr dataset prepared for use in graphing
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 
@@ -730,7 +705,7 @@ vascr_prep_graphdata = function(data.df, unit = "", frequency = Inf, time = NULL
 #'
 #' @return An annotated up dataset, with ymax and ymin in place
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_summarise_errortype(growth.df, "sem")

@@ -1,8 +1,8 @@
 #' Title
 #'
-#' @param data.df 
-#' @param errorbars 
-#' @param alpha 
+#' @param data.df The vascr data set to plot
+#' @param errorbars Type of error bars, Inf for ribbons, 0 for no errors and any interger to plot every nth line
+#' @param alpha Transparency of the error ribbon plotted
 #' 
 #' @importFrom mdthemes md_theme_grey
 #'
@@ -63,13 +63,14 @@ vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3)
 #'
 #' @param plot 
 #' @param key_events 
+#' @param labelx
 #' 
 #' @importFrom ggplot2 geom_rect theme scale_x_continuous dup_axis guide_axis scale_y_continuous
 #' @importFrom ggnewscale new_scale_fill
 #' @importFrom patchwork wrap_plots
 #'
 #' @return
-#' @export
+#' @noRd
 #'
 #' @examples
 vascr_plot_keyrange = function(plot, key_events, labelx = TRUE)
@@ -106,12 +107,13 @@ vascr_plot_keyrange = function(plot, key_events, labelx = TRUE)
 #' Title
 #'
 #' @param plot 
-#' @param key_events 
+#' @param key_events
+#' @param labelx
 #' 
 #' @importFrom ggplot2 geom_rect theme scale_x_continuous dup_axis
 #'
 #' @return
-#' @export
+#' @noRd
 #'
 #' @examples
 vascr_plot_keyrange_labeled = function(plot, key_events, labelx = TRUE)
@@ -143,14 +145,15 @@ vascr_plot_keyrange_labeled = function(plot, key_events, labelx = TRUE)
 
 #' Title
 #'
-#' @param plot 
-#' @param key_events 
+#' @param plot Plot to add arrows to
+#' @param key_events the events to plot
+#' @param labelx Place the time point labels on the x axis
 #' 
 #' @importFrom ggplot2 geom_rect theme scale_x_continuous dup_axis element_line guide_axis
 #' @importFrom ggnewscale new_scale_fill
 #'
 #' @return
-#' @export
+#' @noRd
 #'
 #' @examples
 vascr_plot_keyarrows = function(plot, key_events, labelx = TRUE)
@@ -203,11 +206,15 @@ vascr_plot_keyarrows = function(plot, key_events, labelx = TRUE)
 #'
 #' @param plot 
 #' @param key_events 
+#' @param labelx
+#' @param linetype 
+#' @param linesize Size of the line to plot
 #' 
 #' @importFrom ggplot2 geom_rect theme scale_x_continuous dup_axis
 #'
 #' @return
-#' @export
+#' 
+#' @noRd
 #'
 #' @examples
 vascr_plot_keylines = function(plot, key_events, labelx = TRUE, linetype = "dashed", linesize = 1)
@@ -248,7 +255,7 @@ vascr_plot_keylines = function(plot, key_events, labelx = TRUE, linetype = "dash
 #' @param key_points 
 #'
 #' @return
-#' @export
+#' @noRd
 #'
 #' @examples
 vascr_plot_line_panel = function(data.df, key_points = NULL)

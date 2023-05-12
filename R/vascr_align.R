@@ -22,7 +22,9 @@
 #' @param instrument Which instruments to include values from
 #' @param max_deviation Maximum deviation to allow between replicates
 #' @param subsample Frequency values shoud be subsampled to
-#' @param return_lists Return lists of the varibles to select rather than the subset dataset
+#' @param return_lists Return lists of the variables to select rather than the subset data set
+#' @param sampleid List of ID's to be used. Sample names will be re-ordered accordingly for display.
+#' @param remake_name Should the name be re-formatted
 #'
 #' @return The subset dataset, based on the values selected
 #' 
@@ -43,7 +45,7 @@
 #' 
 #' vascr_subset(growth.df, unit = "Rb")
 #' 
-vascr_subset = function(subset.df, 
+vascr_subset = function(data.df, 
                         time = NULL, 
                         unit = NULL, 
                         well = NULL, 
@@ -67,9 +69,12 @@ vascr_subset = function(subset.df,
                         subsample = NULL,
                         return_lists = FALSE,
                         sampleid = NULL,
-                        remake_name = FALSE)
+                        remake_name = TRUE)
 {
   
+  
+  subset.df = data.df
+  remake_name
   
   # Subsample (this is the cheapest so let's do it first)
   if(!is.null(subsample))
@@ -165,10 +170,6 @@ vascr_subset = function(subset.df,
     warning("No data returned from dataset subset. Check your frequencies, times and units are present in the dataset")
   }
   
-  if(isTRUE(remake_name) & vascr_detect_level(subset.df) == "wells")
-  {
-    subset.df = vascr_make_name(subset.df)
-  }
   
   return(subset.df)
 }
@@ -185,7 +186,7 @@ vascr_subset = function(subset.df,
 #'
 #' @return A list of values that fit the criteria
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_find_value(data.df)
@@ -225,7 +226,7 @@ vascr_find_value = function(data.df, value_greater_than = NULL, value_less_than 
 #' 
 #' @importFrom utils adist
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vector = vascr_find_unit(growth.df, "all")
@@ -278,7 +279,7 @@ vascr_match = function(match, vector)
 #'
 #' @return A boolean
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_is_valid_unit(growth.df, "TEER")
@@ -320,7 +321,7 @@ vascr_is_valid_unit = function(data.df, unit)
 #'
 #' @return A vector of units that have been identified
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_find_unit(growth.df, "raw")
@@ -394,7 +395,7 @@ vascr_find_unit = function(data.df, unit = NA)
 #'
 #' @return results from vascr_find_unit
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # See vascr_find_unit
@@ -411,7 +412,7 @@ vascr_realise_units = function(...)
 #'
 #' @return The string of a valid well to return
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_find_well(growth.df, "A1")
@@ -446,7 +447,7 @@ vascr_find_well = function(data.df, well)
 #'
 #' @return The forced median value
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vector = unique(growth.df$Frequency)
@@ -480,7 +481,7 @@ vascr_force_median = function(vector, round = "up")
 #'
 #' @return A timepoint that exactly aligns with a measured datapoint
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_find_frequency(growth.df, 4382)
@@ -554,7 +555,7 @@ vascr_find_frequency = function(data.df, frequency) {
 #'
 #' @return A character string of the most closley matched experiment
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_find_experiment(growth.df, 1)
@@ -589,7 +590,7 @@ vascr_find_experiment = function(data.df, experiment)
 #'
 #' @return A single time that aligns with the dataset
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples 
 #' #vascr_find_time(data.df, 43.78)
@@ -633,7 +634,7 @@ vascr_find_single_time = function(data.df, time)
 #'
 #' @return A timepoint that exactly aligns with a measured datapoint
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_find_time(growth.df, 146.2)
@@ -701,7 +702,7 @@ vascr_find_time = function(data.df, time = NULL) {
 #'
 #' @return A vector of strings that match
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_find_instrument(growth.df, "Rb")
@@ -755,7 +756,7 @@ vascr_find_instrument = function(data.df, instrument = NULL)
 #'
 #' @return The columns that match
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_find_colname(data.df, "ADP")
@@ -799,7 +800,7 @@ vascr_find_colname = function(data.df, colname = NULL)
 #'
 #' @return The appended unit
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_append_unit("ATP", xcell)
@@ -826,7 +827,7 @@ vascr_append_unit = function(strippedcol, allcols)
 #'
 #' @return The trimmed string
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # string = c("nm.ml.Oleandrin", "nm.ATP")
@@ -853,7 +854,7 @@ vascr_strip_unit = function(string)
 #'
 #' @return Boolean
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_all_null(NULL, TRUE)
@@ -877,7 +878,7 @@ vascr_all_null = function(...)
 #'
 #' @return Boolean
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_all_null(NULL, TRUE)
@@ -912,7 +913,7 @@ vascr_any_null = function(...)
 #'
 #' @return A vector of samples that match the criterion
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 
@@ -1086,7 +1087,7 @@ vascr_find_sample = function(data.df, sample_contains = NULL, sample_not_contain
 #'
 #' @return A boolean
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vector = vascr_units_table()$Unit
@@ -1112,7 +1113,7 @@ vascr_odd_in_vector = function(value, vector)
 #'
 #' @return The value of the next element in the vector
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_next_in_vector("Cm", vector)
@@ -1132,7 +1133,7 @@ vascr_next_in_vector = function(value, vector)
 #'
 #' @return A boolean
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_col_exists("Well", data.df)
@@ -1148,7 +1149,7 @@ vascr_col_exists = function(col, data.df)
 #'
 #' @return The summarised sample table
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # data.df = xcell
@@ -1175,22 +1176,3 @@ samplecols.df = distinct(samplecols.df)
 return(samplecols.df)
 }
 
-
-#' Title
-#'
-#' @param data.df 
-#' 
-#' @importFrom dplyr tibble left_join
-#'
-#' @return
-#' @export
-#'
-#' @examples
-vascr_number_sample = function(data.df)
-{
-  sample_list = tibble(Sample = unique(data.df$Sample), SampleID = 1:length(Sample))
-  data.df$SampleID = NULL
-  data.df = left_join(data.df, sample_list, by = "Sample")
-  
-  return(data.df)
-}

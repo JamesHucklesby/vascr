@@ -20,7 +20,7 @@ A data frame
 Implode multiple columns from a data frame into a single title
 }
 \examples{
-vascr_full_implode(growth.df)
-vascr_full_implode(growth.df, c("cells", "Experiment"))
+vascr_full_implode(growth.df \%>\% vascr_subset(unit = "Rb"))
+vascr_full_implode(growth.df \%>\% vascr_subset(unit = "Rb"), c("cells", "Experiment"))
 
 }

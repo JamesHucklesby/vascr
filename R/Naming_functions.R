@@ -6,7 +6,6 @@
 #' @param remove_blank Should blank names (starting with _, 0_ or NA_) be removed
 #'
 #' @return A data frame with columns carried down
-#' @keywords internal
 #' 
 #' @noRd
 #'
@@ -50,8 +49,8 @@ vascr_carry_down_names = function(data.df, cols_to_carry = NULL, remove_blank = 
 #' @export
 #'
 #' @examples
-#' vascr_full_implode(growth.df)
-#' vascr_full_implode(growth.df, c("cells", "Experiment"))
+#' vascr_full_implode(growth.df %>% vascr_subset(unit = "Rb"))
+#' vascr_full_implode(growth.df %>% vascr_subset(unit = "Rb"), c("cells", "Experiment"))
 #' 
 vascr_full_implode = function(data.df, cols_to_implode = NULL, remove_blank = TRUE)
 {
@@ -91,17 +90,26 @@ vascr_full_implode = function(data.df, cols_to_implode = NULL, remove_blank = TR
 }
 
 
-#' Title
+#' Generate human-readable sample names from a variety of naming variables
 #'
-#' @param data.df 
+#' @param data.df The vascr data frame to generate titles for
+#' @param stripidentical Should column which are the same in all samples be removed from the sample name. Default true
+#' @param colnames Manually specify the columns included in the sample. Defaults to all the columns which change.
+#' @param addcols Columns to explicitly include in the sample name
+#' @param dropcols Columns to explicitly exclude from the sample name
+#' @param fill_blank String to replace blank values with, defaults to "Control"
+#' @param cleanup_sample Remove the underscores between sample names, default FALSE
 #'
-#' @return
+#' @return A vascr dataset with human-readable names
+#' 
 #' @export
 #'
 #'@importFrom dplyr summarise_all select distinct all_of everything filter n_distinct
 #'@importFrom tidyr pivot_longer
 #'
 #' @examples
+#' vascr_implode(growth.df)
+#' 
 vascr_implode = function(data.df, stripidentical = TRUE, colnames = NULL, 
                          addcols = NULL, dropcols = NULL, fill_blank = "Control",
                          cleanup_sample = FALSE)
@@ -141,7 +149,7 @@ vascr_implode = function(data.df, stripidentical = TRUE, colnames = NULL,
   
   toreturn = vascr_full_implode(data.df, cols_to_implode = colnames)
   
-  toreturn = vascr_sample_replace_match(data.df = toreturn, "", fill_blank)
+  toreturn = vascr_sample_replace(data.df = toreturn, "", fill_blank)
   
   if(cleanup_sample)
   {
@@ -160,8 +168,7 @@ vascr_implode = function(data.df, stripidentical = TRUE, colnames = NULL,
 #'
 #' @param cols 
 #'
-#' @return
-#' @export
+#' @return Repaired column names
 #' 
 #' @noRd
 #'
@@ -218,7 +225,7 @@ vascr_col_id = function(data.df)
 #'
 #' @param data.df The dataset to analyse
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @return A vector of the column names that change in the dataset
 #'
@@ -255,7 +262,7 @@ vascr_find_changing_cols = function(data.df)
 #' @importFrom dplyr select all_of
 #' @importFrom tidyr unite separate
 #' 
-#' @export
+#' @noRd
 #'
 #' @examples
 #' data.df = vascr_subset(growth.df, unit = "Rb")
@@ -328,7 +335,7 @@ vascr_summarise_change = function(data.df, showblank = FALSE)
 #'
 #' @return A vector of the returned columns
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_exploded_cols(growth.df)
@@ -347,7 +354,7 @@ vascr_exploded_cols = function(data)
 #'
 #' @return A vector of the columns requested
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 
@@ -485,7 +492,7 @@ cleanup_samplename = function(raw_name)
 #' @param data.df 
 #'
 #' @return
-#' @export
+#' @noRd
 #'
 #' @examples
 vascr_cleanup_sample = function(data.df)

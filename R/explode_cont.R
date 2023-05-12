@@ -57,7 +57,7 @@ vascr_explode = function(data)
 #' @return A numeric vector
 #' @importFrom tidyr replace_na
 #'
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 vascr_make_numeric = function(vector)
@@ -69,39 +69,6 @@ vascr_make_numeric = function(vector)
 }
 
 
-#' Test that the datset is correctly formatted for explosion
-#'
-#' @param data An ECIS data frame
-#' 
-#' @importFrom stringr str_count str_replace
-#'
-#' @return A boolean value
-#' 
-#' @keywords internal
-#'
-#' @examples
-#' #library(stringr)
-#' 
-#' #data.df = growth.df
-#' #data.df$Sample = str_replace(data.df$Sample, " ", "_")
-#' #data.df$Sample = paste(data.df$Sample, "+ 10_nm nothing important")
-#' #data.df$Sample = paste(data.df$Sample, "+ 4_nm Carpet + ECV_line")
-#' 
-#' #vascr_test_explosion_integrity(growth.df)
-#' 
-vascr_test_explosion_integrity = function(data)
-{
-  data$items = str_count(data$Sample, "[+]") + 1 #Count the number of items = +es, +1
-  data$underscore = str_count(data$Sample, "[_]") #Count the number of underscores
-  
-  allsamplescomplete = all(data$items == data$underscore) # Check all samples have one underscore per item
-  allsamplesidentical = sd(data$items)==0 && sd(data$underscore)==0 # Check all samples have a SD of 0, IE all items are identical
-  
-  return(allsamplescomplete && allsamplesidentical)
-  
-}
-
-
 #' Test if an ECIS data frame is exploded
 #' 
 #' This function tests to see if exploded columns are present in a dataset. Does not check that all are present, or that they are corrrectly exploded as this would be much slower.
@@ -110,7 +77,7 @@ vascr_test_explosion_integrity = function(data)
 #'
 #' @return True (exploded) or false (not exploded)
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_test_exploded(growth.df)

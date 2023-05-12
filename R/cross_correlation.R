@@ -90,19 +90,6 @@ vascr_ccf_pairs = function(data.df, reference = NULL, comparator = NULL)
   return(combinations)
 }
 
-#' Title
-#'
-#' @param data.df 
-#'
-#' @return
-#' @export
-#'
-#' @examples
-vascr_summarise_available_samples = function(data.df)
-{
-  dat = vascr_summarise_change(data.df)
-  return(unique(dat$sample))
-}
 
 #' Generate all cross-correlation pairs between sets of values
 #'
@@ -110,7 +97,7 @@ vascr_summarise_available_samples = function(data.df)
 #'
 #' @return A dataset contining values from each cross correlation pair
 #' 
-#' @keywords internal
+#' @noRd
 #' 
 #' @importFrom utils combn
 #'
@@ -197,7 +184,11 @@ return(ret)
 
 #' Plot cross correlation data from a vascr dataset
 #'
-#' @param data.df The dataset to plot
+#' @param data.df The data set to plot
+#' @param reference Reference line to compare against, if not specified all comparasons will be made
+#' @param comparator A list of samples to be compared to the reference. If not specified, all will be compared.
+#' @param manualpairs A manual list of pairs to be compared
+#' 
 #'
 #' @return A plots of the cross correlation calculated
 #' 
@@ -209,9 +200,9 @@ return(ret)
 #' @export
 #'
 #' @examples
-#' # vascr_plot_cross_correlation(growth.df %>% vascr_subset(unit = "R", frequency = 4000))
+#' vascr_plot_cross_correlation(growth.df %>% vascr_subset(unit = "R", frequency = 4000))
 #' 
-vascr_plot_cross_correlation = function(data.df, reference = NULL, comparator = NULL, manualpairs = NULL, show_index = NULL, plot = "all", order = TRUE)
+vascr_plot_cross_correlation = function(data.df, reference = NULL, comparator = NULL, manualpairs = NULL)
 {
   
 

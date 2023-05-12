@@ -18,9 +18,10 @@ The summarized data set
 Summarise a vascr data set down to a particular level
 }
 \examples{
+rbgrowth.df = vascr_subset(growth.df, unit = "Rb")
 
-vascr_summarise(growth.df, level = "summary")
-vascr_summarise(growth.df, level = "experiment")
-vascr_summarise(growth.df, level = "wells")
+vascr_summarise(rbgrowth.df, level = "summary")
+vascr_summarise(rbgrowth.df, level = "experiment")
+vascr_summarise(rbgrowth.df, level = "wells")
 
 }

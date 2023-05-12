@@ -45,14 +45,18 @@ vascr_samples = function(data.df)
   data.df %>% select(SampleID, Sample) %>% distinct() %>%  arrange(Sample)%>%  return()
 }
 
-#' Title
+#' Assign numeric SampleID values to a data set
 #'
-#' @param data.df 
+#' @param data.df The data set to add SampleID to
+#' @param replaceid Force the ID's to be replaced
 #'
-#' @return
-#' @export
+#' @return A data set with numeric ID's associated with each unique sample
+#' 
+#' @noRd
 #'
 #' @examples
+#' vascr_assign_sampleid(growth.df) %>% head()
+#' 
 vascr_assign_sampleid  = function(data.df, replaceid = FALSE)
 {
   
@@ -77,7 +81,7 @@ vascr_assign_sampleid  = function(data.df, replaceid = FALSE)
 #' @param data.df 
 #'
 #' @return
-#' @export
+#' @noRd
 #'
 #' @examples
 vascr_check_sampleid = function(data.df)
@@ -85,8 +89,8 @@ vascr_check_sampleid = function(data.df)
   
   if("SampleID" %notin% colnames(data.df))
   {
-    data.df = vascr_assign_sampleid(data.df)
     warning("No SampleID in input data frame, adding it automatically")
+    data.df = vascr_assign_sampleid(data.df)
   }
   
   return(data.df)
@@ -94,47 +98,20 @@ vascr_check_sampleid = function(data.df)
 }
 
 
-#' Title
+#' Correct a mistake in the sample string
 #'
-#' @param data.df 
-#' @param target 
-#' @param replacement 
+#' @param data.df vascr data set to alter
+#' @param target string to find
+#' @param replacement string to replace with
+#' 
+#' @importFrom dplyr if_else mutate left_join select ungroup distinct
 #'
-#' @return
+#' @return an altered data set
+#' 
 #' @export
 #'
 #' @examples
 vascr_sample_replace = function(data.df, target, replacement = "")
-{
-  
-  data.df = vascr_check_sampleid(data.df)
-  
-  levels = data.df %>% ungroup() %>% select(Sample, SampleID) %>% distinct()
-  
-  newlevels = levels %>% mutate(Sample = as.character(Sample)) %>%
-    mutate(Sample = str_replace_all(Sample, target, replacement)) %>%
-    mutate(Sample = factor(Sample, unique(Sample)))
-  
-  output = data.df %>% select(-Sample) %>%
-    left_join(newlevels, by = "SampleID")
-  
-  return(output)
-  
-}
-
-#' Title
-#'
-#' @param data.df 
-#' @param target 
-#' @param replacement 
-#' 
-#' @importFrom dplyr if_else mutate left_join select ungroup distinct
-#'
-#' @return
-#' @export
-#'
-#' @examples
-vascr_sample_replace_match = function(data.df, target, replacement = "")
 {
   
   data.df = vascr_check_sampleid(data.df)
@@ -162,7 +139,7 @@ vascr_sample_replace_match = function(data.df, target, replacement = "")
 #' @importFrom ggplot2 ggplot geom_tile geom_text theme scale_colour_brewer scale_fill_brewer
 #'
 #' @return
-#' @export
+#' @noRd
 #'
 #' @examples
 #' 
@@ -192,7 +169,8 @@ vascr_plot_sampleid = function(data.df)
 #' @importFrom dplyr filter
 #'
 #' @return
-#' @export
+#'
+#' @noRd
 #'
 #' @examples
 vascr_vline = function(plot1, ..., list = NA)

@@ -2,17 +2,20 @@
 % Please edit documentation in R/sample_id_work.R
 \name{vascr_sample_replace}
 \alias{vascr_sample_replace}
-\title{Title}
+\title{Correct a mistake in the sample string}
 \usage{
 vascr_sample_replace(data.df, target, replacement = "")
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{vascr data set to alter}
 
-\item{target}{}
+\item{target}{string to find}
 
-\item{replacement}{}
+\item{replacement}{string to replace with}
+}
+\value{
+an altered data set
 }
 \description{
-Title
+Correct a mistake in the sample string
 }

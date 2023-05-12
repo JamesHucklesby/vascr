@@ -9,7 +9,7 @@
 #'
 #' @param data.df The dataset to calculate from
 #' 
-#' @noRD
+#' @noRd
 #'
 #' @return An ecis data frame, with calculated values included
 ecis_calculate_quantaties = function(data.df)
@@ -35,18 +35,23 @@ ecis_calculate_quantaties = function(data.df)
   return(longdata.df)
 }
 
-#' Title
+#' Import a table of names
 #'
-#' @param name_path 
+#' @param sampledefine The CSV file to be imported
 #'
-#' @return
+#' @return A data frame containing the samples defined in the file
+#' 
 #' @export
 #' 
 #' @importFrom dplyr relocate mutate
 #' @importFrom tidyr separate_rows unite
+#' @importFrom stringr str_count
 #' 
 #'
 #' @examples
+#' sampledefine = system.file('extdata/growth/growth1_samples.csv', package = 'vascr')
+#' vascr_import_map(sampledefine)
+#' 
 vascr_import_map = function(sampledefine)
 {
   
@@ -93,7 +98,7 @@ vascr_import_map = function(sampledefine)
 #'
 #' @return A standard ECIS data frame, annotated
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # This function is baked into ecis_import and it's parts
@@ -151,7 +156,7 @@ vascr_assign_samples = function (data, sampledefine)
 #' @importFrom dplyr left_join
 #' 
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 
@@ -169,14 +174,6 @@ vascr_assign_samples = function (data, sampledefine)
 #' #data1$Experiment = "Growth_1"
 #' #head(data1)
 #' #vascr_plot(data1, unit = "X")
-#' 
-#' rawdata = "\\\\files.auckland.ac.nz\\myhome\\Plasminogen on D3\\plg_serum\\21_11_22.abp"
-#' modeleddata = "\\\\files.auckland.ac.nz\\myhome\\Plasminogen on D3\\plg_serum\\21_11_22_RbA.csv"
-#' sampledefine = "\\\\files.auckland.ac.nz\\myhome\\Plasminogen on D3\\plg_serum\\21_11_22_key.csv"
-#'
-#'
-#'rawdata = "E:\\Vascr demo\\growth1_raw_50.abp"
-#'sampledefine = "E:\\Vascr demo\\growth1_samples.csv"
 #'
 #' 
 ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
@@ -294,7 +291,7 @@ ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
 #'
 #' @return Data frame containing modeled data
 #' 
-#' @keywords internal
+#' @noRd
 #' 
 #' @importFrom stringr str_detect
 #' @importFrom tidyr separate gather pivot_longer

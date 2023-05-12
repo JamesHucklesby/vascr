@@ -2,7 +2,7 @@
 % Please edit documentation in R/Naming_functions.R
 \name{vascr_implode}
 \alias{vascr_implode}
-\title{Title}
+\title{Generate human-readable sample names from a variety of naming variables}
 \usage{
 vascr_implode(
   data.df,
@@ -15,8 +15,27 @@ vascr_implode(
 )
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The vascr data frame to generate titles for}
+
+\item{stripidentical}{Should column which are the same in all samples be removed from the sample name. Default true}
+
+\item{colnames}{Manually specify the columns included in the sample. Defaults to all the columns which change.}
+
+\item{addcols}{Columns to explicitly include in the sample name}
+
+\item{dropcols}{Columns to explicitly exclude from the sample name}
+
+\item{fill_blank}{String to replace blank values with, defaults to "Control"}
+
+\item{cleanup_sample}{Remove the underscores between sample names, default FALSE}
+}
+\value{
+A vascr dataset with human-readable names
 }
 \description{
-Title
+Generate human-readable sample names from a variety of naming variables
+}
+\examples{
+vascr_implode(growth.df)
+
 }

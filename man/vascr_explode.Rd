@@ -18,5 +18,4 @@ Explode out continuous data from Sample
 \examples{
 # growth.df$Instrument ="ECIS"
 
-
 }

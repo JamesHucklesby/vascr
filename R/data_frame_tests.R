@@ -4,7 +4,7 @@
 #'
 #' @param data the data frame to test
 #'
-#'@keywords internal
+#' @noRd
 #'
 #' @return True (exploded) or false (not exploded)
 #' 
@@ -28,7 +28,7 @@ vascr_test_exploded = function(data.df)
 #'
 #' @return TRUE if normalised, FALSE if not
 #' 
-#' @export
+#' @noRd
 #' 
 #' @importFrom dplyr group_by
 #' @importFrom tidyr replace_na
@@ -68,9 +68,8 @@ vascr_test_normalised = function(data.df)
 #' @importFrom dplyr group_by summarise
 #' @importFrom magrittr "%>%"
 #' 
-#' @keywords internal
+#' @noRd
 #' 
-#' @export
 #'
 #' @examples
 #' # Prep a known good compliment of data
@@ -176,7 +175,9 @@ vascr_missing_wells = function(wells)
 #'
 #' @return boolean, if the dataset is resampled or not
 #' 
-#' @export
+#' @importFrom dplyr across
+#' 
+#' @noRd
 #'
 #' @examples
 #' vascr_test_resampled(growth.df)

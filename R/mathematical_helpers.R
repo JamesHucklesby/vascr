@@ -10,7 +10,7 @@
 #'
 #' @return The mode of the vector
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #getmode(c(1,3,3,4,7))
@@ -25,7 +25,7 @@ getmode <- function(v) {
 #'
 #' @return the most commonly occouring character 
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #categorical_mode(c("Cat", "Cat", "Monkey"))

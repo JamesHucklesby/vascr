@@ -7,11 +7,11 @@
 vascr_plot_line(data.df, errorbars = Inf, alpha = 0.3)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The vascr data set to plot}
 
-\item{errorbars}{}
+\item{errorbars}{Type of error bars, Inf for ribbons, 0 for no errors and any interger to plot every nth line}
 
-\item{alpha}{}
+\item{alpha}{Transparency of the error ribbon plotted}
 }
 \description{
 Title

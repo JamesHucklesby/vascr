@@ -4,7 +4,7 @@
 #'
 #' @return A vector of the modeled units in the dataset
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' #vascr_modeled_in_data(growth.df)
@@ -22,7 +22,7 @@ vascr_modeled_in_data = function(data)
 #'
 #' @return A vector containing the raw units present in the data
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_raw_in_data(growth.df)
@@ -40,7 +40,7 @@ vascr_raw_in_data = function(data)
 #'
 #' @return A number of a frequency in the dataset
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 

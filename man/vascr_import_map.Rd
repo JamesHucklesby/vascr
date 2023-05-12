@@ -2,13 +2,21 @@
 % Please edit documentation in R/z_import_ecis.R
 \name{vascr_import_map}
 \alias{vascr_import_map}
-\title{Title}
+\title{Import a table of names}
 \usage{
 vascr_import_map(sampledefine)
 }
 \arguments{
-\item{name_path}{}
+\item{sampledefine}{The CSV file to be imported}
+}
+\value{
+A data frame containing the samples defined in the file
 }
 \description{
-Title
+Import a table of names
+}
+\examples{
+sampledefine = system.file('extdata/growth/growth1_samples.csv', package = 'vascr')
+vascr_import_map(sampledefine)
+
 }

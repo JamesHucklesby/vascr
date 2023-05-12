@@ -6,8 +6,6 @@
 #' @param key Key file, containing data on which well contains what data
 #' @param experimentname Name to assign to the experiment
 #' @param password The password for protected xCELLigence files
-#' 
-#' @importFrom dplyr if_else
 #'
 #' @return A full vascr dataset
 #' @export

@@ -8,14 +8,17 @@ vascr_plot_cross_correlation(
   data.df,
   reference = NULL,
   comparator = NULL,
-  manualpairs = NULL,
-  show_index = NULL,
-  plot = "all",
-  order = TRUE
+  manualpairs = NULL
 )
 }
 \arguments{
-\item{data.df}{The dataset to plot}
+\item{data.df}{The data set to plot}
+
+\item{reference}{Reference line to compare against, if not specified all comparasons will be made}
+
+\item{comparator}{A list of samples to be compared to the reference. If not specified, all will be compared.}
+
+\item{manualpairs}{A manual list of pairs to be compared}
 }
 \value{
 A plots of the cross correlation calculated
@@ -24,6 +27,6 @@ A plots of the cross correlation calculated
 Plot cross correlation data from a vascr dataset
 }
 \examples{
-# vascr_plot_cross_correlation(growth.df \%>\% vascr_subset(unit = "R", frequency = 4000))
+vascr_plot_cross_correlation(growth.df \%>\% vascr_subset(unit = "R", frequency = 4000))
 
 }

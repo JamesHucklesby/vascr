@@ -14,16 +14,17 @@
 #' @importFrom magrittr "%>%"
 #'
 #' @return A table of what is significant
-#' @export
+#' 
+#' @noRd
 #'
 #' @examples
-#' #vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95)
-#' #vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95, format = "Tukey_data")
+#' vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95)
+#' vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95, format = "Tukey_data")
 #' 
-vascr_make_significance_table = function(data.df, time, unit, frequency, priority, confidence = 0.95, format = "toplot")
+vascr_make_significance_table = function(data.df, time, unit, frequency, confidence = 0.95, format = "toplot")
 {
   
-  data.df = vascr_subset(data.df, unit = unit, time = time, frequency = frequency, remake_name = FALSE)
+  data.df = vascr_subset(data.df, unit = unit, time = time, frequency = frequency)
   
   data.df$Sample = str_replace(data.df$Sample, "-", "~")
   
@@ -116,7 +117,7 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, priorit
 #'
 #' @return A linear model object
 #' 
-#' @keywords internal
+#' @noRd
 #' 
 #' @importFrom stats lm
 #'
@@ -148,7 +149,7 @@ vascr_lm = function(data.df, unit, frequency, time, priority = NULL)
 #' 
 #' @importFrom stats residuals
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 
@@ -174,7 +175,7 @@ vascr_residuals = function(data.df, unit, frequency, time, priority = NULL)
 #' @importFrom ggplot2 labs
 #'
 #' @return A ggpubr ggqqplot object
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_plot_qq(growth.df, "R", 4000, 100)
@@ -214,7 +215,7 @@ vascr_plot_qq = function(data.df, unit, frequency, time, priority = NULL)
 #' @param priority Vascr priority list
 #'
 #' @return A shapiro test of the selected data
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_shapiro(growth.df, "R", 4000, 100)
@@ -238,7 +239,7 @@ vascr_shapiro = function(data.df, unit, frequency, time, priority = NULL)
 #' @importFrom ggplot2 stat_function ggplot geom_histogram aes
 #'
 #' @return a ggplot with rediduals overlaid by a normal curve
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 
@@ -280,7 +281,7 @@ vascr_plot_normality = function(data.df, unit, frequency, time, priority = NULL)
 #'
 #' @return A Levene Test object
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_levene(growth.df, "R", 4000, 100)
@@ -310,7 +311,7 @@ vascr_levene = function(data.df, unit, frequency, time, priority = NULL)
 #' @importFrom ggplot2 ggplot xlab ylab labs stat_smooth geom_hline geom_point
 #'
 #' @return A ggplot of a levene's test and the underlying data analysed
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_plot_levene(growth.df, "R", 4000, 100)
@@ -350,18 +351,17 @@ vascr_plot_levene = function(data.df, unit, frequency, time, priority = NULL)
 #' @param unit Unit to plot
 #' @param frequency Frequency to plot
 #' @param time Time to plot
-#' @param priority Vascr priority list. Blank will use the baked in default.
 #' @param ... Other arguments to be passed on to vascr_plot_line
 #'
 #' @importFrom ggplot2 geom_vline
 #'
 #' @return A ggplot2 object
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_plot_time_vline(growth.df, "R", 4000, 100)
 #' 
-vascr_plot_time_vline = function(data.df, unit, frequency, time, priority = NULL)
+vascr_plot_time_vline = function(data.df, unit, frequency, time)
 {
   
   # Round the number given to the function to the nearest actual measurement
@@ -387,18 +387,18 @@ vascr_plot_time_vline = function(data.df, unit, frequency, time, priority = NULL
 #' @param unit Unit to plot
 #' @param frequency Frequency to plot
 #' @param time Time to plot
-#' @param priority vascr priority, if empty default will be used
 #' 
 #' @importFrom ggplot2 ggplot aes geom_boxplot labs
 #' @importFrom stringr str_replace_all
 #'
 #' @return A ggplot2 box plot of replicate experiments
-#' @keywords internal
+#' 
+#' @noRd
 #'
 #' @examples
 #' # vascr_plot_box_replicate(growth.df, "R", 4000, 100)
 #' 
-vascr_plot_box_replicate = function(data.df, unit, frequency, time, priority = NULL)
+vascr_plot_box_replicate = function(data.df, unit, frequency, time)
 {
   
   data = vascr_subset(data.df, unit = unit, frequency = frequency, time = vascr_find_time(data.df, time))
@@ -431,7 +431,7 @@ return(overallplot)
 #' @importFrom cowplot plot_grid
 #' @importFrom ggtext element_markdown
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' 
@@ -440,11 +440,11 @@ return(overallplot)
 vascr_plot_anova = function(data.df, unit, frequency, time, priority = NULL, ...)
 {
   
-timeplot = vascr_plot_time_vline(data.df, unit, frequency, time, priority) + labs(y = "Resistance  
+timeplot = vascr_plot_time_vline(data.df, unit, frequency, time) + labs(y = "Resistance  
                                                                                   (ohm, 4000 Hz)")
 
 
-overallplot = vascr_plot_box_replicate(data.df, unit, frequency, time, priority) + labs(y = "Resistance  
+overallplot = vascr_plot_box_replicate(data.df, unit, frequency, time) + labs(y = "Resistance  
                                                                                   (ohm, 4000 Hz)") + mdthemes::md_theme_grey() +
   scale_color_manual(values=c("orange", "blue", "green"))
 
@@ -477,20 +477,19 @@ return(grid)
 #' @param unit Unit to analyse
 #' @param frequency Frequency to analyse
 #' @param time Time to analyse
-#' @param priority Priority of units for statistical analyasis
 #' @param raw If true, a non-processed form of the tukey results will be returned
 #' 
 #' @importFrom dplyr arrange
 #'
 #' @return A table or Tukey HSD test result
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @examples
 #' # vascr_tukey(growth.df, "R", 4000, 100)
 #' # vascr_tukey(growth.df, "R", 4000, 100, raw = TRUE)
 #' 
-vascr_tukey = function(data.df, unit, frequency, time, priority = NULL, raw = FALSE)
+vascr_tukey = function(data.df, unit, frequency, time, raw = FALSE)
 {
   if(raw)
   {
@@ -517,7 +516,7 @@ vascr_tukey = function(data.df, unit, frequency, time, priority = NULL, raw = FA
 #' @importFrom stats anova
 #' @importFrom car Anova
 #' 
-#' @keywords internal
+#' @noRd
 #'
 #' @return Prints out the summary data for an ANOVA analysis
 #'
@@ -545,7 +544,7 @@ vascr_summarise_anova = function(data.df, unit, frequency, time, priority = NULL
   # lm = vascr_lm(data21.df, unit, frequency, time, priority)
   # anova = anova(lm)
   
-  tukey =  vascr_tukey(data21.df, unit, frequency, time, priority, raw = TRUE)
+  tukey =  vascr_tukey(data21.df, unit, frequency, time, raw = TRUE)
   levene = vascr_levene(data21.df, unit, frequency, time, priority)
   shapiro = vascr_shapiro(data21.df, unit, frequency, time, priority)
   
@@ -562,14 +561,14 @@ vascr_summarise_anova = function(data.df, unit, frequency, time, priority = NULL
 
 #' Title
 #'
-#' @param data.df 
+#' @param data.df Vascr dataset to 
 #' @param unit 
 #' @param frequency 
 #' @param time 
 #' 
 #'
 #' @return
-#' @export
+#' @noRd
 #'
 #' @examples
 vascr_plot_anova_grid = function (data.df, unit =  "R", frequency = 4000, time = 100)
@@ -617,11 +616,13 @@ return(sigplot)
 #' @param frequency the frequency to use
 #' @param time the time to use for the bar plot and ANOVA
 #' @param reference SampleID of the sample to use as the reference for statistical analysis
+#' @param breaklines Should each variable in the sample name be on a new line
 #' 
 #' @importFrom mdthemes md_theme_gray
 #'
 #' @return
-#' @export
+#' 
+#' @noRd
 #'
 #' @examples
 #' 

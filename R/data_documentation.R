@@ -9,7 +9,7 @@ utils::globalVariables("Time")
 utils::globalVariables("Value")
 utils::globalVariables("Stream")
 
-utils::globalVariables(c("A","B","Label","Score","desc","geom_text","median","movementfrommean","position_stack","rn", "deviation", "expwells", "badremoved", "V1", "V2", "V3","V4", "V5", "mapvalues", "V1.1", "V2.1", "V3.1", "V4.1", "V5.1", "Var1"))
+utils::globalVariables(c("A","B","Label","Score","desc","median","movementfrommean","position_stack","rn", "deviation", "expwells", "badremoved", "V1", "V2", "V3","V4", "V5", "mapvalues", "V1.1", "V2.1", "V3.1", "V4.1", "V5.1", "Var1"))
 
 utils::globalVariables(c("Var1", "Var2", "Var3", "Var4", "Var5"))
 utils::globalVariables(c("Val1", "Val2", "Val3", "Val4", "Val5"))
@@ -21,6 +21,13 @@ utils::globalVariables(c("commaarray", "lsf.str", "Deviation", "Max_Deviation", 
 utils::globalVariables(c("Distance", "Delta_Length", "value", "coeffs", "data"))
 
 utils::globalVariables(c("name","Type","SampleID"))
+
+utils::globalVariables(c("Asig", "Bsig", "ColID", "Column", "Event", "ID", "New_Time", "New_Value", "Row", "SampleA",
+                         "SampleB", "Samplepair", "Significance", "arrow", "coeff", "colour", "currcol", "end",
+                         "formatted", "i" ,"joined" ,"lab" ,"middle" ,"model",
+                         "normtime", "normvalue", "s1", "s2", "samp", "samples", "start", "temp", "time", "times"))
+
+
 
 
 
@@ -72,14 +79,13 @@ utils::globalVariables(c("name","Type","SampleID"))
 #'
 #' See \code{magrittr::\link[magrittr]{\%>\%}} for details.
 #'
-#' @name %>%
+#' @name`%>%`
 #' @rdname pipe
 #' @keywords internal
-#' @export
-#' @importFrom magrittr %>%
+#' @noRd
+#' @importFrom dplyr `%>%`
 #' @importFrom rlang .data
 #' @usage lhs \%>\% rhs
-NULL
 
 
 
