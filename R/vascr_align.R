@@ -1,22 +1,9 @@
-#' Subset a vascr datset based on a numebr of factors
+#' Subset a vascr data set based on a number of factors
 #'
 #' @param data.df Vascr dataset to subset
 #' @param time Specified times. Individual values in a list will be subset out. If vectors are present in the list, values between the two most extreme values will be returned.
 #' @param unit Units to subset. These are checked for integrity against possible units and the dataset itself
 #' @param well Wells to select
-#' @param value_greater_than Select lines where the value is greater than a certain value
-#' @param value_less_than Select lines where the value is less than a certain value
-#' @param value_equal_to Select lines where the value is equal to a certain value
-#' @param sample_contains Return lines where the sample contains a particular value
-#' @param sample_not_contains Return lines where theh sample does not contain particular values
-#' @param sample_equal_to Return lines when the sample exactly matches a particular string
-#' @param variable_set Vector of variables. Lines will be returned if a variable is set.
-#' @param variable_unset Vector of variables. Lines will be returned if a variable is not set.
-#' @param variable_equal_to Vector of pairs of variables and values. Rows will be returned where each variable matches the value following it.
-#' @param variable_not_equal_to Vector of pairs of variables and values. Rows will be returned where each selected variable does not match the value following it.
-#' @param variable_greater_than Vector of pairs of variables and values. Rows will be returned where each selected variable is larger than value following it.
-#' @param variable_less_than Vector of pairs of variables and values. Rows will be returned where each selected variable is less than value following it.
-#' @param include_vehicle Should all relevant vehicle control wells be included in the dataset.
 #' @param frequency Frequencies to include in the dataset.
 #' @param experiment Experiments to include in the dataset. Can be addressed either by name, or by the numerical order that they were loaded into vascr_combine in
 #' @param instrument Which instruments to include values from
@@ -39,7 +26,7 @@
 #' # vascr_subset(growth.df, unit = "R")
 #' # vascr_subset(growth.df, well = "A1")
 #' # vascr_subset(growth.df, value_less_than = 100)
-#' # vascr_subset(growth.df, max_deviation = 10)
+#' # 
 #' 
 #' # vascr_subset(growth.df, time = c(5,20))
 #' 
@@ -49,19 +36,6 @@ vascr_subset = function(data.df,
                         time = NULL, 
                         unit = NULL, 
                         well = NULL, 
-                        value_greater_than = NULL, 
-                        value_less_than = NULL, 
-                        value_equal_to = NULL,   
-                        sample_contains = NULL,
-                        sample_not_contains = NULL,
-                        sample_equal_to = NULL,
-                        variable_set = NULL,
-                        variable_unset = NULL,
-                        variable_equal_to = NULL,
-                        variable_not_equal_to = NULL,
-                        variable_greater_than = NULL,
-                        variable_less_than = NULL,
-                        include_vehicle = TRUE,
                         frequency = NULL,
                         experiment = NULL,
                         instrument = NULL,
@@ -110,13 +84,6 @@ vascr_subset = function(data.df,
   {
   wells = vascr_find_well(subset.df, well)
   subset.df = subset(subset.df, subset.df$Well %in% wells)
-  }
-  
-  # Value
-  if(!is.null(value_greater_than) | !is.null(value_less_than) | !is.null(value_equal_to))
-  {
-  values = vascr_find_value(subset.df, value_greater_than, value_less_than, value_equal_to)
-  subset.df = subset(subset.df, subset.df$Value %in% values)
   }
   
 
@@ -174,47 +141,6 @@ vascr_subset = function(data.df,
   return(subset.df)
 }
 
-
-
-
-#' Find values within particular paramaters
-#'
-#' @param data.df The dataset to analyse
-#' @param value_greater_than Values will be returned if they're greater than this value 
-#' @param value_less_than Values will be returned if less than this value
-#' @param value_equal_to Values will be returned if equal to this value
-#'
-#' @return A list of values that fit the criteria
-#' 
-#' @noRd
-#'
-#' @examples
-#' # vascr_find_value(data.df)
-#' 
-vascr_find_value = function(data.df, value_greater_than = NULL, value_less_than = NULL, value_equal_to = NULL)
-{
-  values =unique(data.df$Value)
-  
-  if(!is.null(value_greater_than))
-  {
-  values = subset(values, values!="NA")
-  values = subset(values, values>value_greater_than)
-  }
-  
-  if(!is.null(value_less_than))
-  {
-    values = subset(values, values!="NA")
-    values = subset(values, values<value_less_than)
-  }
-  
-  if(!is.null(value_equal_to))
-  {
-    values = subset(values, values!="NA")
-    values = subset(values, values == value_equal_to)
-  }
-  
-  return(values)
-}
 
 
 #' Match a string with the closest available option

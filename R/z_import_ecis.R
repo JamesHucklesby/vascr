@@ -3,7 +3,10 @@
 
 #' Calculate electrical properties of ECIS data
 #' 
-#' ECIS instrments capure phase and impedance data. This needs to be converted in software into resistance and capacatance values that are more directly interpretable. This function does that using trigonemetric functions. Validated against data produced by Applied Biophysics' ECIS software.
+#' ECIS instruments capture phase and impedance data. This needs to be converted 
+#' in software into resistance and capacitance values that are more directly 
+#' interpret able. This function does that using trigonometric functions. 
+#' Validated against data produced by Applied Biophysics' ECIS software.
 #' 
 #' Function used by default as part of ecis_import_raw
 #'
@@ -56,7 +59,7 @@ vascr_import_map = function(sampledefine)
 {
   
   file_content = read.csv(sampledefine)
-  file_content$SampleID = c(1:nrow(file_content))
+ #  file_content$SampleID = c(1:nrow(file_content))
   
   if(colnames(file_content) %>% str_count("Well") %>% sum() ==1)
   {
@@ -176,11 +179,10 @@ vascr_assign_samples = function (data, sampledefine)
 #' #vascr_plot(data1, unit = "X")
 #'
 #' 
-ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
+ecis_import_raw = function(rawdata, experimentname = "NA") {
   
   # check the files to be imported exist and are of the correct format
   vascr_validate_file(rawdata, "abp")
-  vascr_validate_file(sampledefine, c("csv", "xlsx"))
     
     # Grab all the rows of the file and dump them into a data frame
   
@@ -271,7 +273,7 @@ ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
     
     longdata.df$Instrument = "ECIS"
 
-    combined.df = vascr_assign_samples(data = longdata.df, sampledefine)
+    combined.df = longdata.df
     
     gc(verbose = FALSE)
     

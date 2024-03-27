@@ -79,10 +79,10 @@ utils::globalVariables(c("Asig", "Bsig", "ColID", "Column", "Event", "ID", "New_
 #'
 #' See \code{magrittr::\link[magrittr]{\%>\%}} for details.
 #'
-#' @name`%>%`
+#' @name %>%
 #' @rdname pipe
 #' @keywords internal
-#' @noRd
+#' @export
 #' @importFrom dplyr `%>%`
 #' @importFrom rlang .data
 #' @usage lhs \%>\% rhs

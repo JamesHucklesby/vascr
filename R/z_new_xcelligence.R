@@ -65,7 +65,7 @@ xcelligence_import_generate_CI = function(data.df)
 #' # xCELLigence test
 #' rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr')
 #' sampledefine = system.file('extdata/instruments/xcellkey.csv', package = 'vascr')
-#' # import_xcelligence(file = rawdata, key = sampledefine, "TEST7")
+#' import_xcelligence(file = rawdata, key = sampledefine, "TEST7")
 #' 
 #'  
 import_xcelligence = function(file, key, experimentname = "NA", password = "RTCaDaTa")

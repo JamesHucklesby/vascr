@@ -1,6 +1,6 @@
-#' Find which modeled units in the dataset
+#' Find which modeled units in the data set
 #'
-#' @param data The dataset to analyse
+#' @param data The data set to analyse
 #'
 #' @return A vector of the modeled units in the dataset
 #' 
