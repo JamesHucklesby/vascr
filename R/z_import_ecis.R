@@ -59,7 +59,7 @@ vascr_import_map = function(sampledefine)
 {
   
   file_content = read.csv(sampledefine)
- #  file_content$SampleID = c(1:nrow(file_content))
+  # file_content$SampleID = c(1:nrow(file_content))
   
   if(colnames(file_content) %>% str_count("Well") %>% sum() ==1)
   {
@@ -179,10 +179,11 @@ vascr_assign_samples = function (data, sampledefine)
 #' #vascr_plot(data1, unit = "X")
 #'
 #' 
-ecis_import_raw = function(rawdata, experimentname = "NA") {
+ecis_import_raw = function(rawdata, sampledefine, experimentname = "NA") {
   
   # check the files to be imported exist and are of the correct format
   vascr_validate_file(rawdata, "abp")
+  vascr_validate_file(sampledefine, c("csv", "xlsx"))
     
     # Grab all the rows of the file and dump them into a data frame
   
@@ -247,7 +248,8 @@ ecis_import_raw = function(rawdata, experimentname = "NA") {
     fulldata_long.df = fulldata.df %>% tidyr::gather("Type", Value, -Well, -Time, -"ID")
     fulldata_long.df = fulldata_long.df %>% mutate(Value = as.numeric(Value))
     
-    separate = fulldata_long.df %>% select(Type) %>% distinct() %>% tidyr::separate("Type", c("Unit", "Frequency"), remove = FALSE)
+    separate = fulldata_long.df %>% select(Type) %>% distinct() %>% 
+      tidyr::separate("Type", c("Unit", "Frequency"), remove = FALSE)
     
     # Split out frequency and R/C as needed
     fulldata_long.df = fulldata_long.df %>% left_join(separate, by = "Type")
@@ -255,11 +257,11 @@ ecis_import_raw = function(rawdata, experimentname = "NA") {
     fulldata_long.df$ID = NULL
     fulldata_long.df$Type = NULL
     
-    # Generate the other physical quantaties
+    # Generate the other physical quantities
     
     longdata.df = ecis_calculate_quantaties(fulldata_long.df)
     
-    # Add constants, standardise well format and assign samples
+    # Add constants, standardize well format and assign samples
     
     if(!missing(experimentname))
     {
@@ -273,7 +275,7 @@ ecis_import_raw = function(rawdata, experimentname = "NA") {
     
     longdata.df$Instrument = "ECIS"
 
-    combined.df = longdata.df
+    combined.df = vascr_assign_samples(data = longdata.df, sampledefine)
     
     gc(verbose = FALSE)
     
