@@ -44,9 +44,9 @@ vascr_summarise = function(data.df, level = "wells")
   levels = vascr_match(level, vascr_levels(set = "all"))
   
 
-  if(length(unique(data.df$Time))>1 & !vascr_test_resampled(data.df))
+  if(length(unique(data.df$Time))>1 & !vascr_test_resampled(data.df) & FALSE)
   {
-    data.df = vascr_interpolate_time(data.df)
+    data.df = vascr_resample_time(data.df)
   }
 
     

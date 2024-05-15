@@ -168,7 +168,7 @@ vascr_residuals = function(data.df, unit, frequency, time, priority = NULL)
 #' @param unit Unit to return
 #' @param frequency Frequency to return
 #' @param time Timepoint to use
-#' @param priority vascr priority list for analyasis, if blank default will be used
+#' @param priority vascr priority list for analysis, if blank default will be used
 #' 
 #' @importFrom ggpubr ggqqplot
 #' @importFrom stats shapiro.test
@@ -445,7 +445,7 @@ timeplot = vascr_plot_time_vline(data.df, unit, frequency, time) + labs(y = "Res
 
 
 overallplot = vascr_plot_box_replicate(data.df, unit, frequency, time) + labs(y = "Resistance  
-                                                                                  (ohm, 4000 Hz)") + mdthemes::md_theme_grey() +
+                                                                                  (ohm, 4000 Hz)") + 
   scale_color_manual(values=c("orange", "blue", "green"))
 
 qqplot = vascr_plot_qq(data.df, unit, frequency, time, priority)
@@ -454,7 +454,7 @@ leveneplot = vascr_plot_levene(data.df, unit, frequency, time, priority)
 
 differences = vascr_plot_bar_anova(data.df, unit = unit, time = time, frequency = frequency, confidence = 0.95, priority = NULL) +
              theme(legend.position = "none") + labs(title = "G) ANOVA results", y = "Resistance   
-                                                    (ohm, 4000 Hz)") + mdthemes::md_theme_grey() +
+                                                    (ohm, 4000 Hz)") +
   theme(legend.position = "none")
 
 tile = vascr_plot_anova_grid(data.df, unit, frequency, time)  + labs(title = "F) P values") +
@@ -596,7 +596,6 @@ sigplot = sigdata2 %>% mutate(A = factor(A,(unique(data.df$Sample)))) %>%
   geom_tile(aes(x = A, y = B, fill = Significance)) +
   labs(fill = "P value",
        x = "Treatment 1", y = "Treatment 2") +
-  mdthemes::md_theme_gray() +
   theme(axis.text.x = element_markdown(angle = 90, vjust = 0.5, hjust=0.5))+
 scale_fill_manual(values = c(pal[[5]], pal[[2]], pal[[3]], pal[[4]]),
               labels = c("< 0.01", "<0.05", "< 0.1", "<1"),
@@ -617,8 +616,6 @@ return(sigplot)
 #' @param time the time to use for the bar plot and ANOVA
 #' @param reference SampleID of the sample to use as the reference for statistical analysis
 #' @param breaklines Should each variable in the sample name be on a new line
-#' 
-#' @importFrom mdthemes md_theme_gray
 #'
 #' @return
 #' 
@@ -687,7 +684,6 @@ vascr_plot_anova_bar_reference = function(data.df, unit, frequency, time, refere
   summdata = toplotdata %>%
     ggplot() +
     geom_col(aes(x = Sample, y = Value), data = toplotdata) +
-    md_theme_gray()+
     geom_text(aes(x = Sample, label = Significance), y = ymaxval, color = "white") +
     geom_errorbar(aes(x = Sample, ymin = Value - sem, ymax = Value + sem)) +
     theme(legend.position = "none") +

@@ -195,7 +195,6 @@ return(ret)
 #' @importFrom magrittr '%>%'
 #' @importFrom dplyr group_by mutate arrange left_join
 #' @importFrom ggplot2 ggplot aes geom_line geom_col geom_errorbar coord_flip scale_colour_manual scale_color_manual scale_fill_manual lims
-#' @importFrom mdthemes md_theme_gray
 #' 
 #' @export
 #'
@@ -217,8 +216,7 @@ output = combinations %>% group_by(s1, s2) %>%
   ggplot() +
   geom_errorbar(aes(xmin = mean-sem, xmax = mean+sem, y = joined, color = s2), size = 1) +
   geom_point(aes(x = mean, y = joined, color = s1), size = 3) +
-  lims (x = c(-1,1)) +
-  md_theme_gray()
+  lims (x = c(-1,1))
 
 output
 

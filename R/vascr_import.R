@@ -7,7 +7,7 @@
 #' @param experimentname Name to assign to the experiment
 #' @param password The password for protected xCELLigence files
 #'
-#' @return A full vascr dataset
+#' @return A full vascr data set
 #' @export
 #'
 #' @examples

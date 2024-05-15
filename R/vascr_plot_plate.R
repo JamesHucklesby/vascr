@@ -27,7 +27,6 @@ vascr_plot_well_grid = function(data) {
 #' @return
 #' @noRd
 #'
-#' @examples
 vascr_plot_treatment_grid = function(data) {
   data = vascr_explode_wells(data)
   
@@ -158,9 +157,9 @@ vascr_test_multi_plate = function(data)
 }
 
 
-#' Plot the plate structure of a datset
+#' Plot the plate structure of a dataset
 #'
-#' @param data The datapoint to plot
+#' @param data The data point to plot
 #' @param title Title to be placed on the graph
 #' @param stripidentical Should identical wells be removed form the dataset
 #' @param ... Variables to be passed onto prep_graphdata and polish_plot

@@ -80,12 +80,12 @@ vascr_import_map = function(sampledefine)
   }
   
   # Copy down the col name into each cell, separated by _
-  for (col in colnames(file_map)[2:length(colnames(file_map))])
+  for (col in colnames(file_map)[3:length(colnames(file_map))])
   {
     file_map[[col]] = paste(file_map[[col]],col, sep ="_")
   }
   
-  file_map = file_map %>% unite("Sample", -Well, sep =" + ")
+  file_map = file_map %>% unite("Sample", -Well, -SampleID, sep =" + ")
   
   
   return(file_map)

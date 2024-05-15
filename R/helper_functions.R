@@ -224,7 +224,6 @@ vascr_detect_normal = function(data.df)
 #'
 #' @return The level of the dataset analysed
 #' 
-#' @noRd
 #'
 #' @examples
 #' #vascr_detect_level(growth.df)
@@ -877,7 +876,7 @@ vascr_exclude = function(data.df, samples = FALSE, wells = FALSE, experiments = 
 
 #' Combine ECIS data frames end to end
 #' 
-#' This funciton will combine ECIS datasets end to end. Preferential to use over a simple rbind command as it runs additional checks to ensure that datapoints are correctly generated
+#' This function will combine ECIS data sets end to end. Preferential to use over a simple rbind command as it runs additional checks to ensure that datapoints are correctly generated
 #'
 #' @param ... List of data frames to be combined
 #' @param resample Automatically try and resample the dataset. Default is FALSE
@@ -905,7 +904,7 @@ vascr_combine = function(..., resample = FALSE) {
   alldata = dataframes[[1]][0, ]
   loops = 1
   
-  # Check that both dataframes have the same timebase
+  # Check that both data frames have the same time base
   for (i in dataframes)
   {
     if (!(exists("timepointstomerge")))
@@ -940,6 +939,7 @@ vascr_combine = function(..., resample = FALSE) {
   return(alldata)
   
 }
+
 
 
 

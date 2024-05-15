@@ -18,10 +18,10 @@
 #' @export
 #'
 #' @examples
-#' p1 = growth.df %>% vascr_subset(unit = "Rb") %>% vascr_plot_line()
-#' p2 = growth.df %>% vascr_subset(unit = "Cm") %>% vascr_plot_line()
+#' #p1 = growth.df %>% vascr_subset(unit = "Rb") %>% vascr_plot_line()
+#' #p2 = growth.df %>% vascr_subset(unit = "Cm") %>% vascr_plot_line()
 #' 
-#' vascr_make_panel(p1, p2)
+#' #vascr_make_panel(p1, p2)
 #' 
 vascr_make_panel <- function(..., plots = NULL, legend_from_index = 1, ncols = 1) {
   

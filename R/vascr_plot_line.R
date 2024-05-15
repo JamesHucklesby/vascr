@@ -4,7 +4,6 @@
 #' @param errorbars Type of error bars, Inf for ribbons, 0 for no errors and any interger to plot every nth line
 #' @param alpha Transparency of the error ribbon plotted
 #' 
-#' @importFrom mdthemes md_theme_grey
 #'
 #' @return
 #' @export
@@ -23,7 +22,7 @@ vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3)
   if(data_level == "wells")
   {
     gplot = ggplot() +
-      geom_line(data = data.df, aes(x = Time, y = Value, color = Sample, group = Well))
+      geom_line(data = data.df, aes(x = Time, y = Value, color = Sample, group = paste(Well, Experiment), linetype = Experiment))
     
     errorbars = 0;
   }
@@ -49,8 +48,6 @@ vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3)
     
     }
   
-  
-  gplot = gplot + md_theme_grey()
   
   gplot = gplot + labs(y = vascr_graph_titles(data.df), x = "Time (hours)")
   

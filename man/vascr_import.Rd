@@ -27,7 +27,7 @@ vascr_import(
 \item{password}{The password for protected xCELLigence files}
 }
 \value{
-A full vascr dataset
+A full vascr data set
 }
 \description{
 Import impedance data to a vascr dataset

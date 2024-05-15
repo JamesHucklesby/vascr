@@ -39,18 +39,21 @@ vascr_carry_down_names = function(data.df, cols_to_carry = NULL, remove_blank = 
 
 
 
+
 #' Implode multiple columns from a data frame into a single title
 #'
 #' @param data.df The dataset to implode
 #' @param cols_to_implode The columns to implode
 #' @param remove_blank Should blank ID's be removed
+#' 
+#' @importFrom magrittr `%>%`
 #'
 #' @return A data frame
-#' @export
+#' @noRd
 #'
 #' @examples
-#' vascr_full_implode(growth.df %>% vascr_subset(unit = "Rb"))
-#' vascr_full_implode(growth.df %>% vascr_subset(unit = "Rb"), c("cells", "Experiment"))
+#' # vascr_full_implode(growth.df)
+#' # vascr_full_implode(growth.df %>% vascr_subset(unit = "Rb"), c("cells", "Experiment"))
 #' 
 vascr_full_implode = function(data.df, cols_to_implode = NULL, remove_blank = TRUE)
 {
@@ -172,7 +175,6 @@ vascr_implode = function(data.df, stripidentical = TRUE, colnames = NULL,
 #' 
 #' @noRd
 #'
-#' @examples
 vascr_find_cols = function(cols)
 {
   
@@ -471,7 +473,6 @@ vascr_zero_time = function(data.df, time = 0)
 #'
 #' @param raw_name 
 #'
-#' @return
 #' 
 #' @noRd
 #'
@@ -492,10 +493,9 @@ cleanup_samplename = function(raw_name)
 #' @param data.df 
 #'
 #' @return
-#' @noRd
+#' @export
 #'
-#' @examples
-vascr_cleanup_sample = function(data.df)
+vascr_cleanup_sample = function(data.df, dropcols = NULL)
 {
   
   data.df = vascr_check_sampleid(data.df)
@@ -507,7 +507,7 @@ vascr_cleanup_sample = function(data.df)
   small2 = vascr_explode(small)
   small2$SampleID = small$SampleID
   
-  small3 = small2 %>% vascr_implode() %>%
+  small3 = small2 %>% vascr_implode(dropcols = dropcols) %>%
   mutate(Sample = cleanup_samplename(Sample)) %>%
   mutate(Sample = factor(Sample, unique(Sample)))
   

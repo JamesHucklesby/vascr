@@ -2,26 +2,13 @@
 % Please edit documentation in R/vascr_align.R
 \name{vascr_subset}
 \alias{vascr_subset}
-\title{Subset a vascr datset based on a numebr of factors}
+\title{Subset a vascr data set based on a number of factors}
 \usage{
 vascr_subset(
   data.df,
   time = NULL,
   unit = NULL,
   well = NULL,
-  value_greater_than = NULL,
-  value_less_than = NULL,
-  value_equal_to = NULL,
-  sample_contains = NULL,
-  sample_not_contains = NULL,
-  sample_equal_to = NULL,
-  variable_set = NULL,
-  variable_unset = NULL,
-  variable_equal_to = NULL,
-  variable_not_equal_to = NULL,
-  variable_greater_than = NULL,
-  variable_less_than = NULL,
-  include_vehicle = TRUE,
   frequency = NULL,
   experiment = NULL,
   instrument = NULL,
@@ -40,32 +27,6 @@ vascr_subset(
 \item{unit}{Units to subset. These are checked for integrity against possible units and the dataset itself}
 
 \item{well}{Wells to select}
-
-\item{value_greater_than}{Select lines where the value is greater than a certain value}
-
-\item{value_less_than}{Select lines where the value is less than a certain value}
-
-\item{value_equal_to}{Select lines where the value is equal to a certain value}
-
-\item{sample_contains}{Return lines where the sample contains a particular value}
-
-\item{sample_not_contains}{Return lines where theh sample does not contain particular values}
-
-\item{sample_equal_to}{Return lines when the sample exactly matches a particular string}
-
-\item{variable_set}{Vector of variables. Lines will be returned if a variable is set.}
-
-\item{variable_unset}{Vector of variables. Lines will be returned if a variable is not set.}
-
-\item{variable_equal_to}{Vector of pairs of variables and values. Rows will be returned where each variable matches the value following it.}
-
-\item{variable_not_equal_to}{Vector of pairs of variables and values. Rows will be returned where each selected variable does not match the value following it.}
-
-\item{variable_greater_than}{Vector of pairs of variables and values. Rows will be returned where each selected variable is larger than value following it.}
-
-\item{variable_less_than}{Vector of pairs of variables and values. Rows will be returned where each selected variable is less than value following it.}
-
-\item{include_vehicle}{Should all relevant vehicle control wells be included in the dataset.}
 
 \item{frequency}{Frequencies to include in the dataset.}
 
@@ -87,7 +48,7 @@ vascr_subset(
 The subset dataset, based on the values selected
 }
 \description{
-Subset a vascr datset based on a numebr of factors
+Subset a vascr data set based on a number of factors
 }
 \examples{
 # vascr_subset(growth.df)
@@ -98,7 +59,7 @@ Subset a vascr datset based on a numebr of factors
 # vascr_subset(growth.df, unit = "R")
 # vascr_subset(growth.df, well = "A1")
 # vascr_subset(growth.df, value_less_than = 100)
-# vascr_subset(growth.df, max_deviation = 10)
+# 
 
 # vascr_subset(growth.df, time = c(5,20))
 

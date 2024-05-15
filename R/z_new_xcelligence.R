@@ -27,13 +27,12 @@ xcelligence_lengthen_platemap = function(data)
 
 #' Generate CI from xcelligence data
 #'
-#' @param data.df The dataset to generate CI from
+#' @param data.df The data set to generate CI from
 #'
-#' @return An enlargened dataset
+#' @return An enlarged dataset
 #' 
 #' @noRd
 #'
-#' @examples
 xcelligence_import_generate_CI = function(data.df)
 {
   cidata = vascr_normalise(data.df, normtime = 0)

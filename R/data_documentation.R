@@ -7,7 +7,7 @@ utils::globalVariables("Frequency")
 utils::globalVariables("Experiment")
 utils::globalVariables("Time")
 utils::globalVariables("Value")
-utils::globalVariables("Stream")
+utils::globalVariables(c("Stream", "values"))
 
 utils::globalVariables(c("A","B","Label","Score","desc","median","movementfrommean","position_stack","rn", "deviation", "expwells", "badremoved", "V1", "V2", "V3","V4", "V5", "mapvalues", "V1.1", "V2.1", "V3.1", "V4.1", "V5.1", "Var1"))
 
@@ -72,20 +72,6 @@ utils::globalVariables(c("Asig", "Bsig", "ColID", "Column", "Event", "ID", "New_
 #' #' @description A dataset containing growth curves from a variety of experiments
 #' #' @source James Hucklesby 2020
 #' ,"instruments.df"
-
-
-
-#' Pipe operator
-#'
-#' See \code{magrittr::\link[magrittr]{\%>\%}} for details.
-#'
-#' @name %>%
-#' @rdname pipe
-#' @keywords internal
-#' @export
-#' @importFrom dplyr `%>%`
-#' @importFrom rlang .data
-#' @usage lhs \%>\% rhs
 
 
 

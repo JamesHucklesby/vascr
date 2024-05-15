@@ -8,7 +8,7 @@ License: GPL-3 + file LICENSE
 Language: en-US
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Depends: R (>= 3.6)
 Imports: ggplot2, 
         gridExtra, 
@@ -18,10 +18,10 @@ Imports: ggplot2,
         ggtext,
         magrittr, 
         grid,
-        stats, utils, rlang,
+        stats, utils,
         data.table, ggpubr, car, cowplot,
         DBI, odbc ,foreach, forcats,
-        ggnewscale, mdthemes, patchwork
+        ggnewscale, patchwork
 Suggests: 
    vdiffr, testthat,
     knitr,

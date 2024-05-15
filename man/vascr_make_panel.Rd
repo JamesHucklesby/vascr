@@ -22,9 +22,9 @@ A panel with multiple plots on it
 Combine multiple vascr plots into a single panel
 }
 \examples{
-p1 = growth.df \%>\% vascr_subset(unit = "Rb") \%>\% vascr_plot_line()
-p2 = growth.df \%>\% vascr_subset(unit = "Cm") \%>\% vascr_plot_line()
+#p1 = growth.df \%>\% vascr_subset(unit = "Rb") \%>\% vascr_plot_line()
+#p2 = growth.df \%>\% vascr_subset(unit = "Cm") \%>\% vascr_plot_line()
 
-vascr_make_panel(p1, p2)
+#vascr_make_panel(p1, p2)
 
 }

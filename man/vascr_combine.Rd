@@ -15,7 +15,7 @@ vascr_combine(..., resample = FALSE)
 A single data frame containing all the data imported, automaticaly incremented by experiment
 }
 \description{
-This funciton will combine ECIS datasets end to end. Preferential to use over a simple rbind command as it runs additional checks to ensure that datapoints are correctly generated
+This function will combine ECIS data sets end to end. Preferential to use over a simple rbind command as it runs additional checks to ensure that datapoints are correctly generated
 }
 \examples{
 
