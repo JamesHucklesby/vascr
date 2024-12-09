@@ -8,7 +8,7 @@ Authors@R: c(
     person("Charles", "Unsworth", , "c.unsworth@auckland.ac.nz", role = "aut",
            comment = c(ORCID = "0000-0002-9153-5232")),
     person("E Scott", "Graham", , "s.graham@auckland.ac.nz", role = "aut",
-           comment = c(ORCID = "000-0002-2925-9126")),
+           comment = c(ORCID = "0000-0002-2925-9126")),
     person("Catherine E", "angel", , "c.angel@auckland.ac.nz", role = "aut",
            comment = c(ORCID = "0000-0003-1737-8539"))
   )
