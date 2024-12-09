@@ -1,0 +1,6 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^raw_data$
+^LICENSE\.md$
+^cran-comments\.md$
+^vascr_web$
