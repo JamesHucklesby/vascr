@@ -2,3 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+.vascr.Rproj
+.Rdata
+.httr-oauth
+.DS_Store
+.quarto
