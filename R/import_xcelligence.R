@@ -65,7 +65,7 @@ xcelligence_import_generate_CI = function(data.df)
 #'
 #' @examples
 #' # xCELLigence test
-#' rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr2')
+#' rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr')
 #' xcell = import_xcelligence(rawdata = rawdata,"TEST7")
 #' 
 #'  

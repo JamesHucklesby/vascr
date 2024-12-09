@@ -1,3 +1,3 @@
-# vascr2 0.1.0
+# vascr 0.1.0
 
 * Initial CRAN submission.

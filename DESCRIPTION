@@ -1,5 +1,5 @@
 Type: Package
-Package: vascr2
+Package: vascr
 Title: Process Biological Impedance Sensing Data
 Version: 0.1.0
 Authors@R: c(

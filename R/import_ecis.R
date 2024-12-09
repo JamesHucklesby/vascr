@@ -23,7 +23,7 @@
 #' #but you can use a path relative to the file you are working on. 
 #' #E.G 'Experiment1/Raw.abp'
 #' 
-#' rawdata = system.file('extdata/growth/growth1_raw_short.abp', package = 'vascr2')
+#' rawdata = system.file('extdata/growth/growth1_raw_short.abp', package = 'vascr')
 #' 
 #' #Then run the import
 #' 
@@ -158,7 +158,7 @@ ecis_import_raw = function(rawdata) {
 #' 
 #'
 #' @examples
-#' modeled = system.file('extdata/instruments/ecis_TimeResample_RbA.csv', package = 'vascr2')
+#' modeled = system.file('extdata/instruments/ecis_TimeResample_RbA.csv', package = 'vascr')
 #' ecis_import_model(modeled)
 ecis_import_model = function(modeleddata) {
   
@@ -251,8 +251,8 @@ ecis_import_model = function(modeleddata) {
 #'
 #' @examples
 #' 
-#' raw = system.file('extdata/instruments/ecis_TimeResample.abp', package = 'vascr2')
-#' modeled = system.file('extdata/instruments/ecis_TimeResample_RbA.csv', package = 'vascr2')
+#' raw = system.file('extdata/instruments/ecis_TimeResample.abp', package = 'vascr')
+#' modeled = system.file('extdata/instruments/ecis_TimeResample_RbA.csv', package = 'vascr')
 #' experimentname = "TEST"
 #' 
 #' #Then run the import
