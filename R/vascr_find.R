@@ -1,3 +1,58 @@
+#' Title
+#'
+#' @param data.df 
+#' @param paramater 
+#'
+#' @return
+#' @export
+#' 
+#' @examples
+#' 
+#' vascr_find(growth.df, "Time")
+#' vascr_find(growth.df, "Time", 66.97)
+#' vascr_find(growth.df, "Time", NULL)
+#' 
+#' vascr_find(growth.df, "Unit")
+#' vascr_find(growth.df, "Unit", "Rb")
+#' vascr_find(growth.df, "Unit", NULL)
+#' 
+#' vascr_find(growth.df, "Well")
+#' vascr_find(growth.df, "Well", "A1")
+#' 
+#' vascr_find(growth.df, "Sample")
+#' vascr_find(growth.df, "Sample", "5000 cells")
+#' 
+#' vascr_find(growth.df, "Frequency")
+#' vascr_find(growth.df, "Frequency", 4000)
+#' 
+#' vascr_find(growth.df, "Experiment")
+#' vascr_find(growth.df, "Experiment", 1)
+#' 
+#' vascr_find(growth.df, "SampleID")
+#' vascr_find(growth.df, "SampleID", 5)
+#' 
+#' vascr_find(growth.df, "resampled")
+#' 
+#' vascr_find(growth.df, "all")
+vascr_find = function(data.df , paramater, value = NA){
+  
+  if(paramater == "Time"){return(vascr_find_time(data.df, value))}
+  if(paramater == "Unit"){return(vascr_find_unit(data.df, value))}
+  if(paramater == "Well"){return(vascr_find_well(data.df, value))}
+  if(paramater == "Sample"){return(vascr_find_sample(data.df, value))}
+  if(paramater == "Frequency"){return(vascr_find_frequency(data.df, value))}
+  if(paramater == "Experiment"){return(vascr_find_experiment(data.df, value))}
+  if(paramater == "SampleID"){return(vascr_find_sampleid(data.df, value))}
+  
+  if(paramater == "resampled"){return(vascr_check_resampled(data.df))}
+  
+  if(paramater == "all"){return(vascr_find_metadata(data.df))}
+  
+  stop("Paramater not something vascr can search for, please check spelling")
+  
+}
+
+
 #' Detect if an ECIS dataset has been normalized
 #'
 #' @param data.df an ECIS dataset
@@ -164,30 +219,6 @@ vascr_find_single_time = function(data.df, time)
 }
 
 
-#' Find the median, that is an actual value
-#' By default, median of an even number of values creates an average. This forces median to pick a value. 
-#'
-#' @param vector the vector to normalise
-#'
-#' @return A single value, present in the original dataset
-#' @importFrom stats median
-#' 
-#' @noRd
-#'
-#' @examples
-#' vascr_find_locked_median(vec = c(1,2,9,8,8,9))
-#' vascr_find_locked_median(vec = c(1,2,9,8,8))
-vascr_find_locked_median = function(vec){
-  
-  potential_median = median(vec)
-  
-  ties = vec[(which(abs(vec - potential_median) == min(abs(vec - potential_median))))]
-  
-  return(min(ties))
-  
-}
-
-
 #' Align times
 #' 
 #' When running analyasis, you can only run stats on a timepoint that exists in the dataset. These are not always logical or easy to remember. This function rounds the number given to the nearest timepoint that is actually in the dataset.
@@ -236,7 +267,7 @@ vascr_find_time = function(data.df, time = NULL) {
   if(all(is.na(time)))
   {
     times = unique(data.df$Time)
-    return(vascr_find_locked_median(times))
+    return(vascr_force_median(times))
   }
   
   
@@ -377,6 +408,24 @@ vascr_find_frequency = function(data.df, frequency) {
 }
 
 
+
+
+#' Title
+#'
+#' @param data.df 
+#' @param sample 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_find_sample = function(data.df, sample){
+  
+  vascr_match(sample, unique(data.df$Sample))
+  
+}
+
+
 # Instrument --------------------------------------------------------------
 
 
@@ -404,11 +453,11 @@ vascr_instrument_list = function()
 #' @noRd
 #'
 #' @examples
-#' #vascr_find_instrument(growth.df, "Rb")
-#' #vascr_find_instrument(growth.df, "cellZScope")
-#' #vascr_find_instrument(growth.df, c("cellZscope", "ECIS"))
+#' vascr_find_instrument(growth.df, "Rb")
+#' vascr_find_instrument(growth.df, "cellZScope")
+#' vascr_find_instrument(growth.df, c("cellZscope", "ECIS"))
 #' 
-#' #vascr_find_instrument(growth.df, NULL)
+#' vascr_find_instrument(growth.df, NULL)
 vascr_find_instrument = function(data.df, instrument = NULL)
 {
   
@@ -828,6 +877,24 @@ vascr_detect_level = function(data)
   {
     return("wells")
   }
+}
+
+#' Title
+#'
+#' @param data.df 
+#' @param metadata 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_find_sampleid = function(data.df, sampleid){
+  
+  if(!sampleid %in% unique(data.df$SampleID))
+  {
+    warning("Sample ID not found")
+  }
+  
 }
 
 

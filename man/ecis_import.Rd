@@ -21,8 +21,8 @@ Import all ECIS values, a child of ecis_import_raw and ecis_import_model
 }
 \examples{
 
-raw = system.file('extdata/instruments/ecis_TimeResample.abp', package = 'vascr2')
-modeled = system.file('extdata/instruments/ecis_TimeResample_RbA.csv', package = 'vascr2')
+raw = system.file('extdata/instruments/ecis_TimeResample.abp', package = 'vascr')
+modeled = system.file('extdata/instruments/ecis_TimeResample_RbA.csv', package = 'vascr')
 experimentname = "TEST"
 
 #Then run the import

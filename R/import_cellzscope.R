@@ -201,7 +201,7 @@ cellzscope_import_raw = function(raw)
 #' raw = system.file("extdata/instruments/zscoperaw.txt", package = "vascr")
 #' 
 #' alldatakey = cellzscope_import(raw, model)
-#' #vascr_plot(alldatakey, unit = "TER", frequency = 0, time = c(0,50))
+#' vascr_plot(alldatakey, unit = "TER", frequency = 0, time = c(0,50))
 #' 
 cellzscope_import = function(raw, model, experimentname = NULL)
 {

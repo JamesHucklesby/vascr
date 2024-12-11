@@ -175,4 +175,16 @@ vascr_subset_sampleid = function (data.df, samplelist){
 }
 
 
-
+#' Title
+#'
+#' @param data.df 
+#' @param well 
+#' @param experiment 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+vascr_exclude = function(data.df, well, experiment){
+  
+}
