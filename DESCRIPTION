@@ -25,8 +25,7 @@ Depends:
 Imports: 
     car,
     cowplot,
-    crayon,
-    data.table,
+    cli,
     DBI,
     dplyr,
     foreach,
@@ -37,6 +36,7 @@ Imports:
     glue,
     gridExtra,
     magrittr,
+    memoise,
     odbc,
     patchwork,
     rlang,
@@ -49,4 +49,4 @@ Suggests:
 Config/testthat/edition: 3
 Encoding: UTF-8
 RoxygenNote: 7.3.2
-LazyLoad: TRUE
+LazyData: TRUE

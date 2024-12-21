@@ -1,0 +1,47 @@
+
+
+test_that("Can import and ECIS file", {
+  raw = system.file('extdata/instruments/ecis_TimeResample.abp', package = 'vascr')
+  modeled = system.file('extdata/instruments/ecis_TimeResample_RbA.csv', package = 'vascr')
+  
+  w16 = system.file('extdata/instruments/ecis_16_testplate.abp', package = 'vascr')
+  empty = system.file('extdata/instruments/ecis_resample_empty.csv', package = 'vascr')
+ 
+  #Then run the import
+  
+  expect_snapshot(ecis_import(raw = w16))
+ expect_snapshot(ecis_import(model = empty))
+  
+  data = ecis_import(raw ,modeled, experimentname = "TEST")
+
+  expect_snapshot(data)
+})
+
+
+
+test_that("Can import cellZScope file", {
+  model = system.file("extdata/instruments/zscopemodel.txt", package = "vascr2")
+  raw = system.file("extdata/instruments/zscoperaw.txt", package = "vascr2")
+  
+  expect_snapshot(cellzscope_import(raw, model, "test"))
+  expect_snapshot(cellzscope_import(raw, model))
+  
+})
+
+
+test_that("Can import xCELLigence file", {
+
+  
+# xCELLigence test
+  rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr2')
+  
+  expect_snapshot(import_xcelligence(rawdata = rawdata,"TEST7"))
+  expect_snapshot(import_xcelligence(rawdata = rawdata))
+  
+  tempfile = paste(tempdir(),"/","TEMPMDBFORIMPORT.mdb", sep = "")
+  file.copy(from = rawdata, to = tempfile)
+  expect_error(import_xcelligence(rawdata = rawdata))
+  unlink(tempfile)
+  
+})
+

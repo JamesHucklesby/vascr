@@ -858,12 +858,13 @@ vascr_instrument_from_unit = function(unit)
 #'
 #' @return The level of the dataset analysed
 #' 
+#' 
 #'
 #' @examples
-#' #vascr_detect_level(growth.df)
-#' #vascr_detect_level(vascr_summarise(growth.df, level = "experiments"))
-#' #vascr_detect_level(vascr_summarise(growth.df, level = "summary"))
-vascr_detect_level = function(data)
+#' #vascr_find_level(growth.df)
+#' #vascr_find_level(vascr_summarise(growth.df, level = "experiments"))
+#' #vascr_find_level(vascr_summarise(growth.df, level = "summary"))
+vascr_find_level = function(data)
 {
   if("totaln" %in% colnames(data))
   {
@@ -1130,7 +1131,7 @@ vascr_cols  = function(data, set = "core")
 #'
 #' @return prints out the parameters of the dataframe in question
 #' 
-#' @importFrom crayon bold blue
+#' @importFrom cli cli_div cli_h1 cli_end
 #' 
 #' @export
 #'
@@ -1139,36 +1140,41 @@ vascr_cols  = function(data, set = "core")
 #' 
 vascr_find_metadata = function(data.df)
 {
+  d <- cli_div(theme = list(h1 = list(color = "blue",
+                                      "font-weight" = "bold")))
   
-  title = function(toprint, subtitle = NULL)
-  {
-    cat(bold$blue(toprint))
-    
-    # Make the subtitle section if needed
-    if(!is.null(subtitle))
-    {
-      cat(bold$blue(": "))
-      cat(paste(subtitle, sep = ", "))
-    }
-    cat("\n")
-  }
+  cli_h1("Timepoints")
   
-  table = function(toprint)
-  {
-    print(toprint, row.names = FALSE)
-    cat("\n")
-  }
+  cli_end(d)
   
-  title("Timepoints", unique(data.df$Time))
-  title("Units", unique(data.df$Unit))
-  title("Frequencies", unique(data.df$Frequency))
-  title("Experiments", unique(data.df$Experiment))
-  title("Instruments", unique(data.df$instrument))
-  
-  title("Samples in data frame")  
-        table(data.df %>% 
-                select("SampleID", "Sample") %>%
-                distinct())
+  # p_title = function(toprint, subtitle = NULL)
+  # {
+  #   cat(bold$blue(toprint))
+  #   
+  #   # Make the subtitle section if needed
+  #   if(!is.null(subtitle))
+  #   {
+  #     cli_h1(title)
+  #     cat(paste(subtitle, sep = ", "))
+  #   }
+  # }
+  # 
+  # p_table = function(toprint)
+  # {
+  #   print(toprint, row.names = FALSE)
+  #   cat("\n")
+  # }
+  # 
+  # p_title("Timepoints", unique(data.df$Time))
+  # p_title("Units", unique(data.df$Unit))
+  # p_title("Frequencies", unique(data.df$Frequency))
+  # p_title("Experiments", unique(data.df$Experiment))
+  # p_title("Instruments", unique(data.df$instrument))
+  # 
+  # p_title("Samples in data frame")  
+  #       table(data.df %>% 
+  #               select("SampleID", "Sample") %>%
+  #               distinct())
   
 }
 

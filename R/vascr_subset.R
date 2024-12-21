@@ -186,5 +186,7 @@ vascr_subset_sampleid = function (data.df, samplelist){
 #'
 #' @examples
 vascr_exclude = function(data.df, well, experiment){
-  
+  data.df = data.df %>% filter(!Well %in% well)
+    
+  return(data.df)
 }

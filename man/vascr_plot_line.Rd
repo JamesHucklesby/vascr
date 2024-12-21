@@ -4,7 +4,7 @@
 \alias{vascr_plot_line}
 \title{Plot a line graph with vascr}
 \usage{
-vascr_plot_line(data.df, errorbars = Inf, alpha = 0.3)
+vascr_plot_line(data.df, errorbars = Inf, alpha = 0.3, text_labels = TRUE)
 }
 \arguments{
 \item{data.df}{The vascr data set to plot}
@@ -23,6 +23,6 @@ Plot a line graph with vascr
 vascr_plot_line(data.df = growth.df \%>\% vascr_subset(unit = "Rb"))
 vascr_plot_line(growth.df \%>\% vascr_subset(unit = "Rb") \%>\% vascr_summarise(level = "experiments"))
 data.df = growth.df \%>\% vascr_subset(unit = "Rb") \%>\% vascr_summarise(level = "summary")
-vascr_plot_line(data.df)
+vascr_plot_line(data.df, text_labels = FALSE)
 
 }

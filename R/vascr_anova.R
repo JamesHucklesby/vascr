@@ -12,7 +12,6 @@
 #' @param format The format to return the data frame in
 #' 
 #' @importFrom stats aov lm TukeyHSD symnum
-#' @importFrom data.table setDT
 #' @importFrom tidyr separate
 #' @importFrom stringr str_c str_replace
 #' @importFrom magrittr "%>%"
@@ -650,7 +649,7 @@ vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequen
   
   # if(!length(unique(c(data$Time, data$Unit, data$Frequency, data$Instrument)))==4)
   # {
-  #   stop("vascr_plot_bar_anova only supports a single time, unit, frequency and instrument at the moment. Please manually create an ANOVA if you need ot ask other  statistical quesitons.")
+  #   stop("vascr_plot_bar_anova only supports a single time, unit, frequency and instrument at the moment. Please manually create an ANOVA if you need to ask other  statistical questions.")
   # }
   
   # Add structure checks in here
@@ -701,8 +700,7 @@ vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequen
 #' @param unit unit to plot
 #' @param frequency frequnecy to plot
 #' @param time timepoint to plot at
-#' @param priority analyasis priority. Will use default if not filled in.
-#' @param ... other controls to be pushed to publish plot and generate graphdata
+#' @param priority analyasis priority. Will use default if not filled in
 #'
 #' @return A matrix of different ANOVA tests
 #' 
@@ -724,10 +722,9 @@ vascr_plot_anova = function(data.df, unit, frequency, time, ...)
   timeplot = vascr_plot_time_vline(data.df, unit, frequency, time) + labs(y = "Resistance  
                                                                                   (ohm, 4000 Hz)")
   
-  
   overallplot = vascr_plot_box_replicate(data.df, unit, frequency, time) + labs(y = "Resistance  
                                                                                   (ohm, 4000 Hz)") + 
-    scale_color_manual(values=c("orange", "blue", "green"))
+    scale_color_manual(values=c("orange", "blue", "green", "purple", "red", "brown", "grey", "turquoise", "violet"))
   
   qqplot = vascr_plot_qq(data.df, unit, frequency, time)
   normaloverlayplot = vascr_plot_normality(data.df, unit, frequency, time)

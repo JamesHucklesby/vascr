@@ -86,7 +86,7 @@ return(processed)
 vascr_summarise_experiments = function(data.df)
 {
   
-  summary_level = vascr_detect_level(data.df)
+  summary_level = vascr_find_level(data.df)
   
   if(summary_level == "wells")
   {
@@ -122,12 +122,12 @@ vascr_summarise_experiments = function(data.df)
 vascr_summarise_summary = function(data.df)
 {
   
-  summary_level = vascr_detect_level(data.df)
+  summary_level = vascr_find_level(data.df)
   
   if(summary_level == "wells")
   {
     data.df = vascr_summarise_experiments(data.df)
-    summary_level = vascr_detect_level(data.df)
+    summary_level = vascr_find_level(data.df)
   }
   
   if(summary_level == "experiments")
@@ -359,7 +359,7 @@ vascr_resample_time = function(data.df, npoints = vascr_find_count_timepoints(da
 vascr_remove_metadata = function(data.df, subset = "all")
 {
   
-  summary_level = vascr_detect_level(data.df)
+  summary_level = vascr_find_level(data.df)
   
   if(summary_level == "summary" || summary_level == "experiments")
   {

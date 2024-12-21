@@ -1,3 +1,53 @@
+function() {
+
+  rawdata = "C:\\Users\\jhuc964\\OneDrive - The University of Auckland\\Desktop\\GBM Jane Dec 24\\00 Original ECIS data\\ECIS_240319_MFT_1_96w1E NZB11&14&huvec Exp#14.abp"
+
+tic()
+ecis_import_raw(rawdata)
+toc()
+
+tic()
+m_ecis_import_raw = memoise(ecis_import_raw)
+toc()
+
+vascr_import = function(rawdata){
+
+  if(!exists(m_ecis_import_raw)){m_ecis_import_raw = memoise(ecis_import_raw)}
+
+  data1 = m_ecis_import_raw(rawdata)
+  vascr_apply_map()
+}
+}
+
+
+#' Title
+#'
+#' @param function_name
+#' @param duration
+#' @param omit_args
+#'
+#' @importFrom memoise memoise
+#'
+#' @return
+#' @export
+#'
+#' @examples
+cache_function <- function(function_name, duration = 86400, omit_args = c()) {
+  fn <- get(function_name, envir = rlang::ns_env("vascr"))
+  fn <- memoise::memoise(
+    fn
+  )
+  assign(function_name, fn, envir = rlang::ns_env("vascr"))
+  return(invisible(TRUE))
+}
+.onLoad <- function(libname, pkgname) {
+  lapply(c("ecis_import_raw", "ecis_import_model"), cache_function)
+}
+
+
+
+
+
 #' ECIS raw data importer
 #' 
 #' Raw data importer, generates a r data frame from a raw ABP file
@@ -30,7 +80,9 @@
 #' data1 = ecis_import_raw(rawdata)
 #'
 #' 
-ecis_import_raw = function(rawdata) {
+ecis_import_raw =  function(rawdata, cache = hash_file_md5(rawdata)) {
+  
+  cache
   
   # check the files to be imported exist and are of the correct format
   vascr_validate_file(rawdata, "abp")
@@ -155,12 +207,15 @@ ecis_import_raw = function(rawdata) {
 #' @importFrom tidyr separate gather pivot_longer
 #' @importFrom magrittr '%>%'
 #' @importFrom utils read.csv
+#' @importFrom cli hash_file_md5
 #' 
 #'
 #' @examples
 #' modeled = system.file('extdata/instruments/ecis_TimeResample_RbA.csv', package = 'vascr')
 #' ecis_import_model(modeled)
-ecis_import_model = function(modeleddata) {
+ecis_import_model = function(modeleddata, cache = hash_file_md5(modeleddata)) {
+  
+  cache
   
   # Validate that the files are readable
   vascr_validate_file(modeleddata, "csv")
@@ -274,7 +329,7 @@ ecis_import = function(raw = NULL, modeled = NULL, experimentname = NULL) {
     masterdata.df = rbind(masterdata.df, raw.df)
   }
   
-  # If a modeled data file is speficied, import it
+  # If a modeled data file is specified, import it
   if(!is.null(modeled))
   {
     model.df = ecis_import_model(modeled)

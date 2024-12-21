@@ -18,9 +18,11 @@ Title
 
 vascr_find(growth.df, "Time")
 vascr_find(growth.df, "Time", 66.97)
+vascr_find(growth.df, "Time", NULL)
 
 vascr_find(growth.df, "Unit")
 vascr_find(growth.df, "Unit", "Rb")
+vascr_find(growth.df, "Unit", NULL)
 
 vascr_find(growth.df, "Well")
 vascr_find(growth.df, "Well", "A1")
@@ -29,11 +31,15 @@ vascr_find(growth.df, "Sample")
 vascr_find(growth.df, "Sample", "5000 cells")
 
 vascr_find(growth.df, "Frequency")
-vascr_find(growth.df, "Frequency")
+vascr_find(growth.df, "Frequency", 4000)
 
 vascr_find(growth.df, "Experiment")
-vascr_find(growth.df, "Experiment")
+vascr_find(growth.df, "Experiment", 1)
 
 vascr_find(growth.df, "SampleID")
-vascr_find(growth.df, "SampleID")
+vascr_find(growth.df, "SampleID", 5)
+
+vascr_find(growth.df, "resampled")
+
+vascr_find(growth.df, "all")
 }

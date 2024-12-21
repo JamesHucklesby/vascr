@@ -4,10 +4,13 @@
 #'
 #' @return the imported plate map, fully lengthened to remove duplication
 #' 
+#' @importFrom dplyr cur_group_id mutate ungroup
+#' @importFrom tidyr separate_rows
+#' 
 #' @noRd
 #' 
 #' @importFrom tidyr separate_rows
-#' @importFrom dplyr relocate
+#' @importFrom dplyr relocate group_by_all
 #'
 #' @examples
 #'map_1 = tribble(~Row, ~Column, ~Sample,
@@ -15,16 +18,35 @@
 #'                "B", "1 2 3", "100 nM Treatment 1 + 1nm water",
 #'                "C", "4 5 6", "10 nM Treatment 2 + 1nm water",
 #'              "D", "1 2 3", "100 nM Treatment 2 + 1nm water")
+#'              
+#'vascr_import_map(map_1)
 #'
-#'vascr_import_map(map1)
-vascr_import_map = function(file_content) {
+#'lookup = tribble(~Row, ~Column, ~Sample,
+#'           "A B C D E F G H", "2", "NZB11 + Media")
+#'           
+#'vascr_import_map(lookup)
+#'
+#'lookup = system.file('extdata/instruments/eciskey.csv', package = 'vascr')
+#'lookupmap = vascr_import_map(lookup)
+#'
+#'map.df =vascr_import_map(lookup = "ECIS/200722_key.csv")
+#'
+vascr_import_map = function(lookup) {
+  
+  if(is.character(lookup))
+  {
+    file_content = read.csv(lookup)
+  } else
+  {
+    file_content = lookup
+  }
   
   # Check for duplicate sample names
-  vascr_check_duplicate(file_content, "Sample")
+  # vascr_check_duplicate(file_content, "Sample")
   
   # Add a Sample ID automatically if not already set
   if(!"SampleID" %in% colnames(file_content)) {
-    file_content$SampleID = c(1:nrow(file_content))
+    file_content = file_content %>% group_by_all() %>% mutate(SampleID = cur_group_id())
   } else { # If samples are set, check for duplicate ID rows
     vascr_check_duplicate(file_content, "SampleID")
   }
@@ -47,9 +69,89 @@ vascr_import_map = function(file_content) {
   
   vascr_check_duplicate(file_map, "Well") # Check if each well is defined more than once
   
+  if(!"Sample" %in% colnames(file_map))
+  {
+    file_map = vascr_implode(file_map)
+  }
+  
+  file_map = ungroup(file_map)
+  
   return(file_map)
 }
 
+
+#' Title
+#'
+#' @param data.df 
+#' @param map 
+#'
+#' @return
+#' @export
+#' 
+#' @noRd
+#'
+#' @examples
+#' lookup = system.file('extdata/instruments/eciskey.csv', package = 'vascr')
+#' vascr_apply_map(growth.df, lookup)
+#' 
+vascr_apply_map = function(data.df, map){
+  
+  map.df = vascr_import_map(map)
+  
+  data.df %>% left_join(map.df)
+  
+}
+
+
+#' Title
+#'
+#' @return
+#' @export
+#' 
+#' @importFrom dplyr bind_rows
+#' @importFrom foreach foreach `%do%`
+#'
+#' @examples
+#' vascr_implode(growth.df)
+#' 
+vascr_implode = function(data.df){
+  
+  toimplodetf = !colnames(data.df) %in% c("Time", "Well", "Unit", "Value", "Instrument", "Experiment", "Frequency", "SampleID", "Sample")
+  toimplode = subset(colnames(data.df), toimplodetf)
+  
+  smallframe = data.df %>% select(all_of(toimplode), SampleID) %>%
+    distinct()
+  
+  to_merge = toimplode
+  
+  smallframe
+  
+  names = foreach(r = c(1:nrow(smallframe))) %do%
+    {
+      row = smallframe[r,]
+        all_cols = foreach (c = to_merge) %do%
+        {
+          if(!as.character(row[,c]) %in% c("NA")){
+           paste(row[,c], c)
+          }
+        }
+        row$Sample = paste(unlist(all_cols), collapse = " + ")
+        return(row)
+    }
+  
+  newnames = bind_rows(names)
+  
+  if("Sample" %in% colnames(data.df))
+  {
+    data.df = data.df %>% select(-"Sample")
+  }
+  
+  newnames %>%
+    ungroup() %>%
+    select("SampleID", "Sample") %>%
+    left_join(data.df, by = "SampleID")
+  
+}
 
 
 #' Separate names in a vascr plate map

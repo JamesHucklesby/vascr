@@ -6,6 +6,7 @@
 #' 
 #' @importFrom ggplot2 geom_ribbon geom_line geom_text facet_grid vars
 #' @importFrom ggtext element_markdown
+#' @importFrom dplyr filter
 #'
 #' @return a ggplot containing the data
 #' @export
@@ -14,13 +15,13 @@
 #' vascr_plot_line(data.df = growth.df %>% vascr_subset(unit = "Rb"))
 #' vascr_plot_line(growth.df %>% vascr_subset(unit = "Rb") %>% vascr_summarise(level = "experiments"))
 #' data.df = growth.df %>% vascr_subset(unit = "Rb") %>% vascr_summarise(level = "summary")
-#' vascr_plot_line(data.df)
+#' vascr_plot_line(data.df, text_labels = FALSE)
 #' 
-vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3)
+vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = TRUE)
 {
   
   
-  data_level = vascr_detect_level(data.df)
+  data_level = vascr_find_level(data.df)
   
   data.df = data.df %>% filter(!is.na(.data$Value))
   
@@ -31,8 +32,12 @@ vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3)
     
     overall_data = data.df
     
+    if(isTRUE(text_labels)){
     final_times = overall_data %>%
       filter(.data$Time == max(.data$Time))
+    }else{
+      final_times = overall_data %>% filter(FALSE)
+    }
     
     gplot = ggplot() +
       geom_line(aes(x = .data$Time, y = .data$Value, color = .data$Sample, group = .data$Well), data = overall_data) +
