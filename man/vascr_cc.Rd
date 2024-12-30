@@ -4,12 +4,17 @@
 \alias{vascr_cc}
 \title{Title}
 \usage{
-vascr_cc(data.df)
+vascr_cc(data.df, reference = "none")
 }
 \description{
 Title
 }
 \examples{
 data.df = vascr::growth.df \%>\% vascr_subset(unit = "R", frequency = 4000, sampleid = c(1,4,7))
-data.df = vascr_cc(data.df)
+
+vascr_cc(data.df)
+
+vascr_cc(data.df, reference = "35,000_cells + HCMEC D3_line")
+vascr_cc(data.df, reference = c("35,000_cells + HCMEC D3_line", "5,000_cells + HCMEC D3_line"))
+
 }

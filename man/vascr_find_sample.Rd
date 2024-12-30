@@ -14,3 +14,10 @@ vascr_find_sample(data.df, sample)
 \description{
 Title
 }
+\examples{
+
+sample = 3000
+
+vascr_find_sample(growth.df, sample)
+
+}

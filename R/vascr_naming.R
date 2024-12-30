@@ -86,7 +86,6 @@ vascr_import_map = function(lookup) {
 #' @param map 
 #'
 #' @return
-#' @export
 #' 
 #' @noRd
 #'

@@ -1,9 +1,15 @@
-#' Title
+#' Find vascr variables
+#' 
+#' These functions are utility functions that will detect if arguments are invalid, 
+#' and attempt to repair them. Each type of variable has rules related to what values
+#' are possible in a valid vascr dataset.
 #'
-#' @param data.df 
-#' @param paramater 
+#' @param data.df The vascr dataset to reference, will default to the growth.df dataset if not specified
+#' @param paramater The parameter to search. Options are "Time", "Unit", "Well", "Frequency", "Sample", "Experiment", "SampleID" or "resampled"
+#' @param value the value to look up
 #'
-#' @return
+#' @return The valid vascr dataset.
+#' 
 #' @export
 #' 
 #' @examples
@@ -34,7 +40,7 @@
 #' vascr_find(growth.df, "resampled")
 #' 
 #' vascr_find(growth.df, "all")
-vascr_find = function(data.df , paramater, value = NA){
+vascr_find = function(data.df = growth.df , paramater, value = NA){
   
   if(paramater == "Time"){return(vascr_find_time(data.df, value))}
   if(paramater == "Unit"){return(vascr_find_unit(data.df, value))}
@@ -419,9 +425,14 @@ vascr_find_frequency = function(data.df, frequency) {
 #' @export
 #'
 #' @examples
+#' 
+#' sample = 3000
+#' 
+#' vascr_find_sample(growth.df, sample)
+#' 
 vascr_find_sample = function(data.df, sample){
   
-  vascr_match(sample, unique(data.df$Sample))
+  vascr_match(sample, unique(data.df$Sample %>% as.character())) %>% as.character()
   
 }
 
@@ -1176,6 +1187,27 @@ vascr_find_metadata = function(data.df)
   #               select("SampleID", "Sample") %>%
   #               distinct())
   
+}
+
+
+
+#' Title
+#'
+#' @param data.df 
+#' @param sampleID 
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+#' vascr_find_sampleid_from_sample(growth.df, "5,000_cells + HCMEC D3_line")
+#' 
+vascr_find_sampleid_from_sample = function(data.df, sample){
+  find.df = data.df %>% select(Sample, SampleID) %>%
+    distinct() %>%
+    filter(Sample == sample)
+  
+  find.df$SampleID[[1]]
 }
 
 

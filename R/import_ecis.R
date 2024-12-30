@@ -29,7 +29,7 @@ vascr_import = function(rawdata){
 #' @importFrom memoise memoise
 #'
 #' @return
-#' @export
+#' @noRd
 #'
 #' @examples
 cache_function <- function(function_name, duration = 86400, omit_args = c()) {

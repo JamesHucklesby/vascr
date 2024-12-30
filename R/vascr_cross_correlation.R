@@ -54,13 +54,17 @@ ccf.df %>% vascr_summarise_cc("summary") %>% vascr_plot_cc()
 #' @export
 #' 
 #' @importFrom cli cli_progress_bar cli_progress_update cli_process_done
-#' @importFrom dplyr bind_cols group_by arrange summarise rename_with 
+#' @importFrom dplyr bind_cols group_by arrange summarise rename_with inner_join rowwise
 #'
 #' @examples
 #' data.df = vascr::growth.df %>% vascr_subset(unit = "R", frequency = 4000, sampleid = c(1,4,7))
 #' 
 #' vascr_cc(data.df)
-vascr_cc = function(data.df) {
+#' 
+#' vascr_cc(data.df, reference = "35,000_cells + HCMEC D3_line")
+#' vascr_cc(data.df, reference = c("35,000_cells + HCMEC D3_line", "5,000_cells + HCMEC D3_line"))
+#' 
+vascr_cc = function(data.df, reference = "none") {
   
 curves = data.df %>%
                 filter(!is.na(.data$Value)) %>% 
@@ -78,6 +82,11 @@ pairedcurves = inner_join(curves, curves, by = c("Experiment"), relationship = "
 
 
 to_export = pairedcurves %>% rowwise() %>% mutate(cc = ccf(unlist(values.x), unlist(values.y), plot = FALSE, lag.max = 0)[["acf"]][[1]])
+
+if(!isTRUE(reference == "none")){
+  reference = vascr_find_sample(data.df, reference)
+  to_export = to_export %>% filter(Sample.x %in% reference | Sample.y %in% reference)
+}
 
 return(to_export)
 

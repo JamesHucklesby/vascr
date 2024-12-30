@@ -6,10 +6,17 @@ test_that("ccf functions work", {
   expect_snapshot({vascr_cc(data.df)})
   
   data.df = vascr::growth.df %>% vascr_subset(unit = "R", frequency = 4000, sampleid = c(1,4,7), time = c(1,20))
-  suppressMessages({cc_data = vascr_cc(data.df)})
   
+  suppressMessages({cc_data = vascr_cc(data.df, reference = "35,000_cells + HCMEC D3_line")})
   expect_snapshot(cc_data)
   
+  suppressMessages({cc_data = vascr_cc(data.df, c("35,000_cells + HCMEC D3_line", "5,000_cells + HCMEC D3_line"))})
+  expect_snapshot(cc_data)
+
+  suppressMessages({cc_data = vascr_cc(data.df)})
+  expect_snapshot(cc_data)
+  
+
   # Check summarisation
   expect_snapshot(vascr_summarise_cc(cc_data, "experiments"))
   expect_snapshot(vascr_summarise_cc(cc_data, "summary"))

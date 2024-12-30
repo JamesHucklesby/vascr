@@ -14,8 +14,8 @@ data.df = vascr::growth.df \%>\%
             vascr_subset(unit = "R", frequency = 4000, sampleid = c(1,4,7,8), time = c(1,20)) \%>\%
             vascr_cc()
 
-# data.df \%>\% vascr_plot_cc()
-# data.df \%>\% vascr_summarise_cc("experiments") \%>\% vascr_plot_cc()
-# data.df \%>\% vascr_summarise_cc("summary") \%>\% vascr_plot_cc()
+data.df \%>\% vascr_plot_cc()
+data.df \%>\% vascr_summarise_cc("experiments") \%>\% vascr_plot_cc()
+data.df \%>\% vascr_summarise_cc("summary") \%>\% vascr_plot_cc()
 
 }

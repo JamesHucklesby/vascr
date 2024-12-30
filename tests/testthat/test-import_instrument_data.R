@@ -10,7 +10,7 @@ test_that("Can import and ECIS file", {
   #Then run the import
   
   expect_snapshot(ecis_import(raw = w16))
- expect_snapshot(ecis_import(model = empty))
+  expect_snapshot(ecis_import(model = empty))
   
   data = ecis_import(raw ,modeled, experimentname = "TEST")
 
@@ -20,8 +20,8 @@ test_that("Can import and ECIS file", {
 
 
 test_that("Can import cellZScope file", {
-  model = system.file("extdata/instruments/zscopemodel.txt", package = "vascr2")
-  raw = system.file("extdata/instruments/zscoperaw.txt", package = "vascr2")
+  model = system.file("extdata/instruments/zscopemodel.txt", package = "vascr")
+  raw = system.file("extdata/instruments/zscoperaw.txt", package = "vascr")
   
   expect_snapshot(cellzscope_import(raw, model, "test"))
   expect_snapshot(cellzscope_import(raw, model))
@@ -33,7 +33,7 @@ test_that("Can import xCELLigence file", {
 
   
 # xCELLigence test
-  rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr2')
+  rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr')
   
   expect_snapshot(import_xcelligence(rawdata = rawdata,"TEST7"))
   expect_snapshot(import_xcelligence(rawdata = rawdata))

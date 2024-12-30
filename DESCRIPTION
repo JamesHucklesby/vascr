@@ -26,7 +26,6 @@ Imports:
     car,
     cowplot,
     cli,
-    DBI,
     dplyr,
     foreach,
     ggnewscale,
@@ -37,15 +36,21 @@ Imports:
     gridExtra,
     magrittr,
     memoise,
-    odbc,
     patchwork,
-    rlang,
     stringr,
     tidyr,
-    utils
+    utils,
+    rlang,
+    DT,
+    shinyjs,
+    shiny
 Suggests: 
     testthat (>= 3.0.0),
-    vdiffr
+    vdiffr,
+    DBI,
+    odbc,
+    writexl,
+    readxl
 Config/testthat/edition: 3
 Encoding: UTF-8
 RoxygenNote: 7.3.2

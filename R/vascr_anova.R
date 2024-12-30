@@ -541,9 +541,16 @@ vascr_plot_anova_grid = function (data.df, unit =  "R", frequency = 4000, time =
 #'
 #' @examples
 #' vascr_plot_anova_bar_reference(growth.df, "R", 4000, 50)
+#' vascr_plot_anova_bar_reference(growth.df, "R", 4000, 50, "5,000_cells + hCMEC D3_line")
 #' 
 vascr_plot_anova_bar_reference = function(data.df, unit, frequency, time, reference = min(data.df$SampleID), breaklines = TRUE)
 {
+
+  if(is.character(reference)) {
+    reference = vascr_find_sample(data.df, reference)
+    reference = vascr_find_sampleid_from_sample(data.df, reference)
+  }
+  
   
   if(!(reference %in% data.df$SampleID))
   {
@@ -715,8 +722,10 @@ vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequen
 #' @examples
 #' 
 #' vascr_plot_anova(data.df = growth.df, unit = "R", frequency = 4000, time = 100)
+#' vascr_plot_anova(data.df = growth.df, unit = "R", frequency = 4000, time = 100, reference = "5,000_cells + HCMEC D3_line")
+#' vascr_plot_anova(data.df = growth.df, unit = "R", frequency = 4000, time = 100, reference = "none")
 #' 
-vascr_plot_anova = function(data.df, unit, frequency, time, ...)
+vascr_plot_anova = function(data.df, unit, frequency, time, reference = NULL)
 {
   
   timeplot = vascr_plot_time_vline(data.df, unit, frequency, time) + labs(y = "Resistance  
@@ -730,16 +739,22 @@ vascr_plot_anova = function(data.df, unit, frequency, time, ...)
   normaloverlayplot = vascr_plot_normality(data.df, unit, frequency, time)
   leveneplot = vascr_plot_levene(data.df, unit, frequency, time)
   
-  differences = vascr_plot_bar_anova(data.df, unit = unit, time = time, frequency = frequency, confidence = 0.95, priority = NULL) +
-    theme(legend.position = "none") + labs(title = "G) ANOVA results", y = "Resistance   
-                                                    (ohm, 4000 Hz)") +
-    theme(legend.position = "none")
   
   tile = vascr_plot_anova_grid(data.df, unit, frequency, time)  + labs(title = "F) P values") +
     guides(fill=guide_legend(nrow=2,byrow=TRUE)) +
     theme(legend.position = "bottom") 
+   
+  if(is.null(reference) | isTRUE(reference == "none"))
+  {
+    anova_results = vascr_plot_bar_anova(data.df, unit = unit, time = time, frequency = frequency)
+  } else {
+    anova_results = vascr_plot_anova_bar_reference(data.df, unit = unit, time = time, frequency = frequency, reference = reference)
+  }
   
-  tile
+  differences =  anova_results +
+    theme(legend.position = "none") + labs(title = "G) ANOVA results", y = "Resistance   
+                                                    (ohm, 4000 Hz)") +
+    theme(legend.position = "none")
   
   grid =  plot_grid(arrangeGrob(timeplot, overallplot, ncol = 2),
                     arrangeGrob(qqplot, normaloverlayplot, leveneplot, ncol = 3),

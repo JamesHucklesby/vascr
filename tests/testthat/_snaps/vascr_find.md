@@ -15,14 +15,14 @@
 # Force median
 
     Code
-      vascr2:::vascr_force_median(c(1, 3, 5, 6), "up")
+      vascr:::vascr_force_median(c(1, 3, 5, 6), "up")
     Output
       [1] 5
 
 ---
 
     Code
-      vascr2:::vascr_force_median(c(1, 3, 5, 6), "down")
+      vascr:::vascr_force_median(c(1, 3, 5, 6), "down")
     Output
       [1] 3
 
@@ -9035,21 +9035,7 @@
 
     Code
       vascr_find_metadata(growth.df)
-    Output
-      Timepoints: 0 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100 105 110 115 120 125 130 135 140 145 150 155 160 165 170 175 180 185 190 195 200
-      Units: Alpha Cm Drift Rb RMSE C P R X Z
-      Frequencies: 0 1000 16000 2000 250 32000 4000 500 64000 8000
-      Experiments: 1 : Experiment 1 2 : Experiment2 3 : Experiment3
-      Instruments
-      Samples in data frame
-       SampleID                       Sample
-              1 35,000_cells + HCMEC D3_line
-              2 30,000_cells + HCMEC D3_line
-              3 25,000_cells + HCMEC D3_line
-              4 20,000_cells + HCMEC D3_line
-              5 15,000_cells + HCMEC D3_line
-              6 10,000_cells + HCMEC D3_line
-              7  5,000_cells + HCMEC D3_line
-              8      0_cells + HCMEC D3_line
+    Message
       
+      Timepoints
 

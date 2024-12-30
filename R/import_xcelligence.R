@@ -47,6 +47,9 @@ xcelligence_import_generate_CI = function(data.df)
 
 
 #' Import an xcelligence file
+#' 
+#' Uses odbc dbConnect odbc dbDisconnect as soft dependencies
+#' DBI dbReadTable
 #'
 #' @param file The file to import
 #' @param key A keyfile to apply. Optional, as the xCELLigence internal definitions will be used if no file is specified
@@ -55,8 +58,7 @@ xcelligence_import_generate_CI = function(data.df)
 #' @importFrom tidyr separate pivot_wider
 #' @importFrom dplyr left_join
 #' @importFrom stringr str_replace
-#' @importFrom DBI dbReadTable
-#' @importFrom odbc dbConnect odbc dbDisconnect
+#' @importFrom rlang check_installed
 #'
 #' @return A vascr datafile
 #' 
@@ -71,7 +73,10 @@ xcelligence_import_generate_CI = function(data.df)
 #'  
 import_xcelligence = function(rawdata, experimentname = NULL, password = "RTCaDaTa")
 {
-  file = rawdata
+ 
+  rlang::check_installed(c("odbc", "DBI"), reason = "is needed to deal with the xCELLigence data format`")
+  
+   file = rawdata
   
   vascr_validate_file(file, "plt")
   
@@ -89,17 +94,17 @@ import_xcelligence = function(rawdata, experimentname = NULL, password = "RTCaDa
   # tables = c("Calibration","ENotes", "ErrLog", "ETimes", "Index1", "Index2", "Index3", "Layout", "Messages", "mIndex1", "Org10K", "Org25K", "Org50K", "ScanPlate", "ScanPlateData", "StepStatus", "TTimes", "WellColor")
   
   
-  connection <- dbConnect(odbc(), .connection_string = paste("Driver={Microsoft Access Driver (*.mdb, *.accdb)};
+  connection <- odbc::dbConnect(odbc::odbc(), .connection_string = paste("Driver={Microsoft Access Driver (*.mdb, *.accdb)};
                             DBQ=",tempfile,";
                             PWD=RTCaDaTa", sep = ""))
   
-  Org10K <- dbReadTable(connection , "Org10K")
-  Org25K <- dbReadTable(connection , "Org25K")
-  Org50K <- dbReadTable(connection , "Org50K")
-  TTimes <- dbReadTable(connection , "TTimes")
-  Layout <- dbReadTable(connection , "Layout")
+  Org10K <- DBI::dbReadTable(connection , "Org10K")
+  Org25K <- DBI::dbReadTable(connection , "Org25K")
+  Org50K <- DBI::dbReadTable(connection , "Org50K")
+  TTimes <- DBI::dbReadTable(connection , "TTimes")
+  Layout <- DBI::dbReadTable(connection , "Layout")
   
-  dbDisconnect(connection)
+  odbc::dbDisconnect(connection)
   
   
   # Delete the temporary file now we have what we need in R

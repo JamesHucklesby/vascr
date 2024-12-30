@@ -2,17 +2,24 @@
 % Please edit documentation in R/vascr_find.R
 \name{vascr_find}
 \alias{vascr_find}
-\title{Title}
+\title{Find vascr variables}
 \usage{
-vascr_find(data.df, paramater, value = NA)
+vascr_find(data.df = growth.df, paramater, value = NA)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The vascr dataset to reference, will default to the growth.df dataset if not specified}
 
-\item{paramater}{}
+\item{paramater}{The parameter to search. Options are "Time", "Unit", "Well", "Frequency", "Sample", "Experiment", "SampleID" or "resampled"}
+
+\item{value}{the value to look up}
+}
+\value{
+The valid vascr dataset.
 }
 \description{
-Title
+These functions are utility functions that will detect if arguments are invalid, 
+and attempt to repair them. Each type of variable has rules related to what values
+are possible in a valid vascr dataset.
 }
 \examples{
 

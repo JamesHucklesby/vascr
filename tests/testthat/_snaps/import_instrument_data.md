@@ -26,7 +26,7 @@
     Code
       ecis_import(model = empty)
     Condition
-      Warning in `ecis_import_model()`:
+      Warning:
       No data imported, check the modeled data you are trying to import is correctly specified and an intact file
     Output
       # A tibble: 0 x 6
