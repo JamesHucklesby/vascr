@@ -19,6 +19,6 @@ Title
 }
 \examples{
 filepath = tempfile("test_export", fileext = ".xlsx")
-vascr_export(data.df, filepath)
+vascr_export(growth.df \%>\% vascr_subset(unit = c("R", "Rb"), frequency = c(0,4000)), filepath)
 
 }

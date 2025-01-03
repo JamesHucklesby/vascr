@@ -1203,7 +1203,7 @@ vascr_find_metadata = function(data.df)
 #' vascr_find_sampleid_from_sample(growth.df, "5,000_cells + HCMEC D3_line")
 #' 
 vascr_find_sampleid_from_sample = function(data.df, sample){
-  find.df = data.df %>% select(Sample, SampleID) %>%
+  find.df = data.df %>% select("Sample", "SampleID") %>%
     distinct() %>%
     filter(Sample == sample)
   

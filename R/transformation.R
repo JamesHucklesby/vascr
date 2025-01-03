@@ -55,6 +55,7 @@ vascr_summarise = function(data.df, level = "wells")
 #' @noRd
 #' 
 #' @importFrom dplyr group_by
+#' @importFrom stats median
 #'
 #' @examples
 #' vascr_summarise_deviation(growth.df %>% vascr_subset(unit = "Rb"))

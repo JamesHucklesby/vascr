@@ -1,13 +1,13 @@
 #' Subset a vascr data set based on a number of factors
 #'
-#' @param data.df Vascr data set to subset
+#' @param data.df vascr data set to subset
 #' @param time Specified times. Individual values in a list will be subset out. If vectors are present in the list, values between the two most extreme values will be returned.
 #' @param unit Units to subset. These are checked for integrity against possible units and the dataset itself
 #' @param well Wells to select
 #' @param frequency Frequencies to include in the data set.
 #' @param experiment Experiments to include in the data set. Can be addressed either by name, or by the numerical order that they were loaded into vascr_combine in
 #' @param instrument Which instruments to include values from
-#' @param subsample Frequency values shoud be subsampled to
+#' @param subsample Frequency values should be sub-sampled to
 #' @param sampleid List of ID's to be used. Sample names will be re-ordered accordingly for display.
 #'
 #' @return The subset dataset, based on the values selected
@@ -18,19 +18,16 @@
 #' @export
 #'
 #' @examples
-#' # vascr_subset(growth.df)
-#' # vascr_subset(growth.df, time = 40)
-#' # vascr_subset(growth.df, time = NULL)
+#' vascr_subset(growth.df)
+#' vascr_subset(growth.df, time = 40)
+#' vascr_subset(growth.df, time = NULL)
 #'  
-#' # vascr_subset(growth.df, unit = "Rb")
-#' # vascr_subset(growth.df, unit = "R")
-#' # vascr_subset(growth.df, well = "A1")
-#' # vascr_subset(growth.df, value_less_than = 100)
-#' # 
+#' vascr_subset(growth.df, unit = "Rb")
+#' vascr_subset(growth.df, unit = "R")
+#' vascr_subset(growth.df, well = "A1")
+#' vascr_subset(growth.df, value_less_than = 100)
 #' 
-#' # vascr_subset(growth.df, time = c(5,20))
-#' 
-#' 
+#' vascr_subset(growth.df, time = c(5,20))
 vascr_subset = function(data.df, 
                         time = NULL, 
                         unit = NULL, 
@@ -175,7 +172,9 @@ vascr_subset_sampleid = function (data.df, samplelist){
 }
 
 
-#' Title
+#' Exclude samples from a vascr dataset
+#' 
+#' 
 #'
 #' @param data.df 
 #' @param well 
@@ -186,7 +185,7 @@ vascr_subset_sampleid = function (data.df, samplelist){
 #'
 #' @examples
 vascr_exclude = function(data.df, well, experiment){
-  data.df = data.df %>% filter(!Well %in% well)
+  data.df = data.df %>% filter(!.data$Well %in% well & !.data$Experiment %in% experiment)
     
   return(data.df)
 }

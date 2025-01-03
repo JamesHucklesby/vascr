@@ -3,12 +3,15 @@
 #' @param data.df 
 #' @param filepath 
 #'
+#'
+#' @importFrom stats setNames
+#'
 #' @returns A dataframe in prism format, or writes to file if filepath specified
 #' @export
 #'
 #' @examples
 #' filepath = tempfile("test_export", fileext = ".xlsx")
-#' vascr_export(data.df, filepath)
+#' vascr_export(growth.df %>% vascr_subset(unit = c("R", "Rb"), frequency = c(0,4000)), filepath)
 #' 
 vascr_export = function(data.df, filepath = NULL){
   
@@ -16,8 +19,9 @@ vascr_export = function(data.df, filepath = NULL){
 
 comboes = data.df %>% select("Unit", "Frequency") %>%
   distinct() %>%
-  mutate(names = paste(Unit, Frequency))
+  mutate(names = paste(.data$Unit, .data$Frequency))
 
+combo = 0
 
 output = foreach(combo = c(1:nrow(comboes)), .final = function(x) setNames(x, comboes$names)) %do%
 {
@@ -26,8 +30,8 @@ output = foreach(combo = c(1:nrow(comboes)), .final = function(x) setNames(x, co
     vascr_subset(unit = combodata$Unit, frequency = combodata$Frequency) %>%
     vascr_summarise(level = "experiments") %>%
     select("Sample", "Value", "Time", "Experiment") %>%
-    mutate(Experiment = paste("[",as.numeric(Experiment),"]", sep = "")) %>%
-    mutate(Sample = str_replace_all(Sample, ",", " ")) %>%
+    mutate(Experiment = paste("[",as.numeric(.data$Experiment),"]", sep = "")) %>%
+    mutate(Sample = str_replace_all(.data$Sample, ",", " ")) %>%
     pivot_wider(names_from = c("Sample", "Experiment"), values_from = "Value", names_repair = "minimal", id_cols = c("Time")) %>%
     arrange(Time)
   

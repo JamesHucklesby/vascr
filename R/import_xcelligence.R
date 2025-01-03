@@ -64,7 +64,6 @@ xcelligence_import_generate_CI = function(data.df)
 #' 
 #' @noRd
 #' 
-#'
 #' @examples
 #' # xCELLigence test
 #' rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr')
@@ -110,7 +109,7 @@ import_xcelligence = function(rawdata, experimentname = NULL, password = "RTCaDa
   # Delete the temporary file now we have what we need in R
   file.remove(tempfile)
   
-  # Where needed, set the appropriate frequencies into the org datafiles, then bind them together
+  # Where needed, set the appropriate frequencies into the org data files, then bind them together
   Org10K$Frequency = 10000
   Org25K$Frequency = 25000
   Org50K$Frequency = 50000

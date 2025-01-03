@@ -17,7 +17,7 @@ vascr_subset(
 )
 }
 \arguments{
-\item{data.df}{Vascr data set to subset}
+\item{data.df}{vascr data set to subset}
 
 \item{time}{Specified times. Individual values in a list will be subset out. If vectors are present in the list, values between the two most extreme values will be returned.}
 
@@ -33,7 +33,7 @@ vascr_subset(
 
 \item{sampleid}{List of ID's to be used. Sample names will be re-ordered accordingly for display.}
 
-\item{subsample}{Frequency values shoud be subsampled to}
+\item{subsample}{Frequency values should be sub-sampled to}
 }
 \value{
 The subset dataset, based on the values selected
@@ -42,17 +42,14 @@ The subset dataset, based on the values selected
 Subset a vascr data set based on a number of factors
 }
 \examples{
-# vascr_subset(growth.df)
-# vascr_subset(growth.df, time = 40)
-# vascr_subset(growth.df, time = NULL)
+vascr_subset(growth.df)
+vascr_subset(growth.df, time = 40)
+vascr_subset(growth.df, time = NULL)
  
-# vascr_subset(growth.df, unit = "Rb")
-# vascr_subset(growth.df, unit = "R")
-# vascr_subset(growth.df, well = "A1")
-# vascr_subset(growth.df, value_less_than = 100)
-# 
+vascr_subset(growth.df, unit = "Rb")
+vascr_subset(growth.df, unit = "R")
+vascr_subset(growth.df, well = "A1")
+vascr_subset(growth.df, value_less_than = 100)
 
-# vascr_subset(growth.df, time = c(5,20))
-
-
+vascr_subset(growth.df, time = c(5,20))
 }

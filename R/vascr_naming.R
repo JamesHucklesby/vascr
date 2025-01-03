@@ -118,12 +118,14 @@ vascr_implode = function(data.df){
   toimplodetf = !colnames(data.df) %in% c("Time", "Well", "Unit", "Value", "Instrument", "Experiment", "Frequency", "SampleID", "Sample")
   toimplode = subset(colnames(data.df), toimplodetf)
   
-  smallframe = data.df %>% select(all_of(toimplode), SampleID) %>%
+  smallframe = data.df %>% select(all_of(toimplode), "SampleID") %>%
     distinct()
   
   to_merge = toimplode
   
   smallframe
+  
+  r = 0
   
   names = foreach(r = c(1:nrow(smallframe))) %do%
     {

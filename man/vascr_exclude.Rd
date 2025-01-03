@@ -2,7 +2,7 @@
 % Please edit documentation in R/vascr_subset.R
 \name{vascr_exclude}
 \alias{vascr_exclude}
-\title{Title}
+\title{Exclude samples from a vascr dataset}
 \usage{
 vascr_exclude(data.df, well, experiment)
 }
@@ -14,5 +14,5 @@ vascr_exclude(data.df, well, experiment)
 \item{experiment}{}
 }
 \description{
-Title
+Exclude samples from a vascr dataset
 }

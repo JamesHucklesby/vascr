@@ -13,6 +13,6 @@ vascr_shiny(data.df)
 Title
 }
 \examples{
-vascr_shiny(growth.df)
-vascr_shiny()
+#vascr_shiny(growth.df)
+#vascr_shiny()
 }

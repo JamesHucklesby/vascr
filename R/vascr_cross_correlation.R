@@ -55,6 +55,7 @@ ccf.df %>% vascr_summarise_cc("summary") %>% vascr_plot_cc()
 #' 
 #' @importFrom cli cli_progress_bar cli_progress_update cli_process_done
 #' @importFrom dplyr bind_cols group_by arrange summarise rename_with inner_join rowwise
+#' @importFrom stats ccf
 #'
 #' @examples
 #' data.df = vascr::growth.df %>% vascr_subset(unit = "R", frequency = 4000, sampleid = c(1,4,7))
@@ -68,8 +69,8 @@ vascr_cc = function(data.df, reference = "none") {
   
 curves = data.df %>%
                 filter(!is.na(.data$Value)) %>% 
-                group_by(Well, SampleID, Sample, Experiment) %>%
-                arrange(Time, SampleID) %>%
+                group_by(.data$Well, .data$SampleID, .data$Sample, .data$Experiment) %>%
+                arrange(.data$Time, .data$SampleID) %>%
                 mutate(Time = NULL) %>%
                 summarise(values = list(.data$Value), .groups = "keep") %>%
                 ungroup("Well") %>%
@@ -81,11 +82,11 @@ pairedcurves = inner_join(curves, curves, by = c("Experiment"), relationship = "
 
 
 
-to_export = pairedcurves %>% rowwise() %>% mutate(cc = ccf(unlist(values.x), unlist(values.y), plot = FALSE, lag.max = 0)[["acf"]][[1]])
+to_export = pairedcurves %>% rowwise() %>% mutate(cc = ccf(unlist(.data$values.x), unlist(.data$values.y), plot = FALSE, lag.max = 0)[["acf"]][[1]])
 
 if(!isTRUE(reference == "none")){
   reference = vascr_find_sample(data.df, reference)
-  to_export = to_export %>% filter(Sample.x %in% reference | Sample.y %in% reference)
+  to_export = to_export %>% filter(.data$Sample.x %in% reference | .data$Sample.y %in% reference)
 }
 
 return(to_export)
@@ -132,18 +133,21 @@ vascr_summarise_cc = function(data.df, level = "summary")
 }
 
 
-#' Title
+#' Plot out a cross-correlation summarized dataset
+#' 
+#' @param data.df a cross-correlation summarised vascr dataset
 #'
-#' @return
+#' @return A ggplot of the dataset presented to be cropped
 #' 
 #' @importFrom ggplot2 geom_tile geom_text facet_wrap scale_colour_manual geom_point geom_errorbar
 #' @importFrom dplyr tibble 
 #' @importFrom ggtext element_markdown
 #' 
+#' @noRd
 #'
 #' @examples
 #' data.df = vascr::growth.df %>% 
-#'             vascr_subset(unit = "R", frequency = 4000, sampleid = c(1,4,7,8), time = c(1,20)) %>%
+#'             vascr_subset(unit = "R", frequency = 4000) %>%
 #'             vascr_cc()
 #'
 #' data.df %>% vascr_plot_cc()
@@ -154,23 +158,23 @@ vascr_plot_cc = function(data.df){
 
 if(vascr_find_level(data.df) == "wells"){
   toreturn = data.df %>% ggplot() +
-    geom_tile(aes(x = paste(`Experiment`, `Well.x`, sep = "\n"), y = paste(`Experiment`, `Well.y`, sep = "\n"), fill = cc)) +
-    geom_text(aes(x = paste(`Experiment`, `Well.x`, sep = "\n"), y = paste(`Experiment`, `Well.y`, sep = "\n"), label = round(cc,3))) +
-    facet_wrap(vars(`Sample.x`, `Sample.y`), scales = "free")
+    geom_tile(aes(x = paste(.data$`Experiment`, .data$`Well.x`, sep = "\n"), y = paste(.data$`Experiment`, .data$`Well.y`, sep = "\n"), fill = .data$cc)) +
+    geom_text(aes(x = paste(.data$`Experiment`, .data$`Well.x`, sep = "\n"), y = paste(.data$`Experiment`, .data$`Well.y`, sep = "\n"), label = round(.data$cc,3))) +
+    facet_wrap(vars(.data$`Sample.x`, .data$`Sample.y`), scales = "free")
  
    return(toreturn)
 }
 
 if(vascr_find_level(data.df) == "experiments"){
   toreturn = data.df %>% ggplot() +
-  geom_tile(aes(x = `Experiment`, y = `Experiment`, fill = cc)) +
-  facet_wrap(vars(`Sample.x`, `Sample.y`), scales = "free")
+  geom_tile(aes(x = .data$`Experiment`, y = .data$`Experiment`, fill = .data$cc)) +
+  facet_wrap(vars(.data$`Sample.x`, .data$`Sample.y`), scales = "free")
   
   return(toreturn)
 }
   
   data.df %>% ggplot() +
-    geom_tile(aes(x = `Sample.x`, y = `Sample.y`, fill = cc))
+    geom_tile(aes(x = .data$`Sample.x`, y = .data$`Sample.y`, fill = .data$cc))
 
 colours = vascr_gg_color_hue(length(unique(c(data.df$`Sample.x`, data.df$`Sample.y`))))
 
@@ -185,8 +189,8 @@ toplot = data.df %>% left_join(hue, join_by(`Sample.x` == `Sample`)) %>%
   
 toplot %>%
   ggplot() +
-  geom_point(aes(y = title, x = cc, color = `Sample.x`)) +
-  geom_errorbar(aes(y = title, xmin = cc-ccsem, xmax = cc + ccsem, color = `Sample.y`)) +
+  geom_point(aes(y = .data$title, x = .data$cc, color = .data$`Sample.x`)) +
+  geom_errorbar(aes(y = .data$title, xmin = .data$cc-.data$ccsem, xmax = .data$cc + .data$ccsem, color = .data$`Sample.y`)) +
   theme(axis.text.y = element_markdown()) +
   scale_colour_manual(values = colours)
 
