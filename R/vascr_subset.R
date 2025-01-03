@@ -25,7 +25,6 @@
 #' vascr_subset(growth.df, unit = "Rb")
 #' vascr_subset(growth.df, unit = "R")
 #' vascr_subset(growth.df, well = "A1")
-#' vascr_subset(growth.df, value_less_than = 100)
 #' 
 #' vascr_subset(growth.df, time = c(5,20))
 vascr_subset = function(data.df, 
