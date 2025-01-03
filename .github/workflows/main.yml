@@ -37,21 +37,7 @@ jobs:
       with:
         config: ${{ github.event.inputs.config }}
       id: rhub-setup
-
-  linux-containers:
-    needs: setup
-    if: ${{ needs.setup.outputs.containers != '[]' }}
-    runs-on: ubuntu-latest
-    name: ${{ matrix.config.label }}
-    strategy:
-      fail-fast: false
-      matrix:
-        config: ${{ fromJson(needs.setup.outputs.containers) }}
-    container:
-      image: ${{ matrix.config.container }}
-
-    steps:
-    steps:
+          steps:
 - uses: actions/checkout@v4
 - uses: r-lib/actions/setup-r@v2
 - uses: r-lib/actions/setup-r-dependencies@v2
@@ -65,6 +51,18 @@ jobs:
     check-dir: '"check"'
       - uses: r-hub/actions/checkout@v1
       - uses: r-hub/actions/platform-info@v1
+
+  linux-containers:
+    needs: setup
+    if: ${{ needs.setup.outputs.containers != '[]' }}
+    runs-on: ubuntu-latest
+    name: ${{ matrix.config.label }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config: ${{ fromJson(needs.setup.outputs.containers) }}
+    container:
+      image: ${{ matrix.config.container }}
         with:
           token: ${{ secrets.RHUB_TOKEN }}
           job-config: ${{ matrix.config.job-config }}
