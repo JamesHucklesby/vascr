@@ -50,14 +50,16 @@ ccf.df %>% vascr_summarise_cc("summary") %>% vascr_plot_cc()
 
 #' Calculate the cross correlation coefficients of a vascr dataset
 #'
-#'  @param data.df a vascr dataset to calculate
-#'  @param reference  The sample to reference all CC's against. Defaults to all comparisons
+#' @param data.df a vascr dataset to calculate
+#' @param reference  The sample to reference all CC's against. Defaults to all comparisons
 #'
 #' @return a vascr dataset containing the cross correlation coefficients between curves
 #' 
 #' @importFrom cli cli_progress_bar cli_progress_update cli_process_done
 #' @importFrom dplyr bind_cols group_by arrange summarise rename_with inner_join rowwise
 #' @importFrom stats ccf
+#' 
+#' @noRd
 #'
 #' @examples
 #' data.df = vascr::growth.df %>% vascr_subset(unit = "R", frequency = 4000, sampleid = c(1,4,7))
@@ -119,7 +121,7 @@ vascr_summarise_cc = function(data.df, level = "summary")
   
   ccf_exp = data.df %>% ungroup() %>% 
     group_by_at(vars("Sample.x", "Sample.y", "SampleID.x", "SampleID.y", "Experiment")) %>%
-    summarise(cc = mean(cc), n = n())
+    summarise(cc = mean(.data$cc), n = n())
   
   distinct(ccf_exp %>% select(-"cc"))
   
@@ -127,7 +129,7 @@ vascr_summarise_cc = function(data.df, level = "summary")
     return(ccf_exp)
   }
   
-  ccf_sum = ccf_exp %>% group_by(`Sample.x`, `Sample.y`) %>%
+  ccf_sum = ccf_exp %>% group_by(.data$`Sample.x`, .data$`Sample.y`) %>%
     summarise(ccsem = sd(.data$cc)/n(), cc = mean(.data$cc), totaln = sum(.data$n)) %>%
     mutate(title = paste(.data$`Sample.x`, .data$`Sample.y`, sep = "\n"))
   
@@ -181,9 +183,13 @@ colours = vascr_gg_color_hue(length(unique(c(data.df$`Sample.x`, data.df$`Sample
 
 hue = tibble(Sample = unique(c(data.df$`Sample.x`, data.df$`Sample.y`)), colours = colours)
 
-toplot = data.df %>% left_join(hue, join_by(`Sample.x` == `Sample`)) %>% 
+x = NULL
+y = NULL
+cc = NULL
+
+toplot = data.df %>% left_join(hue, join_by(x$`Sample.x` == y$`Sample`)) %>% 
   mutate(hue1 = .data$colours, colours = NULL) %>% 
-  left_join(hue, join_by(`Sample.y` == `Sample`)) %>% 
+  left_join(hue, join_by(x$`Sample.y` == y$`Sample`)) %>% 
   mutate(hue2 = colours, colours = NULL) %>%
   mutate(title = glue("<span style = 'color:{hue1};'>{`Sample.x`}</span><br>
                        <span style = 'color:{hue2};'>{`Sample.y`}</span>"))

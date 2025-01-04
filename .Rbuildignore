@@ -3,7 +3,6 @@
 ^raw_data$
 ^LICENSE\.md$
 ^cran-comments\.md$
-^vascr_web$
 ^\.github$
 ^revdep$
 ^README\.Rmd$

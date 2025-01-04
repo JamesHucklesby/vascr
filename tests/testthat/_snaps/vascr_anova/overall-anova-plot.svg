@@ -839,144 +839,144 @@
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
 </g>
 <defs>
-  <clipPath id='cpMjY1LjU3fDcxNC41MnwzMTAuNzh8NTQ1LjEx'>
-    <rect x='265.57' y='310.78' width='448.95' height='234.33' />
+  <clipPath id='cpMjY1LjU3fDcxNC41MnwzMTAuNzh8NDYwLjI1'>
+    <rect x='265.57' y='310.78' width='448.95' height='149.47' />
   </clipPath>
 </defs>
-<g clip-path='url(#cpMjY1LjU3fDcxNC41MnwzMTAuNzh8NTQ1LjEx)'>
-<rect x='265.57' y='310.78' width='448.95' height='234.33' style='stroke-width: 1.07; stroke: none; fill: #EBEBEB;' />
-<polyline points='265.57,502.09 714.52,502.09 ' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='265.57,437.36 714.52,437.36 ' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='265.57,372.63 714.52,372.63 ' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='265.57,534.46 714.52,534.46 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='265.57,469.73 714.52,469.73 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='265.57,404.99 714.52,404.99 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='265.57,340.26 714.52,340.26 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='298.42,545.11 298.42,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='353.17,545.11 353.17,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='407.92,545.11 407.92,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='462.67,545.11 462.67,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='517.42,545.11 517.42,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='572.17,545.11 572.17,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='626.92,545.11 626.92,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<polyline points='681.67,545.11 681.67,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
-<rect x='273.78' y='458.50' width='49.28' height='75.96' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #F8766D;' />
-<rect x='328.53' y='355.29' width='49.28' height='179.17' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #CD9600;' />
-<rect x='383.28' y='340.03' width='49.28' height='194.43' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #7CAE00;' />
-<rect x='438.03' y='340.22' width='49.28' height='194.24' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BE67;' />
-<rect x='492.78' y='342.68' width='49.28' height='191.78' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFC4;' />
-<rect x='547.53' y='345.52' width='49.28' height='188.94' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #00A9FF;' />
-<rect x='602.28' y='354.79' width='49.28' height='179.67' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #C77CFF;' />
-<rect x='657.03' y='412.92' width='49.28' height='121.54' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #FF61CC;' />
-<text x='298.42' y='452.59' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line ***</text>
-<text x='298.42' y='468.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line ***</text>
-<text x='298.42' y='484.38' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line ***</text>
-<text x='298.42' y='500.28' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line ***</text>
-<text x='298.42' y='516.18' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line ***</text>
-<text x='298.42' y='532.07' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line ***</text>
-<text x='298.42' y='547.97' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
-<text x='353.17' y='452.59' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line  </text>
-<text x='353.17' y='468.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line  </text>
-<text x='353.17' y='484.38' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line  </text>
-<text x='353.17' y='500.28' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line  </text>
-<text x='353.17' y='516.18' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line  </text>
-<text x='353.17' y='532.07' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
-<text x='353.17' y='547.97' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
-<text x='407.92' y='452.59' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line  </text>
-<text x='407.92' y='468.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line  </text>
-<text x='407.92' y='484.38' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line  </text>
-<text x='407.92' y='500.28' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line  </text>
-<text x='407.92' y='516.18' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
-<text x='407.92' y='532.07' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
-<text x='407.92' y='547.97' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line  </text>
-<text x='462.67' y='452.59' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line  </text>
-<text x='462.67' y='468.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line  </text>
-<text x='462.67' y='484.38' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line  </text>
-<text x='462.67' y='500.28' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
-<text x='462.67' y='516.18' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
-<text x='462.67' y='532.07' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line  </text>
-<text x='462.67' y='547.97' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line  </text>
-<text x='517.42' y='452.59' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line  </text>
-<text x='517.42' y='468.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line  </text>
-<text x='517.42' y='484.38' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
-<text x='517.42' y='500.28' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
-<text x='517.42' y='516.18' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line  </text>
-<text x='517.42' y='532.07' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line  </text>
-<text x='517.42' y='547.97' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line  </text>
-<text x='572.17' y='452.59' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line  </text>
-<text x='572.17' y='468.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
-<text x='572.17' y='484.38' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
-<text x='572.17' y='500.28' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line  </text>
-<text x='572.17' y='516.18' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line  </text>
-<text x='572.17' y='532.07' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line  </text>
-<text x='572.17' y='547.97' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line  </text>
-<text x='626.92' y='452.59' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
-<text x='626.92' y='468.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
-<text x='626.92' y='484.38' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line  </text>
-<text x='626.92' y='500.28' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line  </text>
-<text x='626.92' y='516.18' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line  </text>
-<text x='626.92' y='532.07' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line  </text>
-<text x='626.92' y='547.97' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line  </text>
-<text x='681.67' y='452.59' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
-<text x='681.67' y='468.49' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line ***</text>
-<text x='681.67' y='484.38' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line ***</text>
-<text x='681.67' y='500.28' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line ***</text>
-<text x='681.67' y='516.18' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line ***</text>
-<text x='681.67' y='532.07' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line ***</text>
-<text x='681.67' y='547.97' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line ***</text>
-<polyline points='281.99,458.00 314.84,458.00 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='298.42,458.00 298.42,459.00 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='281.99,459.00 314.84,459.00 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='336.74,335.48 369.59,335.48 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='353.17,335.48 353.17,375.10 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='336.74,375.10 369.59,375.10 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='391.49,321.43 424.34,321.43 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='407.92,321.43 407.92,358.62 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='391.49,358.62 424.34,358.62 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='446.24,324.40 479.09,324.40 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='462.67,324.40 462.67,356.05 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='446.24,356.05 479.09,356.05 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='500.99,328.57 533.84,328.57 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='517.42,328.57 517.42,356.78 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='500.99,356.78 533.84,356.78 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='555.74,333.33 588.59,333.33 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='572.17,333.33 572.17,357.72 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='555.74,357.72 588.59,357.72 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='610.49,347.01 643.35,347.01 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='626.92,347.01 626.92,362.57 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='610.49,362.57 643.35,362.57 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='665.25,402.78 698.10,402.78 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='681.67,402.78 681.67,423.05 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
-<polyline points='665.25,423.05 698.10,423.05 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<g clip-path='url(#cpMjY1LjU3fDcxNC41MnwzMTAuNzh8NDYwLjI1)'>
+<rect x='265.57' y='310.78' width='448.95' height='149.47' style='stroke-width: 1.07; stroke: none; fill: #EBEBEB;' />
+<polyline points='265.57,432.81 714.52,432.81 ' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='265.57,391.52 714.52,391.52 ' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='265.57,350.23 714.52,350.23 ' style='stroke-width: 0.53; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='265.57,453.46 714.52,453.46 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='265.57,412.17 714.52,412.17 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='265.57,370.88 714.52,370.88 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='265.57,329.59 714.52,329.59 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='298.42,460.25 298.42,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='353.17,460.25 353.17,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='407.92,460.25 407.92,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='462.67,460.25 462.67,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='517.42,460.25 517.42,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='572.17,460.25 572.17,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='626.92,460.25 626.92,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
+<polyline points='681.67,460.25 681.67,310.78 ' style='stroke-width: 1.07; stroke: #FFFFFF; stroke-linecap: butt;' />
+<rect x='273.78' y='405.01' width='49.28' height='48.45' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #F8766D;' />
+<rect x='328.53' y='339.17' width='49.28' height='114.28' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #CD9600;' />
+<rect x='383.28' y='329.44' width='49.28' height='124.02' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #7CAE00;' />
+<rect x='438.03' y='329.56' width='49.28' height='123.89' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BE67;' />
+<rect x='492.78' y='331.13' width='49.28' height='122.33' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #00BFC4;' />
+<rect x='547.53' y='332.94' width='49.28' height='120.51' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #00A9FF;' />
+<rect x='602.28' y='338.85' width='49.28' height='114.61' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #C77CFF;' />
+<rect x='657.03' y='375.93' width='49.28' height='77.53' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #FF61CC;' />
+<text x='298.42' y='385.34' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line ***</text>
+<text x='298.42' y='401.24' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line ***</text>
+<text x='298.42' y='417.13' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line ***</text>
+<text x='298.42' y='433.03' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line ***</text>
+<text x='298.42' y='448.93' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line ***</text>
+<text x='298.42' y='464.82' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line ***</text>
+<text x='298.42' y='480.72' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
+<text x='353.17' y='385.34' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line  </text>
+<text x='353.17' y='401.24' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line  </text>
+<text x='353.17' y='417.13' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line  </text>
+<text x='353.17' y='433.03' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line  </text>
+<text x='353.17' y='448.93' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line  </text>
+<text x='353.17' y='464.82' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
+<text x='353.17' y='480.72' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
+<text x='407.92' y='385.34' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line  </text>
+<text x='407.92' y='401.24' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line  </text>
+<text x='407.92' y='417.13' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line  </text>
+<text x='407.92' y='433.03' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line  </text>
+<text x='407.92' y='448.93' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
+<text x='407.92' y='464.82' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
+<text x='407.92' y='480.72' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line  </text>
+<text x='462.67' y='385.34' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line  </text>
+<text x='462.67' y='401.24' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line  </text>
+<text x='462.67' y='417.13' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line  </text>
+<text x='462.67' y='433.03' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
+<text x='462.67' y='448.93' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
+<text x='462.67' y='464.82' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line  </text>
+<text x='462.67' y='480.72' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line  </text>
+<text x='517.42' y='385.34' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line  </text>
+<text x='517.42' y='401.24' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line  </text>
+<text x='517.42' y='417.13' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
+<text x='517.42' y='433.03' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
+<text x='517.42' y='448.93' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line  </text>
+<text x='517.42' y='464.82' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line  </text>
+<text x='517.42' y='480.72' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line  </text>
+<text x='572.17' y='385.34' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line  </text>
+<text x='572.17' y='401.24' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
+<text x='572.17' y='417.13' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
+<text x='572.17' y='433.03' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line  </text>
+<text x='572.17' y='448.93' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line  </text>
+<text x='572.17' y='464.82' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line  </text>
+<text x='572.17' y='480.72' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line  </text>
+<text x='626.92' y='385.34' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
+<text x='626.92' y='401.24' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
+<text x='626.92' y='417.13' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line  </text>
+<text x='626.92' y='433.03' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line  </text>
+<text x='626.92' y='448.93' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line  </text>
+<text x='626.92' y='464.82' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line  </text>
+<text x='626.92' y='480.72' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line  </text>
+<text x='681.67' y='385.34' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
+<text x='681.67' y='401.24' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line ***</text>
+<text x='681.67' y='417.13' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line ***</text>
+<text x='681.67' y='433.03' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line ***</text>
+<text x='681.67' y='448.93' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line ***</text>
+<text x='681.67' y='464.82' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line ***</text>
+<text x='681.67' y='480.72' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line ***</text>
+<polyline points='281.99,404.69 314.84,404.69 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='298.42,404.69 298.42,405.32 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='281.99,405.32 314.84,405.32 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='336.74,326.54 369.59,326.54 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='353.17,326.54 353.17,351.81 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='336.74,351.81 369.59,351.81 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='391.49,317.58 424.34,317.58 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='407.92,317.58 407.92,341.30 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='391.49,341.30 424.34,341.30 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='446.24,319.47 479.09,319.47 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='462.67,319.47 462.67,339.66 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='446.24,339.66 479.09,339.66 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='500.99,322.13 533.84,322.13 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='517.42,322.13 517.42,340.12 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='500.99,340.12 533.84,340.12 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='555.74,325.17 588.59,325.17 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='572.17,325.17 572.17,340.72 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='555.74,340.72 588.59,340.72 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='610.49,333.89 643.35,333.89 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='626.92,333.89 626.92,343.82 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='610.49,343.82 643.35,343.82 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='665.25,369.46 698.10,369.46 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='681.67,369.46 681.67,382.40 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
+<polyline points='665.25,382.40 698.10,382.40 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
 </g>
 <g clip-path='url(#cpMC4wMHw3MjAuMDB8MC4wMHw1NzYuMDA=)'>
-<text x='260.64' y='537.49' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>0</text>
-<text x='260.64' y='472.76' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='14.68px' lengthAdjust='spacingAndGlyphs'>200</text>
-<text x='260.64' y='408.02' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='14.68px' lengthAdjust='spacingAndGlyphs'>400</text>
-<text x='260.64' y='343.29' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='14.68px' lengthAdjust='spacingAndGlyphs'>600</text>
-<polyline points='262.83,534.46 265.57,534.46 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='262.83,469.73 265.57,469.73 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='262.83,404.99 265.57,404.99 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='262.83,340.26 265.57,340.26 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='298.42,547.85 298.42,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='353.17,547.85 353.17,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='407.92,547.85 407.92,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='462.67,547.85 462.67,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='517.42,547.85 517.42,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='572.17,547.85 572.17,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='626.92,547.85 626.92,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<polyline points='681.67,547.85 681.67,545.11 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
-<text x='298.42' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='101.25px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line</text>
-<text x='353.17' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='123.28px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line</text>
-<text x='407.92' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='123.28px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line</text>
-<text x='462.67' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='123.28px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line</text>
-<text x='517.42' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='123.28px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line</text>
-<text x='572.17' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='123.28px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line</text>
-<text x='626.92' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='123.28px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line</text>
-<text x='681.67' y='556.10' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='118.38px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line</text>
+<text x='260.64' y='456.49' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='4.89px' lengthAdjust='spacingAndGlyphs'>0</text>
+<text x='260.64' y='415.19' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='14.68px' lengthAdjust='spacingAndGlyphs'>200</text>
+<text x='260.64' y='373.90' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='14.68px' lengthAdjust='spacingAndGlyphs'>400</text>
+<text x='260.64' y='332.61' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='14.68px' lengthAdjust='spacingAndGlyphs'>600</text>
+<polyline points='262.83,453.46 265.57,453.46 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='262.83,412.17 265.57,412.17 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='262.83,370.88 265.57,370.88 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='262.83,329.59 265.57,329.59 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='298.42,462.99 298.42,460.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='353.17,462.99 353.17,460.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='407.92,462.99 407.92,460.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='462.67,462.99 462.67,460.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='517.42,462.99 517.42,460.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='572.17,462.99 572.17,460.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='626.92,462.99 626.92,460.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<polyline points='681.67,462.99 681.67,460.25 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
+<text transform='translate(302.70,469.46) rotate(-45)' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='101.25px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line</text>
+<text transform='translate(357.45,469.46) rotate(-45)' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='123.28px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line</text>
+<text transform='translate(412.20,469.46) rotate(-45)' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='123.28px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line</text>
+<text transform='translate(466.95,469.46) rotate(-45)' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='123.28px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line</text>
+<text transform='translate(521.70,469.46) rotate(-45)' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='123.28px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line</text>
+<text transform='translate(576.45,469.46) rotate(-45)' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='123.28px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line</text>
+<text transform='translate(631.20,469.46) rotate(-45)' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='123.28px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line</text>
+<text transform='translate(685.95,469.46) rotate(-45)' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='118.38px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line</text>
 <text x='490.04' y='568.24' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='37.30px' lengthAdjust='spacingAndGlyphs'>Sample</text>
-<text transform='translate(229.05,427.95) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='63.60px' lengthAdjust='spacingAndGlyphs'>Resistance   </text>
-<text transform='translate(240.93,427.95) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='234.72px' lengthAdjust='spacingAndGlyphs'>                                                    (ohm, 4000 Hz)</text>
+<text transform='translate(229.05,385.52) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='63.60px' lengthAdjust='spacingAndGlyphs'>Resistance   </text>
+<text transform='translate(240.93,385.52) rotate(-90)' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='234.72px' lengthAdjust='spacingAndGlyphs'>                                                    (ohm, 4000 Hz)</text>
 <text x='265.57' y='302.56' style='font-size: 13.20px; font-family: sans;' textLength='107.12px' lengthAdjust='spacingAndGlyphs'>G) ANOVA results</text>
 </g>
 </svg>

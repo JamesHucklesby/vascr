@@ -2,20 +2,20 @@
 % Please edit documentation in R/vascr_export.R
 \name{vascr_export}
 \alias{vascr_export}
-\title{Title}
+\title{Export a vascr dataframe}
 \usage{
 vascr_export(data.df, filepath = NULL)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{a vascr dataset to export}
 
-\item{filepath}{}
+\item{filepath}{Path to save the dataframe in}
 }
 \value{
 A dataframe in prism format, or writes to file if filepath specified
 }
 \description{
-Title
+Export a vascr dataframe
 }
 \examples{
 filepath = tempfile("test_export", fileext = ".xlsx")

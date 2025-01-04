@@ -3,6 +3,7 @@
 #' @param data.df The vascr data set to plot
 #' @param errorbars Type of error bars, Inf for ribbons, 0 for no errors and any integer to plot every nth line
 #' @param alpha Transparency of the error ribbon plotted
+#' @param text_labels Show or hide well labels
 #' 
 #' @importFrom ggplot2 geom_ribbon geom_line geom_text facet_grid vars
 #' @importFrom ggtext element_markdown

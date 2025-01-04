@@ -9,15 +9,18 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' vascr_shiny(growth.df)
 #' vascr_shiny()
+#' }
 vascr_shiny = function(data.df = NULL){
   
-  uidataset.df = growth.df
+  ui = NULL
+  server = NULL
   
-  source("vascr_web/app.R", local = TRUE)
+  source("R/vascr_web/app.R", local = TRUE)
   
-  returned = runApp(list(ui = ui, server = server))
+  returned = shiny::runApp(list(ui = ui, server = server))
 
   return(returned)
 }
@@ -30,9 +33,11 @@ vascr_shiny = function(data.df = NULL){
 #' @importFrom stringr str_remove
 #'
 #' @returns A copy and pasteable tribble
+#' 
+#' @noRd
 #'
 #' @examples
-#' mc_tribble(indf = growth.df[1:4,])
+#' mc_tribble(growth.df[1:4,])
 #' 
 #' 
 mc_tribble <- function(toprint) {

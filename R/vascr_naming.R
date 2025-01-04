@@ -104,7 +104,10 @@ vascr_apply_map = function(data.df, map){
 
 #' Implode individual samples from a vascr dataset
 #'
+#' @param data.df A vascr dataset to be imploded
+#'
 #' @return A vascr dataset with individual wells imploded
+#' 
 #' @export
 #' 
 #' @importFrom dplyr bind_rows

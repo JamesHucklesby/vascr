@@ -1,10 +1,11 @@
-#' Title
+#' Export a vascr dataframe
 #'
-#' @param data.df 
-#' @param filepath 
+#' @param data.df a vascr dataset to export
+#' @param filepath Path to save the dataframe in
 #'
 #'
 #' @importFrom stats setNames
+#' @importFrom utils write.csv
 #'
 #' @returns A dataframe in prism format, or writes to file if filepath specified
 #' @export

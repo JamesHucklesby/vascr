@@ -6,6 +6,9 @@
 \usage{
 vascr_implode(data.df)
 }
+\arguments{
+\item{data.df}{A vascr dataset to be imploded}
+}
 \value{
 A vascr dataset with individual wells imploded
 }

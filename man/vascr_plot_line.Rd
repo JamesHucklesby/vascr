@@ -12,6 +12,8 @@ vascr_plot_line(data.df, errorbars = Inf, alpha = 0.3, text_labels = TRUE)
 \item{errorbars}{Type of error bars, Inf for ribbons, 0 for no errors and any integer to plot every nth line}
 
 \item{alpha}{Transparency of the error ribbon plotted}
+
+\item{text_labels}{Show or hide well labels}
 }
 \value{
 a ggplot containing the data

@@ -16,6 +16,8 @@ a vascr dataset, with the modifications made
 Title
 }
 \examples{
+\dontrun{
 vascr_shiny(growth.df)
 vascr_shiny()
+}
 }
