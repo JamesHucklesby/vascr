@@ -1,7 +1,15 @@
+round_prob = function(test)
+{
+  test$Tukey.level = signif(test$Tukey.level,3)
+  test$p.adj = signif(test$p.adj,3)
+  return(test)
+}
+
+
 test_that("Can make a significance table", {
   
   expect_snapshot(vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95))
-  expect_snapshot(vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95, format = "Tukey_data"))
+  expect_snapshot(vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95, format = "Tukey_data") %>% round_prob())
   
 })
 

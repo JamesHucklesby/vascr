@@ -409,7 +409,7 @@
       [1] 1 : Experiment 1 2 : Experiment2  3 : Experiment3 
       Levels: 1 : Experiment 1 2 : Experiment2 3 : Experiment3
 
-# vascr_titles
+# vascr_titles render
 
     Code
       vascr_titles(unit, frequency)
@@ -521,7 +521,7 @@
     Output
       Rmed (ohm)
 
----
+# vascr_titles
 
     Code
       vascr_titles("random text, not changed")

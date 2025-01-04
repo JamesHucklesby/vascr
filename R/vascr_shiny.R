@@ -15,12 +15,12 @@
 #' }
 vascr_shiny = function(data.df = NULL){
   
-  ui = NULL
-  server = NULL
+  x_e <- new.env(parent = emptyenv())
+  x_e$data <- data.df
   
-  source("R/vascr_web/app.R", local = TRUE)
+  localapp = shinyApp(vascr_ui, vascr_server)
   
-  returned = shiny::runApp(list(ui = ui, server = server))
+  returned = shiny::runApp(localapp)
 
   return(returned)
 }

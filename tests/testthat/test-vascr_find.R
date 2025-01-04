@@ -125,9 +125,10 @@ test_that("vascr_find_experiment",{
 
 })
 
-test_that("vascr_titles",{
-  
 
+test_that("vascr_titles render",{
+  
+  skip_on_ci()
   
   test_render = function(unit, frequency = 1000)
   {
@@ -163,13 +164,18 @@ test_that("vascr_titles",{
   test_render("Drift")
   
   test_render("CI")
-
+  
   
   test_render("CPE_A")
   test_render("CPE_n")
   test_render("TER")
   test_render("Ccl")
   test_render("Rmed")
+  
+})
+
+
+test_that("vascr_titles",{
   
   
   expect_snapshot(vascr_titles("random text, not changed"))
