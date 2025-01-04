@@ -80,12 +80,12 @@ vascr_import_map = function(lookup) {
 }
 
 
-#' Title
+#' Apply a map to a vascr dataset
 #'
-#' @param data.df 
-#' @param map 
+#' @param data.df the dataset to apply to
+#' @param map the dataset to apply
 #'
-#' @return
+#' @return a named vascr dataset
 #' 
 #' @noRd
 #'
@@ -102,9 +102,9 @@ vascr_apply_map = function(data.df, map){
 }
 
 
-#' Title
+#' Implode individual samples from a vascr dataset
 #'
-#' @return
+#' @return A vascr dataset with individual wells imploded
 #' @export
 #' 
 #' @importFrom dplyr bind_rows

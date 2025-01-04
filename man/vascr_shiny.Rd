@@ -4,15 +4,18 @@
 \alias{vascr_shiny}
 \title{Title}
 \usage{
-vascr_shiny(data.df)
+vascr_shiny(data.df = NULL)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{A vascr dataset to maniuplate}
+}
+\value{
+a vascr dataset, with the modifications made
 }
 \description{
 Title
 }
 \examples{
-#vascr_shiny(growth.df)
-#vascr_shiny()
+vascr_shiny(growth.df)
+vascr_shiny()
 }

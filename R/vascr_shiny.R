@@ -1,81 +1,53 @@
 #' Title
 #'
-#' @param data.df 
+#' @param data.df A vascr dataset to maniuplate
 #'
-#' @returns
+#' @returns a vascr dataset, with the modifications made
 #' 
 #' @importFrom dplyr full_join ungroup tibble tribble filter group_by summarise
-#' 
 #' 
 #' @export
 #'
 #' @examples
-#' #vascr_shiny(growth.df)
-#' #vascr_shiny()
-vascr_shiny = function(data.df){
+#' vascr_shiny(growth.df)
+#' vascr_shiny()
+vascr_shiny = function(data.df = NULL){
   
-  rlang::check_installed(c("shiny", "DT", "shinyjs"))
+  uidataset.df = growth.df
   
-  selectInput = shiny::selectInput
-  moduleServer = shiny::moduleServer
-  checkboxGroupInput = shiny::checkboxGroupInput
-  DTOutput = DT::DTOutput
-  plotOutput = shiny::plotOutput
-  fluidRow = shiny::fluidRow
-  tagList = shiny::tagList
-  shinyApp = shiny::shinyApp
-  NS = shiny::NS
-  tags = shiny::tags
-  HTML = shiny::HTML
-  conditionalPanel = shiny::conditionalPanel
-  navbarPage = shiny::navbarPage
-  title = graphics::title
-  tabPanel = shiny::tabPanel
-  selectInput= shiny::selectInput
-  checkboxGroupInput= shiny::checkboxGroupInput
-  observe= shiny::observe
-  updateSelectInput= shiny::updateSelectInput
-  moduleServer= shiny::moduleServer
-  observeEvent= shiny::observeEvent
-  updateCheckboxGroupInput= shiny::updateCheckboxGroupInput
-  selectInput= shiny::selectInput
-  updateSliderInput= shiny::updateSliderInput
-  sliderInput= shiny::sliderInput
-  fluidPage= shiny::fluidPage
-  useShinyjs= shinyjs::useShinyjs
-  conditionalPanel= shiny::conditionalPanel
-  tabPanel= shiny::tabPanel
-  sidebarPanel= shiny::sidebarPanel
-  sidebarLayout = shiny::sidebarLayout
-  mainPanel= shiny::mainPanel
-  fileInput= shiny::fileInput
-  textInput= shiny::textInput
-  actionButton= shiny::actionButton
-  uiOutput= shiny::uiOutput
-  tabPanel= shiny::tabPanel
-  downloadButton= shiny::downloadButton
-  renderText= shiny::renderText
-  reactiveVal= shiny::reactiveVal
-  reactive= shiny::reactive
-  reactiveValues= shiny::reactiveValues
-  renderDT = DT::renderDT
-  eventReactive= shiny::eventReactive
-  observeEvent= shiny::observeEvent
-  reset = shinyjs::reset
-  req= shiny::req
-  renderUI= shiny::renderUI
-  checkboxGroupInput= shiny::checkboxGroupInput
-  bindCache= shiny::bindCache
-  renderPlot= shiny::renderPlot
+  source("vascr_web/app.R", local = TRUE)
   
-  ui = NULL
-  server = NULL
-  
-source("vascr_web/app.R", local = TRUE)
+  returned = runApp(list(ui = ui, server = server))
 
-shinyApp(ui = ui, server = server)
+  return(returned)
+}
 
+
+#' Make a tribble from underlying R code
+#'
+#' @param toprint the tribble to print
+#' 
+#' @importFrom stringr str_remove
+#'
+#' @returns A copy and pasteable tribble
+#'
+#' @examples
+#' mc_tribble(indf = growth.df[1:4,])
+#' 
+#' 
+mc_tribble <- function(toprint) {
+  name <- as.character(substitute(toprint))
+  name <- name[length(name)]
+  
+  meat <- capture.output(write.csv(toprint, quote = TRUE, row.names = FALSE))
+  meat = paste(meat, ",", sep = "")
+  meat[[length(meat)]] = str_remove(meat[[length(meat)]], ",$")
+  
+  writeLines(meat)
 
 }
+
+
+
 
 

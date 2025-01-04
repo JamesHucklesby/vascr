@@ -75,13 +75,13 @@ import_xcelligence = function(rawdata, experimentname = NULL, password = "RTCaDa
  
   rlang::check_installed(c("odbc", "DBI"), reason = "is needed to deal with the xCELLigence data format`")
   
-   file = rawdata
+  file = rawdata
   
   vascr_validate_file(file, "plt")
   
   
   # Make a temporary copy of the file, with the correct extension so Microsoft Access can open it
-  folder = dirname(file)
+  #folder = dirname(file)
   tempfile = paste(tempdir(),"/","TEMPMDBFORIMPORT.mdb", sep = "")
   if(!file.copy(from = file, to = tempfile))
   {

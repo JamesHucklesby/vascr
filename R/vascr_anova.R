@@ -33,23 +33,20 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, confide
   data.df$Sample = str_replace(data.df$Sample, "-", "~")
   data.df$Sample = str_replace_all(data.df$Sample, "[\\+]", "x")
   
-  data.df$Sample
-  
   data.df = ungroup(data.df)
   
   # What is the effect of the treatment on the value ?
   lm = vascr_lm(data.df, unit, frequency, time)
   
   data.df$Sample = factor(data.df$Sample, unique(data.df$Sample))
-  ANOVA = Anova(lm, type = "III")
+  # ANOVA = Anova(lm, type = "III")
+  # print(ANOVA)
   
   
   # Tukey test to study each pair of treatment :
   tukeyanova = aov(lm)
   TUKEY <- TukeyHSD(x=tukeyanova)
   
-  # Tuckey test representation :, shouldn't be included here
-  #plot(TUKEY , las=1 , col="brown")
   
   # Extract labels and factor levels from Tukey post-hoc 
   Tukey.levels <- TUKEY[[2]][] # pull out the tukey significance levels
@@ -131,7 +128,7 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, confide
 #' @importFrom stats lm
 #'
 #' @examples
-#' # vascr_lm(growth.df, "R", 4000, 100)
+#' vascr_lm(growth.df, "R", 4000, 100)
 #' 
 vascr_lm = function(data.df, unit, frequency, time)
 {
@@ -541,7 +538,7 @@ vascr_plot_anova_grid = function (data.df, unit =  "R", frequency = 4000, time =
 #'
 #' @examples
 #' vascr_plot_anova_bar_reference(growth.df, "R", 4000, 50)
-#' vascr_plot_anova_bar_reference(growth.df, "R", 4000, 50, "5,000_cells + hCMEC D3_line")
+#' vascr_plot_anova_bar_reference(growth.df, "R", 4000, 50, "10,000_cells + hCMEC D3_line")
 #' 
 vascr_plot_anova_bar_reference = function(data.df, unit, frequency, time, reference = min(data.df$SampleID), breaklines = TRUE)
 {
@@ -571,7 +568,7 @@ vascr_plot_anova_bar_reference = function(data.df, unit, frequency, time, refere
   
   ids = data2.df %>% select("Sample", "SampleID") %>% distinct() %>% mutate(Sample = as.character(.data$Sample))
   
-  rawsamples = unique(data2.df$Sample)
+  # rawsamples = unique(data2.df$Sample)
   
   
   significance = data2.df %>% vascr_tukey(unit = unit, frequency = frequency, time = time, raw = FALSE) %>%
@@ -614,6 +611,7 @@ vascr_plot_anova_bar_reference = function(data.df, unit, frequency, time, refere
     ggplot() +
     geom_col(aes(x = .data$Sample, y = .data$Value), data = toplotdata) +
     geom_text(aes(x = .data$Sample, label = .data$Significance), y = ymaxval, color = "white") +
+    geom_text(x = reference, y = ymaxval, color = "white", label = "+") +
     geom_errorbar(aes(x = .data$Sample, ymin = .data$Value - .data$sem, ymax = .data$Value + .data$sem)) +
     theme(legend.position = "none") +
     geom_point(aes(x = .data$Sample, y = .data$Value, color = .data$Sample), data = pd1r4)
@@ -632,7 +630,7 @@ vascr_plot_anova_bar_reference = function(data.df, unit, frequency, time, refere
 #' @param frequency Frequency to plot
 #' @param format Statistics format to return
 #' @param error The style of eror bars to plot
-#' @param ... Any argument to vascr_prep_graphdata or vascr_polish_plot. Use this to select values ect.
+#' @param rotate_x_angle How far to rotate the x angle
 #'
 #' @return A vascr bar plot with statistics attached to it
 #' 
@@ -642,11 +640,17 @@ vascr_plot_anova_bar_reference = function(data.df, unit, frequency, time, refere
 #'
 #' @examples
 #' vascr_plot_bar(data = growth.df, confidence = 0.95, unit = "R", time = 100, 
-#'   frequency = 4000, rotate_x_angle = 45)
+#'   frequency = 4000)
 #' vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", 
+#'   time = 100, frequency = 4000)
+#'
+#'vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", 
 #'   time = 100, frequency = 4000, rotate_x_angle = 45)
+#'   
+#'vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", 
+#'   time = 100, frequency = 4000, rotate_x_angle = 90)
 #' 
-vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequency, format = "toplot", error = Inf, ...)
+vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequency, format = "toplot", error = Inf, rotate_x_angle = 45)
 {
   
   data.df$Sample = str_replace_all(data.df$Sample, "[\\+]", "x")
@@ -678,9 +682,13 @@ vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequen
   
   filtered2.df = left_join(summary, labeltable, by = "Sample")
   
+  hjust_needed = sin(rotate_x_angle*pi/180)
+  
   plot = ggplot(filtered2.df, aes(x = .data$Sample, y = .data$Value, label = .data$Label, fill = .data$Sample)) + 
     geom_bar(stat = "identity") +
-    geom_text(aes(label=.data$Label, y = min(.data$Value)/2)) 
+    geom_text(aes(label=.data$Label, y = min(.data$Value)/2))  +
+    theme(axis.text.x = element_text(angle = rotate_x_angle, vjust = 1, hjust=1))
+    
   
   plot
   
@@ -689,8 +697,6 @@ vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequen
   { 
     plot = plot + geom_errorbar(aes(ymax = .data$Value + .data$sem, ymin = .data$Value - .data$sem), width = 0.6)
   }
-  
-  dots = list(...)
   
   plot
   

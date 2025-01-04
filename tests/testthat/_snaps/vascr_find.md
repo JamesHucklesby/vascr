@@ -360,8 +360,11 @@
 
     Code
       vascr_find_unit(growth.df, unit = c("Ci", "Rb"))
+    Condition
+      Warning in `vascr_match()`:
+      [Ci] corrected to [Cm]. Please check the argeuments for your functions are correctly typed.
     Output
-      [1] "Ci" "Rb"
+      [1] "Cm" "Rb"
 
 ---
 

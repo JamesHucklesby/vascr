@@ -40,7 +40,7 @@
 #' vascr_find(growth.df, "resampled")
 #' 
 #' vascr_find(growth.df, "all")
-vascr_find = function(data.df = growth.df , paramater, value = NA){
+vascr_find = function(data.df = vascr::growth.df , paramater, value = NA){
   
   if(paramater == "Time"){return(vascr_find_time(data.df, value))}
   if(paramater == "Unit"){return(vascr_find_unit(data.df, value))}
@@ -416,18 +416,18 @@ vascr_find_frequency = function(data.df, frequency) {
 
 
 
-#' Title
+#' Find a vascr sample
 #'
-#' @param data.df 
-#' @param sample 
+#' @param data.df vascr dataset to reference
+#' @param sample sample name to try and find
 #'
-#' @return
-#' @export
-#'
+#' @return the name, or names, of the vascr dataset
+#' 
+#' @noRd
+#' 
 #' @examples
 #' 
 #' sample = 3000
-#' 
 #' vascr_find_sample(growth.df, sample)
 #' 
 vascr_find_sample = function(data.df, sample){
@@ -571,11 +571,11 @@ vascr_find_unit = function(data.df, unit = NA)
       toreturn = (vascr_units_table() %>% filter(.data$Instrument %in% unique(data.df$Instrument)))$Unit
     } else
     {
-      allunits = vascr_units_table()$Unit
-      
+      all_options = vascr_units_table()$Unit
+      uni = vascr_match(uni, all_options)
       toreturn = c(toreturn,uni)
     }
-    
+
   }
   
   toreturn = unique(toreturn)
@@ -891,21 +891,28 @@ vascr_find_level = function(data)
   }
 }
 
-#' Title
+#' Find the Sample ID in a dataset
 #'
-#' @param data.df 
-#' @param metadata 
+#' @param data.df the dataset to reference
+#' @param sampleid the sampleID to look up
 #'
-#' @return
-#' @export
+#' @importFrom cli cli_alert_danger
+#'
+#' @return the sampleID, but warns if the SampleID is not found
+#' 
+#' @noRd
 #'
 #' @examples
+#' vascr_find_sampleid(growth.df, 3)
+#' vascr_find_sampleid(growth.df, 300)
 vascr_find_sampleid = function(data.df, sampleid){
   
   if(!sampleid %in% unique(data.df$SampleID))
   {
-    warning("Sample ID not found")
+    cli_alert_danger("Sample ID not found")
   }
+  
+  return(sampleid)
   
 }
 
@@ -1191,13 +1198,14 @@ vascr_find_metadata = function(data.df)
 
 
 
-#' Title
+#' Convert a sample name into sampleID
 #'
 #' @param data.df 
 #' @param sampleID 
 #'
-#' @returns
-#' @export
+#' @returns a valid vascr sampleid
+#' 
+#' @noRd
 #'
 #' @examples
 #' vascr_find_sampleid_from_sample(growth.df, "5,000_cells + HCMEC D3_line")
@@ -1205,7 +1213,7 @@ vascr_find_metadata = function(data.df)
 vascr_find_sampleid_from_sample = function(data.df, sample){
   find.df = data.df %>% select("Sample", "SampleID") %>%
     distinct() %>%
-    filter(Sample == sample)
+    filter(.data$Sample == sample)
   
   find.df$SampleID[[1]]
 }

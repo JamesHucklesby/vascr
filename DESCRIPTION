@@ -17,15 +17,15 @@ Description: Process complex impedance sensing datasets, including those
     imported to a standardised tidy format and then plotted. Suppport for
     conducting and plotting the outputs of ANOVA (with appropriate tests
     of statistical assumptions) and cross-correlation analyasis.
+License: GPL (>= 3)
 URL: https://github.com/JamesHucklesby/vascr
 BugReports: https://github.com/JamesHucklesby/vascr/issues
-License: GPL (>= 3)
 Depends: 
     R (>= 3.6)
 Imports: 
     car,
-    cowplot,
     cli,
+    cowplot,
     dplyr,
     foreach,
     ggnewscale,
@@ -37,22 +37,22 @@ Imports:
     magrittr,
     memoise,
     patchwork,
+    rlang,
     stringr,
     tidyr,
-    utils,
-    rlang,
-    DT,
-    shinyjs,
-    shiny
+    utils
 Suggests: 
+    DBI,
+    DT,
+    odbc,
+    readr,
+    readxl,
+    shiny,
+    shinyjs,
     testthat (>= 3.0.0),
     vdiffr,
-    DBI,
-    odbc,
-    writexl,
-    readxl,
-    readr
+    writexl
 Config/testthat/edition: 3
 Encoding: UTF-8
-RoxygenNote: 7.3.2
 LazyData: TRUE
+RoxygenNote: 7.3.2

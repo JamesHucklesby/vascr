@@ -2,12 +2,16 @@
 % Please edit documentation in R/vascr_cross_correlation.R
 \name{vascr_cc}
 \alias{vascr_cc}
-\title{Title}
+\title{Calculate the cross correlation coefficients of a vascr dataset}
 \usage{
 vascr_cc(data.df, reference = "none")
 }
+\value{
+a vascr dataset containing the cross correlation coefficients between curves
+}
 \description{
-Title
+@param data.df a vascr dataset to calculate
+ @param reference  The sample to reference all CC's against. Defaults to all comparisons
 }
 \examples{
 data.df = vascr::growth.df \%>\% vascr_subset(unit = "R", frequency = 4000, sampleid = c(1,4,7))

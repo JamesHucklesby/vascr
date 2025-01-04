@@ -33,7 +33,7 @@ output = foreach(combo = c(1:nrow(comboes)), .final = function(x) setNames(x, co
     mutate(Experiment = paste("[",as.numeric(.data$Experiment),"]", sep = "")) %>%
     mutate(Sample = str_replace_all(.data$Sample, ",", " ")) %>%
     pivot_wider(names_from = c("Sample", "Experiment"), values_from = "Value", names_repair = "minimal", id_cols = c("Time")) %>%
-    arrange(Time)
+    arrange(.data$Time)
   
    colnames(prismed_expt) = colnames(prismed_expt) %>% str_remove("_\\[.*")
    

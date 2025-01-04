@@ -4,7 +4,7 @@
 \alias{vascr_find}
 \title{Find vascr variables}
 \usage{
-vascr_find(data.df = growth.df, paramater, value = NA)
+vascr_find(data.df = vascr::growth.df, paramater, value = NA)
 }
 \arguments{
 \item{data.df}{The vascr dataset to reference, will default to the growth.df dataset if not specified}

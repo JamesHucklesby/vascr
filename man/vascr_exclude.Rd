@@ -7,12 +7,19 @@
 vascr_exclude(data.df, well, experiment)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{the vascr data set to exclude things from}
 
-\item{well}{}
+\item{well}{wells to exclude}
 
-\item{experiment}{}
+\item{experiment}{experiments to exclude}
+}
+\value{
+A smaller vascr dataset
 }
 \description{
 Exclude samples from a vascr dataset
+}
+\examples{
+vascr_exclude(growth.df, "A01", "E01")
+
 }

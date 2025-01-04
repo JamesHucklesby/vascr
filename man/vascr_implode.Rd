@@ -2,12 +2,15 @@
 % Please edit documentation in R/vascr_naming.R
 \name{vascr_implode}
 \alias{vascr_implode}
-\title{Title}
+\title{Implode individual samples from a vascr dataset}
 \usage{
 vascr_implode(data.df)
 }
+\value{
+A vascr dataset with individual wells imploded
+}
 \description{
-Title
+Implode individual samples from a vascr dataset
 }
 \examples{
 vascr_implode(growth.df)

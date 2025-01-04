@@ -173,16 +173,17 @@ vascr_subset_sampleid = function (data.df, samplelist){
 
 #' Exclude samples from a vascr dataset
 #' 
+#' @param data.df the vascr data set to exclude things from
+#' @param well wells to exclude
+#' @param experiment experiments to exclude
+#'
+#' @return A smaller vascr dataset
 #' 
-#'
-#' @param data.df 
-#' @param well 
-#' @param experiment 
-#'
-#' @return
 #' @export
 #'
 #' @examples
+#' vascr_exclude(growth.df, "A01", "E01")
+#' 
 vascr_exclude = function(data.df, well, experiment){
   data.df = data.df %>% filter(!.data$Well %in% well & !.data$Experiment %in% experiment)
     

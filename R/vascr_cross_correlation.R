@@ -48,10 +48,12 @@ ccf.df %>% vascr_summarise_cc("summary") %>% vascr_plot_cc()
 
 }
 
-#' Title
+#' Calculate the cross correlation coefficients of a vascr dataset
 #'
-#' @return
-#' @export
+#'  @param data.df a vascr dataset to calculate
+#'  @param reference  The sample to reference all CC's against. Defaults to all comparisons
+#'
+#' @return a vascr dataset containing the cross correlation coefficients between curves
 #' 
 #' @importFrom cli cli_progress_bar cli_progress_update cli_process_done
 #' @importFrom dplyr bind_cols group_by arrange summarise rename_with inner_join rowwise
@@ -78,7 +80,7 @@ curves = data.df %>%
 
 
 pairedcurves = inner_join(curves, curves, by = c("Experiment"), relationship = "many-to-many") %>%
-                filter(SampleID.x < SampleID.y)
+                filter(.data$SampleID.x < .data$SampleID.y)
 
 
 
@@ -94,14 +96,14 @@ return(to_export)
 }
 
 
-#' Title
+#' Summarise Cross Correlation Data
 #'
-#' @param data.df 
-#' @param level 
+#' @param data.df The vascr dataset to summarise
+#' @param level Level at which to summarise, options are wells, experiments, summary
 #'
-#' @return
+#' @return a vascr dataset of cross correlaions
 #' 
-#' @importFrom dplyr group_by_at summarise ungroup mutate select
+#' @importFrom dplyr group_by_at summarise ungroup mutate select distinct
 #' 
 #' @noRd
 #'
@@ -115,7 +117,8 @@ return(to_export)
 vascr_summarise_cc = function(data.df, level = "summary")
 {
   
-  ccf_exp = data.df %>% ungroup() %>% group_by_at(vars("Sample.x", "Sample.y", "SampleID.x", "SampleID.y", "Experiment")) %>%
+  ccf_exp = data.df %>% ungroup() %>% 
+    group_by_at(vars("Sample.x", "Sample.y", "SampleID.x", "SampleID.y", "Experiment")) %>%
     summarise(cc = mean(cc), n = n())
   
   distinct(ccf_exp %>% select(-"cc"))
@@ -125,8 +128,8 @@ vascr_summarise_cc = function(data.df, level = "summary")
   }
   
   ccf_sum = ccf_exp %>% group_by(`Sample.x`, `Sample.y`) %>%
-    summarise(ccsem = sd(cc)/n(), cc = mean(cc), totaln = sum(n)) %>%
-    mutate(title = paste(`Sample.x`, `Sample.y`, sep = "\n"))
+    summarise(ccsem = sd(.data$cc)/n(), cc = mean(.data$cc), totaln = sum(.data$n)) %>%
+    mutate(title = paste(.data$`Sample.x`, .data$`Sample.y`, sep = "\n"))
   
   return(ccf_sum)
   
@@ -173,27 +176,25 @@ if(vascr_find_level(data.df) == "experiments"){
   return(toreturn)
 }
   
-  data.df %>% ggplot() +
-    geom_tile(aes(x = .data$`Sample.x`, y = .data$`Sample.y`, fill = .data$cc))
 
 colours = vascr_gg_color_hue(length(unique(c(data.df$`Sample.x`, data.df$`Sample.y`))))
 
 hue = tibble(Sample = unique(c(data.df$`Sample.x`, data.df$`Sample.y`)), colours = colours)
 
 toplot = data.df %>% left_join(hue, join_by(`Sample.x` == `Sample`)) %>% 
-  mutate(hue1 = colours, colours = NULL) %>% 
+  mutate(hue1 = .data$colours, colours = NULL) %>% 
   left_join(hue, join_by(`Sample.y` == `Sample`)) %>% 
   mutate(hue2 = colours, colours = NULL) %>%
   mutate(title = glue("<span style = 'color:{hue1};'>{`Sample.x`}</span><br>
                        <span style = 'color:{hue2};'>{`Sample.y`}</span>"))
-  
+
+
 toplot %>%
   ggplot() +
   geom_point(aes(y = .data$title, x = .data$cc, color = .data$`Sample.x`)) +
-  geom_errorbar(aes(y = .data$title, xmin = .data$cc-.data$ccsem, xmax = .data$cc + .data$ccsem, color = .data$`Sample.y`)) +
+  geom_errorbar(aes(y = .data$title, xmin = .data$cc -  .data$ccsem, xmax = .data$cc + .data$ccsem, color = .data$`Sample.y`)) +
   theme(axis.text.y = element_markdown()) +
   scale_colour_manual(values = colours)
-
 
 }
 

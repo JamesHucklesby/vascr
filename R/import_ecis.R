@@ -20,34 +20,6 @@ vascr_import = function(rawdata){
 }
 
 
-#' Title
-#'
-#' @param function_name
-#' @param duration
-#' @param omit_args
-#'
-#' @importFrom memoise memoise
-#'
-#' @return
-#' @noRd
-#'
-#' @examples
-cache_function <- function(function_name, duration = 86400, omit_args = c()) {
-  fn <- get(function_name, envir = rlang::ns_env("vascr"))
-  fn <- memoise::memoise(
-    fn
-  )
-  assign(function_name, fn, envir = rlang::ns_env("vascr"))
-  return(invisible(TRUE))
-}
-.onLoad <- function(libname, pkgname) {
-  lapply(c("ecis_import_raw", "ecis_import_model"), cache_function)
-}
-
-
-
-
-
 #' ECIS raw data importer
 #' 
 #' Raw data importer, generates a r data frame from a raw ABP file
