@@ -6,6 +6,7 @@
 #'
 #' @importFrom stats setNames
 #' @importFrom utils write.csv
+#' @importFrom cli cli_progress_start
 #'
 #' @returns A dataframe in prism format, or writes to file if filepath specified
 #' @export
@@ -24,6 +25,8 @@ comboes = data.df %>% select("Unit", "Frequency") %>%
 
 combo = 0
 
+ cli_progress_bar("Exporting units", total = nrow(comboes))
+
 output = foreach(combo = c(1:nrow(comboes)), .final = function(x) setNames(x, comboes$names)) %do%
 {
   combodata = comboes[combo,]
@@ -38,8 +41,12 @@ output = foreach(combo = c(1:nrow(comboes)), .final = function(x) setNames(x, co
   
    colnames(prismed_expt) = colnames(prismed_expt) %>% str_remove("_\\[.*")
    
+   cli_progress_update()
+   
    prismed_expt
 }
+
+cli_process_done()
 
  if(!is.null(filepath))
  {

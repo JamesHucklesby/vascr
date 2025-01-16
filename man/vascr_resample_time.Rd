@@ -4,7 +4,12 @@
 \alias{vascr_resample_time}
 \title{Resample a vascr dataset}
 \usage{
-vascr_resample_time(data.df, npoints = vascr_find_count_timepoints(data.df))
+vascr_resample_time(
+  data.df,
+  npoints = vascr_find_count_timepoints(data.df),
+  start = min(data.df$Time),
+  end = max(data.df$Time)
+)
 }
 \arguments{
 \item{data.df}{The vascr dataset to resample}
@@ -20,6 +25,7 @@ summarising and plotting the data. This function interpolates these data to allo
 these downstream functions to happen.
 }
 \examples{
+vascr_resample_time(growth.df, 5, 0, 200)
 vascr_resample_time(growth.df, 5)
 
 }

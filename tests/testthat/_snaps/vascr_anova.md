@@ -12,15 +12,15 @@
       6 10,000_cells x HCMEC D3_line
       7  5,000_cells x HCMEC D3_line
       8      0_cells x HCMEC D3_line
-                                                                                                                                                                                                                                            Label
-      1    5,000_cells x HCMEC D3_line ***\n0_cells x HCMEC D3_line ***\n10,000_cells x HCMEC D3_line ***\n15,000_cells x HCMEC D3_line ***\n20,000_cells x HCMEC D3_line ***\n25,000_cells x HCMEC D3_line ***\n30,000_cells x HCMEC D3_line ***
-      2     35,000_cells x HCMEC D3_line ***\n5,000_cells x HCMEC D3_line ***\n0_cells x HCMEC D3_line ***\n10,000_cells x HCMEC D3_line ***\n15,000_cells x HCMEC D3_line ***\n20,000_cells x HCMEC D3_line ***\n25,000_cells x HCMEC D3_line **
-      3      30,000_cells x HCMEC D3_line **\n35,000_cells x HCMEC D3_line ***\n5,000_cells x HCMEC D3_line ***\n0_cells x HCMEC D3_line ***\n10,000_cells x HCMEC D3_line ***\n15,000_cells x HCMEC D3_line ***\n20,000_cells x HCMEC D3_line **
-      4       25,000_cells x HCMEC D3_line **\n30,000_cells x HCMEC D3_line ***\n35,000_cells x HCMEC D3_line ***\n5,000_cells x HCMEC D3_line ***\n0_cells x HCMEC D3_line ***\n10,000_cells x HCMEC D3_line ***\n15,000_cells x HCMEC D3_line  
-      5        20,000_cells x HCMEC D3_line  \n25,000_cells x HCMEC D3_line ***\n30,000_cells x HCMEC D3_line ***\n35,000_cells x HCMEC D3_line ***\n5,000_cells x HCMEC D3_line ***\n0_cells x HCMEC D3_line ***\n10,000_cells x HCMEC D3_line  
-      6        15,000_cells x HCMEC D3_line  \n20,000_cells x HCMEC D3_line ***\n25,000_cells x HCMEC D3_line ***\n30,000_cells x HCMEC D3_line ***\n35,000_cells x HCMEC D3_line ***\n5,000_cells x HCMEC D3_line .\n0_cells x HCMEC D3_line ***
-      7       0_cells x HCMEC D3_line .\n10,000_cells x HCMEC D3_line .\n15,000_cells x HCMEC D3_line ***\n20,000_cells x HCMEC D3_line ***\n25,000_cells x HCMEC D3_line ***\n30,000_cells x HCMEC D3_line ***\n35,000_cells x HCMEC D3_line ***
-      8 10,000_cells x HCMEC D3_line ***\n15,000_cells x HCMEC D3_line ***\n20,000_cells x HCMEC D3_line ***\n25,000_cells x HCMEC D3_line ***\n30,000_cells x HCMEC D3_line ***\n35,000_cells x HCMEC D3_line ***\n5,000_cells x HCMEC D3_line .
+                                                                                                                                                                                                                                         Label
+      1    5,000_cells x HCMEC D3_line ***\n0_cells x HCMEC D3_line ***\n10,000_cells x HCMEC D3_line ***\n15,000_cells x HCMEC D3_line ***\n20,000_cells x HCMEC D3_line ***\n25,000_cells x HCMEC D3_line **\n30,000_cells x HCMEC D3_line  
+      2        35,000_cells x HCMEC D3_line  \n5,000_cells x HCMEC D3_line ***\n0_cells x HCMEC D3_line ***\n10,000_cells x HCMEC D3_line ***\n15,000_cells x HCMEC D3_line **\n20,000_cells x HCMEC D3_line *\n25,000_cells x HCMEC D3_line  
+      3         30,000_cells x HCMEC D3_line  \n35,000_cells x HCMEC D3_line **\n5,000_cells x HCMEC D3_line ***\n0_cells x HCMEC D3_line ***\n10,000_cells x HCMEC D3_line **\n15,000_cells x HCMEC D3_line .\n20,000_cells x HCMEC D3_line  
+      4           25,000_cells x HCMEC D3_line  \n30,000_cells x HCMEC D3_line *\n35,000_cells x HCMEC D3_line ***\n5,000_cells x HCMEC D3_line *\n0_cells x HCMEC D3_line ***\n10,000_cells x HCMEC D3_line  \n15,000_cells x HCMEC D3_line  
+      5           20,000_cells x HCMEC D3_line  \n25,000_cells x HCMEC D3_line .\n30,000_cells x HCMEC D3_line **\n35,000_cells x HCMEC D3_line ***\n5,000_cells x HCMEC D3_line  \n0_cells x HCMEC D3_line **\n10,000_cells x HCMEC D3_line  
+      6          15,000_cells x HCMEC D3_line  \n20,000_cells x HCMEC D3_line  \n25,000_cells x HCMEC D3_line **\n30,000_cells x HCMEC D3_line ***\n35,000_cells x HCMEC D3_line ***\n5,000_cells x HCMEC D3_line  \n0_cells x HCMEC D3_line .
+      7        0_cells x HCMEC D3_line  \n10,000_cells x HCMEC D3_line  \n15,000_cells x HCMEC D3_line  \n20,000_cells x HCMEC D3_line *\n25,000_cells x HCMEC D3_line ***\n30,000_cells x HCMEC D3_line ***\n35,000_cells x HCMEC D3_line ***
+      8 10,000_cells x HCMEC D3_line .\n15,000_cells x HCMEC D3_line **\n20,000_cells x HCMEC D3_line ***\n25,000_cells x HCMEC D3_line ***\n30,000_cells x HCMEC D3_line ***\n35,000_cells x HCMEC D3_line ***\n5,000_cells x HCMEC D3_line  
 
 ---
 
@@ -57,64 +57,64 @@
       35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line   80.40346
       5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -289.14682
       5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  -369.55029
-                                                                         lwr
-      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line        53.3333992
-      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       102.3396630
-      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       146.6978715
-      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       212.6374111
-      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       288.5202951
-      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       368.9237554
-      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         -0.6265298
-      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   -6.5452301
-      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   37.8129784
-      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  103.7525180
-      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  179.6354021
-      35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  260.0388623
-      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -109.5114229
-      20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -11.1932854
-      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line   54.7462542
-      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  130.6291382
-      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  211.0325985
-      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -158.5176867
-      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line   10.3880457
-      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line   86.2709297
-      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  166.6743900
-      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -202.8758952
-      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line   20.3313901
-      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  100.7348504
-      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  -268.8154348
-      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line   24.8519663
-      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -344.6983189
-      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  -425.1017791
-                                                                        upr    p.adj
-      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       164.436387 1.70e-06
-      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       213.442651 4.79e-11
-      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       257.800859 1.89e-11
-      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       323.740399 1.89e-11
-      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       399.623283 1.89e-11
-      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       480.026743 1.89e-11
-      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line        110.476458 5.48e-02
-      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  104.557758 1.22e-01
-      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  148.915966 4.78e-05
-      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  214.855506 4.01e-11
-      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  290.738390 1.89e-11
-      35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  371.141850 1.89e-11
-      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line     1.591565 6.29e-02
-      20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line   99.909702 2.13e-01
-      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  165.849242 1.24e-06
-      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  241.732126 1.90e-11
-      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  322.135586 1.89e-11
-      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line   -47.414699 6.17e-06
-      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  121.491034 9.54e-03
-      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  197.373918 1.08e-09
-      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  277.777378 1.89e-11
-      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line   -91.772907 3.27e-10
-      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  131.434378 1.59e-03
-      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  211.837838 6.04e-11
-      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  -157.712447 1.89e-11
-      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  135.954954 6.65e-04
-      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -233.595331 1.89e-11
-      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  -313.998791 1.89e-11
+                                                                        lwr
+      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       -11.138852
+      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line        37.867412
+      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line        82.225621
+      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       148.165160
+      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       224.048044
+      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       304.451505
+      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line        -65.098781
+      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -71.017481
+      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -26.659272
+      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   39.280267
+      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  115.163151
+      35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  195.566612
+      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -173.983674
+      20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -75.665536
+      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line   -9.725997
+      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line   66.156887
+      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  146.560348
+      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -222.989937
+      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -54.084205
+      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line   21.798679
+      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  102.202139
+      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -267.348146
+      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  -44.140861
+      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line   36.262600
+      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  -333.287686
+      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -39.620284
+      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -409.170570
+      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  -489.574030
+                                                                       upr    p.adj
+      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       228.90864 8.84e-02
+      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       277.91490 6.78e-03
+      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       322.27311 7.00e-04
+      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       388.21265 3.40e-05
+      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       464.09553 1.76e-06
+      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       544.49899 1.25e-07
+      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line        174.94871 7.35e-01
+      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  169.03001 8.25e-01
+      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  213.38822 1.87e-01
+      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  279.32776 6.29e-03
+      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  355.21064 1.46e-04
+      35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  435.61410 5.03e-06
+      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line    66.06382 7.51e-01
+      20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  164.38195 8.83e-01
+      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  230.32149 8.23e-02
+      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  306.20438 1.56e-03
+      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  386.60784 3.64e-05
+      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line    17.05755 1.18e-01
+      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  185.96328 5.49e-01
+      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  261.84617 1.59e-02
+      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  342.24963 2.67e-04
+      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line   -27.30066 1.18e-02
+      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  195.90663 3.90e-01
+      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  276.31009 7.37e-03
+      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line   -93.24020 4.10e-04
+      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  200.42720 3.27e-01
+      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -169.12308 1.42e-05
+      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  -249.52654 7.23e-07
                                                                                            A
       10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      10,000_cells x HCMEC D3_line
       15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      15,000_cells x HCMEC D3_line
@@ -174,61 +174,61 @@
       5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  30,000_cells x HCMEC D3_line
       5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  35,000_cells x HCMEC D3_line
                                                                 Tukey.level
-      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         1.70e-06
-      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         4.79e-11
-      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         1.89e-11
-      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         1.89e-11
-      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         1.89e-11
-      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         1.89e-11
-      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line          5.48e-02
-      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line    1.22e-01
-      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line    4.78e-05
-      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line    4.01e-11
-      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line    1.89e-11
-      35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line    1.89e-11
-      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line     6.29e-02
-      20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line    2.13e-01
-      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line    1.24e-06
-      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line    1.90e-11
-      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line    1.89e-11
-      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line     6.17e-06
-      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line    9.54e-03
-      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line    1.08e-09
-      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line    1.89e-11
-      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line     3.27e-10
-      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line    1.59e-03
-      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line    6.04e-11
-      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line     1.89e-11
-      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line    6.65e-04
-      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line     1.89e-11
-      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line     1.89e-11
+      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         8.84e-02
+      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         6.78e-03
+      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         7.00e-04
+      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         3.40e-05
+      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         1.76e-06
+      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         1.25e-07
+      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line          7.35e-01
+      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line    8.25e-01
+      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line    1.87e-01
+      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line    6.29e-03
+      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line    1.46e-04
+      35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line    5.03e-06
+      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line     7.51e-01
+      20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line    8.83e-01
+      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line    8.23e-02
+      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line    1.56e-03
+      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line    3.64e-05
+      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line     1.18e-01
+      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line    5.49e-01
+      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line    1.59e-02
+      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line    2.67e-04
+      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line     1.18e-02
+      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line    3.90e-01
+      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line    7.37e-03
+      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line     4.10e-04
+      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line    3.27e-01
+      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line     1.42e-05
+      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line     7.23e-07
                                                                 Significance
-      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
-      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
+      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line                 .
+      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line                **
       20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
       25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
       30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
       35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
-      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line                  .
+      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line                   
       15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line             
-      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line          ***
-      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line          ***
+      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line             
+      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line           **
       30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line          ***
       35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line          ***
-      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line             .
+      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line              
       20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line             
-      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line          ***
-      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line          ***
+      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line            .
+      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line           **
       35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line          ***
-      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line           ***
-      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line           **
-      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line          ***
+      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line              
+      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line             
+      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line            *
       35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line          ***
-      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line           ***
-      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line           **
-      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line          ***
+      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line             *
+      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line             
+      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line           **
       5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line           ***
-      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line          ***
+      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line             
       5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line           ***
       5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line           ***
 
@@ -259,30 +259,14 @@
     Code
       vascr_residuals(growth.df, "R", "4000", 100)
     Output
-                 1            2            3            4            5            6 
-      -24.28920848 -14.98986852 -24.84298887  -1.01918262  10.92881633   1.62439727 
-                 7            8            9           10           11           12 
-       21.45358319  18.78399498  12.27466394  29.11442345  38.01546145  20.96191202 
-                13           14           15           16           17           18 
-       42.60552176  45.67947881  35.46910852  77.16510646   8.13640923  45.25816683 
-                19           20           21           22           23           24 
-      -51.14251817 -45.50363567 -31.90356561 -71.90944544 -70.17949187 -71.69113900 
-                25           26           27           28           29           30 
-        3.98176855  13.35453186 -21.41921017 -15.68346390  11.79483172  -8.96012763 
-                31           32           33           34           35           36 
-      -16.38252332 -13.79272796 -19.57427370 -39.62844893 -28.06167637 -25.63329352 
-                37           38           39           40           41           42 
-       -6.40454029  -8.48846054 -20.58480210  12.86188362 -14.02529940   1.77935190 
-                43           44           45           46           47           48 
-       50.40502468  52.96572369  46.02890766  13.92699448  16.06960885  15.47022080 
-                49           50           51           52           53           54 
-       15.99361692  31.86053545  20.35082326   2.15114862   0.05887274  -0.89529254 
-                55           56           57           58           59           60 
-        2.36728224   0.86165452  -5.99165390   6.98643246   3.21766196  -4.97247254 
-                61           62           63           64           65           66 
-      -55.18427614 -34.87932476   1.78729473  -2.72068786 -40.10214644 -88.35278434 
-                67           68           69           70           71           72 
-       28.31877980 -18.97726170 -30.19145468  56.84412793  57.72431779  53.74480647 
+                1           2           3           4           5           6 
+      -71.2600254  15.1556080  56.1044174  43.5198942   0.2053120 -43.7252062 
+                7           8           9          10          11          12 
+       41.2513697 -11.8259343 -29.4254354  29.3639323 -31.1078063   1.7438740 
+               13          14          15          16          17          18 
+       17.5040807 -16.5831750  -0.9209057   3.8446770  -4.2829199   0.4382429 
+               19          20          21          22          23          24 
+      -21.3740220  -1.3609699  22.7349919 -42.8499065  49.7998853  -6.9499789 
 
 # Vascr Shapiro test checks
 
@@ -293,7 +277,7 @@
       	Shapiro-Wilk normality test
       
       data:  aov_residuals
-      W = 0.98678, p-value = 0.6552
+      W = 0.97874, p-value = 0.8716
       
 
 # Levene test
@@ -342,93 +326,64 @@
       35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -28.6226619
       5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -208.2198663
       5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  -179.5972044
-                                                                        lwr
-      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       265.594696
-      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       312.760655
-      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       312.150564
-      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       304.571826
-      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       295.779659
-      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       267.156997
-      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         87.559793
-      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   -6.109053
-      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   -6.719144
-      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -14.297882
-      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -23.090048
-      35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -51.712710
-      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -231.309915
-      20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -53.885103
-      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -61.463841
-      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -70.256007
-      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -98.878669
-      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -278.475874
-      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -60.853749
-      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -69.645916
-      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -98.268578
-      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -277.865783
-      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  -62.067179
-      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  -90.689841
-      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  -270.287045
-      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -81.897674
-      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -261.494878
-      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  -232.872216
-                                                                        upr
-      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       372.144719
-      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       419.310678
-      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       418.700587
-      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       411.121850
-      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       402.329683
-      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       373.707021
-      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line        194.109816
-      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  100.440971
-      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   99.830880
-      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   92.252142
-      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   83.459975
-      35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   54.837313
-      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -124.759891
-      20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line   52.664921
-      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line   45.086183
-      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line   36.294016
-      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line    7.671354
-      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -171.925850
-      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line   45.696274
-      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line   36.904107
-      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line    8.281445
-      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -171.315759
-      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line   44.482845
-      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line   15.860183
-      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  -163.737022
-      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line   24.652350
-      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -154.944855
-      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  -126.322193
+                                                                       lwr        upr
+      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       202.70847  435.03095
+      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       249.87443  482.19691
+      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       249.26433  481.58682
+      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       241.68560  474.00808
+      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       232.89343  465.21591
+      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       204.27077  436.59325
+      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         24.67356  256.99605
+      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -68.99528  163.32720
+      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -69.60537  162.71711
+      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -77.18411  155.13837
+      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -85.97628  146.34620
+      35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line -114.59894  117.72354
+      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -294.19614  -61.87366
+      20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line -116.77133  115.55115
+      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line -124.35007  107.97241
+      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line -133.14224   99.18024
+      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line -161.76490   70.55758
+      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -341.36210 -109.03962
+      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line -123.73998  108.58250
+      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line -132.53215   99.79034
+      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line -161.15481   71.16767
+      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -340.75201 -108.42953
+      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line -124.95341  107.36907
+      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line -153.57607   78.74641
+      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  -333.17327 -100.85079
+      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line -144.78390   87.53858
+      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -324.38111  -92.05863
+      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  -295.75845  -63.43596
                                                                        p.adj
-      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       3.618496e-10
-      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 1.197922e-01
-      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 1.298156e-01
-      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 3.129593e-01
-      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 6.373888e-01
+      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      2.985548e-06
+      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      5.413543e-07
+      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      5.528030e-07
+      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      7.186768e-07
+      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      9.800410e-07
+      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      2.812867e-06
+      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       1.303752e-02
+      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 8.282857e-01
+      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 8.368011e-01
+      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 9.239222e-01
+      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 9.791281e-01
       35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 1.000000e+00
-      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  1.902545e-11
+      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  1.751519e-03
       20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 1.000000e+00
-      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.997034e-01
-      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.727893e-01
-      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 1.467682e-01
-      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  1.890488e-11
-      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.998229e-01
-      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.778112e-01
-      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 1.584985e-01
-      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  1.890554e-11
-      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 9.995257e-01
-      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 3.643463e-01
-      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  1.890932e-11
-      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line 6.964884e-01
-      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  1.891554e-11
-      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  1.900213e-11
+      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.999951e-01
+      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.993464e-01
+      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 8.496814e-01
+      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  1.638600e-04
+      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.999971e-01
+      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.994841e-01
+      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 8.576615e-01
+      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  1.687008e-04
+      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 9.999920e-01
+      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 9.372571e-01
+      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  2.430383e-04
+      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line 9.844247e-01
+      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  3.741608e-04
+      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  1.613445e-03
                                                                                            A
       10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      10,000_cells x HCMEC D3_line
       15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      15,000_cells x HCMEC D3_line
@@ -488,34 +443,34 @@
       5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  30,000_cells x HCMEC D3_line
       5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  35,000_cells x HCMEC D3_line
                                                                  Tukey.level
-      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       3.618496e-10
-      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 1.197922e-01
-      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 1.298156e-01
-      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 3.129593e-01
-      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 6.373888e-01
+      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      2.985548e-06
+      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      5.413543e-07
+      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      5.528030e-07
+      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      7.186768e-07
+      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      9.800410e-07
+      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      2.812867e-06
+      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       1.303752e-02
+      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 8.282857e-01
+      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 8.368011e-01
+      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 9.239222e-01
+      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 9.791281e-01
       35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 1.000000e+00
-      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  1.902545e-11
+      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  1.751519e-03
       20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 1.000000e+00
-      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.997034e-01
-      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.727893e-01
-      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 1.467682e-01
-      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  1.890488e-11
-      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.998229e-01
-      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.778112e-01
-      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 1.584985e-01
-      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  1.890554e-11
-      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 9.995257e-01
-      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 3.643463e-01
-      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  1.890932e-11
-      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line 6.964884e-01
-      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  1.891554e-11
-      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  1.900213e-11
+      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.999951e-01
+      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.993464e-01
+      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 8.496814e-01
+      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  1.638600e-04
+      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.999971e-01
+      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.994841e-01
+      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 8.576615e-01
+      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  1.687008e-04
+      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 9.999920e-01
+      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 9.372571e-01
+      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  2.430383e-04
+      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line 9.844247e-01
+      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  3.741608e-04
+      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  1.613445e-03
                                                                 Significance
       10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
       15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
@@ -523,13 +478,13 @@
       25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
       30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
       35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
-      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line                ***
+      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line                  *
       15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line             
       20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line             
       25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line             
       30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line             
       35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line             
-      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line           ***
+      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line            **
       20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line             
       25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line             
       30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line             
@@ -544,7 +499,7 @@
       5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line           ***
       35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line             
       5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line           ***
-      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line           ***
+      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line            **
 
 ---
 
@@ -580,93 +535,64 @@
       35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -28.6226619
       5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -208.2198663
       5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  -179.5972044
-                                                                        lwr
-      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       265.594696
-      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       312.760655
-      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       312.150564
-      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       304.571826
-      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       295.779659
-      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       267.156997
-      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         87.559793
-      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   -6.109053
-      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   -6.719144
-      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -14.297882
-      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -23.090048
-      35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -51.712710
-      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -231.309915
-      20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -53.885103
-      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -61.463841
-      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -70.256007
-      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -98.878669
-      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -278.475874
-      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -60.853749
-      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -69.645916
-      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -98.268578
-      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -277.865783
-      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  -62.067179
-      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  -90.689841
-      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  -270.287045
-      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -81.897674
-      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -261.494878
-      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  -232.872216
-                                                                        upr
-      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       372.144719
-      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       419.310678
-      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       418.700587
-      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       411.121850
-      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       402.329683
-      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       373.707021
-      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line        194.109816
-      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  100.440971
-      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   99.830880
-      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   92.252142
-      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   83.459975
-      35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line   54.837313
-      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -124.759891
-      20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line   52.664921
-      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line   45.086183
-      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line   36.294016
-      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line    7.671354
-      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -171.925850
-      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line   45.696274
-      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line   36.904107
-      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line    8.281445
-      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -171.315759
-      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line   44.482845
-      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line   15.860183
-      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  -163.737022
-      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line   24.652350
-      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -154.944855
-      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  -126.322193
+                                                                       lwr        upr
+      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       202.70847  435.03095
+      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       249.87443  482.19691
+      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       249.26433  481.58682
+      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       241.68560  474.00808
+      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       232.89343  465.21591
+      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       204.27077  436.59325
+      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line         24.67356  256.99605
+      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -68.99528  163.32720
+      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -69.60537  162.71711
+      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -77.18411  155.13837
+      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -85.97628  146.34620
+      35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line -114.59894  117.72354
+      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  -294.19614  -61.87366
+      20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line -116.77133  115.55115
+      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line -124.35007  107.97241
+      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line -133.14224   99.18024
+      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line -161.76490   70.55758
+      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  -341.36210 -109.03962
+      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line -123.73998  108.58250
+      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line -132.53215   99.79034
+      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line -161.15481   71.16767
+      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  -340.75201 -108.42953
+      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line -124.95341  107.36907
+      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line -153.57607   78.74641
+      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  -333.17327 -100.85079
+      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line -144.78390   87.53858
+      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  -324.38111  -92.05863
+      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  -295.75845  -63.43596
                                                                        p.adj
-      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       3.618496e-10
-      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 1.197922e-01
-      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 1.298156e-01
-      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 3.129593e-01
-      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 6.373888e-01
+      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      2.985548e-06
+      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      5.413543e-07
+      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      5.528030e-07
+      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      7.186768e-07
+      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      9.800410e-07
+      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      2.812867e-06
+      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       1.303752e-02
+      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 8.282857e-01
+      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 8.368011e-01
+      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 9.239222e-01
+      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 9.791281e-01
       35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 1.000000e+00
-      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  1.902545e-11
+      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  1.751519e-03
       20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 1.000000e+00
-      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.997034e-01
-      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.727893e-01
-      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 1.467682e-01
-      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  1.890488e-11
-      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.998229e-01
-      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.778112e-01
-      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 1.584985e-01
-      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  1.890554e-11
-      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 9.995257e-01
-      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 3.643463e-01
-      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  1.890932e-11
-      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line 6.964884e-01
-      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  1.891554e-11
-      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  1.900213e-11
+      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.999951e-01
+      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.993464e-01
+      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 8.496814e-01
+      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  1.638600e-04
+      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.999971e-01
+      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.994841e-01
+      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 8.576615e-01
+      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  1.687008e-04
+      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 9.999920e-01
+      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 9.372571e-01
+      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  2.430383e-04
+      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line 9.844247e-01
+      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  3.741608e-04
+      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  1.613445e-03
                                                                                            A
       10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      10,000_cells x HCMEC D3_line
       15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      15,000_cells x HCMEC D3_line
@@ -726,34 +652,34 @@
       5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  30,000_cells x HCMEC D3_line
       5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  35,000_cells x HCMEC D3_line
                                                                  Tukey.level
-      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      1.890288e-11
-      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       3.618496e-10
-      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 1.197922e-01
-      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 1.298156e-01
-      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 3.129593e-01
-      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 6.373888e-01
+      10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      2.985548e-06
+      15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      5.413543e-07
+      20,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      5.528030e-07
+      25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      7.186768e-07
+      30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      9.800410e-07
+      35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line      2.812867e-06
+      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line       1.303752e-02
+      15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 8.282857e-01
+      20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 8.368011e-01
+      25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 9.239222e-01
+      30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 9.791281e-01
       35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line 1.000000e+00
-      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  1.902545e-11
+      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line  1.751519e-03
       20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 1.000000e+00
-      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.997034e-01
-      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.727893e-01
-      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 1.467682e-01
-      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  1.890488e-11
-      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.998229e-01
-      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.778112e-01
-      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 1.584985e-01
-      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  1.890554e-11
-      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 9.995257e-01
-      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 3.643463e-01
-      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  1.890932e-11
-      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line 6.964884e-01
-      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  1.891554e-11
-      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  1.900213e-11
+      25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.999951e-01
+      30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 9.993464e-01
+      35,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line 8.496814e-01
+      5,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line  1.638600e-04
+      25,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.999971e-01
+      30,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 9.994841e-01
+      35,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line 8.576615e-01
+      5,000_cells x HCMEC D3_line-20,000_cells x HCMEC D3_line  1.687008e-04
+      30,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 9.999920e-01
+      35,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line 9.372571e-01
+      5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line  2.430383e-04
+      35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line 9.844247e-01
+      5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line  3.741608e-04
+      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line  1.613445e-03
                                                                 Significance
       10,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
       15,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
@@ -761,13 +687,13 @@
       25,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
       30,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
       35,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line               ***
-      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line                ***
+      5,000_cells x HCMEC D3_line-0_cells x HCMEC D3_line                  *
       15,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line             
       20,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line             
       25,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line             
       30,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line             
       35,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line             
-      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line           ***
+      5,000_cells x HCMEC D3_line-10,000_cells x HCMEC D3_line            **
       20,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line             
       25,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line             
       30,000_cells x HCMEC D3_line-15,000_cells x HCMEC D3_line             
@@ -782,5 +708,5 @@
       5,000_cells x HCMEC D3_line-25,000_cells x HCMEC D3_line           ***
       35,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line             
       5,000_cells x HCMEC D3_line-30,000_cells x HCMEC D3_line           ***
-      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line           ***
+      5,000_cells x HCMEC D3_line-35,000_cells x HCMEC D3_line            **
 

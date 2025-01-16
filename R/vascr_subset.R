@@ -185,7 +185,9 @@ vascr_subset_sampleid = function (data.df, samplelist){
 #' vascr_exclude(growth.df, "A01", "E01")
 #' 
 vascr_exclude = function(data.df, well, experiment){
-  data.df = data.df %>% filter(!.data$Well %in% well & !.data$Experiment %in% experiment)
-    
+  # data.df = data.df %>% filter(!.data$Well %in% well & !.data$Experiment %in% experiment)
+  
+  data.df = data.df %>% filter(!Well %in% well)
+  
   return(data.df)
 }

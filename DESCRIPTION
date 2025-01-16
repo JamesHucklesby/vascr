@@ -38,6 +38,7 @@ Imports:
     memoise,
     patchwork,
     rlang,
+    rstatix,
     stringr,
     tidyr,
     utils

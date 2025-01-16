@@ -1,0 +1,42 @@
+{
+  "input": {
+    "add_row": 0,
+    "anova-frequency": "4000",
+    "anova-reference": "none",
+    "anova-sample": null,
+    "anova-time": "0",
+    "anova-unit": "R",
+    "cc-frequency": "4000",
+    "cc-reference": "none",
+    "cc-sample": null,
+    "cc-unit": "R",
+    "experiment_name": "Test1",
+    "import_instrument": "ECIS",
+    "line2-frequency": "4000",
+    "line2-level": "well",
+    "line2-sample": null,
+    "line2-time_range": [
+      1,
+      100
+    ],
+    "line2-unit": "R",
+    "load_default": 0,
+    "load_previous": null,
+    "model": null,
+    "platemap": null,
+    "raw": null,
+    "return_to_r": 0,
+    "run_import": 1,
+    "save_data": 0
+  },
+  "output": {
+    "import_data": [
+      "",
+      "NULL",
+      "c(\"shiny.silent.error\", \"validation\")"
+    ]
+  },
+  "export": {
+
+  }
+}

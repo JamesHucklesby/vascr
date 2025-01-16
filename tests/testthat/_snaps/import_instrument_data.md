@@ -6,19 +6,19 @@
       Warning:
       Expected 2 pieces. Additional pieces discarded in 2 rows [1, 2].
     Output
-      # A tibble: 880 x 6
-             Time Well  Frequency Unit   Value Instrument
-            <dbl> <chr>     <dbl> <fct>  <dbl> <chr>     
-       1 0.000688 A01        1000 R      1508. ECIS      
-       2 0.000688 A01         125 R     22828. ECIS      
-       3 0.000688 A01       16000 R      1006. ECIS      
-       4 0.000688 A01        2000 R      1186. ECIS      
-       5 0.000688 A01         250 R      6776. ECIS      
-       6 0.000688 A01       32000 R       995. ECIS      
-       7 0.000688 A01        4000 R      1076. ECIS      
-       8 0.000688 A01         500 R      2556. ECIS      
-       9 0.000688 A01          62 R     82275. ECIS      
-      10 0.000688 A01       64000 R       996. ECIS      
+      # A tibble: 880 x 7
+             Time Well  Frequency Unit   Value Instrument Excluded
+            <dbl> <chr>     <dbl> <fct>  <dbl> <chr>      <chr>   
+       1 0.000688 A01        1000 R      1508. ECIS       no      
+       2 0.000688 A01         125 R     22828. ECIS       no      
+       3 0.000688 A01       16000 R      1006. ECIS       no      
+       4 0.000688 A01        2000 R      1186. ECIS       no      
+       5 0.000688 A01         250 R      6776. ECIS       no      
+       6 0.000688 A01       32000 R       995. ECIS       no      
+       7 0.000688 A01        4000 R      1076. ECIS       no      
+       8 0.000688 A01         500 R      2556. ECIS       no      
+       9 0.000688 A01          62 R     82275. ECIS       no      
+      10 0.000688 A01       64000 R       996. ECIS       no      
       # i 870 more rows
 
 ---
@@ -29,28 +29,28 @@
       Warning:
       No data imported, check the modeled data you are trying to import is correctly specified and an intact file
     Output
-      # A tibble: 0 x 6
-      # i 6 variables: Time <???>, Unit <???>, Well <???>, Value <???>,
-      #   Frequency <???>, Instrument <???>
+      # A tibble: 0 x 7
+      # i 7 variables: Time <???>, Unit <???>, Well <???>, Value <???>,
+      #   Frequency <???>, Instrument <???>, Excluded <chr>
 
 ---
 
     Code
       data
     Output
-      # A tibble: 14,400 x 7
-          Time Well  Frequency Unit  Value Instrument Experiment
-         <dbl> <chr>     <dbl> <fct> <dbl> <chr>      <chr>     
-       1     0 A01        1000 R      394. ECIS       TEST      
-       2     0 A01       16000 R      223. ECIS       TEST      
-       3     0 A01        2000 R      316. ECIS       TEST      
-       4     0 A01         250 R      824. ECIS       TEST      
-       5     0 A01       32000 R      212. ECIS       TEST      
-       6     0 A01        4000 R      267. ECIS       TEST      
-       7     0 A01         500 R      533. ECIS       TEST      
-       8     0 A01       64000 R      205. ECIS       TEST      
-       9     0 A01        8000 R      240. ECIS       TEST      
-      10     0 B01        1000 R      388. ECIS       TEST      
+      # A tibble: 14,400 x 8
+          Time Well  Frequency Unit  Value Instrument Experiment Excluded
+         <dbl> <chr>     <dbl> <fct> <dbl> <chr>      <chr>      <chr>   
+       1     0 A01        1000 R      394. ECIS       TEST       no      
+       2     0 A01       16000 R      223. ECIS       TEST       no      
+       3     0 A01        2000 R      316. ECIS       TEST       no      
+       4     0 A01         250 R      824. ECIS       TEST       no      
+       5     0 A01       32000 R      212. ECIS       TEST       no      
+       6     0 A01        4000 R      267. ECIS       TEST       no      
+       7     0 A01         500 R      533. ECIS       TEST       no      
+       8     0 A01       64000 R      205. ECIS       TEST       no      
+       9     0 A01        8000 R      240. ECIS       TEST       no      
+      10     0 B01        1000 R      388. ECIS       TEST       no      
       # i 14,390 more rows
 
 # Can import cellZScope file

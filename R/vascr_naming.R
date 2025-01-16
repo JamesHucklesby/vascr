@@ -1,3 +1,47 @@
+#' Title
+#'
+#' @param instrument 
+#' @param raw 
+#' @param modeled 
+#' @param map 
+#' @param experiment 
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+#' 
+#' 
+vascr_import = function(instrument = NULL, raw = NULL, modeled = NULL, map = NULL, experiment = NULL){
+  
+  if(instrument == "ECIS")
+  {
+    return(ecis_import(raw, modeled, map))
+  } else if (instrument == "xcelligence")
+  {
+    return(import_xcelligence(raw, experimentname))
+  } else if (instrument == "cellzscope")
+  {
+    return(cellzscope_import(raw, modeled, experiment))
+  }
+  else{
+    error("Data didn't import, wrong instument typed")
+  }
+  
+}
+
+
+#' Title
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+vascr_blank_df = function(){
+  growth.df %>% filter(FALSE) %>% mutate(Excluded = FALSE) %>% vascr_remove_metadata()
+}
+
+
 #' Import a vascr platemap
 #'
 #' @param file_content a tibble or file path to import

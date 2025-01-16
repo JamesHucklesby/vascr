@@ -16,13 +16,14 @@
 #' @importFrom stringr str_c str_replace
 #' @importFrom magrittr "%>%"
 #' @importFrom car Anova
+#' @importFrom rstatix tukey_hsd
 #'
 #' @return A table of what is significant
 #' 
 #' @noRd
 #'
 #' @examples
-#' vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95)
+#' vascr_make_significance_table(data.df = growth.df, time = 50, unit = "R", frequency = 4000, confidence = 0.95)
 #' vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95, format = "Tukey_data")
 #' 
 vascr_make_significance_table = function(data.df, time, unit, frequency, confidence = 0.95, format = "toplot")
@@ -43,73 +44,86 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, confide
   # print(ANOVA)
   
   
-  # Tukey test to study each pair of treatment :
-  tukeyanova = aov(lm)
-  TUKEY <- TukeyHSD(x=tukeyanova)
+  # # Tukey test to study each pair of treatment :
+  # tukeyanova = aov(lm)
+  # TUKEY <- TukeyHSD(x=tukeyanova)
+  # 
+  tukey = tukey_hsd(lm)
   
+  tukey %>%
+    mutate(temp = group1, group1 = group2, group2 = temp, temp = NULL) %>%
+    rbind(tukey) %>%
+    filter(term == "Sample") %>%
+    filter(p.adj.signif != "ns") %>%
+    mutate(Sample = group1, group1 = NULL) %>%
+    group_by(Sample) %>%
+    summarise(Label = paste(group2, p.adj.signif, collapse = "\n"))
   
-  # Extract labels and factor levels from Tukey post-hoc 
-  Tukey.levels <- TUKEY[[2]][] # pull out the tukey significance levels
-  Tukey.labels <- data.frame(Tukey.levels)
+  # labeltable
   
-  Tukey.labels$Samplepair = rownames(Tukey.labels)
-  
-  Tukey.labels = Tukey.labels %>% separate("Samplepair", c("A", "B"), sep = "-")
-  
-  Tukey.labels$Tukey.level = Tukey.labels$p.adj
-  
-  Tukey.labels$Significance <- symnum(Tukey.labels$Tukey.level, corr = FALSE, na = FALSE, 
-                                      cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 
-                                      symbols = c("***", "**", "*", ".", " "))
-  
-  if (format == "Tukey_data")
-  {
-    
-    return(Tukey.labels)
-  }
-  else if (format == "toplot")
-  {
-    
-    #Generate a list of all the row names
-    alllabels = c(Tukey.labels$A, Tukey.labels$B)
-    alllabels = unique(data.df$Sample) %>% as.character()
-    
-    # Reformat for graphics
-    # Tukey.labels = subset(Tukey.labels, Tukey.levels<(1-confidence))
-    
-    sources = c()
-    sinks = c()
-    
-    Tukey.labels$Asig = paste(Tukey.labels$A, Tukey.labels$Significance)
-    Tukey.labels$Bsig = paste(Tukey.labels$B, Tukey.labels$Significance)
-    
-    for(label in alllabels)
-    {
-      sink1 = filter(Tukey.labels, .data$B == label) %>%
-                  mutate(samp = .data$A, lab = .data$Asig, source = .data$B) %>% 
-                 select("samp", "lab", "source")
-      sink2 = filter(Tukey.labels, .data$A == label) %>% 
-                  mutate(samp = .data$B, lab = .data$Bsig, source = .data$A) %>% 
-                  select("samp", "lab", "source")
-      sink = rbind(sink1, sink2)
-      sink = sink %>% mutate(samp = factor(.data$samp, alllabels)) %>% arrange("samp") %>% mutate(samp = as.character(.data$samp))
-      sinktext = str_c("",sink$lab, collapse = "\n")
-      sources = append(sources, unique(sink$source))
-      sinks = append(sinks, sinktext)
-      
-    }
-    
-    labeltable = data.frame("Sample" = alllabels, "Label" = sinks)
-    
-    labeltable
-    
-    return(labeltable)
-  }
-  else
-  {
-    warning("Unknown output format. Check and try again")
-  }
-  
+  # # Extract labels and factor levels from Tukey post-hoc 
+  # Tukey.levels <- TUKEY[[2]][] # pull out the tukey significance levels
+  # Tukey.labels <- data.frame(Tukey.levels)
+  # 
+  # Tukey.labels$Samplepair = rownames(Tukey.labels)
+  # 
+  # Tukey.labels = Tukey.labels %>% separate("Samplepair", c("A", "B"), sep = "-")
+  # 
+  # Tukey.labels$Tukey.level = Tukey.labels$p.adj
+  # 
+  # Tukey.labels$Significance <- symnum(Tukey.labels$Tukey.level, corr = FALSE, na = FALSE, 
+  #                                     cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 
+  #                                     symbols = c("***", "**", "*", ".", " "))
+  # 
+  # if (format == "Tukey_data")
+  # {
+  #   
+  #   return(Tukey.labels)
+  # }
+  # else if (format == "toplot")
+  # {
+  #   
+  #   #Generate a list of all the row names
+  #   alllabels = c(Tukey.labels$A, Tukey.labels$B)
+  #   alllabels = unique(data.df$Sample) %>% as.character()
+  #   
+  #   # Reformat for graphics
+  #   # Tukey.labels = subset(Tukey.labels, Tukey.levels<(1-confidence))
+  #   
+  #   sources = c()
+  #   sinks = c()
+  #   
+  #   Tukey.labels$Asig = paste(Tukey.labels$A, Tukey.labels$Significance)
+  #   Tukey.labels$Bsig = paste(Tukey.labels$B, Tukey.labels$Significance)
+  #   
+  #   for(label in alllabels)
+  #   {
+  #     sink1 = filter(Tukey.labels, .data$B == label) %>%
+  #                 filter(Significance != "") %>%
+  #                 mutate(samp = .data$A, lab = .data$Asig, source = .data$B) %>% 
+  #                select("samp", "lab", "source")
+  #     sink2 = filter(Tukey.labels, .data$A == label) %>% 
+  #                 mutate(samp = .data$B, lab = .data$Bsig, source = .data$A) %>% 
+  #                 select("samp", "lab", "source")
+  #     sink = rbind(sink1, sink2)
+  #     sink = sink %>% mutate(samp = factor(.data$samp, alllabels)) %>% arrange("samp") %>% mutate(samp = as.character(.data$samp))
+  #     sinktext = str_c("",sink$lab, collapse = "\n")
+  #     sources = append(sources, unique(sink$source))
+  #     sinks = append(sinks, sinktext)
+  #     
+  #   }
+  #   
+  #   labeltable = data.frame("Sample" = alllabels, "Label" = sinks)
+  #   
+  #   labeltable
+  #   
+  #   return(labeltable)
+  # }
+  # else
+  # {
+  #   warning("Unknown output format. Check and try again")
+  # }
+  # 
 }
 
 
@@ -128,11 +142,12 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, confide
 #' @importFrom stats lm
 #'
 #' @examples
-#' vascr_lm(growth.df, "R", 4000, 100)
+#' vascr_lm(data.df = growth.df, unit = "R", frequency = 4000, time = 100)
 #' 
 vascr_lm = function(data.df, unit, frequency, time)
 {
-  data.df = vascr_subset(data.df, unit = unit, frequency = frequency, time = time)
+  data.df = vascr_subset(data.df, unit = unit, frequency = frequency, time = time) %>% 
+    vascr_summarise(level = "experiments")
   
   
   formula = "Value ~ Experiment + Sample"
@@ -179,7 +194,7 @@ vascr_residuals = function(data.df, unit, frequency, time)
 #' @noRd
 #'
 #' @examples
-#' # vascr_shapiro(growth.df, "R", 4000, 100)
+#' vascr_shapiro(growth.df, "R", 4000, 100)
 #' 
 vascr_shapiro = function(data.df, unit, frequency, time)
 {
@@ -198,23 +213,23 @@ vascr_shapiro = function(data.df, unit, frequency, time)
 #' @param time time to plot
 #' @param priority vascr priority list
 #' 
-#' @importFrom car leveneTest
-#' @importFrom stats lm
+#' @importFrom rstatix levene_test
 #'
 #' @return A Levene Test object
 #' 
 #' @noRd
 #'
 #' @examples
-#' # vascr_levene(growth.df, "R", 4000, 100)
+#' vascr_levene(growth.df, "R", 4000, 100)
 #' 
 vascr_levene = function(data.df, unit, frequency, time)
 {
-  data.df = vascr_subset(data.df, unit = unit, frequency = frequency, time = time)
+  data_s.df = vascr_subset(data.df, unit = unit, frequency = frequency, time = time) %>% 
+    vascr_summarise(level = "experiments") %>% ungroup() %>%
+    mutate(Sample = as.factor(Sample))
   
-  leveneformula = paste("Value ~ Sample * Experiment")
-  modeltest = lm(leveneformula, data = data.df)
-  levenetest = leveneTest(modeltest)
+  levenetest = levene_test(data_s.df, Value ~ Sample)
+  levenetest
   
   return(levenetest)
 }
@@ -295,7 +310,7 @@ vascr_plot_normality = function(data.df, unit, frequency, time)
   data = vascr_subset(data.df, unit = unit, frequency = frequency, time = time)
   aov_residuals = vascr_residuals(data, unit, frequency, time)
   
-  filtered.df = data
+  filtered.df = data %>% vascr_summarise(level = "experiments")
   filtered.df$residuals <- aov_residuals
   filteredplot.df = filtered.df
   filteredplot.df$Value = filtered.df$residuals
@@ -335,8 +350,8 @@ vascr_plot_levene = function(data.df, unit, frequency, time)
   
   levenetest = vascr_levene(data.df, unit, frequency, time)
   
-  f = round(levenetest$`F value`[1],3)
-  p = round(levenetest$`Pr(>F)`[1],3)
+  f = round(levenetest$statistic[1],3)
+  p = round(levenetest$p[1],3)
   
   if(p>0.05)
   {
@@ -520,6 +535,63 @@ vascr_plot_anova_grid = function (data.df, unit =  "R", frequency = 4000, time =
 
 
 
+#' Title
+#'
+#' @param data.df 
+#' @param unit 
+#' @param frequency 
+#' @param time 
+#' @param reference 
+#'
+#' @returns
+#' 
+#' @importFrom multcomp glht
+#' 
+#' @export
+#'
+#' @examples
+#' vascr_dunnett(growth.df, "R", 4000, 100, 6)
+#' 
+vascr_dunnett = function(data.df, unit, frequency, time, reference){
+  
+  data.df = vascr_subset(data.df, time = time, unit = unit, frequency = frequency)
+  
+  if(is.character(reference)) {
+    reference = vascr_find_sample(data.df, reference)
+    reference = vascr_find_sampleid_from_sample(data.df, reference)
+  }
+  
+  
+  if(!(reference %in% data.df$SampleID))
+  {
+    stop('Reference sample not in data frame')
+  }
+  
+  
+  releveled = data.df %>% vascr_summarise(level = "experiments") %>% mutate(Sample = as.factor(Sample))
+  
+  fit <- lm("Value ~ Sample + Experiment", releveled)
+  
+  
+  gmod = glht(aov(fit),
+       linfct = mcp(Sample = "Dunnett"))
+  
+  summ = summary(gmod)
+  
+ toreturn =  tibble(
+    Sample = summ$test$sigma %>% names(),
+    P = summ$test$pvalues %>% as.vector(),
+    ) %>%
+    add_significance(p.col = "P", output.col = "Label") %>%
+    mutate(P_round = round(P, 3)) %>%
+    mutate(P_round =  ifelse(P>0.05, "", P_round))%>%
+    mutate(P_round =  ifelse(P_round == "0", "< 0.001", P_round))
+
+ return(toreturn)
+ 
+}
+
+
 #' Make a bar graph with ANOVA stars annotated against a set reference
 #'
 #' @param data.df a vascr dataframe
@@ -571,11 +643,7 @@ vascr_plot_anova_bar_reference = function(data.df, unit, frequency, time, refere
   # rawsamples = unique(data2.df$Sample)
   
   
-  significance = data2.df %>% vascr_tukey(unit = unit, frequency = frequency, time = time, raw = FALSE) %>%
-    left_join(ids, by = c("A"="Sample")) %>% mutate(SampleA = .data$SampleID, SampleID = NULL) %>%
-    left_join(ids, by = c("B"="Sample")) %>% mutate(SampleB = .data$SampleID, SampleID = NULL) %>%
-    filter(.data$SampleA == reference | .data$SampleB == reference) %>%
-    mutate(Sample = ifelse(.data$SampleB == reference, .data$A, .data$B))
+  significance = data2.df %>% vascr_tukey(unit = unit, frequency = frequency, time = time, raw = FALSE)
   
   
   pd1r3 = (data2.df %>% vascr_subset(frequency = frequency, unit = unit, time = time))
@@ -602,15 +670,13 @@ vascr_plot_anova_bar_reference = function(data.df, unit, frequency, time, refere
   
   
   toplotdata = pd1r4 %>% vascr_summarise("summary") %>%
-    left_join(significance %>% select("Sample", "Significance"), by = join_by("Sample")) %>%
-    mutate(Sample = factor(.data$Sample, unique(.data$Sample))) %>%
-    mutate(Significance = if_else(!is.na(.data$Significance), as.character(.data$Significance), ""))
+    left_join(significance %>% select("Sample", "Label"), by = join_by("Sample"))
   
   
   summdata = toplotdata %>%
     ggplot() +
     geom_col(aes(x = .data$Sample, y = .data$Value), data = toplotdata) +
-    geom_text(aes(x = .data$Sample, label = .data$Significance), y = ymaxval, color = "white") +
+    geom_text(aes(x = .data$Sample, label = .data$Label), y = ymaxval, color = "white") +
     geom_text(x = reference, y = ymaxval, color = "white", label = "+") +
     geom_errorbar(aes(x = .data$Sample, ymin = .data$Value - .data$sem, ymax = .data$Value + .data$sem)) +
     theme(legend.position = "none") +
@@ -723,7 +789,7 @@ vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequen
 #' @importFrom ggplot2 scale_color_manual guides labs theme guide_legend
 #' @importFrom gridExtra arrangeGrob
 #' 
-#' @noRd
+#' @export
 #'
 #' @examples
 #' 
@@ -733,6 +799,10 @@ vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequen
 #' 
 vascr_plot_anova = function(data.df, unit, frequency, time, reference = NULL)
 {
+  if(isTRUE(reference == "all"))
+  {
+    reference = NULL
+  }
   
   timeplot = vascr_plot_time_vline(data.df, unit, frequency, time) + labs(y = "Resistance  
                                                                                   (ohm, 4000 Hz)")
@@ -769,7 +839,6 @@ vascr_plot_anova = function(data.df, unit, frequency, time, reference = NULL)
   
   return(grid)
 }
-
 
 
 

@@ -313,6 +313,8 @@ ecis_import = function(raw = NULL, modeled = NULL, experimentname = NULL) {
     masterdata.df$Experiment = experimentname
   }
   
+  masterdata.df$Excluded = "no"
+  
   masterdata.df = as_tibble(masterdata.df)
   
   return(masterdata.df)

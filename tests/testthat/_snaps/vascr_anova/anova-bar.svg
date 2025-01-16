@@ -56,13 +56,13 @@
 <text x='74.92' y='373.26' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line ***</text>
 <text x='74.92' y='389.16' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line ***</text>
 <text x='74.92' y='405.05' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line ***</text>
-<text x='74.92' y='420.95' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
+<text x='74.92' y='420.95' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='155.88px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line *</text>
 <text x='136.98' y='325.57' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line  </text>
 <text x='136.98' y='341.47' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line  </text>
 <text x='136.98' y='357.36' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line  </text>
 <text x='136.98' y='373.26' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line  </text>
 <text x='136.98' y='389.16' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line  </text>
-<text x='136.98' y='405.05' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
+<text x='136.98' y='405.05' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.18px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line **</text>
 <text x='136.98' y='420.95' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
 <text x='199.04' y='325.57' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line  </text>
 <text x='199.04' y='341.47' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line  </text>
@@ -92,20 +92,20 @@
 <text x='385.21' y='389.16' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line  </text>
 <text x='385.21' y='405.05' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line  </text>
 <text x='385.21' y='420.95' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line  </text>
-<text x='447.27' y='325.57' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='164.48px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line ***</text>
+<text x='447.27' y='325.57' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.18px' lengthAdjust='spacingAndGlyphs'>5,000_cells x HCMEC D3_line **</text>
 <text x='447.27' y='341.47' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
 <text x='447.27' y='357.36' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line  </text>
 <text x='447.27' y='373.26' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line  </text>
 <text x='447.27' y='389.16' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line  </text>
 <text x='447.27' y='405.05' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line  </text>
 <text x='447.27' y='420.95' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='160.79px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line  </text>
-<text x='509.33' y='325.57' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='142.99px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line ***</text>
-<text x='509.33' y='341.47' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line ***</text>
+<text x='509.33' y='325.57' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='134.39px' lengthAdjust='spacingAndGlyphs'>0_cells x HCMEC D3_line *</text>
+<text x='509.33' y='341.47' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='166.32px' lengthAdjust='spacingAndGlyphs'>10,000_cells x HCMEC D3_line **</text>
 <text x='509.33' y='357.36' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>15,000_cells x HCMEC D3_line ***</text>
 <text x='509.33' y='373.26' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>20,000_cells x HCMEC D3_line ***</text>
 <text x='509.33' y='389.16' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>25,000_cells x HCMEC D3_line ***</text>
 <text x='509.33' y='405.05' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>30,000_cells x HCMEC D3_line ***</text>
-<text x='509.33' y='420.95' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='170.62px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line ***</text>
+<text x='509.33' y='420.95' text-anchor='middle' style='font-size: 11.04px; font-family: sans;' textLength='166.32px' lengthAdjust='spacingAndGlyphs'>35,000_cells x HCMEC D3_line **</text>
 <polyline points='56.31,297.62 93.54,297.62 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <polyline points='74.92,297.62 74.92,299.49 ' style='stroke-width: 1.07; stroke-linecap: butt;' />
 <polyline points='56.31,299.49 93.54,299.49 ' style='stroke-width: 1.07; stroke-linecap: butt;' />

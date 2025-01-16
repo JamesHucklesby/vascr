@@ -7,3 +7,4 @@
 ^revdep$
 ^README\.Rmd$
 ^codemeta\.json$
+^codecov\.yml$

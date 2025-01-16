@@ -17,6 +17,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/JamesHucklesby/vascr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/JamesHucklesby/vascr/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/JamesHucklesby/vascr/graph/badge.svg)](https://app.codecov.io/gh/JamesHucklesby/vascr)
 <!-- badges: end -->
 
 The goal of vascr is to ...

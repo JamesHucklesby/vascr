@@ -172,6 +172,11 @@ vascr_summarise_summary = function(data.df)
 #' 
 vascr_normalise = function(data.df, normtime, divide = FALSE) {
   
+  if(is.null(normtime))
+  {
+    return(data.df)
+  }
+  
   data.df = vascr_force_resampled(data.df)
   
   data.df = vascr_remove_metadata(data.df)
@@ -316,15 +321,14 @@ vascr_interpolate_time = function(data.df, npoints = vascr_find_count_timepoints
 #' @export
 #'
 #' @examples
+#' vascr_resample_time(growth.df, 5, 0, 200)
 #' vascr_resample_time(growth.df, 5)
 #' 
-vascr_resample_time = function(data.df, npoints = vascr_find_count_timepoints(data.df))
+vascr_resample_time = function(data.df, npoints = vascr_find_count_timepoints(data.df), start = min(data.df$Time), end = max(data.df$Time))
 {
   datasplit = data.df %>% group_by(.data$Frequency, .data$Unit) %>% group_split()
   
   baseline_times = npoints
-  start = min(floor(data.df$Time))
-  end = max(ceiling(data.df$Time))
   
   i = 1
   
@@ -335,6 +339,167 @@ vascr_resample_time = function(data.df, npoints = vascr_find_count_timepoints(da
   
   return(resampled)
   
+}
+
+
+#' Title
+#'
+#' @param data.df 
+#'
+#' @returns
+#' @noRd
+#'
+#' @examples
+vascr_auc = function(data.df) {
+
+      auc = data.df %>% mutate(Time2 = lead(Time), Value2 = lead(Value)) %>% 
+                  filter(!(is.na(Time2) | is.na(Value2) | is.na(Value))) %>%
+                  group_by_all() %>%
+                  mutate(auc = abs((Time2 - Time) * mean(Value, Value2)))
+
+      sum(auc$auc)
+}
+
+
+
+
+#' Title
+#'
+#' @param data.df 
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+#' vascr_plot_resample_range(growth.df)
+#' 
+#' bigdata = vascr_import("ECIS", raw ="raw_data/growth/growth1_raw.abp", experiment = 1)
+#' 
+#' toprocess = bigdata %>% mutate(Experiment = "1", Sample = "Test")
+#' 
+#' vascr_plot_resample_range(data.df = toprocess)
+#' 
+vascr_plot_resample_range = function(data.df, unit = "R", frequency  = 4000, well = "A01"){
+  
+  data.df = data.df %>% vascr_subset(unit = unit, frequency = frequency, well = well) 
+  
+  checktimes = seq(from = vascr_find_count_timepoints(data.df), to = 2, length.out = 20) %>% round() %>% unique()
+  
+  cli_progress_bar(total = length(checktimes))
+  
+boot = foreach (i = checktimes, .combine = rbind) %do% {
+        cli_progress_update()
+        vascr_plot_resample(data.df, plot = FALSE, newn = i)  
+}
+
+  cli_progress_cleanup()
+  
+  boot %>% filter(r2 > 0.999)
+
+boot2 = boot %>%
+          pivot_longer(-n, names_to = "variable", values_to = "value")
+
+ggplot(boot2) +
+  geom_line(aes(x = n, y = value, colour = variable)) +
+  ylim(c(0.9,1)) +
+  geom_hline(aes(yintercept = 0.999))
+
+# unique(master$Experiment)
+#
+# data.df = master %>% vascr_subset(instrument = "ECIS", experiment = "3 : 1 : 2 : ECIS_200722_MFT_1.abp")
+# 
+# data.df
+# 
+# vascr_plot_resample(data.df, newn = 30)
+}
+
+
+
+
+
+#' Title
+#'
+#' @param data.df 
+#' @param unit 
+#' @param frequency 
+#' @param well 
+#'
+#' @returns
+#'
+#' @examples
+#' vascr_plot_resample(growth.df)
+#' vascr_plot_resample(growth.df, plot = FALSE)
+#' 
+#' 
+vascr_plot_resample = function(data.df, unit = "R", frequency = "4000", well = "A01", newn = 20, plot = TRUE)
+      {
+          base_data = data.df %>% filter(!is.na(Value))
+          
+          to_return = list()
+          
+          to_return["n"] = newn
+  
+          # Create resampled set
+          original_data = base_data %>% vascr_subset(unit = "R", frequency = 4000, well = "A01")
+          oldn = vascr_find_count_timepoints(original_data)
+          new_data = original_data %>% vascr_resample_time(npoints = newn)
+          reverse_processed = new_data %>% vascr_resample_time(npoints = oldn)
+          
+          # Calculate change in ACF
+          old_auc = vascr_auc(original_data)
+          new_auc = vascr_auc(new_data)
+          d_auc = 1-(old_auc-new_auc)/old_auc
+          
+          to_return["d_auc"] = d_auc
+          
+          # original_data$Time == reverse_processed$Time
+          
+          # diff.df = tibble(time = original_data$Time, original = original_data$Value, processed = reverse_processed$Value)
+          
+          # diff.df$residuals = diff.df$original - diff.df$processed
+          
+          
+          to_return["r2"] = 1 - mean((original_data$Value - reverse_processed$Value)^2) / (mean((original_data$Value - mean(original_data$Value))^2))
+
+          
+          # lmod = lm('processed ~ original', diff.df %>% select("processed", "original"))
+          # stats:::plot.lm(lmod)
+          # print(summary(lmod))
+          
+          
+          # lm_original = lm('Value ~ .', original_data %>% select("Value"))
+          # lm_resampled = lm('Value ~ .', new_data %>% select("Value"))
+          
+          # to_return["aic"] = (AIC(lm_original, lm_resampled)$AIC[2])
+          # to_return["aic"] = (AIC(lmod))
+          # to_return["Bic"] = (BIC(lmod))
+          
+          
+          # diff.df = diff.df %>% mutate(d2 =  abs(processed-original)^2)
+          
+          # sqrt(mean(diff.df$d2))
+          
+          rmse = sqrt(mean((original_data$Value - reverse_processed$Value)^2))
+          
+          
+          
+          to_return["ccf"] = ccf(original_data$Value, reverse_processed$Value, lag.max = 0, plot = FALSE)[[1]] %>% as.numeric()
+          
+          
+          if(isFALSE(plot))
+          {
+            return(to_return %>% as.data.frame())
+          }
+          
+          original_data$source = "original"
+          new_data$source = "resampled"
+          
+          all = rbind(original_data, new_data)
+          
+          ggplot(all) +
+            geom_line(aes(x = Time, y = Value, colour = source)) +
+            geom_rug(aes(x = Time, colour = source))
+
 }
 
 
