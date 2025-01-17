@@ -526,6 +526,8 @@ vascr_shiny = function(){
   
   return(toreturn)
   
+  return(toreturn)
+  
 }
 
 # vascr_shiny()
