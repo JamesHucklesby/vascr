@@ -246,3 +246,12 @@ samples = distinct_samples %>%
 return(fulldata)
 
 }
+
+
+# data.df = growth.df %>% mutate(Sample = paste(Sample, "+ test_pipette"))
+
+
+
+
+
+

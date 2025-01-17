@@ -58,16 +58,17 @@ vascr_summarise = function(data.df, level = "wells")
 #' @importFrom stats median
 #'
 #' @examples
-#' vascr_summarise_deviation(growth.df %>% vascr_subset(unit = "Rb"))
+#' vascr_summarise_deviation(growth.df %>% vascr_subset(unit = "R", frequency = 4000, time = 5, well =c("A01","A02", "A03", "A04", "A05")))
 #' 
 vascr_summarise_deviation = function(data.df){
   
 processed = data.df %>% 
   group_by(.data$Time, .data$Experiment, .data$SampleID) %>% 
   mutate(Median_Deviation = abs(.data$Value/median(.data$Value)-1)) %>%
-  mutate(Median_Value = median(.data$Value))
+  mutate(Median_Value = median(.data$Value)) %>%
+  mutate(MAD = median(.data$Value - .data$Median_Value))
 
-return(processed)
+processed
 
 }
 

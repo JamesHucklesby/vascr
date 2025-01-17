@@ -330,6 +330,16 @@
       W = 0.97874, p-value = 0.8716
       
 
+# Levene Test
+
+    Code
+      vascr_levene(growth.df, "R", 4000, 100)
+    Output
+      # A tibble: 1 x 4
+          df1   df2 statistic     p
+        <int> <int>     <dbl> <dbl>
+      1     7    16     0.484 0.832
+
 # Tukey Test
 
     Code

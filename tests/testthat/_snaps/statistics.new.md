@@ -1,4 +1,48 @@
-# Can make a significance table
+# Linear model
+
+    Code
+      vascr_lm(growth.df, "R", 4000, 100)
+    Output
+      
+      Call:
+      lm(formula = formula, data = data.df)
+      
+      Coefficients:
+                             (Intercept)           Experiment2 : Experiment2  
+                                  302.97                              -81.22  
+               Experiment3 : Experiment3  Sample10,000_cells + HCMEC D3_line  
+                                 -123.63                              318.87  
+      Sample15,000_cells + HCMEC D3_line  Sample20,000_cells + HCMEC D3_line  
+                                  366.04                              365.43  
+      Sample25,000_cells + HCMEC D3_line  Sample30,000_cells + HCMEC D3_line  
+                                  357.85                              349.05  
+      Sample35,000_cells + HCMEC D3_line   Sample5,000_cells + HCMEC D3_line  
+                                  320.43                              140.83  
+      
+
+---
+
+    Code
+      vascr_lm(growth.df, "Rb", 0, 25)
+    Output
+      
+      Call:
+      lm(formula = formula, data = data.df)
+      
+      Coefficients:
+                             (Intercept)           Experiment2 : Experiment2  
+                                 0.02000                             0.02048  
+               Experiment3 : Experiment3  Sample10,000_cells + HCMEC D3_line  
+                                -0.02000                            -0.02016  
+      Sample15,000_cells + HCMEC D3_line  Sample20,000_cells + HCMEC D3_line  
+                                -0.02016                            -0.02016  
+      Sample25,000_cells + HCMEC D3_line  Sample30,000_cells + HCMEC D3_line  
+                                -0.02016                            -0.02016  
+      Sample35,000_cells + HCMEC D3_line   Sample5,000_cells + HCMEC D3_line  
+                                 0.12095                            -0.02016  
+      
+
+# Significance table
 
     Code
       vascr_make_significance_table(growth.df, 50, "R", 4000, 0.95)
@@ -36,29 +80,7 @@
       # i 21 more rows
       # i 1 more variable: p.adj.signif <chr>
 
-# Vascr LM
-
-    Code
-      vascr_lm(growth.df, "R", 4000, 100)
-    Output
-      
-      Call:
-      lm(formula = formula, data = data.df)
-      
-      Coefficients:
-                             (Intercept)           Experiment2 : Experiment2  
-                                  302.97                              -81.22  
-               Experiment3 : Experiment3  Sample10,000_cells + HCMEC D3_line  
-                                 -123.63                              318.87  
-      Sample15,000_cells + HCMEC D3_line  Sample20,000_cells + HCMEC D3_line  
-                                  366.04                              365.43  
-      Sample25,000_cells + HCMEC D3_line  Sample30,000_cells + HCMEC D3_line  
-                                  357.85                              349.05  
-      Sample35,000_cells + HCMEC D3_line   Sample5,000_cells + HCMEC D3_line  
-                                  320.43                              140.83  
-      
-
-# Vascr_residuals
+# Residuals
 
     Code
       vascr_residuals(growth.df, "R", "4000", 100)
@@ -72,7 +94,7 @@
                19          20          21          22          23          24 
       -21.3740220  -1.3609699  22.7349919 -42.8499065  49.7998853  -6.9499789 
 
-# Vascr Shapiro test checks
+# Shapiro Test
 
     Code
       vascr_shapiro(growth.df, "R", 4000, 100)
@@ -84,7 +106,7 @@
       W = 0.97874, p-value = 0.8716
       
 
-# Levene test
+# Levene Test
 
     Code
       vascr_levene(growth.df, "R", 4000, 100)
@@ -94,7 +116,7 @@
         <int> <int>     <dbl> <dbl>
       1     7    16     0.484 0.832
 
-# Tukey tests
+# Tukey Test
 
     Code
       vascr_tukey(growth.df, "R", 4000, 100)

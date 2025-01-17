@@ -50,6 +50,11 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, confide
   # 
   tukey = tukey_hsd(lm)
   
+  if(format == "Tukey_data")
+  {
+    return(tukey)
+  }
+  
   tukey %>%
     mutate(temp = group1, group1 = group2, group2 = temp, temp = NULL) %>%
     rbind(tukey) %>%
@@ -511,20 +516,15 @@ vascr_plot_anova_grid = function (data.df, unit =  "R", frequency = 4000, time =
   
   sigdata = vascr_make_significance_table(data.df, unit = unit, frequency = frequency, time = time, format = "Tukey_data")
   
-  sigdata2 = sigdata %>% mutate(temp = .data$A, A = .data$B, B = .data$temp, temp = NULL) %>%
-    rbind(sigdata)
+  sigdata
   
-  sigplot = sigdata2 %>% mutate(A = factor(.data$A,(unique(c(sigdata$A, sigdata$B))))) %>%
-    mutate(Significance = cut(sigdata2$Tukey.level, breaks = c(0, 0.01, 0.05, 0.1, 1), 
-                              labels = c("< 0.01", "<0.05", "< 0.1", "<1"))) %>%
-    mutate(Significance = factor(.data$Significance, c("< 0.01", "<0.05", "< 0.1", "<1"))) %>%
-    mutate(B = factor(.data$B, unique(c(sigdata$A, sigdata$B)))) %>%
+  sigplot = sigdata %>% filter(term == "Sample") %>%
     ggplot() +
-    geom_tile(aes(x = .data$A, y = .data$B, fill = .data$Significance)) +
+    geom_tile(aes(x = .data$group1, y = .data$group2, fill = .data$p.adj.signif)) +
     labs(fill = "P value",
          x = "Treatment 1", y = "Treatment 2") +
     theme(axis.text.x = element_markdown(angle = 90, vjust = 0.5, hjust=0.5))+
-    scale_fill_manual(values = c(pal[[5]], pal[[2]], pal[[3]], pal[[4]]),
+    scale_fill_manual(values = c(pal[[5]], pal[[2]], pal[[3]], pal[[4]], pal[[5]]),
                       labels = c("< 0.01", "<0.05", "< 0.1", "<1"),
                       drop = FALSE)
   
@@ -585,7 +585,9 @@ vascr_dunnett = function(data.df, unit, frequency, time, reference){
     add_significance(p.col = "P", output.col = "Label") %>%
     mutate(P_round = round(P, 3)) %>%
     mutate(P_round =  ifelse(P>0.05, "", P_round))%>%
-    mutate(P_round =  ifelse(P_round == "0", "< 0.001", P_round))
+    mutate(P_round =  ifelse(P_round == "0", "< 0.001", P_round)) %>%
+    separate(Sample, into = c("a","b"), sep = " - ", remove = FALSE) %>%
+   mutate(Sample = a, a = NULL, b = NULL)
 
  return(toreturn)
  
@@ -643,7 +645,7 @@ vascr_plot_anova_bar_reference = function(data.df, unit, frequency, time, refere
   # rawsamples = unique(data2.df$Sample)
   
   
-  significance = data2.df %>% vascr_tukey(unit = unit, frequency = frequency, time = time, raw = FALSE)
+  significance = data2.df %>% vascr_make_significance_table(unit = unit, frequency = frequency, time = time)
   
   
   pd1r3 = (data2.df %>% vascr_subset(frequency = frequency, unit = unit, time = time))
@@ -685,6 +687,119 @@ vascr_plot_anova_bar_reference = function(data.df, unit, frequency, time, refere
   return(summdata)
   
 }
+
+
+#' Title
+#'
+#' @param data.df 
+#' @param unit 
+#' @param frequency 
+#' @param time 
+#' @param reference 
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+vascr_plot_line_dunnett = function(data.df, unit = unit, frequency = frequency, time = time, reference = reference, inputplot = NULL)
+{
+  
+  dun.df = vascr_dunnett(data.df, unit = unit, frequency = frequency, time = time, reference = reference)
+  
+  subset.df = growth.df %>% vascr_subset(unit = unit, frequency = frequency)
+  
+  summdat = subset.df %>% vascr_summarise(level = "summary") 
+  
+  plot1 = summdat %>% vascr_plot_line()
+  
+  
+  
+  plab = summdat %>% 
+    vascr_subset(time = time) %>%
+    dplyr::select("Value", "Sample") %>%
+    left_join(dun.df) %>%
+    filter(!Label == "NA") %>%
+    filter(!Label == "ns") %>%
+    mutate(Label = paste(" ", Label))
+  
+  plab
+  
+  
+  plot1 + geom_vline(xintercept = time, alpha=  0.8, linetype = 4) +
+    geom_text(aes(x = time, y = Value, label = Label, group = 1, hjust = 0), data = plab)
+  
+  
+}
+
+
+vascr_plot_time_vlines = function() {
+  
+  sub.df = growth.df %>% vascr_subset(unit = unit, frequency = frequency, time = list(50, 150))
+  
+  subsum = sub.df %>% vascr_summarise("experiments") %>% mutate(Time = as.factor(Time))
+  
+  mod = lm(Value ~ Experiment + Sample + Time, data = subsum)
+  
+  anova_test(mod)
+  
+ tk.df =  tukey_hsd(mod)
+  
+ 
+ lmd_all = lmer(Value ~ ((Sample) + (1| Experiment)), data = subsum)
+ 
+ summary(lmd_all)
+ 
+ summary(glht(lmd_all, linfct = mcp(Sample = "Dunnett", Time = "Tukey")), test = adjusted("holm"))
+ 
+ summary(glht(lmd_all, test = adjusted("holm")))
+ 
+ 
+ anova(lmd_all)
+  
+ TukeyHSD(lmd_all)
+ 
+ emmeans::emmeans(lmd_all, specs = list("Sample", "Time", "Sample + Time"))
+ 
+ # subsum = subsum %>% mutate(Experiment = as.factor(Experiment), Time = as.factor(Time), Sample = as.factor(Sample))
+ 
+ a3 = subsum %>%
+   group_by(Time) %>%
+   tukey_hsd(Value ~ Sample + Experiment) %>%
+   get_anova_table()
+ 
+
+ a3
+ 
+ subsum %>% filter(Time == 50) %>%
+   tukey_hsd(Value ~ Sample + Experiment) %>%
+   get_anova_table()
+ 
+ 
+ pwc <- subsum %>% #filter(Time == 50) %>%
+   group_by(Time) %>%
+   pairwise_t_test(
+     Value ~ Sample , paired = TRUE,
+     ref.group = "0_cells + HCMEC D3_line",
+     p.adjust.method = "fdr"
+   )
+ pwc
+ 
+ 
+ l5 = lmer(Value ~ Sample*Time + (1|Experiment), data = subsum)
+ 
+ summary(glht(l5, linfct = mcp(Sample = "Dunnett")), test = adjusted("holm"))
+ 
+ s = summary(glht(l5), linfct = X, test = adjusted("holm"))
+ 
+ # s
+ # 
+ # R anova  subsum %>% vascr_plot_line()
+ 
+}
+
+
+
+
 
 
 #' Plot a bar chart with ANOVA statistics superimposed on it as text

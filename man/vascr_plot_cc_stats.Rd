@@ -4,7 +4,15 @@
 \alias{vascr_plot_cc_stats}
 \title{Title}
 \usage{
-vascr_plot_cc_stats(data.df, unit = "R", frequency = 4000)
+vascr_plot_cc_stats(
+  data.df,
+  unit = "R",
+  frequency = 4000,
+  reference = "none",
+  points = FALSE,
+  stars = TRUE,
+  pval = FALSE
+)
 }
 \arguments{
 \item{data.df}{}
@@ -15,5 +23,13 @@ Title
 \examples{
 
 vascr_plot_cc_stats(growth.df)
+vascr_plot_cc_stats(growth.df, reference = 1)
+
+vascr_plot_cc_stats(growth.df, pval = TRUE)
+vascr_plot_cc_stats(growth.df, reference = 1, pval = TRUE)
+
+vascr_plot_cc_stats(growth.df, points = TRUE)
+vascr_plot_cc_stats(growth.df, reference = 1, points = TRUE)
+
 
 }
