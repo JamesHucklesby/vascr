@@ -42,7 +42,8 @@ Imports:
     rstatix,
     stringr,
     tidyr,
-    utils
+    utils,
+    multcomp
 Suggests: 
     DBI,
     DT,
