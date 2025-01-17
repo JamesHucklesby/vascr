@@ -493,9 +493,6 @@ server <- function(input, output) {
 #' @returns
 #' @export
 #' 
-#' @import shiny
-#' @import DT
-#' @import bslib
 #'
 #' @examples
 vascr_shiny_app = function()
@@ -525,7 +522,6 @@ vascr_shiny = function(){
   
   return(toreturn)
   
-  return(toreturn)
   
 }
 
