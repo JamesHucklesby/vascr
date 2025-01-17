@@ -500,7 +500,8 @@ server <- function(input, output) {
 #' @examples
 vascr_shiny_app = function()
 {
-  shinyApp(vascr:::vascr_ui, vascr:::vascr_serve(vascr::growth.df))
+  var = shinyApp(vascr:::vascr_ui, vascr:::vascr_serve(vascr::growth.df))
+  var
 }
 
 
