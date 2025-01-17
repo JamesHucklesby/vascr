@@ -487,6 +487,23 @@ server <- function(input, output) {
 }
 }
 
+
+#' Title
+#'
+#' @returns
+#' @export
+#' 
+#' @import shiny
+#' @import DT
+#' @import bslib
+#'
+#' @examples
+vascr_shiny_app = function()
+{
+  shinyApp(vascr:::vascr_ui, vascr:::vascr_serve(vascr::growth.df))
+}
+
+
 #' Title
 #'
 #' @returns
@@ -495,16 +512,18 @@ server <- function(input, output) {
 #' @examples
 vascr_shiny = function(){
   
-  library(shiny)
-  library(bslib)
-  library(ggplot2)
-  library(vascr)
-  library(DT)
-  library(tidyverse)
+  # library(shiny)
+  # library(bslib)
+  # library(ggplot2)
+  # library(vascr)
+  # library(DT)
+  # library(tidyverse)
 
-  application = shinyApp(vascr_ui, vascr_serve(vascr::growth.df))
+  app = vascr_shiny_app()
   
-  toreturn = runApp(application)
+  toreturn = runApp(app)
+  
+  return(toreturn)
   
 }
 
