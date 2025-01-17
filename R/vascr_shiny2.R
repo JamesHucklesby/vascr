@@ -506,6 +506,8 @@ vascr_shiny = function(){
   
   toreturn = runApp(application)
   
+  return(toreturn)
+  
 }
 
 # vascr_shiny()
