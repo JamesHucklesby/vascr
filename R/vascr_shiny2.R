@@ -503,7 +503,7 @@ vascr_shiny = function(){
   
   application = shinyApp(vascr_ui, vascr_serve(growth.df))
   
-  toreturn = runApp(application)
+  # toreturn = runApp(application)
   
 }
 
