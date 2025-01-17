@@ -197,7 +197,7 @@ server <- function(input, output) {
   })
 
   observeEvent(input$load_default, {
-    raw_dat(growth.df %>% mutate(Excluded = "no") %>% filter(!is.na(Value)))
+    raw_dat(vascr::growth.df %>% mutate(Excluded = "no") %>% filter(!is.na(Value)))
 
   })
 
