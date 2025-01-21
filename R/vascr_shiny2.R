@@ -197,7 +197,7 @@ server <- function(input, output) {
   })
 
   observeEvent(input$load_default, {
-    raw_dat(vascr::growth.df %>% mutate(Excluded = "no") %>% filter(!is.na(Value)))
+    raw_dat(growth.df %>% mutate(Excluded = "no") %>% filter(!is.na(Value)))
 
   })
 
@@ -418,7 +418,7 @@ server <- function(input, output) {
                                        vascr_summarise(level = input$level) %>%
                                        vascr_plot_line()))
 
-      print(.Last.value)
+      # print(.Last.value)
   })
 
 
@@ -493,37 +493,11 @@ server <- function(input, output) {
 #' @returns
 #' @export
 #' 
-#'
 #' @examples
-vascr_shiny_app = function()
+vascr_shiny = function(data.df)
 {
-  shinyApp(vascr:::vascr_ui, vascr:::vascr_serve(vascr::growth.df))
+  shinyApp(vascr_ui, vascr_serve(data.df))
 }
 
 
-#' Title
-#'
-#' @returns
-#' @export
-#'
-#' @examples
-vascr_shiny = function(){
-  
-  # library(shiny)
-  # library(bslib)
-  # library(ggplot2)
-  # library(vascr)
-  # library(DT)
-  # library(tidyverse)
-
-  app = vascr_shiny_app()
-  
-  toreturn = runApp(app)
-  
-  return(toreturn)
-  
-  
-}
-
-# vascr_shiny()
 
