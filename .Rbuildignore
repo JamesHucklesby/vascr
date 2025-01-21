@@ -8,3 +8,4 @@
 ^README\.Rmd$
 ^codemeta\.json$
 ^codecov\.yml$
+^app\.r$
