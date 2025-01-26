@@ -9,3 +9,5 @@
 ^codemeta\.json$
 ^codecov\.yml$
 ^app\.r$
+^devel$
+^vascr_web$

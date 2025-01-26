@@ -35,11 +35,20 @@ vascr_subset = function(data.df,
                         experiment = NULL,
                         instrument = NULL,
                         sampleid = NULL,
-                        subsample = NULL)
+                        sample = NULL,
+                        subsample = NULL,
+                        remove_na_value =TRUE)
 {
   
   
   subset.df = data.df
+  
+  if(!"SampleID" %in% colnames(subset.df)) {subset.df$SampleID = 1}
+  
+  if(isTRUE(remove_na_value))
+  {
+    subset.df = subset(subset.df, !is.na(Value))
+  }
   
   # Subsample (this is the cheapest so let's do it first)
   if(!is.null(subsample))
@@ -123,18 +132,25 @@ vascr_subset = function(data.df,
     subset.df = subset(subset.df, subset.df$Instrument %in% instruments)
   }
   
-  # Sample (s) (this is second to last as it is highly CPU intensive, and therefore should be imposed on the smallest data set)
+  # Sample
   
   if(!is.null(sampleid))
   {
     subset.df = vascr_subset_sampleid(subset.df, sampleid)
   }
   
+  if(!is.null(sample))
+  {
+    samples = vascr_find_sample(subset.df, sample)
+    subset.df = subset(subset.df, subset.df$Sample %in% samples)
+      
+  }
+  
   
   # Check if there is still some data here, and if not sound a warning
   if(nrow(subset.df)==0)
   {
-    warning("No data returned from dataset subset. Check your frequencies, times and units are present in the dataset")
+    vascr_notify("warning","No data returned from dataset subset. Check your frequencies, times and units are present in the dataset")
   }
   
   

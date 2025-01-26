@@ -1,10 +1,10 @@
-library(shiny)
-library(bslib)
-library(ggplot2)
-# library(vascr)
-library(DT)
-library(tidyverse)
-
+#' Vascr UI setup
+#'
+#' @returns A UI page for shiny presenting vascr data analysis
+#' 
+#' @noRd
+#'
+#' @examples
 vascr_ui = function(){
     test_page = function(pages)
     {
@@ -12,19 +12,58 @@ vascr_ui = function(){
     }
     
     cpan = function(output, pages){
-      conditionalPanel(test_page(pages), uiOutput(output))
+      shiny::conditionalPanel(test_page(pages), uiOutput(output))
     }
     
     nd = function()
     {
-      card("No data",  actionButton("load_default", "Load the default growth.df dataset"))
+      bslib::card("No data",  shiny::actionButton("load_default", "Load the default growth.df dataset"))
     }
     
-    ui <- page_navbar(
+    ui <- bslib::page_navbar(
+      
+                # spinner css
+                tags$head(
+                  tags$style(HTML("
+            #loadmessage {
+            position:fixed; z-index:8; top:50%; left:50%; padding:10px;
+            text-align:center; font-weight:bold; color:#000000; background-color:#CCFF66;
+            }
+            
+            .loader {
+            position:fixed; z-index:8; border:16px solid #999999;
+            border-top: 16px solid #8B0000; border-radius: 50%;
+            width: 120px; height: 120px; top:45%; left:45%;
+            animation: spin 2s linear infinite;
+            }
+          
+            .prevent_click{
+            position:fixed; 
+            z-index:9;
+            width:100%;
+            height:100vh;
+            background-color: transpare'nt;   
+            }
+          
+            @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+            }"))
+                ),
+      
+      # display load spinner when shiny is busy
+      conditionalPanel(
+        condition = "$(\'html\').hasClass(\'shiny-busy\')",
+        tags$div(class = "loader"),
+        tags$div(class = "prevent_click")
+      ),
+      
+      tags$style("#shiny-notification-success_box {background-color:rgb(103, 194, 58);}"),
+      
       shinyjs::useShinyjs(),
       title = "vascr dashboard",
       id = "nav",
-      sidebar =   sidebar(
+      sidebar =   bslib::sidebar(
         cpan("select_unit", c("line", "anova", "cc")),
         cpan("select_frequency", c("line", "anova", "cc")),
         cpan("select_sample", c("line", "anova", "cc")),
@@ -36,15 +75,15 @@ vascr_ui = function(){
         cpan("select_normalise", c("line"))
       ),
     
-      nav_panel("Import data", uiOutput("import_controls", fill = "item")),
-      nav_panel("Edit labels", card(DTOutput("edit_labels")), value = "label"),
-      nav_panel("Resample time", card(textOutput("original_times"), uiOutput("resample_controls")), plotOutput("resample_graph"), plotOutput("resample_graph_range"), value = "resample"),
-      nav_panel("QC", card(plotOutput("plot_qc")), value = "qc"),
-      nav_panel("Line graph", card(plotOutput("plot_line")), value = "line"),
-      nav_panel("ANOVA", card(plotOutput("plot_ANOVA")), value = "anova"),
-      nav_panel("Cross Correlation", card(plotOutput("plot_cc")), value = "cc"),
-      nav_panel("Export", card(uiOutput("export_controls"))),
-      nav_panel("Log", card(verbatimTextOutput("log")), value = "log"),
+      bslib::nav_panel("Import data", shiny::uiOutput("import_controls", fill = "item")),
+      bslib::nav_panel("Edit labels", bslib::card(DT::DTOutput("edit_labels")), value = "label"),
+      bslib::nav_panel("Resample time", bslib::card(textOutput("original_times"), shiny::uiOutput("resample_controls")), shiny::plotOutput("resample_graph"), shiny::plotOutput("resample_graph_range"), value = "resample"),
+      bslib::nav_panel("QC", bslib::card(shiny::plotOutput("plot_qc")), value = "qc"),
+      bslib::nav_panel("Line graph", bslib::card(shiny::plotOutput("plot_line")), value = "line"),
+      bslib::nav_panel("ANOVA", bslib::card(shiny::plotOutput("plot_ANOVA")), value = "anova"),
+      bslib::nav_panel("Cross Correlation", bslib::card(shiny::plotOutput("plot_cc")), value = "cc"),
+      bslib::nav_panel("Export", bslib::card(shiny::uiOutput("export_controls"))),
+      bslib::nav_panel("Log", bslib::card(shiny::verbatimTextOutput("log")), value = "log"),
       fillable = c("label","qc", "line", "anova", "cc")
     )
     
@@ -52,6 +91,22 @@ vascr_ui = function(){
 }
 
 
+#' Create the vascr server for shiny
+#'
+#' @param data.df The vascr dataset to be imported on load
+#' 
+#' @importFrom ggplot2 geom_text theme_void
+#' @importFrom dplyr full_join mutate filter group_by summarise tribble
+#' @importFrom utils read.csv2
+#' @importFrom glue glue
+#' 
+#' @noRd
+#'
+#' @returns A shiny server function for vascr
+#'
+#' @examples
+#' vascr_serve(growth.df)
+#' 
 vascr_serve  = function (data.df)
 {
 
@@ -70,7 +125,7 @@ server <- function(input, output) {
     print(tolog)
   }
 
-  setuplog = observe({
+  setuplog = shiny::observe({
 
   l(vascr_log(l, "# Setup the dataset"))
   l(vascr_log(l, "data.df = vascr_blank_df()"))
@@ -79,12 +134,12 @@ server <- function(input, output) {
 
 
 
-  raw_dat = reactiveVal({
-    vascr::growth.df %>% filter(FALSE) %>% mutate(Excluded = FALSE)
+  raw_dat = shiny::reactiveVal({
+    vascr::growth.df %>% dplyr::filter(FALSE) %>% mutate(Excluded = FALSE)
   })
 
 
-  uniques = reactive({
+  uniques = shiny::reactive({
     uni = list()
 
     unit = unique(dat()$Sample)
@@ -94,68 +149,66 @@ server <- function(input, output) {
 
   # Generate floating UI
 
-  output$select_unit = renderUI(selectInput("unit", "Select unit", choices = unique(dat()$Unit)))
-  output$select_sample = renderUI(checkboxGroupInput("sample", "Select sample", choices = unique(dat()$Sample), selected = unique(dat()$Sample)))
-  output$select_frequency = renderUI(selectInput("frequency", "Select Frequency", choices = unique((dat() %>% filter(Unit == input$unit))$Frequency)))
-  output$select_time_single = renderUI(selectInput("time_single", "Select time", choices = unique(dat()$Time)))
-  output$select_normalise = renderUI(selectInput("normalise", "Select time to normalise to", choices = c("none",unique(dat()$Time))))
-  output$select_reference = renderUI(selectInput("reference", "Select reference", choices = c("none", unique(dat()$Sample)), selected = unique(dat()$Sample)))
-  output$select_level = renderUI(selectInput("level", "Select level", choices = c("summary", "experiments", "wells")))
+  output$select_unit = shiny::renderUI(shiny::selectInput("unit", "Select unit", choices = unique(dat()$Unit)))
+  
+  shiny::observeEvent(input$unit, {
+  output$select_frequency = shiny::renderUI(shiny::selectInput("frequency", "Select Frequency", choices = unique((dat() %>% filter(Unit == input$unit))$Frequency)))
+  })
+  
+  
+  output$select_sample = shiny::renderUI(shiny::checkboxGroupInput("sample", "Select sample", choices = unique(dat()$Sample), selected = unique(dat()$Sample)))
+  output$select_time_single = shiny::renderUI(shiny::selectInput("time_single", "Select time", choices = unique(dat()$Time)))
+  output$select_normalise = shiny::renderUI(shiny::selectInput("normalise", "Select time to normalise to", choices = c("none",unique(dat()$Time))))
+  output$select_reference = shiny::renderUI(shiny::selectInput("reference", "Select reference", choices = c("none", unique(dat()$Sample)), selected = unique(dat()$Sample)))
+  output$select_level = shiny::renderUI(shiny::selectInput("level", "Select level", choices = c("summary", "experiments", "wells")))
 
 
 
   #///////////////////////////// Import Data /////////////////////////////////////
 
-  output$import_controls = renderUI({
-    tagList(card(
-      card_header("Import default"),
-      card_body(
-                 actionButton("load_default", "Load the default growth.df dataset")),
+  output$import_controls = shiny::renderUI({
+    shiny::tagList(
+      bslib::card(
+      bslib::card_header("Import default"),
+      bslib::card_body(
+        shiny::actionButton("load_default", "Load the default growth.df dataset")),
       ),
-           card(
-             card_header("Import from instrument"),
-             card_body(
-            selectInput(
+      bslib::card(
+        bslib::card_header("Import from instrument"),
+        bslib::card_body(
+               shiny::selectInput(
                 "import_instrument",
                 "Select Instrument",
                 c("ECIS", "xCELLigence", "cellZscope")
               ),
-              fileInput("raw", "Upload a raw file"),
-              fileInput("model", "Upload a modeled file"),
-              fileInput("platemap", "Upload a platemap"),
-              textInput("experiment_name", "Experiment Name"),
-              actionButton("run_import", "Run Import"),
-              actionButton("save_data", "Save current experiment")
+            shiny::fileInput("raw", "Upload a raw file"),
+            shiny::fileInput("model", "Upload a modeled file"),
+            shiny::textInput("experiment_name", "Experiment Name"),
+            shiny::actionButton("run_import", "Run Import")
              )) ,
-           card(
-              card_header("Import previous data"),
-              card_body(
-              fileInput("load_previous", "Upload a previous vascr file"))
+      bslib::card(
+        bslib::card_header("Import previous data"),
+        bslib::card_body(
+                shiny::fileInput("load_previous", "Upload a previous vascr file"))
            )
     )
     })
 
-  observeEvent(input$run_import, {
+ shiny::observeEvent(input$run_import, {
 
     l(vascr_log(l, "setup"))
 
-    log1 = glue("ecis_import({input$raw$name},
+    log1 = glue("vascr_import({input$raw$name},
+                      {input$raw$name},
                       {input$model$name},
                       {input$experiment_name})")
 
     print(log1)
 
-    importing = ecis_import(input$raw$datapath,
+    importing = vascr_import(input$import_instrument,
+                             input$raw$datapath,
                             input$model$datapath,
                             input$experiment_name)
-
-    if (!is.null(input$platemap)) {
-      importing = importing %>% vascr_apply_map(input$platemap$datapath)
-    } else
-    {
-      importing$Sample = NA
-      importing$SampleID = 1
-    }
 
 
     # Merge the datasets
@@ -166,8 +219,8 @@ server <- function(input, output) {
 
     if (exp_moving %in% unique(current_data$Experiment))
     {
-      current_data = current_data %>% filter(!Experiment == exp_moving)
-      showNotification(glue("Experiment {exp_moving} already imported, overwriting"),
+      current_data = current_data %>% dplyr::filter(!Experiment == exp_moving)
+      shiny::showNotification(glue("Experiment {exp_moving} already imported, overwriting"),
                        type = "warning")
     }
 
@@ -189,32 +242,34 @@ server <- function(input, output) {
   })
 
 
-  observeEvent(input$load_previous, {
+  shiny::observeEvent(input$load_previous, {
     req(input$load_previous)
-    load_in = read_csv2(input$load_previous$datapath)
+    load_in = read.csv2(input$load_previous$datapath)
     print(load_in)
     all_data(load_in)
   })
 
-  observeEvent(input$load_default, {
-    raw_dat(growth.df %>% mutate(Excluded = "no") %>% filter(!is.na(Value)))
+  shiny::observeEvent(input$load_default, {
+    
+    raw_dat(growth.df %>% mutate(Excluded = "no") %>% dplyr::filter(!is.na(.data$Value)))
+    vascr_notify("success", "Default data loaded")
 
   })
 
   # ///////////// Re-sample time
 
 
-  output$resample_controls = renderUI(
-        sliderInput("resample_n", "Number of points to resample", min = 0, max = vascr:::vascr_find_count_timepoints(raw_dat()), value = vascr:::vascr_find_count_timepoints(raw_dat()))
+  output$resample_controls = shiny::renderUI(
+    shiny::sliderInput("resample_n", "Number of points to resample", min = 0, max = vascr_find_count_timepoints(raw_dat()), value = vascr_find_count_timepoints(raw_dat()))
   )
 
-  output$original_times = renderText(paste(unique(raw_dat()$Time, collapse = ",")))
+  # output$original_times = shiny::renderText(paste(unique(raw_dat()$Time, collapse = ",")))
 
-  output$resample_graph = renderPlot(vascr:::vascr_plot_resample(raw_dat(), newn = input$resample_n))
+  output$resample_graph = shiny::renderPlot(vascr_plot_resample(raw_dat(), newn = input$resample_n))
 
-  output$resample_graph_range = renderPlot(vascr:::vascr_plot_resample_range(raw_dat()))
+  output$resample_graph_range = shiny::renderPlot(vascr_plot_resample_range(raw_dat()))
 
-  dat = reactive({
+  dat = shiny::reactive({
 
   if(is.null(input$resample_n))
     {
@@ -231,30 +286,29 @@ server <- function(input, output) {
 
   #////////////////////////// Plate map import
 
-  output$label_active_expt = renderUI({
-    selectInput("active_expt_select",
-                "Active Experiment",
-                choices = unique(dat()$Experiment))
-  })
+  # output$label_active_expt = shiny::renderUI({
+  #   shiny::selectInput("active_expt_select",
+  #               "Active Experiment",
+  #               choices = unique(dat()$Experiment))
+  # })
+  # 
+  # 
+  # 
+  # platemap = shiny::reactive({
+  #   raw_dat(raw_dat() %>% mutate(Experiment = str_replace_all(Experiment, " ", "_")))
+  # 
+  #   dat() %>% vascr_subset(time = min(dat()$Time)) %>%
+  #     select("Experiment", "Well", "Sample", "SampleID", "Excluded") %>% distinct() %>%
+  #     group_by(Experiment, Sample, SampleID, Excluded) %>%
+  #     summarise(Well = paste(Well, collapse = " "))
+  # })
 
 
-
-
-  platemap = reactive({
-    raw_dat(raw_dat() %>% mutate(Experiment = str_replace_all(Experiment, " ", "_")))
-
-    dat() %>% vascr_subset(time = min(dat()$Time)) %>%
-      select("Experiment", "Well", "Sample", "SampleID", "Excluded") %>% distinct() %>%
-      group_by(Experiment, Sample, SampleID, Excluded) %>%
-      summarise(Well = paste(Well, collapse = " "))
-  })
-
-
-  c_platemap = reactiveVal({
+  c_platemap = shiny::reactiveVal({
     tribble(~`Experiment`, ~`Well`, ~`Sample`, ~`SampleID`, ~`Excluded`)
   })
 
-  observeEvent(input$nav, {
+  shiny::observeEvent(input$nav, {
 
     if(input$nav == "label")
     {
@@ -285,9 +339,9 @@ server <- function(input, output) {
     inputs
   }
 
-  output$edit_labels <- renderDT({
+  output$edit_labels <- DT::renderDT({
     table_to_print = c_platemap()
-    datatable(table_to_print, editable = TRUE, escape = F, options = list(pageLength = nrow(table_to_print)))
+    DT::datatable(table_to_print, editable = TRUE, escape = F, options = list(pageLength = nrow(table_to_print)))
   })
 
   # observeEvent(input$add_row, {
@@ -298,7 +352,7 @@ server <- function(input, output) {
   #   raw_dat(all_dat)
   # })
 
-  observeEvent(input$edit_labels_cell_edit, {
+  shiny::observeEvent(input$edit_labels_cell_edit, {
     #get values
     info = input$edit_labels_cell_edit
     selectedrow = as.numeric(info$row)
@@ -318,24 +372,26 @@ server <- function(input, output) {
 
   ### QC ################################################################
 
-  selected_expt = reactiveVal(c("testing"))
+  selected_expt = shiny::reactiveVal(c("testing"))
 
-  output$select_experiment = renderUI(selectInput("experiment", "Select experiment", choices = unique(dat()$Experiment), selected = selected_expt()))
+  output$select_experiment = shiny::renderUI(selectInput("experiment", "Select experiment", choices = unique(dat()$Experiment), selected = selected_expt()))
 
 
-  deviation = reactive({
+  deviation = shiny::reactive({
     dat() %>%
       vascr_subset(unit = "R", frequency = 4000) %>%
-      vascr:::vascr_summarise_deviation() %>%
+      vascr_summarise_deviation() %>%
       group_by(Well, Experiment) %>%
       summarise(max = max(Median_Deviation, na.rm = TRUE))
   })
 
-
+  
+shiny::observeEvent(input$experiment, {
+  
   output$qc_wells = renderUI({
-    already_chosen = (dat() %>% filter(Excluded == "yes"))$Well
+    already_chosen = (dat() %>% dplyr::filter(Excluded == "yes"))$Well
 
-    devs = (deviation() %>% filter(Experiment == input$experiment))
+    devs = (deviation() %>% dplyr::filter(Experiment == input$experiment))
 
     names = as.list(paste0(
       devs$Well,
@@ -347,7 +403,7 @@ server <- function(input, output) {
     ))
     names = lapply(names, HTML)
 
-    checkboxGroupInput(
+    shiny::checkboxGroupInput(
       "qc_wells",
       "Exclude wells",
       choiceNames = names,
@@ -356,10 +412,12 @@ server <- function(input, output) {
 
     )
   })
+})
 
 
-
-  grid_data = reactive({
+  grid_data = shiny::reactive({
+    req(input$experiment)
+    
     dat() %>%
       vascr_subset(
         unit = "R",
@@ -368,16 +426,18 @@ server <- function(input, output) {
       ) %>%
       vascr_resample_time(npoints = min(
         40,
-        vascr:::vascr_find_count_timepoints(dat())
+        vascr_find_count_timepoints(dat())
       ))
   })
 
-  output$plot_qc = renderPlot({
+  
+  
+  output$plot_qc = shiny::renderPlot({
     vascr_plot_grid(grid_data())
   })
 
 
-  observeEvent(input$qc_wells,{
+  shiny::observeEvent(input$qc_wells,{
     selected_expt(input$experiment)
     updatedat = raw_dat() %>% mutate(Excluded = ifelse(Well %in% input$qc_wells & Experiment %in% input$experiment, "yes", "no"))
     raw_dat(updatedat)
@@ -401,7 +461,7 @@ server <- function(input, output) {
   }
 
 
-  observe({
+  shiny::observe({
 
     normtime = if(isTRUE(input$normalise =="none"))
     {
@@ -411,9 +471,9 @@ server <- function(input, output) {
       normtime = as.numeric(input$normalise)
     }
 
-      output$plot_line <- renderPlot(protect(dat() %>% vascr_subset(unit = input$unit, frequency = input$frequency) %>%
-                                       filter(Excluded == "no") %>%
-                                       filter(Sample %in% input$sample) %>%
+      output$plot_line <- shiny::renderPlot(protect(dat() %>% vascr_subset(unit = input$unit, frequency = input$frequency) %>%
+                                       dplyr::filter(Excluded == "no") %>%
+                                       dplyr::filter(Sample %in% input$sample) %>%
                                        vascr_normalise(normtime) %>%
                                        vascr_summarise(level = input$level) %>%
                                        vascr_plot_line()))
@@ -422,16 +482,22 @@ server <- function(input, output) {
   })
 
 
-  output$plot_ANOVA <- renderPlot(dat() %>%
-                                    filter(Excluded == "no") %>%
-                                    filter(Sample %in% input$sample) %>%
-                                    vascr_plot_anova(unit = input$unit, frequency = input$frequency,
-                                                     time = as.numeric(input$time_single),
-                                                     reference = input$reference))
+ plot_ANOVA_generator = reactive({
+  dat() %>%
+     dplyr::filter(Excluded == "no") %>%
+     dplyr::filter(Sample %in% input$sample) %>%
+     vascr_plot_anova(unit = input$unit, frequency = input$frequency,
+     time = as.numeric(input$time_single),
+      reference = input$reference)
+   
+ })
+  
+ output$plot_ANOVA <- shiny::renderPlot(plot_ANOVA_generator())
 
-  output$plot_cc <- renderPlot(dat() %>%
-                                    filter(Excluded == "no") %>%
-                                    filter(Sample %in% input$sample) %>%
+
+  output$plot_cc <- shiny::renderPlot(dat() %>%
+                                        dplyr::filter(Excluded == "no") %>%
+                                        dplyr::filter(Sample %in% input$sample) %>%
                                     vascr_subset(unit = input$unit, frequency = input$frequency) %>%
                                     vascr_plot_cc_stats(unit = input$unit, frequency = input$frequency)
                                   )
@@ -439,15 +505,15 @@ server <- function(input, output) {
   # Exporting data
   ####################### Export ####################################
 
-  output$export_controls = renderUI({
-      tagList(
-        downloadButton('downloadDataR', 'Save data'),
-        downloadButton('downloadDataCSV', 'Download vascr dataframe'),
-        downloadButton('downloadDataP', 'Download prism compatable xlsx spreadsheet'),
-        actionButton("return_to_r", "Return values to R"))
+  output$export_controls = shiny::renderUI({
+    shiny::tagList(
+        shiny::downloadButton('downloadDataR', 'Save data'),
+        shiny::downloadButton('downloadDataCSV', 'Download vascr dataframe'),
+        shiny::downloadButton('downloadDataP', 'Download prism compatable xlsx spreadsheet'),
+        shiny::actionButton("return_to_r", "Return values to R"))
   })
 
-  output$downloadDataR <- downloadHandler(
+  output$downloadDataR <- shiny::downloadHandler(
     filename = function() {
       paste("vascr_output", format(Sys.time()), '.RData', sep='')
     },
@@ -457,16 +523,16 @@ server <- function(input, output) {
     }
   )
 
-  output$downloadDataCSV <- downloadHandler(
+  output$downloadDataCSV <- shiny::downloadHandler(
     filename = function() {
       paste("vascr_output", format(Sys.time()), '.csv', sep='')
     },
     content = function(con) {
-      write_csv2(dat(), con)
+      write.csv2(dat(), con)
     }
   )
 
-  output$downloadDataP <- downloadHandler(
+  output$downloadDataP <- shiny::downloadHandler(
     filename = function() {
       paste("vascr_output_prism", format(Sys.time()), '.xlsx', sep='')
     },
@@ -475,29 +541,38 @@ server <- function(input, output) {
     }
   )
 
-  observeEvent(input$return_to_r , {
-    stopApp(dat())
+  shiny::observeEvent(input$return_to_r , {
+    shiny::stopApp(dat())
   })
 
 
   ######## Logs
 
-  output$log = renderText(l())
+  output$log = shiny::renderText(l())
 
 }
 }
 
 
-#' Title
+#' Launch the vascr UI
 #'
-#' @returns
+#' @returns A shinyApp to work with vascr data
+#' 
 #' @export
 #' 
+#' @importFrom rlang check_installed
+#' 
 #' @examples
-vascr_shiny = function(data.df)
+#' \dontrun{
+#' vascr_shiny()
+#' }
+#' 
+vascr_shiny = function(data.df = growth.df)
 {
-  shinyApp(vascr_ui, vascr_serve(data.df))
+  # Web packages do not ship with shiny by default, hence offer to install if required
+  rlang::check_installed(pkg = c("shiny", "bslib", "DT", "shinyjs"), reason ="to run the web technologies required to render the vascr UI. You must install these packages to continue to the vascr UI")
+  
+  # Launch the UI
+  shiny::shinyApp(vascr_ui, vascr_serve(data.df))
 }
-
-
 

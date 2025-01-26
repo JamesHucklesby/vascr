@@ -1,25 +1,3 @@
-function() {
-
-  rawdata = "C:\\Users\\jhuc964\\OneDrive - The University of Auckland\\Desktop\\GBM Jane Dec 24\\00 Original ECIS data\\ECIS_240319_MFT_1_96w1E NZB11&14&huvec Exp#14.abp"
-
-tic()
-ecis_import_raw(rawdata)
-toc()
-
-tic()
-m_ecis_import_raw = memoise(ecis_import_raw)
-toc()
-
-vascr_import = function(rawdata){
-
-  if(!exists(m_ecis_import_raw)){m_ecis_import_raw = memoise(ecis_import_raw)}
-
-  data1 = m_ecis_import_raw(rawdata)
-  vascr_apply_map()
-}
-}
-
-
 #' ECIS raw data importer
 #' 
 #' Raw data importer, generates a r data frame from a raw ABP file
@@ -45,7 +23,7 @@ vascr_import = function(rawdata){
 #' #but you can use a path relative to the file you are working on. 
 #' #E.G 'Experiment1/Raw.abp'
 #' 
-#' rawdata = system.file('extdata/growth/growth1_raw_short.abp', package = 'vascr')
+#' rawdata = system.file('extdata/instruments/ecis_TimeResample.abp', package = 'vascr')
 #' 
 #' #Then run the import
 #' 
@@ -60,11 +38,12 @@ ecis_import_raw =  function(rawdata, cache = hash_file_md5(rawdata)) {
   vascr_validate_file(rawdata, "abp")
   
   # Grab all the rows of the file and dump them into a data frame
-  
+  vascr_notify("info", "Reading file")
   file.df = read.delim(rawdata, as.is = TRUE, sep = "\n", strip.white = TRUE)
   colnames(file.df) = "Data"
   
   # Generate a data frame containing the titles
+  vascr_notify("info", "Extracting data")
   titles.df = subset(file.df, str_detect(file.df$Data, "Index, Time,"))
   titlestring = titles.df[1, 1]
   titles = unlist(strsplit(titlestring, split = ","))
@@ -119,6 +98,7 @@ ecis_import_raw =  function(rawdata, cache = hash_file_md5(rawdata)) {
   
   
   # Make the wide dataset long
+  vascr_notify("info", "Lengthening the dataset")
   fulldata_long.df = fulldata.df %>% tidyr::gather("Type", "Value", -"Well", -"Time", -"ID")
   fulldata_long.df = fulldata_long.df %>% mutate(Value = as.numeric(.data$Value))
   
@@ -132,6 +112,7 @@ ecis_import_raw =  function(rawdata, cache = hash_file_md5(rawdata)) {
   fulldata_long.df$Type = NULL
   
   # Generate the other physical quantities
+  vascr_notify("info", "Generating other physical quantaties")
   
   # Wrangle data so it is in columns
   child1.df = fulldata_long.df
@@ -147,6 +128,7 @@ ecis_import_raw =  function(rawdata, cache = hash_file_md5(rawdata)) {
   # Change format back
   longdata.df = tidyr::gather(widedata.df, "Unit", "Value", -"Well", -"Time", -"Frequency")
   
+  vascr_notify("info", "Cleaning up")
   # Fix data types
   longdata.df$Unit = factor(longdata.df$Unit)
   longdata.df$Well = as.character(longdata.df$Well)
@@ -177,7 +159,7 @@ ecis_import_raw =  function(rawdata, cache = hash_file_md5(rawdata)) {
 #' 
 #' @importFrom stringr str_detect
 #' @importFrom tidyr separate gather pivot_longer
-#' @importFrom magrittr '%>%'
+#' @importFrom dplyr '%>%'
 #' @importFrom utils read.csv
 #' @importFrom cli hash_file_md5
 #' 
@@ -195,17 +177,19 @@ ecis_import_model = function(modeleddata, cache = hash_file_md5(modeleddata)) {
   
   rawdata = modeleddata
   
+  vascr_notify("info", "Reading file into R")
   file.df = read.delim(rawdata, as.is = TRUE, sep = "\n", strip.white = TRUE)
   colnames(file.df) = "Data"
   
   # Import the dataset in segments so that you can get rid of the ECIS crap
+  vascr_notify("info", "Extracting useful data")
   cells.df = subset(file.df, str_detect(file.df$Data, "Well ID"))
   unit.df = subset(file.df, str_detect(file.df$Data, "Time "))
   data.df = subset(file.df, str_detect(file.df$Data, "^[0-9]"))
   
   if(nrow(unit.df)==0 || nrow(data.df)==0)
   {
-    warning("No data imported, check the modeled data you are trying to import is correctly specified and an intact file")
+    vascr_notify("warning", "No data imported, check the modeled data you are trying to import is correctly specified and an intact file")
   }
   
   cells = cells.df[1, 1]
@@ -219,6 +203,7 @@ ecis_import_model = function(modeleddata, cache = hash_file_md5(modeleddata)) {
   unit.df = unit
   
   # Rename the units something sensible
+  vascr_notify("info", "Renaming units")
   unit.df = replace(unit.df, unit.df == "Rb (ohm.cm^2)", "Rb")
   unit.df = replace(unit.df, unit.df == "Alpha (cm.ohm^0.5)", "Alpha")
   unit.df = replace(unit.df, unit.df == "CellMCap(uF/cm^2)", "Cm")
@@ -230,18 +215,20 @@ ecis_import_model = function(modeleddata, cache = hash_file_md5(modeleddata)) {
   
   # Merge well ID and unit variables together
   
+  vascr_notify("info", "Naming dataset")
   data.df = data.df %>% tidyr::separate("Data", uniquenamesvector, ",", extra = "drop")
   alldata.df = rbind(cells.df, data.df)
   
   alldata.df = alldata.df[-1,]
   colnames(alldata.df)[1] = "Time"
   
-  
+  vascr_notify("info", "Creating long dataframe")
   combined.df = alldata.df %>% pivot_longer(cols = -"Time", values_to = "Value") %>%
     separate("name", into = c("Unit", "Well"))
   
   
   # Fix up the data types
+  vascr_notify("info", "Finishing up")
   combined.df$Time = as.numeric(combined.df$Time)
   combined.df$Value = as.numeric(combined.df$Value)
   combined.df$Unit = factor(combined.df$Unit)
@@ -288,6 +275,8 @@ ecis_import_model = function(modeleddata, cache = hash_file_md5(modeleddata)) {
 #' #head(data)
 ecis_import = function(raw = NULL, modeled = NULL, experimentname = NULL) {
   
+  vascr_notify("info", "Starting import")
+  
   # Validate files exist and are correct. Will be done in the internal functions, but doing it here saves time on failure
   if(!is.null(raw)){vascr_validate_file(raw, "abp")}
   if(!is.null(modeled)){vascr_validate_file(modeled, "csv")}
@@ -297,6 +286,7 @@ ecis_import = function(raw = NULL, modeled = NULL, experimentname = NULL) {
   # If a raw data file is specified, import it
   if(!is.null(raw))
   {
+    vascr_notify("info", "Importing raw data")
     raw.df = ecis_import_raw(raw)
     masterdata.df = rbind(masterdata.df, raw.df)
   }
@@ -304,6 +294,7 @@ ecis_import = function(raw = NULL, modeled = NULL, experimentname = NULL) {
   # If a modeled data file is specified, import it
   if(!is.null(modeled))
   {
+    vascr_notify("info", "Importing model data")
     model.df = ecis_import_model(modeled)
     masterdata.df = rbind(masterdata.df, model.df)
   }
@@ -316,6 +307,12 @@ ecis_import = function(raw = NULL, modeled = NULL, experimentname = NULL) {
   masterdata.df$Excluded = "no"
   
   masterdata.df = as_tibble(masterdata.df)
+  
+  masterdata.df$Experiment = experimentname
+  masterdata.df$Sample = "NA"
+  
+  vascr_notify("success", "Import complete")
+  
   
   return(masterdata.df)
 }

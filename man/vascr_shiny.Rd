@@ -2,10 +2,19 @@
 % Please edit documentation in R/vascr_shiny2.R
 \name{vascr_shiny}
 \alias{vascr_shiny}
-\title{Title}
+\title{Launch the vascr UI}
 \usage{
-vascr_shiny(data.df)
+vascr_shiny(data.df = growth.df)
+}
+\value{
+A shinyApp to work with vascr data
 }
 \description{
-Title
+Launch the vascr UI
+}
+\examples{
+\dontrun{
+vascr_shiny()
+}
+
 }

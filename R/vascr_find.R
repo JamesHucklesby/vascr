@@ -54,7 +54,7 @@ vascr_find = function(data.df = vascr::growth.df , paramater, value = NA){
   
   if(paramater == "all"){return(vascr_find_metadata(data.df))}
   
-  stop("Paramater not something vascr can search for, please check spelling")
+  vascr_notify("error","Paramater not something vascr can search for, please check spelling")
   
 }
 
@@ -169,7 +169,7 @@ vascr_match = function(match, vector)
       
       string = paste("[",tomatch, "] corrected to [", matched, "]. Please check the argeuments for your functions are correctly typed.", sep = "")
       
-      warning(string)
+      vascr_notify("warning",string)
       
       toreturn = c(toreturn, matched)
     }
@@ -202,13 +202,13 @@ vascr_find_single_time = function(data.df, time)
   
   if(length(time)>1)
   {
-    warning("Vascr_find_single_time deals with only one time in one call. Use find times if more parsing is needed.")
+    vascr_notify("warning","Vascr_find_single_time deals with only one time in one call. Use find times if more parsing is needed.")
     return("NA")
   }
   
   if(!is.data.frame(data.df))
   {
-    stop("Data frame not provided to find a time in")
+    vascr_notify("error","Data frame not provided to find a time in")
   }
   
   
@@ -218,7 +218,7 @@ vascr_find_single_time = function(data.df, time)
   if(!(timetouse == time))
   {
     stringtoprint = paste("[",time,"]", " corrected to ","[",timetouse,"]. Please check the variables used.")
-    warning(stringtoprint)
+    vascr_notify("warning",stringtoprint)
   }
   
   return(timetouse)
@@ -405,7 +405,7 @@ vascr_find_frequency = function(data.df, frequency) {
   
   if(!(toreturn == frequency))
   {
-    warning(paste("Frequency corrected from", frequency, "to", toreturn))
+    vascr_notify("warning",paste("Frequency corrected from", frequency, "to", toreturn))
   }
   
   
@@ -427,13 +427,32 @@ vascr_find_frequency = function(data.df, frequency) {
 #' 
 #' @examples
 #' 
-#' sample = 3000
-#' vascr_find_sample(growth.df, sample)
+#' vascr_find_sample(growth.df, "3000 cells")
+#' vascr_find_sample(growth.df, c("3000 cells", "35000_cells"))
+#' vascr_find_sample(growth.df, 5)
+#' vascr_find_sample(growth.df, "none")
 #' 
 vascr_find_sample = function(data.df, sample){
   
-  vascr_match(sample, unique(data.df$Sample %>% as.character())) %>% as.character()
+  if(is.numeric(sample)){
+    
+    sample_from_id = data.df %>% select("SampleID", "Sample") %>% filter(SampleID == sample) %>% distinct() %>% .$Sample
+    
+    if(length(sample_from_id)>0){
+      sample = sample_from_id
+    }
+    
+  }
   
+  batched = for(sam in sample){
+    if (sam == "none"){
+      return("none")
+    } else {
+    return(vascr_match(sample, unique(c(data.df$Sample %>% as.character()))) %>% as.character())
+  }
+  
+    
+  }
 }
 
 
@@ -486,7 +505,7 @@ vascr_find_instrument = function(data.df, instrument = NULL)
     if(!repaired %in% unique(data.df$Instrument))
     {
       string = paste(repaired, " data is not present in the dataset. Use with care", sep = "")
-      warning(string)
+      vascr_notify("warning",string)
     }
     else
     {
@@ -497,7 +516,7 @@ vascr_find_instrument = function(data.df, instrument = NULL)
   
   if(length(returnvector)==0)
   {
-    warning("No selected instruments present in dataset. Use with care.")
+    vascr_notify("warning","No selected instruments present in dataset. Use with care.")
   }
   else
   {
@@ -945,7 +964,7 @@ vascr_validate_file = function(file_name, extension)
   
   if(!(isTRUE(file.exists(file_name))))
   {
-    stop(paste("File ", file_name,"  not found. Please check file path and try again"))
+    vascr_notify("error",paste("File ", file_name,"  not found. Please check file path and try again"))
   }
   else
   {
@@ -972,7 +991,7 @@ vascr_validate_file = function(file_name, extension)
     {
       filetypes = paste(extension, collapse = " or ")
       
-      stop(paste("File extension is", file_extension, "not the required extension(s) ",filetypes,". Please check you have the correct file in the correct argument and try again."))
+      vascr_notify("error",paste("File extension is", file_extension, "not the required extension(s) ",filetypes,". Please check you have the correct file in the correct argument and try again."))
     }
     
   }
@@ -1019,12 +1038,11 @@ vascr_standardise_wells = function(well) {
   # Check that it now conforms
   
   validnames = vascr_96_well_names()
-  originalwell = uniquewell
   uniquewell = if_else(uniquewell %in% validnames, uniquewell, "NA" )
   
   if(any(uniquewell == "NA"))
   {
-    warning(paste("Well", uniquewell, "is not a valid well name, please check your input data"))
+    vascr_notify("warning",paste("Well", uniquewell, "is not a valid well name, please check your input data"))
   }
   
   exchange = data.frame(well = original_unique, uniquewell)
@@ -1098,7 +1116,7 @@ vascr_gg_color_hue <- function(n, start = 15, values_needed = c(1:n), l = 65, c 
 #'   
 #'   if (!(mean(difftimes) == getmode(difftimes)))
 #'   {
-#'     warning("Gaps in the dataset, use resampling with care")
+#'     vascr_notify("warning","Gaps in the dataset, use resampling with care")
 #'   }
 #'   return(getmode(difftimes))
 #' }
@@ -1136,7 +1154,7 @@ vascr_cols  = function(data, set = "core")
   
   else
   {
-    warning("Inappropriate set selected, please use another")
+    vascr_notify("warning","Inappropriate set selected, please use another")
     return(NULL)
   }
   

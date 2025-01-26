@@ -2,7 +2,7 @@
 % Please edit documentation in R/transformation.R
 \name{vascr_plot_resample}
 \alias{vascr_plot_resample}
-\title{Title}
+\title{Plot the data resampling process}
 \usage{
 vascr_plot_resample(
   data.df,
@@ -14,16 +14,19 @@ vascr_plot_resample(
 )
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{Dataset to analyse}
 
-\item{unit}{}
+\item{unit}{Unit to use, defaults to R}
 
-\item{frequency}{}
+\item{frequency}{Frequency to use, defaults to 4000}
 
-\item{well}{}
+\item{well}{Well to use, defaults to A01 (or first well in plate)}
+}
+\value{
+A plot showing how well the resampled data conforms to the actual data set
 }
 \description{
-Title
+Plot the data resampling process
 }
 \examples{
 vascr_plot_resample(growth.df)

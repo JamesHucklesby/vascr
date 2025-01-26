@@ -37,6 +37,8 @@ test_that("Can normalise", {
   
   rgrowth.df = growth.df %>% vascr_subset(unit = "R", frequency = 4000)
   expect_snapshot(vascr_normalise(rgrowth.df, 100))
+  
+  expect_snapshot(vascr_normalise(growth.df, NULL))
 
 })
 
@@ -64,12 +66,89 @@ test_that("vascr time samples counts correctly",
   expect_snapshot(vascr_find_count_timepoints(growth.df))
 })
 
+#vascr auc
+test_that("vascr AUC works", 
+          {
+            expect_snapshot(vascr_auc(growth.df %>% vascr_subset(experiment = 1, well = "A01", unit = "R", frequency = 4000)))
+          })
+
+# plot resample range
+test_that("plot of resample degradation works", 
+  {
+    vdiffr::expect_doppelganger("plot resample accuracy 1", vascr_plot_resample_range(data.df = growth.df))
+})
+
+# plot resample
+
+test_that("Data can be resampled and plotted",{
+            vdiffr::expect_doppelganger("vascr_plot_resample raw data", vascr_plot_resample(growth.df))
+            vdiffr::expect_doppelganger("vascr_plot_resample raw data", vascr_plot_resample(growth.df, plot = TRUE))
+          })
 
 test_that("remove metadata",
 {
   expect_snapshot(growth.df%>% vascr_remove_metadata())
   expect_snapshot(vascr_summarise(growth.df, "experiments") %>% vascr_remove_metadata())
 })
+
+future::plan("multisession")
+
+test_that("resample stretching works", {
+  
+  future::plan("multisession")
+  
+  data.df = growth.df %>% vascr_subset(unit = "R", frequency = "4000", sample =c(1,3,8), time = c(0,50))
+  
+   t1 = growth.df %>% vascr_subset(unit = "R", frequency = 4000, experiment = 1, sample = "10,000_cells + HCMEC D3_line") %>% vascr_summarise(level = "experiments")
+   t2 = growth.df %>% vascr_subset(unit = "R", frequency = 4000, experiment = 1, sample = "30,000_cells + HCMEC D3_line") %>% vascr_summarise(level = "experiments")
+   
+    expect_snapshot({stretch_cc(t1, t2)})
+  
+    expect_snapshot(vascr_summarise_cc_stretch_shift(data.df, 8))
+    
+    expect_snapshot(vascr_summarise_cc_stretch_shift_stats(data.df, 8))
+    
+    vdiffr::expect_doppelganger("stretch shift stats", vascr_plot_cc_stretch_shift_stats(data.df, 8))
+    vdiffr::expect_doppelganger("stretch shift stats all comps", vascr_plot_cc_stretch_shift_stats(data.df))
+  
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -13,7 +13,9 @@ vascr_subset(
   experiment = NULL,
   instrument = NULL,
   sampleid = NULL,
-  subsample = NULL
+  sample = NULL,
+  subsample = NULL,
+  remove_na_value = TRUE
 )
 }
 \arguments{

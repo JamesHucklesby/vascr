@@ -1,44 +1,65 @@
-#' Title
+#' Import an impedance datafile to vascr
 #'
-#' @param instrument 
-#' @param raw 
-#' @param modeled 
-#' @param map 
-#' @param experiment 
+#' @param instrument Instrument to import from, either ECIS, xCELLigence or cellZscope
+#' @param raw Path to raw datafile
+#' @param modeled Path to modeled datafile from manufacturer's software
+#' @param experiment Name for the experiment being imported
+#' 
+#' @importFrom stringr str_to_lower
 #'
-#' @returns
+#' @returns A vascr dataset for subsequent analyasis
+#' 
 #' @export
 #'
 #' @examples
+#' # ECIS
+#' raw = system.file('extdata/instruments/ecis_TimeResample.abp', package = 'vascr')
+#' modeled = system.file('extdata/instruments/ecis_TimeResample_RbA.csv', package = 'vascr')
+#' vascr_import("ECIS", raw, modeled, "ECIS_Data")
 #' 
+#' # xCELLigence
+#' raw = system.file('extdata/instruments/xcell.plt', package = 'vascr')
+#' # No modeling for this system
+#' vascr_import("xCELLigence", raw, experiment = "xCELLigence")
 #' 
-vascr_import = function(instrument = NULL, raw = NULL, modeled = NULL, map = NULL, experiment = NULL){
+#' # cellZscope
+#' model = system.file("extdata/instruments/zscopemodel.txt", package = "vascr")
+#' raw = system.file("extdata/instruments/zscoperaw.txt", package = "vascr")
+#' vascr_import("cellzscope", raw, model, "cellZscope")
+#' 
+vascr_import = function(instrument = NULL, raw = NULL, modeled = NULL, experiment = NULL){
   
-  if(instrument == "ECIS")
+  instrument = str_to_lower(instrument)
+  
+  if(is.null(experiment)){experiment == ""}
+  
+  if(instrument == "ecis")
   {
-    return(ecis_import(raw, modeled, map))
+    return(ecis_import(raw, modeled, experiment))
   } else if (instrument == "xcelligence")
   {
-    return(import_xcelligence(raw, experimentname))
+    return(import_xcelligence(raw, experiment))
   } else if (instrument == "cellzscope")
   {
     return(cellzscope_import(raw, modeled, experiment))
   }
   else{
-    error("Data didn't import, wrong instument typed")
+    vascr_notify("error", "Data didn't import, wrong instument typed")
   }
+  
   
 }
 
 
-#' Title
+#' Create a blank vascr dataframe
 #'
-#' @returns
-#' @export
+#' @returns A blank vascr dataframe
+#' 
+#' @noRd
 #'
 #' @examples
 vascr_blank_df = function(){
-  growth.df %>% filter(FALSE) %>% mutate(Excluded = FALSE) %>% vascr_remove_metadata()
+  vascr::growth.df %>% filter(FALSE) %>% mutate(Excluded = FALSE) %>% vascr_remove_metadata()
 }
 
 
@@ -108,7 +129,7 @@ vascr_import_map = function(lookup) {
       mutate(Well = paste(.data$Row, .data$Column, sep = ""), Well = vascr_standardise_wells(.data$Well)) %>%
       mutate(Row = NULL, Column = NULL)
   }else {
-    stop("Either `Row` and `Column' or `Well` must be specified in the input file")
+    vascr_notify("error","Either `Row` and `Column' or `Well` must be specified in the input file")
   }
   
   vascr_check_duplicate(file_map, "Well") # Check if each well is defined more than once

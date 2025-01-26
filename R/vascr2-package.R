@@ -8,11 +8,14 @@ NULL
 
 #' re-export magrittr pipe operator
 #'
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' @name %>%
 #' @rdname pipe
 #' @export
 NULL
+
+# Allow use of dot in pipelines
+globalVariables(".")
 
 #' re-export tribble
 #'

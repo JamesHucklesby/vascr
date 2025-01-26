@@ -15,6 +15,8 @@ vascr_plot_anova(data.df, unit, frequency, time, reference = NULL)
 
 \item{time}{timepoint to plot at}
 
+\item{reference}{Sample to reference post-hoc analyasis to}
+
 \item{priority}{analyasis priority. Will use default if not filled in}
 }
 \value{
@@ -26,7 +28,7 @@ Make a display with all the anova analysis pre-conducted
 \examples{
 
 vascr_plot_anova(data.df = growth.df, unit = "R", frequency = 4000, time = 100)
-vascr_plot_anova(data.df = growth.df, unit = "R", frequency = 4000, time = 100, reference = "5,000_cells + HCMEC D3_line")
-vascr_plot_anova(data.df = growth.df, unit = "R", frequency = 4000, time = 100, reference = "none")
+vascr_plot_anova(data.df = growth.df, unit = "R", frequency = 4000, time = 100, 
+          reference = "5,000_cells + HCMEC D3_line")
 
 }

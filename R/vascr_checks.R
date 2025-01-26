@@ -23,7 +23,7 @@ vascr_check_duplicate = function(df, col)
     reframe('Freq' = n())
   
   duplicated = tabulated %>%
-    filter(.data$Freq>1) %>%
+    dplyr::filter(.data$Freq>1) %>%
     left_join(df, by = col)
   
   # Check that there are no duplicate wells in the table
@@ -31,7 +31,7 @@ vascr_check_duplicate = function(df, col)
     
     warn_text = paste(col, paste("[",unique(duplicated[[col]]), "] ", collapse = " ")," defined more than once \n") # Generate the string warning of duplicates
     
-    warning(paste0(c(warn_text,capture.output(duplicated)), collapse = "\n")) # Add the warning string to the beginning of a table showing the repeated data
+    vascr_notify("warning",paste0(c(warn_text,capture.output(duplicated)), collapse = "\n")) # Add the warning string to the beginning of a table showing the repeated data
     
   }
   return()
@@ -53,7 +53,7 @@ vascr_force_resampled = function(data.df)
 {
   if(!vascr_check_resampled(data.df))
   {
-    warning("Data is not resampled, resampling to allow further analytics")
+    vascr_notify("warning","Data is not resampled, resampling to allow further analytics")
     data.df = vascr_resample_time(data.df)
   }
   
@@ -103,7 +103,7 @@ vascr_check_resampled = function(data.df)
 vascr_check_col_exists = function(df, col){
   if(!c(col) %in% colnames(df))
   {
-    warning(paste(col, "not found in dataframe. Please check"))
+    vascr_notify("warning",paste(col, "not found in dataframe. Please check"))
     return(FALSE)
   }
   else{

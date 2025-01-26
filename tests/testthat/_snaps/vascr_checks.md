@@ -2,9 +2,8 @@
 
     Code
       vascr_check_duplicate(map_4, "Row")
-    Condition
-      Warning in `vascr_check_duplicate()`:
-      Row [ A ]   defined more than once 
+    Message
+      ! Row [ A ]   defined more than once 
       
       # A tibble: 2 x 5
         Row    Freq SampleID Column Sample                       
@@ -18,9 +17,8 @@
 
     Code
       vascr_check_duplicate(map_5, "Sample")
-    Condition
-      Warning in `vascr_check_duplicate()`:
-      Sample [ 10 nM Treatment 1 + 1nm water ]   defined more than once 
+    Message
+      ! Sample [ 10 nM Treatment 1 + 1nm water ]   defined more than once 
       
       # A tibble: 2 x 5
         Sample                         Freq SampleID Row   Column
@@ -48,9 +46,8 @@
 
     Code
       vascr_check_col_exists(map_4, "Not_A_Col")
-    Condition
-      Warning in `vascr_check_col_exists()`:
-      Not_A_Col not found in dataframe. Please check
+    Message
+      ! Not_A_Col not found in dataframe. Please check
     Output
       [1] FALSE
 

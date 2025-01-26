@@ -28,13 +28,13 @@ test_that("ccf functions work", {
   
   
   vdiffr::expect_doppelganger("Plot CC 1", vascr_plot_cc_stats(growth.df))
-  vdiffr::expect_doppelganger("Plot CC 2", vascr_plot_cc_stats(growth.df, reference = 1))
+  vdiffr::expect_doppelganger("Plot CC 2", vascr_plot_cc_stats(growth.df, reference = "0_cells + HCMEC D3_line"))
   
   vdiffr::expect_doppelganger("Plot CC 3", vascr_plot_cc_stats(growth.df, pval = TRUE))
-  vdiffr::expect_doppelganger("Plot CC 4", vascr_plot_cc_stats(growth.df, reference = 1, pval = TRUE))
+  vdiffr::expect_doppelganger("Plot CC 4", vascr_plot_cc_stats(growth.df, reference = "0_cells + HCMEC D3_line", pval = TRUE))
   
   vdiffr::expect_doppelganger("Plot CC 5", vascr_plot_cc_stats(growth.df, points = TRUE))
-  vdiffr::expect_doppelganger("Plot CC 6", vascr_plot_cc_stats(growth.df, reference = 1, points = TRUE))
+  vdiffr::expect_doppelganger("Plot CC 6", vascr_plot_cc_stats(data.df = growth.df, reference = "0_cells + HCMEC D3_line", points = TRUE))
   
   
 })

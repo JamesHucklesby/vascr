@@ -2,28 +2,45 @@
 % Please edit documentation in R/vascr_anova.R
 \name{vascr_plot_line_dunnett}
 \alias{vascr_plot_line_dunnett}
-\title{Title}
+\title{Create a line plot with Dunnett's statistics}
 \usage{
 vascr_plot_line_dunnett(
   data.df,
-  unit = unit,
-  frequency = frequency,
-  time = time,
-  reference = reference,
+  unit = "R",
+  frequency = 4000,
+  time = 100,
+  reference = "0_cells + HCMEC D3_Line",
   inputplot = NULL
 )
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{A vascr dataset}
 
-\item{unit}{}
+\item{unit}{Unit to calculate}
 
-\item{frequency}{}
+\item{frequency}{Frequency to calculate from}
 
-\item{time}{}
+\item{time}{Time to calculate}
 
-\item{reference}{}
+\item{reference}{Sample to reference testing against}
+}
+\value{
+A line plot, annotated with the P-values determined by Dunnett's test
 }
 \description{
-Title
+Create a line plot with Dunnett's statistics
+}
+\examples{
+vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 25, 
+    reference = "0_cells + HCMEC D3_Line", inputplot = NULL)
+vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = list(25,100), 
+    reference = "0_cells + HCMEC D3_Line", inputplot = NULL)
+vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 180, 
+    reference = "20,000_cells + HCMEC D3_Line", inputplot = NULL)
+
+data.df = growth.df
+unit = "R"
+frequency = 4000
+time = 50
+reference = "5,000_cells + HCMEC D3_line"
 }

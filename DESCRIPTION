@@ -23,7 +23,6 @@ BugReports: https://github.com/JamesHucklesby/vascr/issues
 Depends: 
     R (>= 3.6)
 Imports: 
-    car,
     cli,
     cowplot,
     dplyr,
@@ -31,10 +30,11 @@ Imports:
     ggnewscale,
     ggplot2,
     ggpubr,
+    progressr,
+    doFuture,
     ggtext,
     glue,
     gridExtra,
-    magrittr,
     memoise,
     multcomp,
     patchwork,
@@ -43,8 +43,10 @@ Imports:
     stringr,
     tidyr,
     utils,
-    multcomp
+    ggrepel,
+    nlme
 Suggests: 
+    bslib,
     DBI,
     DT,
     odbc,

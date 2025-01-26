@@ -85,7 +85,7 @@ import_xcelligence = function(rawdata, experimentname = NULL, password = "RTCaDa
   tempfile = paste(tempdir(),"/","TEMPMDBFORIMPORT.mdb", sep = "")
   if(!file.copy(from = file, to = tempfile))
   {
-    stop("ERROR - file could not be duplicated to be opened. Ensure you have write capabilities in the new folder, and the file TEMPMDBFORIMPORT.mdb does not exist. Also check that the plt file is not open when you run this command")
+    vascr_notify("error","ERROR - file could not be duplicated to be opened. Ensure you have write capabilities in the new folder, and the file TEMPMDBFORIMPORT.mdb does not exist. Also check that the plt file is not open when you run this command")
   }
   file = tempfile
   

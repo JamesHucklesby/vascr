@@ -23,9 +23,8 @@
 
     Code
       vascr_import_map(map_2)
-    Condition
-      Warning in `vascr_check_duplicate()`:
-      Well [ C01 ]  [ C02 ]  [ C03 ]   defined more than once 
+    Message
+      ! Well [ C01 ]  [ C02 ]  [ C03 ]   defined more than once 
       
       # A tibble: 6 x 4
         Well   Freq Sample                         SampleID
@@ -61,9 +60,8 @@
 
     Code
       vascr_import_map(map_4)
-    Condition
-      Warning in `vascr_check_duplicate()`:
-      Well [ A01 ]  [ A02 ]  [ A03 ]   defined more than once 
+    Message
+      ! Well [ A01 ]  [ A02 ]  [ A03 ]   defined more than once 
       
       # A tibble: 6 x 4
         Well   Freq SampleID Sample                       

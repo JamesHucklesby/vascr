@@ -41,7 +41,7 @@ vascr_combine = function(..., resample = FALSE) {
     
     if ((!identical(timepointstomerge,unique(i$Time))) & isFALSE(resample))
     {
-      warning("Datasets have different non-identical timebases. Please resample one or more of these datasets before running this function again or graphs may not be properly generated.")
+      vascr_notify("warning","Datasets have different non-identical timebases. Please resample one or more of these datasets before running this function again or graphs may not be properly generated.")
     }
   }
   

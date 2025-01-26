@@ -2,27 +2,39 @@
 % Please edit documentation in R/vascr_naming.R
 \name{vascr_import}
 \alias{vascr_import}
-\title{Title}
+\title{Import an impedance datafile to vascr}
 \usage{
-vascr_import(
-  instrument = NULL,
-  raw = NULL,
-  modeled = NULL,
-  map = NULL,
-  experiment = NULL
-)
+vascr_import(instrument = NULL, raw = NULL, modeled = NULL, experiment = NULL)
 }
 \arguments{
-\item{instrument}{}
+\item{instrument}{Instrument to import from, either ECIS, xCELLigence or cellZscope}
 
-\item{raw}{}
+\item{raw}{Path to raw datafile}
 
-\item{modeled}{}
+\item{modeled}{Path to modeled datafile from manufacturer's software}
 
-\item{map}{}
-
-\item{experiment}{}
+\item{experiment}{Name for the experiment being imported}
+}
+\value{
+A vascr dataset for subsequent analyasis
 }
 \description{
-Title
+Import an impedance datafile to vascr
+}
+\examples{
+# ECIS
+raw = system.file('extdata/instruments/ecis_TimeResample.abp', package = 'vascr')
+modeled = system.file('extdata/instruments/ecis_TimeResample_RbA.csv', package = 'vascr')
+vascr_import("ECIS", raw, modeled, "ECIS_Data")
+
+# xCELLigence
+raw = system.file('extdata/instruments/xcell.plt', package = 'vascr')
+# No modeling for this system
+vascr_import("xCELLigence", raw, experiment = "xCELLigence")
+
+# cellZscope
+model = system.file("extdata/instruments/zscopemodel.txt", package = "vascr")
+raw = system.file("extdata/instruments/zscoperaw.txt", package = "vascr")
+vascr_import("cellzscope", raw, model, "cellZscope")
+
 }

@@ -12,9 +12,8 @@ test_that("Can import and ECIS file", {
   expect_snapshot(ecis_import(raw = w16))
   expect_snapshot(ecis_import(model = empty))
   
-  data = ecis_import(raw ,modeled, experimentname = "TEST")
 
-  expect_snapshot(data)
+  expect_snapshot(ecis_import(raw ,modeled, experimentname = "TEST"))
 })
 
 

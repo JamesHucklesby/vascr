@@ -7,7 +7,7 @@
 #' @return The summarized data set
 #' 
 #' @importFrom stringr str_length
-#' @importFrom dplyr reframe summarise
+#' @importFrom dplyr reframe summarise filter
 #' 
 #' @export
 #'
@@ -40,7 +40,6 @@ vascr_summarise = function(data.df, level = "wells")
       data.df = vascr_summarise_deviation(data.df)
     }
     
-  
   return(data.df)
   
 }
@@ -94,14 +93,14 @@ vascr_summarise_experiments = function(data.df)
   {
     experiment.df = data.df %>%
       group_by(.data$Time, .data$Unit, .data$Frequency, .data$Sample, .data$Experiment, .data$Instrument, .data$SampleID) %>%
-      reframe(sd = sd(.data$Value), n = n(),min = min(.data$Value), max = max(.data$Value), Well = paste0(unique(.data$Well), collapse = ","),Value = mean(.data$Value), sem = .data$sd/sqrt(.data$n), .groups = "drop")
+      reframe(sd = sd(.data$Value), n = n(),min = min(.data$Value), max = max(.data$Value), Well = paste0(unique(.data$Well), collapse = ","),Value = mean(.data$Value), sem = .data$sd/sqrt(.data$n))
     
     
     experiment.df = experiment.df %>% ungroup()
     
   } else
   {
-    stop("Requested data is less summarised than the data input, try again")
+    vascr_notify("error","Requested data is less summarised than the data input, try again")
   }
   
   return(experiment.df)
@@ -137,7 +136,7 @@ vascr_summarise_summary = function(data.df)
     summary.df = data.df %>%
       group_by(.data$Time, .data$Unit, .data$Frequency, .data$Sample, .data$Instrument) %>%
       reframe(sd = sd(.data$Value), totaln = sum(.data$n), n = n(), min = min(.data$Value), max = max(.data$Value), Well = paste0(unique(.data$Well), collapse = ","), 
-              Value = mean(.data$Value), Experiment = "Summary", sem = .data$sd/sqrt(.data$n),  .groups = "drop")
+              Value = mean(.data$Value), Experiment = "Summary", sem = .data$sd/sqrt(.data$n))
     return(summary.df)
   }
   
@@ -185,7 +184,7 @@ vascr_normalise = function(data.df, normtime, divide = FALSE) {
   data.df = ungroup(data.df)
   
   # Create a table that contains the full data set at the time we are normalizing to
-  mininormaltable = data.df %>% filter(.data$Time == vascr_find_time(data.df, normtime))
+  mininormaltable = data.df %>% dplyr::filter(.data$Time == vascr_find_time(data.df, normtime))
   mininormaltable$NormValue = mininormaltable$Value
   mininormaltable$Value = NULL
   mininormaltable$NormTime = normtime
@@ -211,7 +210,7 @@ vascr_normalise = function(data.df, normtime, divide = FALSE) {
   
   # Warn if maths errors have occoured
   if (isFALSE(all(is.finite(fulltable$Value)))) {
-    warning("NaN values or infinities generated in normalisation. Proceed with caution")
+    vascr_notify("warning","NaN values or infinities generated in normalisation. Proceed with caution")
   }
   
   #Return the whole table
@@ -289,13 +288,15 @@ vascr_interpolate_time = function(data.df, npoints = vascr_find_count_timepoints
   
   if(length(unique(data.df$Frequency))>1 || length(unique(data.df$Unit))>1)
   {
-    stop("vascr_interpolate_time only supports one unit and frequency at a time")
+    vascr_notify("error","vascr_interpolate_time only supports one unit and frequency at a time")
   }
   
   
   # originalsample = unique(data.df$Sample)
   
   xout = seq(from = from, to = to, length.out = npoints)
+  
+  # approx(data.df$Time, data.df$Value, method = "linear", n = npoints)
   
   processed = data.df %>% group_by(across(c(-"Value", -"Time"))) %>%
     reframe(New_Value = approx(.data$Time, .data$Value, xout = xout, rule = 2)$y, New_Time = approx(.data$Time, .data$Value, xout = xout, rule = 2)$x) %>%
@@ -304,6 +305,35 @@ vascr_interpolate_time = function(data.df, npoints = vascr_find_count_timepoints
   
   return(processed)
 }
+
+
+#' Remove columns in the dataset, if they exist
+#'
+#' @param data.df Dataset to remove cols from
+#' @param cols Columns to remove from the dataset
+#'
+#' @returns Revised dataset
+#' 
+#' @noRd
+#'
+#' @examples
+#' vascr_remove_cols(growth.df, "Sample")
+#' 
+vascr_remove_cols = function(data.df, cols){
+  
+  processed.df = data.df
+  
+  for(col in cols){
+    
+    if(col %in% colnames(data.df))
+    {
+      processed.df[col] = NULL
+    }
+  }
+  
+  return(processed.df)
+}
+
 
 #' Resample a vascr dataset
 #' 
@@ -327,7 +357,7 @@ vascr_interpolate_time = function(data.df, npoints = vascr_find_count_timepoints
 #' 
 vascr_resample_time = function(data.df, npoints = vascr_find_count_timepoints(data.df), start = min(data.df$Time), end = max(data.df$Time))
 {
-  datasplit = data.df %>% group_by(.data$Frequency, .data$Unit) %>% group_split()
+  datasplit = data.df %>% vascr_remove_cols(c("sd", "n", "min", "max", "sem")) %>% group_by(.data$Frequency, .data$Unit) %>% group_split() 
   
   baseline_times = npoints
   
@@ -343,20 +373,25 @@ vascr_resample_time = function(data.df, npoints = vascr_find_count_timepoints(da
 }
 
 
-#' Title
+#' Calculate the area under the curve of a trace
 #'
-#' @param data.df 
+#' @param data.df vascr data set containing a single trace
+#' 
+#' @importFrom dplyr lead group_by_all mutate filter
 #'
-#' @returns
+#' @return The calcaulted area under the curve
+#' 
 #' @noRd
 #'
 #' @examples
+#' vascr_auc(growth.df %>% vascr_subset(unit = "R", frequency = 4000, well = "A01"))
+#' 
 vascr_auc = function(data.df) {
 
-      auc = data.df %>% mutate(Time2 = lead(Time), Value2 = lead(Value)) %>% 
-                  filter(!(is.na(Time2) | is.na(Value2) | is.na(Value))) %>%
+      auc = data.df %>% mutate(Time2 = lead(.data$Time), Value2 = lead(.data$Value)) %>% 
+                  dplyr::filter(!(is.na(.data$Time2) | is.na(.data$Value2) | is.na(.data$Value))) %>%
                   group_by_all() %>%
-                  mutate(auc = abs((Time2 - Time) * mean(Value, Value2)))
+                  mutate(auc = abs((.data$Time2 - .data$Time) * mean(.data$Value, .data$Value2)))
 
       sum(auc$auc)
 }
@@ -364,21 +399,28 @@ vascr_auc = function(data.df) {
 
 
 
-#' Title
+#' Plot showing the sensitivity of resampling
 #'
 #' @param data.df 
 #'
-#' @returns
-#' @export
+#' @returns A plot showing sensitivity of resamping
+#' 
+#' @noRd
+#' 
+#' @importFrom cli cli_progress_cleanup cli_progress_update cli_progress_bar
+#' @importFrom foreach foreach `%do%`
+#' @importFrom dplyr filter
+#' @importFrom tidyr pivot_longer
+#' @importFrom ggplot2 geom_line ylim geom_hline aes
 #'
 #' @examples
 #' vascr_plot_resample_range(growth.df)
 #' 
 #' bigdata = vascr_import("ECIS", raw ="raw_data/growth/growth1_raw.abp", experiment = 1)
 #' 
-#' toprocess = bigdata %>% mutate(Experiment = "1", Sample = "Test")
+#' toprocess = bigdata %>% dplyr::mutate(Experiment = "1", Sample = "Test")
 #' 
-#' vascr_plot_resample_range(data.df = toprocess)
+#' vascr_plot_resample_range(data.df = growth.df)
 #' 
 vascr_plot_resample_range = function(data.df, unit = "R", frequency  = 4000, well = "A01"){
   
@@ -388,44 +430,45 @@ vascr_plot_resample_range = function(data.df, unit = "R", frequency  = 4000, wel
   
   cli_progress_bar(total = length(checktimes))
   
-boot = foreach (i = checktimes, .combine = rbind) %do% {
-        cli_progress_update()
-        vascr_plot_resample(data.df, plot = FALSE, newn = i)  
-}
+    boot = foreach (i = checktimes, .combine = rbind) %do% {
+            cli_progress_update()
+            vascr_plot_resample(data.df, plot = FALSE, newn = i)  
+    }
 
   cli_progress_cleanup()
   
-  boot %>% filter(r2 > 0.999)
+  boot %>% dplyr::filter(r2 > 0.999)
 
 boot2 = boot %>%
-          pivot_longer(-n, names_to = "variable", values_to = "value")
+          pivot_longer(-n, names_to = "variable", values_to = "value") %>%
+          dplyr::filter(value>0.9, value<1.1)
 
 ggplot(boot2) +
   geom_line(aes(x = n, y = value, colour = variable)) +
   ylim(c(0.9,1)) +
   geom_hline(aes(yintercept = 0.999))
 
-# unique(master$Experiment)
-#
-# data.df = master %>% vascr_subset(instrument = "ECIS", experiment = "3 : 1 : 2 : ECIS_200722_MFT_1.abp")
-# 
-# data.df
-# 
-# vascr_plot_resample(data.df, newn = 30)
+
 }
 
 
 
 
 
-#' Title
+#' Plot the data resampling process
 #'
-#' @param data.df 
-#' @param unit 
-#' @param frequency 
-#' @param well 
+#' @param data.df Dataset to analyse
+#' @param unit Unit to use, defaults to R
+#' @param frequency Frequency to use, defaults to 4000
+#' @param well Well to use, defaults to A01 (or first well in plate)
+#' 
+#' @importFrom ggplot2 geom_rug geom_line ylim aes
+#' @importFrom stats ccf
+#' @importFrom dplyr filter
 #'
-#' @returns
+#' @export
+#'
+#' @returns A plot showing how well the resampled data conforms to the actual data set
 #'
 #' @examples
 #' vascr_plot_resample(growth.df)
@@ -434,7 +477,7 @@ ggplot(boot2) +
 #' 
 vascr_plot_resample = function(data.df, unit = "R", frequency = "4000", well = "A01", newn = 20, plot = TRUE)
       {
-          base_data = data.df %>% filter(!is.na(Value))
+          base_data = data.df %>% dplyr::filter(!is.na(.data$Value))
           
           to_return = list()
           
@@ -512,7 +555,7 @@ vascr_plot_resample = function(data.df, unit = "R", frequency = "4000", well = "
 #' @param subset What to strip off. Default is all, more options to come.
 #' 
 #' @importFrom stringr str_trim
-#' @importFrom dplyr any_of
+#' @importFrom dplyr any_of select
 #'
 #' @return A dataset containing only the core ECIS columns
 #' 
@@ -530,7 +573,7 @@ vascr_remove_metadata = function(data.df, subset = "all")
   
   if(summary_level == "summary" || summary_level == "experiments")
   {
-    warning("You are removing some summary statistics. These are not re-generatable using vascr_explode alone, and must be regenerated with vascr_summarise.")
+    vascr_notify("warning","You are removing some summary statistics. These are not re-generatable using vascr_explode alone, and must be regenerated with vascr_summarise.")
   }
   
   removed.df = data.df %>% select(any_of(vascr_cols()))
@@ -540,10 +583,267 @@ vascr_remove_metadata = function(data.df, subset = "all")
 
 
 
+#' Title
+#'
+#' @param t1 
+#' @param t2 
+#'
+#' @returns
+#' @noRd
+#' 
+#' @importFrom dplyr mutate filter
+#'
+#' @examples
+#'  t1 = growth.df %>% vascr_subset(unit = "R", frequency = 4000, experiment = 1, sample = "10,000_cells + HCMEC D3_line") %>% vascr_summarise(level = "experiments")
+#'  t2 = growth.df %>% vascr_subset(unit = "R", frequency = 4000, experiment = 1, sample = "30,000_cells + HCMEC D3_line") %>% vascr_summarise(level = "experiments")
+#' 
+#' stretch_cc(t1, t2)
+stretch_cc = function(t1, t2)
+{
+  
+  # print(t1)
+  # print(t2)
+  
+stretch = 1.5
+
+stretch_series = (c(1:25)/5)
+
+stretching = foreach(stretch = stretch_series, .combine = rbind) %do%{
+
+      
+      t2b1 = t2 %>% mutate(Time = Time*stretch) %>% 
+            dplyr::mutate(Time = Time - min(Time)) %>%
+            vascr_subset(time = c(min(t1$Time), max(t1$Time))) 
+      
+      
+      # t2b1 %>% vascr_resample_time(npoints = 10)
+      
+      # t2b1 %>% vascr_resample_time(npoints = 3)
+      
+      t2b = t2b1 %>%
+            vascr_resample_time(npoints = vascr_find_count_timepoints(t1), start = min(t1$Time), end = max(t1$Time))
+      
+      # print(t2b$Value)
+      # rbind(t1, t2, t2s) %>% vascr_plot_line
+      
+      # cc = ccf(t1$Value, t2$Value, lag.max = 0, plot = FALSE)$acf[1]
+      cc_full = ccf(t1$Value, t2b$Value, plot = FALSE)
+      cc.df = data.frame(lag = cc_full$lag, cc = cc_full$acf)
+      stretch_cc = cc.df %>% dplyr::filter(lag == 0) %>% .$cc
+      stretch_shift_cc  = cc.df %>% dplyr::filter(cc == max(cc)) %>% .$cc
+      stretch_shift_shift  = cc.df %>% dplyr::filter(cc == max(cc)) %>% .$lag
+      
+      # print(cc)
+      
+       # t2b %>% mutate(cc = cc, stretch = stretch)
+      
+      return(tribble(~"stretch_cc", ~"stretch_factor", ~"stretch_shift_cc", ~"stretch_shift_shift", stretch_cc, stretch, stretch_shift_cc, stretch_shift_shift))
+
+}
+
+# ad = rbind(t1 %>% vascr_remove_cols(c("n", "sem", "sd", "min", "max")) %>% mutate(cc = 0), stretching) %>%
+#     group_by(Experiment, Sample) %>%
+#     mutate(Value = (Value - min(Value))/(max(Value) - min(Value))) %>%
+#     ungroup()
+# 
+# 
+#  (ad %>% ggplot()+
+#   geom_line(aes(x = Time, y = Value, colour = cc, group = Experiment)) +
+#   scale_colour_viridis_c()) %>%
+#   plotly::ggplotly()
+# 
+# (ad %>% ggplot()+
+#     geom_line(aes(x = Time, y = Value, colour = as.character(cc), group = Experiment))) %>%
+#   plotly::ggplotly()
+# 
+# (stretching %>% select("Experiment","cc") %>%
+#   distinct() %>%
+#   ggplot() +
+#   geom_point(aes(x = Experiment, y = cc))) %>%
+#   plotly::ggplotly()
+# 
+
+
+stretching
+
+tr1 = stretching %>% dplyr::filter(stretch_cc == max(stretch_cc)) %>% select(stretch_cc, stretch_factor)
+
+tr2 = stretching %>% dplyr::filter(stretch_shift_cc == max(stretch_shift_cc)) %>% 
+  select(stretch_shift_cc, stretch_factor, stretch_shift_shift) %>% 
+  mutate(stretch_shift_factor = stretch_factor, stretch_factor = NULL)
+
+tr3 = stretching %>% dplyr::filter(stretch_factor == 1) %>% 
+  dplyr::select("stretch_cc", "stretch_shift_cc", "stretch_shift_shift") %>%
+  dplyr::mutate(cc = stretch_cc, stretch_cc = NULL) %>%
+  dplyr::mutate(shift_cc = stretch_shift_cc, stretch_shift_cc = NULL) %>%
+  dplyr::mutate(shift_shift = stretch_shift_shift, stretch_shift_shift = NULL)
+
+tr = cbind(tr3, tr2, tr1)
+
+
+return(tr)
+}
 
 
 
 
 
+#' Title
+#'
+#' @param data.df 
+#' @param reference 
+#' 
+#' @importFrom dplyr as_tibble
+#' @importFrom progressr progressor
+#' @importFrom doFuture %dofuture%
+#'
+#' @returns
+#' @noRd
+#'
+#' @examples
+#' future::plan("multisession")
+#' vascr_summarise_cc_stretch_shift(growth.df)
+#' vascr_summarise_cc_stretch_shift(growth.df, 5)
+vascr_summarise_cc_stretch_shift = function(data.df = growth.df, reference = "none"){
 
+    toprocess = data.df %>% vascr_subset(unit = "R", frequency = 4000) %>% vascr_summarise(level = "experiments")
+    # vascr_plot_line(toprocess)
+    cc_data = toprocess %>% vascr_cc(reference)
+    
+    cli_progress_bar(total = nrow(cc_data))
+    
+    # progressr::handlers("cli")
+    # progressr::handlers(global = TRUE)
+
+    p <- progressr::progressor(along = c(1:nrow(cc_data)))
+    
+    s_cc = foreach (i  =  c(1:nrow(cc_data)), .combine = rbind) %dofuture% {
+      
+      cc_row = cc_data[i,]
+      
+      t1 = toprocess %>% dplyr::filter(Sample == cc_row$Sample.x & Experiment == cc_row$Experiment.x)
+      t2 = toprocess %>% dplyr::filter(Sample == cc_row$Sample.y & Experiment == cc_row$Experiment.y)
+      
+      str = vascr:::stretch_cc(t1, t2)
+      p()
+      
+      
+      toreturn = cbind(cc_row %>% dplyr::select(-"cc"), str) %>% dplyr::as_tibble()
+    }
+
+    
+    s_cc
+    
+    s_long = s_cc %>%
+      rowwise() %>%
+      mutate(title = paste(as.character(Sample.x), as.character(Sample.y), sep = " - ")) %>%
+      select(title, Sample.x, Sample.y, cc, shift_cc, shift_shift, stretch_cc, stretch_factor, stretch_shift_cc, stretch_shift_factor, stretch_shift_shift) %>%
+      pivot_longer(cols = c(-title, -Sample.x, -Sample.y))
+    
+    s_long
+
+}
+
+
+#' Title
+#'
+#' @param data.df 
+#' @param reference 
+#'
+#' @returns
+#' @noRd
+#'
+#' @examples
+vascr_summarise_cc_stretch_shift_stats = function(data.df, reference = "none"){
+
+s_long = vascr_summarise_cc_stretch_shift(data.df, reference)
+
+s_long %>% filter(str_count(name, "cc")>0) %>%
+ ggplot() +
+  geom_point(aes(x = value, y = title, colour = name))
+
+
+
+pairs = s_long %>% ungroup() %>% 
+  filter(str_count(name, "cc") > 0) %>%
+  select("Sample.x", "Sample.y", "title", "name") %>% distinct() %>%
+  rowwise() %>%
+  group_split()
+
+reference_sample = vascr_find_sample(data.df, reference)
+
+output = foreach (pair = pairs, .combine = rbind) %do% {
+  
+      
+      s1 = pair$Sample.x
+      s2 = pair$Sample.y
+      sta = pair$name
+      
+      t1 = s_long %>% filter(Sample.x == s1, Sample.y ==s2) %>% filter(name == sta)
+      
+      if(isTRUE(reference == "none"))
+      {
+        t2 = rbind( s_long %>% filter(Sample.x == s1, Sample.y ==s1) %>% filter(name == sta),
+                    s_long %>% filter(Sample.x == s2, Sample.y ==s2) %>% filter(name == sta))
+      } else
+      {
+        t2 = rbind( s_long %>% filter(Sample.x == reference_sample, Sample.y == reference_sample) %>% filter(name == sta))
+      }
+      
+      if(length(unique(c(t1$value, t2$value))) == 1){
+        p$p.value = 1
+      } else {
+       p = t.test(t1$value, t2$value, var.equal = FALSE)
+      }
+      
+      
+      return(tribble(~name,     ~title,     ~p,        ~mean, ~sd, ~nsample, ~ncontrol,~Sample.x, ~Sample.y, ~refs,
+                     pair$name, pair$title, p$p.value, mean(t1$value), sd(t1$value), length(t1$value), length(t2$value), s1, s2, paste(t2$value, collapse = ",")))
+}
+
+
+output$padj = p.adjust(output$p, "fdr")
+
+output$stars <- symnum(output$p, corr = FALSE, na = FALSE, 
+                       cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 
+                       symbols = c("***", "**", "*", ".", " "))
+
+ return(output)
+}
+
+
+#' Title
+#'
+#' @param data.df 
+#' @param reference 
+#'
+#' @returns
+#' @noRd
+#'
+#' @examples
+#' vascr_plot_cc_stretch_shift_stats(growth.df)
+#' vascr_plot_cc_stretch_shift_stats(growth.df, 5)
+#' 
+#' 
+vascr_plot_cc_stretch_shift_stats = function(data.df, reference = "none"){
+
+output = vascr_summarise_cc_stretch_shift_stats(data.df, reference)
+  
+output %>%
+ggplot() +
+  geom_point(aes(x = mean, y = title, color = name)) +
+  geom_errorbar(aes(xmin = mean-sd, xmax = mean+sd, y = title, color = name)) +
+  geom_text_repel(aes(x = mean, y = title, color = name, label = as.character(stars)), direction = "y", seed = 10, nudge_y = 0.2, box.padding = 0, point.padding = 0)
+
+
+
+# s_sum = s_long %>% rowwise() %>%
+#   group_by(title, name) %>%
+#   reframe(mean = mean(value), sd = sd(value))
+# 
+# s_sum %>% filter(str_count(name, "cc")>0) %>%
+# ggplot() +
+#   geom_point(aes(x = mean, y = title, color = name))
+
+}
 

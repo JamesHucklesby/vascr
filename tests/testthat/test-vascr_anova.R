@@ -59,9 +59,29 @@ test_that("Tukey tests", {
   expect_snapshot(vascr_tukey(growth.df, "R", 4000, 100, raw = TRUE))
 })
 
+test_that("Dunnett test works", {
+  #one time
+  expect_snapshot(vascr_dunnett(growth.df, "R", 4000, 50, 8))
+  #Two times
+  expect_snapshot(vascr_dunnett(growth.df, "R", 4000, list(50, 100), 8))
+  # With name rather than ID
+  expect_snapshot(vascr_dunnett(growth.df, "R", 4000, 50, "0_cells + HCMEC D3_line"))
+  # With invalid ID
+  expect_error(vascr_dunnett(growth.df, "R", 4000, 50, 88))
+})
+
+
+test_that("Dunnett test works", {
+  
+  vdiffr::expect_doppelganger("Dunnett 1", vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 25, reference = "0_cells + HCMEC D3_line", inputplot = NULL))
+  vdiffr::expect_doppelganger("Dunnett 2",vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = list(25,100), reference = "0_cells + HCMEC D3_line", inputplot = NULL))
+  vdiffr::expect_doppelganger("Dunnett 3",vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 180, reference = "20,000_cells + HCMEC D3_line", inputplot = NULL))
+ 
+})
+
 test_that("Anova bar against reference", {
-  vdiffr::expect_doppelganger("Anova reference", vascr_plot_anova_bar_reference(growth.df, "R", 4000, 50))
-  vdiffr::expect_doppelganger("Anova reference 2", vascr_plot_anova_bar_reference(growth.df, "R", 4000, 50, breaklines = FALSE))
+  vdiffr::expect_doppelganger("Anova reference", vascr_plot_bar_dunnett(growth.df, "R", 4000, 50, 8, stars =TRUE))
+  vdiffr::expect_doppelganger("Anova reference 2", vascr_plot_bar_dunnett(growth.df, "R", 4000, 50, 8, stars =FALSE))
 })
 
 test_that("Plot bar anova", {
@@ -70,6 +90,7 @@ test_that("Plot bar anova", {
 
 test_that("Plot overall ANOVA tabulation", {
   vdiffr::expect_doppelganger("Overall anova plot", vascr_plot_anova(data.df = growth.df, unit = "R", frequency = 4000, time = 100))
+  vdiffr::expect_doppelganger("anova bar 2", vascr_plot_anova(data = growth.df, unit = "R", time = 100, frequency = 4000, reference = "0_cells + HCMEC D3_line"))
   
   
   nines = vascr_combine(growth.df %>% mutate(Experiment = paste(Experiment, "1")), growth.df %>% mutate(Experiment = paste(Experiment, "2")), growth.df %>% mutate(Experiment = paste(Experiment, "3")))

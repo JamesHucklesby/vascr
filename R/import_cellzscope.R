@@ -7,7 +7,7 @@
 #' 
 #' @importFrom stringr str_remove str_split
 #' @importFrom tidyr separate fill pivot_longer
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #'
 #' @return An vascr compatible data set
 #'
@@ -94,7 +94,7 @@ cellzscope_import_model  = function(model)
 #' 
 #' @importFrom stringr str_remove
 #' @importFrom tidyr separate fill pivot_longer pivot_wider
-#' @importFrom magrittr %>%
+#' @importFrom dplyr %>%
 #' 
 #' 
 #' @noRd

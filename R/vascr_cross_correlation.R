@@ -1,8 +1,15 @@
 #' Title
 #'
 #' @param data.df 
+#' 
+#' @importFrom tidyr separate_longer_delim 
+#' @importFrom dplyr filter mutate left_join rowwise group_split tribble select
+#' @importFrom ggplot2 ggplot geom_point geom_errorbar labs theme scale_colour_manual
+#' @importFrom ggnewscale new_scale
 #'
 #' @returns
+#' 
+#' @noRd
 #'
 #' @examples
 #' 
@@ -67,7 +74,7 @@ output = foreach (pair = pairs, .combine = rbind) %do% {
               ccf_calc %>% filter(Sample.x == s2, Sample.y ==s2))
   } else
   {
-  t2 = rbind( ccf_calc %>% filter(SampleID.x == reference, SampleID.y ==reference))
+  t2 = rbind( ccf_calc %>% filter(Sample.x == reference, Sample.y ==reference))
   }
   
   p = t.test(t1$cc, t2$cc, var.equal = FALSE)
@@ -187,8 +194,8 @@ if(vascr_find_level(data.df) == "wells")
 
     # # pairedcurves = tidyr::crossing(c1, c2)
     
-    c1 = curves %>% mutate(expid = as.numeric(Experiment))
-    c2 = curves %>% mutate(expid = as.numeric(Experiment))
+    c1 = curves %>% mutate(expid = as.numeric(.data$Experiment))
+    c2 = curves %>% mutate(expid = as.numeric(.data$Experiment))
     
     colnames(c1) = paste(colnames(c1), ".x", sep = "")
     colnames(c2) = paste(colnames(c2), ".y", sep = "")

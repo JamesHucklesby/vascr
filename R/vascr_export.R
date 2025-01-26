@@ -6,7 +6,7 @@
 #'
 #' @importFrom stats setNames
 #' @importFrom utils write.csv
-#' @importFrom cli cli_progress_start
+#' @importFrom cli cli_progress_bar cli_progress_update cli_progress_done
 #'
 #' @returns A dataframe in prism format, or writes to file if filepath specified
 #' @export

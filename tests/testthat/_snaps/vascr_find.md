@@ -30,9 +30,8 @@
 
     Code
       vascr_match("Re", vector)
-    Condition
-      Warning in `vascr_match()`:
-      [Re] corrected to [Rb]. Please check the argeuments for your functions are correctly typed.
+    Message
+      ! [Re] corrected to [Rb]. Please check the argeuments for your functions are correctly typed.
     Output
       [1] "Rb"
 
@@ -63,9 +62,8 @@
 
     Code
       vascr_find_single_time(growth.df, c(1, 3))
-    Condition
-      Warning in `vascr_find_single_time()`:
-      Vascr_find_single_time deals with only one time in one call. Use find times if more parsing is needed.
+    Message
+      ! Vascr_find_single_time deals with only one time in one call. Use find times if more parsing is needed.
     Output
       [1] "NA"
 
@@ -73,9 +71,8 @@
 
     Code
       vascr_find_single_time(c(1, 2, 3), c(1, 3))
-    Condition
-      Warning in `vascr_find_single_time()`:
-      Vascr_find_single_time deals with only one time in one call. Use find times if more parsing is needed.
+    Message
+      ! Vascr_find_single_time deals with only one time in one call. Use find times if more parsing is needed.
     Output
       [1] "NA"
 
@@ -83,9 +80,8 @@
 
     Code
       vascr_find_single_time(growth.df, c(4.876))
-    Condition
-      Warning in `vascr_find_single_time()`:
-      [ 4.876 ]  corrected to  [ 5 ]. Please check the variables used.
+    Message
+      ! [ 4.876 ]  corrected to  [ 5 ]. Please check the variables used.
     Output
       [1] 5
 
@@ -119,11 +115,9 @@
 
     Code
       vascr_find_well(growth.df, "W39")
-    Condition
-      Warning in `vascr_standardise_wells()`:
-      Well NA is not a valid well name, please check your input data
-      Warning in `vascr_match()`:
-      [NA] corrected to [A01]. Please check the argeuments for your functions are correctly typed.
+    Message
+      ! Well NA is not a valid well name, please check your input data
+      ! [NA] corrected to [A01]. Please check the argeuments for your functions are correctly typed.
     Output
       [1] "A01"
 
@@ -140,11 +134,9 @@
 
     Code
       vascr_find_time(growth.df, list(1, 3, 5))
-    Condition
-      Warning in `vascr_find_single_time()`:
-      [ 1 ]  corrected to  [ 0 ]. Please check the variables used.
-      Warning in `vascr_find_single_time()`:
-      [ 3 ]  corrected to  [ 5 ]. Please check the variables used.
+    Message
+      ! [ 1 ]  corrected to  [ 0 ]. Please check the variables used.
+      ! [ 3 ]  corrected to  [ 5 ]. Please check the variables used.
     Output
       [1] 0 5 5
 
@@ -182,9 +174,8 @@
 
     Code
       vascr_find_frequency(growth.df, 4382)
-    Condition
-      Warning in `vascr_find_frequency()`:
-      Frequency corrected from 4382 to 4000
+    Message
+      ! Frequency corrected from 4382 to 4000
     Output
       [1] 4000
 
@@ -270,9 +261,8 @@
 
     Code
       vascr_find_instrument(growth.df, "Rb")
-    Condition
-      Warning in `vascr_match()`:
-      [Rb] corrected to [ECIS]. Please check the argeuments for your functions are correctly typed.
+    Message
+      ! [Rb] corrected to [ECIS]. Please check the argeuments for your functions are correctly typed.
     Output
       [1] "ECIS"
 
@@ -287,11 +277,9 @@
 
     Code
       vascr_find_instrument(growth.df, "cellZscope")
-    Condition
-      Warning in `vascr_find_instrument()`:
-      cellZscope data is not present in the dataset. Use with care
-      Warning in `vascr_find_instrument()`:
-      No selected instruments present in dataset. Use with care.
+    Message
+      ! cellZscope data is not present in the dataset. Use with care
+      ! No selected instruments present in dataset. Use with care.
     Output
       NULL
 
@@ -299,9 +287,8 @@
 
     Code
       vascr_find_instrument(growth.df, c("cellZscope", "ECIS"))
-    Condition
-      Warning in `vascr_find_instrument()`:
-      cellZscope data is not present in the dataset. Use with care
+    Message
+      ! cellZscope data is not present in the dataset. Use with care
     Output
       [1] "ECIS"
 
@@ -309,13 +296,10 @@
 
     Code
       vascr_find_instrument(growth.df, c("cellZscope", "xCELLigence"))
-    Condition
-      Warning in `vascr_find_instrument()`:
-      cellZscope data is not present in the dataset. Use with care
-      Warning in `vascr_find_instrument()`:
-      xCELLigence data is not present in the dataset. Use with care
-      Warning in `vascr_find_instrument()`:
-      No selected instruments present in dataset. Use with care.
+    Message
+      ! cellZscope data is not present in the dataset. Use with care
+      ! xCELLigence data is not present in the dataset. Use with care
+      ! No selected instruments present in dataset. Use with care.
     Output
       NULL
 
@@ -360,9 +344,8 @@
 
     Code
       vascr_find_unit(growth.df, unit = c("Ci", "Rb"))
-    Condition
-      Warning in `vascr_match()`:
-      [Ci] corrected to [Cm]. Please check the argeuments for your functions are correctly typed.
+    Message
+      ! [Ci] corrected to [Cm]. Please check the argeuments for your functions are correctly typed.
     Output
       [1] "Cm" "Rb"
 
@@ -633,9 +616,8 @@
 
     Code
       vascr_standardise_wells("tortoise")
-    Condition
-      Warning in `vascr_standardise_wells()`:
-      Well NA is not a valid well name, please check your input data
+    Message
+      ! Well NA is not a valid well name, please check your input data
     Output
       [1] "NA"
 
@@ -9028,9 +9010,8 @@
 
     Code
       vascr_cols(growth.df, set = "not_a_set")
-    Condition
-      Warning in `vascr_cols()`:
-      Inappropriate set selected, please use another
+    Message
+      ! Inappropriate set selected, please use another
     Output
       NULL
 
