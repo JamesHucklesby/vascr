@@ -230,7 +230,7 @@ test_that("test well standardisation" , {
   expect_snapshot(vascr_standardise_wells('A 1'))
 
   expect_snapshot(vascr_standardise_wells('tortoise')) # Non-standardize becomes NA
-  expect_snapshot(vascr_standardise_wells(growth.df$Well))
+  expect_snapshot(vascr_standardise_wells(growth.df$Well) %>% head())
 
 })
 

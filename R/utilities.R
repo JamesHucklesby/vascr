@@ -23,10 +23,10 @@ vascr_notify = function(level, message){
   if(rlang::is_installed("shiny")){
       if(shiny::isRunning()){
         
-        if(level == "success")  showNotification(id = "success_box", message, type = "default")
-        if(level == "info")  showNotification(message, type = "message")
-        if(level == "warning")  showNotification(message, type = "warning")
-        if(level == "error")  showNotification(message, type = "error")
+        if(level == "success")  shiny::showNotification(id = "success_box", message, type = "default")
+        if(level == "info")  shiny::showNotification(message, type = "message")
+        if(level == "warning")  shiny::showNotification(message, type = "warning")
+        if(level == "error")  shiny::showNotification(message, type = "error")
         
       }
   }

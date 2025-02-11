@@ -9,8 +9,7 @@ vascr_plot_line_dunnett(
   unit = "R",
   frequency = 4000,
   time = 100,
-  reference = "0_cells + HCMEC D3_Line",
-  inputplot = NULL
+  reference = "0_cells + HCMEC D3_Line"
 )
 }
 \arguments{
@@ -32,11 +31,11 @@ Create a line plot with Dunnett's statistics
 }
 \examples{
 vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 25, 
-    reference = "0_cells + HCMEC D3_Line", inputplot = NULL)
+    reference = "0_cells + HCMEC D3_Line")
 vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = list(25,100), 
-    reference = "0_cells + HCMEC D3_Line", inputplot = NULL)
+    reference = "0_cells + HCMEC D3_Line")
 vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 180, 
-    reference = "20,000_cells + HCMEC D3_Line", inputplot = NULL)
+    reference = "20,000_cells + HCMEC D3_Line")
 
 data.df = growth.df
 unit = "R"

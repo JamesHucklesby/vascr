@@ -41,7 +41,7 @@ test_that("Can import xCELLigence file", {
   
   tempfile = paste(tempdir(),"/","TEMPMDBFORIMPORT.mdb", sep = "")
   file.copy(from = rawdata, to = tempfile)
-  expect_error(import_xcelligence(rawdata = rawdata))
+  expect_snapshot_error(import_xcelligence(rawdata = rawdata))
   unlink(tempfile)
   
 })

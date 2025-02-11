@@ -60,13 +60,13 @@ vascr_make_significance_table = function(data.df, time, unit, frequency, confide
   }
   
   tukey %>%
-    mutate(temp = group1, group1 = group2, group2 = temp, temp = NULL) %>%
+    mutate(temp = .data$group1, group1 = .data$group2, group2 = .data$temp, temp = NULL) %>%
     rbind(tukey) %>%
-    dplyr:: filter(term == "Sample") %>%
-    dplyr:: filter(p.adj.signif != "ns") %>%
-    mutate(Sample = group1, group1 = NULL) %>%
-    group_by(Sample) %>%
-    summarise(Label = paste(group2, p.adj.signif, collapse = "\n"))
+    dplyr:: filter(.data$term == "Sample") %>%
+    dplyr:: filter(.data$p.adj.signif != "ns") %>%
+    mutate(Sample = .data$group1, group1 = NULL) %>%
+    group_by(.data$Sample) %>%
+    summarise(Label = paste(.data$group2, .data$p.adj.signif, collapse = "\n"))
   
   # labeltable
   
@@ -235,7 +235,7 @@ vascr_levene = function(data.df, unit, frequency, time)
 {
   data_s.df = vascr_subset(data.df, unit = unit, frequency = frequency, time = time) %>% 
     vascr_summarise(level = "experiments") %>% ungroup() %>%
-    mutate(Sample = as.factor(Sample))
+    mutate(Sample = as.factor(.data$Sample))
   
   levenetest = levene_test(data_s.df, Value ~ Sample)
   levenetest
@@ -522,7 +522,7 @@ vascr_plot_anova_grid = function (data.df, unit =  "R", frequency = 4000, time =
   
   sigdata
   
-  sigplot = sigdata %>% filter(term == "Sample") %>%
+  sigplot = sigdata %>% filter(.data$term == "Sample") %>%
     ggplot() +
     geom_tile(aes(x = .data$group1, y = .data$group2, fill = .data$p.adj.signif)) +
     labs(fill = "P value",
@@ -575,7 +575,7 @@ vascr_dunnett = function(data.df, unit, frequency, time, reference){
     vascr_notify("error","Reference sample not in data frame")
   }
   
-  sample_text = data.df %>% dplyr::filter(SampleID == reference) %>% .$Sample %>% unique() %>% .[[1]]
+  sample_text = ((data.df %>% dplyr::filter(.data$SampleID == reference))$"Sample" %>% unique())[[1]]
   
 
     # This use of global variable is inelegent, but needs to be done to overcome a bug in ghlt below
@@ -595,10 +595,6 @@ vascr_dunnett = function(data.df, unit, frequency, time, reference){
     
   fit <- nlme::gls(Value ~ Sample + Experiment, data=rl,
              weights = nlme::varIdent(form = ~1|Sample))
-  
-
-  
-
   
   # ncvTest(fit)
   
@@ -621,15 +617,15 @@ vascr_dunnett = function(data.df, unit, frequency, time, reference){
     
   # mod = lm("Value ~ Sample * Time + Experiment", releveled)
   
-  mod =  nlme::gls(Value ~ Sample * Time  + Experiment, data =rl,
-            weights = nlme::varIdent(form = ~Sample))
+  # mod =  nlme::gls(Value ~ Sample * Time  + Experiment, data =rl,
+  #           weights = nlme::varIdent(form = ~Sample))
   
-  tmp = expand.grid(Sample = unique(rl$Sample),
-                    Time = unique(rl$Time),
-                    Experiment = unique(rl$Experiment))
+  # tmp = expand.grid(Sample = unique(rl$Sample),
+  #                   Time = unique(rl$Time),
+  #                   Experiment = unique(rl$Experiment))
   
 
-  X <- stats::model.matrix(~ Sample * Time + Experiment , data = tmp)
+  # X <- stats::model.matrix(~ Sample * Time + Experiment , data = tmp)
   
   # glht(mod, linfct = X)
   
@@ -645,28 +641,28 @@ vascr_dunnett = function(data.df, unit, frequency, time, reference){
   
   # summary(glht(mod, linfct = K %*% X))
   
-  rl$tw<-with(rl, interaction(Sample, Time))
+  rl$tw<-interaction(rl$Sample, rl$Time)
   cell<-gls(Value~ tw- 1,data= rl,  weights = varIdent(form = ~1|Sample*Time))
   summ = summary(glht(cell,linfct = K))
   
   summ
   
   tr1 =  tibble(
-    Time_Sample = summ$test$sigma %>% names(),
-    P = summ$test$pvalues %>% as.vector() ) %>%
-    separate_wider_delim(Time_Sample, names = c("Time", "Sample"), delim = ":")
+    "Time_Sample" = summ$test$sigma %>% names(),
+    "P" = summ$test$pvalues %>% as.vector() ) %>%
+    separate_wider_delim("Time_Sample", names = c("Time", "Sample"), delim = ":")
     
   }
   
  
   toreturn =  tr1 %>%
     rstatix::add_significance(p.col = "P", output.col = "Label") %>%
-    mutate(P_round = round(P, 3)) %>%
-    mutate(P_round =  ifelse(P>0.05, "", P_round))%>%
-    mutate(P_round =  ifelse(P_round == "0", "< 0.001", P_round)) %>%
-    separate(Sample, into = c("a","b"), sep = " - ", remove = FALSE) %>%
-    mutate(Sample = a, a = NULL, b = NULL) %>%
-    mutate(Time = as.numeric(Time)) 
+    mutate(P_round = round(.data$P, 3)) %>%
+    mutate(P_round =  ifelse(.data$P>0.05, "", .data$P_round))%>%
+    mutate(P_round =  ifelse(.data$P_round == "0", "< 0.001", .data$P_round)) %>%
+    separate("Sample", into = c("a","b"), sep = " - ", remove = FALSE) %>%
+    mutate(Sample = .data$a, a = NULL, b = NULL) %>%
+    mutate(Time = as.numeric(.data$Time)) 
  
  toreturn
  
@@ -674,15 +670,15 @@ vascr_dunnett = function(data.df, unit, frequency, time, reference){
 
  
  tr = left_join(rawsum, toreturn, by = c("Time", "Sample")) %>%
-   mutate(Label = ifelse(Sample == sample_text, "+", Label)) %>%
-   mutate(P_round = ifelse(Sample == sample_text, "+", P_round)) %>%
-   mutate(P = ifelse(Sample == sample_text, "+", P))
+   mutate(Label = ifelse(.data$Sample == sample_text, "+", .data$Label)) %>%
+   mutate(P_round = ifelse(.data$Sample == sample_text, "+", .data$P_round)) %>%
+   mutate(P = ifelse(.data$Sample == sample_text, "+", .data$P))
 
  return(tr)
  
 }
 
-#' Title
+#' Plot a bar plot with Dunnett's test
 #'
 #' @param data.df a vascr dataframe
 #' @param unit the unit to use
@@ -693,8 +689,9 @@ vascr_dunnett = function(data.df, unit, frequency, time, reference){
 #' 
 #' @importFrom ggplot2 geom_col ggplot geom_text geom_errorbar aes
 #' 
-#' @returns
-#' @export
+#' @returns A bar plot of data with Dunnett's comparisons
+#' 
+#' @noRd
 #'
 #' @examples
 #' vascr_plot_bar_dunnett(growth.df, "R", 4000, 50, "0_cells + hCMEC/d3_line")
@@ -706,16 +703,16 @@ vascr_plot_bar_dunnett = function(data.df, unit, frequency, time, reference, sta
   if(isTRUE(stars))
   {
   ggplot(toplot) +
-    ggplot2::geom_col(aes(x = Sample, y = Value)) +
-    geom_text(aes(x = Sample, label = Label), y = min(toplot$Value)/2) +
-    geom_errorbar(aes(x = Sample, ymin = Value - sem, ymax = Value + sem))
+    ggplot2::geom_col(aes(x = .data$Sample, y = .data$Value)) +
+    geom_errorbar(aes(x = .data$Sample, ymin = .data$Value - .data$sem, ymax = .data$Value + .data$sem)) +
+    geom_text_repel(aes(x = .data$Sample, label = .data$Label, y = .data$Value + .data$sem), direction = "y", nudge_y = 1)
   }
   else
   {
     ggplot(toplot) +
-      ggplot2::geom_col(aes(x = Sample, y = Value)) +
-      geom_text(aes(x = Sample, label = P_round), y = min(toplot$Value)/2) +
-      geom_errorbar(aes(x = Sample, ymin = Value - sem, ymax = Value + sem))
+      ggplot2::geom_col(aes(x = .data$Sample, y = .data$Value)) +
+      geom_text(aes(x = .data$Sample, label = .data$P_round), y = min(toplot$Value)/2) +
+      geom_errorbar(aes(x = .data$Sample, ymin = .data$Value - .data$sem, ymax = .data$Value + .data$sem))
   }
   
   
@@ -739,13 +736,13 @@ vascr_plot_bar_dunnett = function(data.df, unit, frequency, time, reference, sta
 #'
 #' @examples
 #' vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 25, 
-#'     reference = "0_cells + HCMEC D3_Line", inputplot = NULL)
+#'     reference = "0_cells + HCMEC D3_Line")
 #' vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = list(25,100), 
-#'     reference = "0_cells + HCMEC D3_Line", inputplot = NULL)
+#'     reference = "0_cells + HCMEC D3_Line")
 #' vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 180, 
-#'     reference = "20,000_cells + HCMEC D3_Line", inputplot = NULL)
+#'     reference = "20,000_cells + HCMEC D3_Line")
 #' 
-vascr_plot_line_dunnett = function(data.df, unit = "R", frequency = 4000, time = 100, reference = "0_cells + HCMEC D3_Line", inputplot = NULL)
+vascr_plot_line_dunnett = function(data.df, unit = "R", frequency = 4000, time = 100, reference = "0_cells + HCMEC D3_Line")
 {
   
   
@@ -757,14 +754,14 @@ vascr_plot_line_dunnett = function(data.df, unit = "R", frequency = 4000, time =
   
   dun.df = vascr_dunnett(data.df, unit = unit, frequency = frequency, time = time, reference = reference)
   
-  subset.df = growth.df %>% vascr_subset(unit = unit, frequency = frequency) %>% vascr_summarise(level = "summary") 
+  subset.df = data.df %>% vascr_subset(unit = unit, frequency = frequency) %>% vascr_summarise(level = "summary") 
   
 
   
   plab = dun.df %>%
-    dplyr::filter(!Label == "NA") %>%
-    dplyr::filter(!Label == "ns") %>%
-    mutate(Label = paste(" ", Label)) # %>%
+    dplyr::filter(!.data$Label == "NA") %>%
+    dplyr::filter(!.data$Label == "ns") %>%
+    mutate(Label = paste(" ", .data$Label)) # %>%
     # mutate(Label = str_replace_all(Label, "\\*", "✱")) #%>%
     #mutate(Label = str_replace_all(Label, "+", "➕")
   
@@ -773,8 +770,9 @@ vascr_plot_line_dunnett = function(data.df, unit = "R", frequency = 4000, time =
   
   plot1 = subset.df %>% vascr_plot_line(alpha = 0.2)
   
-  plot1 + geom_vline(aes(xintercept = Time), alpha=  0.8, linetype = 4, data = plab) +
-    geom_text_repel(aes(x = as.numeric(Time), y = Value, label = Label, group = 1, hjust = 0, color = Sample), alpha = 1, data = plab, show.legend = FALSE, direction = "y", box.padding = 0.01, seed = 1)
+  
+  plot1 + geom_vline(aes(xintercept = .data$Time), alpha=  0.8, linetype = 4, data = plab) +
+    geom_text_repel(aes(x = as.numeric(.data$Time), y = .data$Value, label = .data$Label, group = 1, hjust = 0, color = .data$Sample), alpha = 1, data = plab, show.legend = FALSE, direction = "y", box.padding = 0.01, seed = 1)
   
   
 
@@ -839,7 +837,7 @@ vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequen
   
   filtered2.df = left_join(summary, labeltable, by = "Sample")
   
-  hjust_needed = sin(rotate_x_angle*pi/180)
+  # hjust_needed = sin(rotate_x_angle*pi/180)
   
   plot = ggplot(filtered2.df, aes(x = .data$Sample, y = .data$Value, label = .data$Label, fill = .data$Sample)) + 
     geom_bar(stat = "identity") +
@@ -870,16 +868,14 @@ vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequen
 #' @param unit unit to plot
 #' @param frequency frequnecy to plot
 #' @param time timepoint to plot at
-#' @param priority analyasis priority. Will use default if not filled in
 #' @param reference Sample to reference post-hoc analyasis to
 #'
 #' @return A matrix of different ANOVA tests
 #' 
-#' @importFrom cowplot plot_grid
+#' @importFrom patchwork free plot_layout
 #' @importFrom ggtext element_markdown
 #' @importFrom stringr str_replace_all
 #' @importFrom ggplot2 scale_color_manual guides labs theme guide_legend
-#' @importFrom gridExtra arrangeGrob
 #' @importFrom dplyr filter
 #' 
 #' @export
@@ -930,10 +926,14 @@ vascr_plot_anova = function(data.df, unit, frequency, time, reference = NULL)
                                                     (ohm, 4000 Hz)") +
     theme(legend.position = "none")
   
-  grid =  plot_grid(arrangeGrob(timeplot, overallplot, ncol = 2),
-                    arrangeGrob(qqplot, normaloverlayplot, leveneplot, ncol = 3),
-                    arrangeGrob(tile, differences, nrow = 1, widths = c(0.3, 0.7)),
-                    nrow = 3, rel_heights = c(1/4, 1/4, 1/2))
+  
+  design <- "
+  111222
+  334455
+  667777"
+  
+  grid = free(timeplot) + free(overallplot)+ free(qqplot) + free(normaloverlayplot) + free(leveneplot) + free(tile) + free(differences) + plot_layout(design = design)
+  
   
   return(grid)
 }

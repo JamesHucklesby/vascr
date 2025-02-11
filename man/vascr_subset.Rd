@@ -15,7 +15,8 @@ vascr_subset(
   sampleid = NULL,
   sample = NULL,
   subsample = NULL,
-  remove_na_value = TRUE
+  remove_na_value = TRUE,
+  remove_excluded = TRUE
 )
 }
 \arguments{
@@ -35,7 +36,13 @@ vascr_subset(
 
 \item{sampleid}{List of ID's to be used. Sample names will be re-ordered accordingly for display.}
 
+\item{sample}{Sample to subset}
+
 \item{subsample}{Frequency values should be sub-sampled to}
+
+\item{remove_na_value}{Should NA values be removed (default true)}
+
+\item{remove_excluded}{Should excluded values eb removed (default true)}
 }
 \value{
 The subset dataset, based on the values selected

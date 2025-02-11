@@ -431,12 +431,22 @@ vascr_find_frequency = function(data.df, frequency) {
 #' vascr_find_sample(growth.df, c("3000 cells", "35000_cells"))
 #' vascr_find_sample(growth.df, 5)
 #' vascr_find_sample(growth.df, "none")
-#' 
-vascr_find_sample = function(data.df, sample){
+#' vascr_find_sample(growth.df)
+#' vascr_find_sample(growth.df, NA)
+vascr_find_sample = function(data.df, sample = NULL){
+  
+  if(all(is.null(sample))){
+    return(unique(data.df$Sample))
+  }
+  
+  if(all(is.na(sample))){
+    return(unique(data.df$Sample)[1])
+  }
+  
   
   if(is.numeric(sample)){
     
-    sample_from_id = data.df %>% select("SampleID", "Sample") %>% filter(SampleID == sample) %>% distinct() %>% .$Sample
+    sample_from_id = (data.df %>% select("SampleID", "Sample") %>% filter(.data$SampleID == sample) %>% distinct())$"Sample"
     
     if(length(sample_from_id)>0){
       sample = sample_from_id
@@ -453,6 +463,8 @@ vascr_find_sample = function(data.df, sample){
   
     
   }
+  
+  return(batched)
 }
 
 
@@ -691,8 +703,9 @@ vascr_instrument_units =  function(instrument)
 #' @noRd
 #'
 #' @examples
-#' # vascr_find_experiment(growth.df, 1)
-#' # vascr_find_experiment(growth.df, "1 : Experiment 1")
+#' vascr_find_experiment(growth.df, 1)
+#' vascr_find_experiment(growth.df, experiment = "2")
+#' vascr_find_experiment(growth.df, "1 : Experiment 1")
 #' 
 vascr_find_experiment = function(data.df, experiment)
 {
@@ -709,7 +722,7 @@ vascr_find_experiment = function(data.df, experiment)
     return(fullexperiment[experiment])
   }
   
-  experiment = vascr_match(experiment, unique(data.df$Experiment))
+  experiment = vascr_match(experiment, unique(data.df$Experiment) %>% as.character())
   return(experiment)
   
 }
@@ -1134,16 +1147,16 @@ vascr_gg_color_hue <- function(n, start = 15, values_needed = c(1:n), l = 65, c 
 #'
 #' @examples
 #' 
-#' #vascr_cols()
-#' #vascr_cols(growth.df, set = "exploded")
-#' #vascr_cols(growth.df, set = "core")
+#' vascr_cols()
+#' vascr_cols(growth.df, set = "exploded")
+#' vascr_cols(growth.df, set = "core")
 #' 
 #' 
 vascr_cols  = function(data, set = "core")
 {
   if(set == "core")
   {
-    return(c("Time", "Unit", "Value", "Well", "Sample", "Frequency", "Experiment", "Instrument", "SampleID"))
+    return(c("Time", "Unit", "Value", "Well", "Sample", "Frequency", "Experiment", "Instrument", "SampleID", "Excluded"))
   }
   
   else if (set == "exploded")
@@ -1253,7 +1266,7 @@ vascr_find_sampleid_from_sample = function(data.df, sample){
 vascr_find_count_timepoints = function(data.df)
 {
   
-  experiment_times = data.df %>% group_by(.data$Unit, .data$Experiment, .data$Well, .data$Instrument, .data$Sample) %>% 
+  experiment_times = data.df %>% group_by(.data$Unit, .data$Experiment, .data$Well, .data$Instrument, .data$Frequency) %>% 
     reframe(n = n())
   
   samples = min(experiment_times$n)

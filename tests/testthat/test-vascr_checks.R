@@ -33,3 +33,14 @@ test_that("Check col exists", {
   
   
 })
+
+
+test_that("Checking of resampling works", {
+  
+  expect_snapshot({
+  w16 = system.file('extdata/instruments/ecis_16_testplate.abp', package = 'vascr')
+  d16 = vascr_import("ECIS", raw = w16, experiment = "W16")
+  })
+  
+  expect_snapshot(vascr_check_resampled(d16))
+})

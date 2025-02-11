@@ -10,7 +10,8 @@ vascr_plot_resample(
   frequency = "4000",
   well = "A01",
   newn = 20,
-  plot = TRUE
+  plot = TRUE,
+  rug = TRUE
 )
 }
 \arguments{
@@ -21,6 +22,10 @@ vascr_plot_resample(
 \item{frequency}{Frequency to use, defaults to 4000}
 
 \item{well}{Well to use, defaults to A01 (or first well in plate)}
+
+\item{newn}{New number of timeplots to compare to current}
+
+\item{plot}{Return a ggplot or the underlying data. Defaults to TRUE, returning the plot.}
 }
 \value{
 A plot showing how well the resampled data conforms to the actual data set

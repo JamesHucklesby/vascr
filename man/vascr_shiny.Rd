@@ -4,7 +4,10 @@
 \alias{vascr_shiny}
 \title{Launch the vascr UI}
 \usage{
-vascr_shiny(data.df = growth.df)
+vascr_shiny(data.df)
+}
+\arguments{
+\item{data.df}{Data to preload into shiny app}
 }
 \value{
 A shinyApp to work with vascr data

@@ -9,6 +9,9 @@
 #' @param instrument Which instruments to include values from
 #' @param subsample Frequency values should be sub-sampled to
 #' @param sampleid List of ID's to be used. Sample names will be re-ordered accordingly for display.
+#' @param sample Sample to subset
+#' @param remove_na_value Should NA values be removed (default true)
+#' @param remove_excluded Should excluded values eb removed (default true)
 #'
 #' @return The subset dataset, based on the values selected
 #' 
@@ -37,17 +40,25 @@ vascr_subset = function(data.df,
                         sampleid = NULL,
                         sample = NULL,
                         subsample = NULL,
-                        remove_na_value =TRUE)
+                        remove_na_value =TRUE,
+                        remove_excluded = TRUE)
 {
   
   
   subset.df = data.df
   
+  
+  if(!"SampleID" %in% colnames(subset.df)) {subset.df$Excluded = "no"}
+  
+  if(isTRUE(remove_excluded)){
+  subset.df = subset.df %>% dplyr::filter(.data$Excluded != "yes")
+  }
+  
   if(!"SampleID" %in% colnames(subset.df)) {subset.df$SampleID = 1}
   
   if(isTRUE(remove_na_value))
   {
-    subset.df = subset(subset.df, !is.na(Value))
+    subset.df = subset(subset.df, !is.na(subset.df$Value))
   }
   
   # Subsample (this is the cheapest so let's do it first)
@@ -198,12 +209,16 @@ vascr_subset_sampleid = function (data.df, samplelist){
 #' @export
 #'
 #' @examples
-#' vascr_exclude(growth.df, "A01", "E01")
+#' vascr_exclude(growth.df, c("A01", "E01"))
 #' 
-vascr_exclude = function(data.df, well, experiment){
+vascr_exclude = function(data.df, well = NULL, experiment = NULL){
   # data.df = data.df %>% filter(!.data$Well %in% well & !.data$Experiment %in% experiment)
   
-  data.df = data.df %>% filter(!Well %in% well)
+  well = vascr_find_well(data.df, well)
+  experiment = vascr_find_experiment(data.df, well)
+  
+  data.df = data.df %>% filter(!.data$Well %in% well & !.data$Experiment %in% experiment)
   
   return(data.df)
 }
+

@@ -89,6 +89,13 @@ vascr_blank_df = function(){
 #'lookup = tribble(~Row, ~Column, ~Sample,
 #'           "A B C D E F G H", "2", "NZB11 + Media")
 #'           
+#'           
+#'vascr_import_map(lookup)
+#'
+#'lookup = tribble(~Well, ~Sample,
+#'           "A01 A02", "NZB11 + Media")
+#'           
+#'           
 #'vascr_import_map(lookup)
 #'
 #'lookup = system.file('extdata/instruments/eciskey.csv', package = 'vascr')
@@ -113,7 +120,7 @@ vascr_import_map = function(lookup) {
   if(!"SampleID" %in% colnames(file_content)) {
     file_content = file_content %>% group_by_all() %>% mutate(SampleID = cur_group_id())
   } else { # If samples are set, check for duplicate ID rows
-    vascr_check_duplicate(file_content, "SampleID")
+    #vascr_check_duplicate(file_content, c("Experiment","SampleID"))
   }
   
   # Lengthen out imported names
@@ -132,7 +139,7 @@ vascr_import_map = function(lookup) {
     vascr_notify("error","Either `Row` and `Column' or `Well` must be specified in the input file")
   }
   
-  vascr_check_duplicate(file_map, "Well") # Check if each well is defined more than once
+  #vascr_check_duplicate(file_map, "Well") # Check if each well is defined more than once
   
   if(!"Sample" %in% colnames(file_map))
   {
@@ -162,7 +169,49 @@ vascr_apply_map = function(data.df, map){
   
   map.df = vascr_import_map(map)
   
-  data.df %>% left_join(map.df)
+  print("mapping")
+  print(map.df)
+  
+  data.df  = data.df %>% vascr_remove_cols(c("Sample", "SampleID", "Excluded"))
+  
+  toreturn = data.df %>% left_join(map.df)
+  
+  toreturn = toreturn %>% mutate(Experiment = as.factor(.data$Experiment)) %>%
+            mutate(Sample = as.factor(.data$Sample))
+  
+  return(toreturn)
+}
+
+
+#' Title
+#'
+#' @returns
+#' @noRd
+#'
+#' @examples
+vascr_map_template = function(){
+  tribble(~`Experiment`, ~`Well`, ~`Sample`, ~`SampleID`, ~`Excluded`)
+}
+
+
+#' Title
+#'
+#' @param data.df 
+#' 
+#' @importFrom dplyr select distinct group_by summarise
+#' @importFrom rlang .data
+#'
+#' @returns
+#' @noRd
+#' 
+#' @examples
+vascr_regenerate_map = function(data.df){
+
+  data.df %>% select("Experiment", "Well", "Sample", "SampleID", "Excluded") %>%
+    distinct() %>%
+    group_by(.data$Experiment, .data$Sample, .data$SampleID, .data$Excluded) %>%
+    summarise(Well = paste(.data$Well, collapse = " "))
+  
   
 }
 
@@ -175,7 +224,7 @@ vascr_apply_map = function(data.df, map){
 #' 
 #' @export
 #' 
-#' @importFrom dplyr bind_rows
+#' @importFrom dplyr bind_rows as_tibble all_of
 #' @importFrom foreach foreach `%do%`
 #'
 #' @examples
@@ -218,7 +267,8 @@ vascr_implode = function(data.df){
   newnames %>%
     ungroup() %>%
     select("SampleID", "Sample") %>%
-    left_join(data.df, by = "SampleID")
+    left_join(data.df, by = "SampleID") %>%
+    as_tibble()
   
 }
 
@@ -229,7 +279,7 @@ vascr_implode = function(data.df){
 #'
 #' @return a separated vascr dataset, with additional columns for each variable
 #' 
-#' @importFrom dplyr select distinct mutate left_join join_by
+#' @importFrom dplyr select distinct mutate left_join join_by as_tibble
 #' @importFrom tidyr separate_longer_delim separate_wider_delim pivot_wider
 #' @importFrom stringr regex
 #' 
@@ -243,14 +293,17 @@ vascr_explode = function(data.df) {
   vascr_check_col_exists(data.df, "SampleID")
   vascr_check_col_exists(data.df, "Sample")
   
+  
+  core_data.df = data.df %>% select(vascr_cols()) %>% as_tibble()
+  
 # Break out the data
-  distinct_samples = data.df %>%
+  distinct_samples = core_data.df %>%
   select("SampleID", "Sample") %>%
   distinct() 
 
 # Check there isn't duplication in Sample or SampleID pairs as this may muck things up later
-  vascr_check_duplicate(distinct_samples, "SampleID")
-  vascr_check_duplicate(distinct_samples, "Sample")
+  #vascr_check_duplicate(distinct_samples, "SampleID")
+  #vascr_check_duplicate(distinct_samples, "Sample")
 
 # Generate the expanded cols, based on SampleID as the unique key
 samples = distinct_samples %>%
@@ -262,7 +315,7 @@ samples = distinct_samples %>%
   mutate(`NA` = NULL)
 
 # Attach the full data set back onto the data frame
-  fulldata = data.df %>% left_join(samples, by = join_by("SampleID"))
+  fulldata = data.df %>% left_join(samples, by = join_by("SampleID")) %>% as_tibble()
 
 return(fulldata)
 

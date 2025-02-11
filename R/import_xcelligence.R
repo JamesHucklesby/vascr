@@ -38,6 +38,7 @@ xcelligence_lengthen_platemap = function(data)
 #'
 xcelligence_import_generate_CI = function(data.df)
 {
+  data.df$Excluded = "no"
   cidata = vascr_normalise(data.df, normtime = 0, divide = TRUE)
   cidata$Unit = "CI"
   
@@ -56,7 +57,7 @@ xcelligence_import_generate_CI = function(data.df)
 #' @param experimentname Name of the experiment to be built into the dataset
 #' 
 #' @importFrom tidyr separate pivot_wider
-#' @importFrom dplyr left_join
+#' @importFrom dplyr left_join as_tibble
 #' @importFrom stringr str_replace
 #' @importFrom rlang check_installed
 #'
@@ -163,6 +164,8 @@ import_xcelligence = function(rawdata, experimentname = NULL, password = "RTCaDa
     labeleddata = data.frame(Sample = unique(labeleddata$Sample), SampleID = c(1:length(unique(labeleddata$Sample)))) %>%
       right_join(labeleddata, by = join_by("Sample"))
     toreturn = xcelligence_import_generate_CI(labeleddata)
+    
+    toreturn = as_tibble(toreturn)
   
   return(toreturn)
 }

@@ -16,8 +16,6 @@ vascr_plot_anova(data.df, unit, frequency, time, reference = NULL)
 \item{time}{timepoint to plot at}
 
 \item{reference}{Sample to reference post-hoc analyasis to}
-
-\item{priority}{analyasis priority. Will use default if not filled in}
 }
 \value{
 A matrix of different ANOVA tests

@@ -16,6 +16,7 @@
 #' @examples
 #' vascr_check_duplicate(df = growth.df %>% vascr_subset(well = c("A01", "A02")), col = "Well")
 #' 
+#' 
 vascr_check_duplicate = function(df, col)
 {
   tabulated = df %>%
@@ -47,7 +48,7 @@ vascr_check_duplicate = function(df, col)
 #' @noRd
 #'
 #' @examples
-#' vascr_force_resampled(data.df)
+#' vascr_force_resampled(growth.df)
 #' vascr_force_resampled(growth_unresampled.df)
 vascr_force_resampled = function(data.df)
 {
@@ -57,12 +58,14 @@ vascr_force_resampled = function(data.df)
     data.df = vascr_resample_time(data.df)
   }
   
-  return(data.df)
+  return(data.df %>% as_tibble())
 }
 
 #' Check if a vascr data set is re sampled
 #'
 #' @param data.df The vascr data set to check if it has been re sampled
+#' 
+#' @importFrom rlang hash
 #'
 #' @return A boolean, TRUE if re sampled otherwise FALSE
 #' 
@@ -72,16 +75,20 @@ vascr_force_resampled = function(data.df)
 #' @examples
 #' vascr_check_resampled(growth.df)
 #' vascr_check_resampled(growth_unresampled.df)
+#' 
+#' 
+#' 
+#' 
 vascr_check_resampled = function(data.df)
 {
   
   experiment_times = data.df %>% 
     group_by(.data$Unit, .data$Experiment, .data$Well, .data$Instrument, .data$Sample) %>% 
-    summarise(n = n()) %>% 
+    summarise(hash = rlang::hash(.data$Time)) %>% 
     group_by(.data$Unit) %>% 
-    reframe(n = sd(n))
+    reframe(n = length(unique(hash)))
   
-  samples = sum(experiment_times$n) == 0
+  samples = mean(experiment_times$n) == 1
   
   return(samples)
   
@@ -110,3 +117,4 @@ vascr_check_col_exists = function(df, col){
     return(TRUE)
   }
 }
+

@@ -24,7 +24,6 @@ Depends:
     R (>= 3.6)
 Imports: 
     cli,
-    cowplot,
     dplyr,
     foreach,
     ggnewscale,
@@ -34,7 +33,6 @@ Imports:
     doFuture,
     ggtext,
     glue,
-    gridExtra,
     memoise,
     multcomp,
     patchwork,
@@ -49,6 +47,7 @@ Suggests:
     bslib,
     DBI,
     DT,
+    future,
     odbc,
     readr,
     readxl,

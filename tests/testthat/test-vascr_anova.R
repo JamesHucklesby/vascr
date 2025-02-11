@@ -73,9 +73,9 @@ test_that("Dunnett test works", {
 
 test_that("Dunnett test works", {
   
-  vdiffr::expect_doppelganger("Dunnett 1", vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 25, reference = "0_cells + HCMEC D3_line", inputplot = NULL))
-  vdiffr::expect_doppelganger("Dunnett 2",vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = list(25,100), reference = "0_cells + HCMEC D3_line", inputplot = NULL))
-  vdiffr::expect_doppelganger("Dunnett 3",vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 180, reference = "20,000_cells + HCMEC D3_line", inputplot = NULL))
+  vdiffr::expect_doppelganger("Dunnett 1", vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 25, reference = "0_cells + HCMEC D3_line"))
+  vdiffr::expect_doppelganger("Dunnett 2",vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = list(25,100), reference = "0_cells + HCMEC D3_line"))
+  vdiffr::expect_doppelganger("Dunnett 3",vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 180, reference = "20,000_cells + HCMEC D3_line"))
  
 })
 
@@ -90,7 +90,8 @@ test_that("Plot bar anova", {
 
 test_that("Plot overall ANOVA tabulation", {
   vdiffr::expect_doppelganger("Overall anova plot", vascr_plot_anova(data.df = growth.df, unit = "R", frequency = 4000, time = 100))
-  vdiffr::expect_doppelganger("anova bar 2", vascr_plot_anova(data = growth.df, unit = "R", time = 100, frequency = 4000, reference = "0_cells + HCMEC D3_line"))
+  set.seed(100)
+  invisible(vdiffr::expect_doppelganger("anova bar 2", {vascr_plot_anova(data = growth.df, unit = "R", time = 110, frequency = 4000, reference = "0_cells + HCMEC D3_line")}))
   
   
   nines = vascr_combine(growth.df %>% mutate(Experiment = paste(Experiment, "1")), growth.df %>% mutate(Experiment = paste(Experiment, "2")), growth.df %>% mutate(Experiment = paste(Experiment, "3")))
@@ -102,3 +103,7 @@ test_that("Plot overall ANOVA tabulation", {
 test_that("Can plot out the anova graphics", {
   vdiffr::expect_doppelganger("overall plot", vascr_plot_anova_grid(growth.df, "R", 4000, 100))
 })
+
+
+
+

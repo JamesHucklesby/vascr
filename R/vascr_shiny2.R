@@ -6,59 +6,91 @@
 #'
 #' @examples
 vascr_ui = function(){
+  
+  # Bind tags to someting to keep cmd check happy
+  tags = NULL
+  
     test_page = function(pages)
     {
       paste("input.nav === '", pages, "'", sep = "", collapse = " | ")
     }
     
     cpan = function(output, pages){
-      shiny::conditionalPanel(test_page(pages), uiOutput(output))
+      shiny::conditionalPanel(test_page(pages), shiny::uiOutput(output))
     }
     
-    nd = function()
-    {
-      bslib::card("No data",  shiny::actionButton("load_default", "Load the default growth.df dataset"))
-    }
+    # nd = function()
+    # {
+    #   bslib::card("No data",  shiny::actionButton("load_default", "Load the default growth.df dataset"))
+    # }
     
-    ui <- bslib::page_navbar(
-      
-                # spinner css
-                tags$head(
-                  tags$style(HTML("
-            #loadmessage {
+    
+    ui <- 
+      shiny::tagList(# spinner css
+      #' tags$head(
+      #'   tags$style(shiny::HTML("
+      #'       #loadmessage {
+      #'       position:fixed; z-index:8; top:50%; left:50%; padding:10px;
+      #'       text-align:center; font-weight:bold; color:#000000; background-color:#CCFF66;
+      #'       }
+      #' 
+      #'       .loader {
+      #'       position:fixed; z-index:8; border:16px solid #999999;
+      #'       border-top: 16px solid #8B0000; border-radius: 50%;
+      #'       width: 120px; height: 120px; top:45%; left:45%;
+      #'       animation: spin 2s linear infinite;
+      #'       }
+      #' 
+      #'       .prevent_click{
+      #'       position:fixed;
+      #'       z-index:9;
+      #'       width:100%;
+      #'       height:100vh;
+      #'       background-color: transpare'nt;
+      #'       }
+      #' 
+      #'       @keyframes spin {
+      #'       0% { transform: rotate(0deg); }
+      #'       100% { transform: rotate(360deg); }
+      #'       }"))
+      #' ),
+
+            
+      bslib::page_navbar(
+        
+      # display load spinner when shiny is busy
+        
+      shiny::conditionalPanel(
+        condition = "$(\'html\').hasClass(\'shiny-busy\')",
+        div(class = "loader"),
+        div(class = "prevent_click")
+      ),
+
+      theme = bs_theme() %>% bs_add_rules("#shiny-notification-success_box {background-color:rgb(103, 194, 58);}
+                                          #loadmessage {
             position:fixed; z-index:8; top:50%; left:50%; padding:10px;
             text-align:center; font-weight:bold; color:#000000; background-color:#CCFF66;
             }
-            
+
             .loader {
             position:fixed; z-index:8; border:16px solid #999999;
             border-top: 16px solid #8B0000; border-radius: 50%;
             width: 120px; height: 120px; top:45%; left:45%;
             animation: spin 2s linear infinite;
             }
-          
+
             .prevent_click{
-            position:fixed; 
+            position:fixed;
             z-index:9;
             width:100%;
             height:100vh;
-            background-color: transpare'nt;   
+            background-color: transparent;
             }
-          
+
             @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-            }"))
-                ),
-      
-      # display load spinner when shiny is busy
-      conditionalPanel(
-        condition = "$(\'html\').hasClass(\'shiny-busy\')",
-        tags$div(class = "loader"),
-        tags$div(class = "prevent_click")
-      ),
-      
-      tags$style("#shiny-notification-success_box {background-color:rgb(103, 194, 58);}"),
+            }"),
       
       shinyjs::useShinyjs(),
       title = "vascr dashboard",
@@ -72,12 +104,13 @@ vascr_ui = function(){
         cpan("select_level", c("line", "cc")),
         cpan("select_experiment", c("qc")),
         cpan("qc_wells", c("qc")),
-        cpan("select_normalise", c("line"))
+        cpan("select_normalise", c("line")),
+        cpan("add_row", c("label"))
       ),
     
       bslib::nav_panel("Import data", shiny::uiOutput("import_controls", fill = "item")),
-      bslib::nav_panel("Edit labels", bslib::card(DT::DTOutput("edit_labels")), value = "label"),
-      bslib::nav_panel("Resample time", bslib::card(textOutput("original_times"), shiny::uiOutput("resample_controls")), shiny::plotOutput("resample_graph"), shiny::plotOutput("resample_graph_range"), value = "resample"),
+      bslib::nav_panel("Edit labels", bslib::card(DT::DTOutput("map")), value = "label"),
+      bslib::nav_panel("Resample time", bslib::card(shiny::textOutput("original_times"), shiny::uiOutput("resample_controls")), shiny::plotOutput("resample_graph"), shiny::plotOutput("resample_graph_range"), value = "resample"),
       bslib::nav_panel("QC", bslib::card(shiny::plotOutput("plot_qc")), value = "qc"),
       bslib::nav_panel("Line graph", bslib::card(shiny::plotOutput("plot_line")), value = "line"),
       bslib::nav_panel("ANOVA", bslib::card(shiny::plotOutput("plot_ANOVA")), value = "anova"),
@@ -85,6 +118,7 @@ vascr_ui = function(){
       bslib::nav_panel("Export", bslib::card(shiny::uiOutput("export_controls"))),
       bslib::nav_panel("Log", bslib::card(shiny::verbatimTextOutput("log")), value = "log"),
       fillable = c("label","qc", "line", "anova", "cc")
+    )
     )
     
     return(ui)
@@ -99,6 +133,7 @@ vascr_ui = function(){
 #' @importFrom dplyr full_join mutate filter group_by summarise tribble
 #' @importFrom utils read.csv2
 #' @importFrom glue glue
+#' @importFrom rlang .data
 #' 
 #' @noRd
 #'
@@ -116,7 +151,7 @@ server <- function(input, output) {
   options(shiny.maxRequestSize=1000*1024^2)
 
 
-  l = reactiveVal({})
+  l = shiny::reactiveVal({})
 
 
   vascr_log = function(l, string)
@@ -135,31 +170,35 @@ server <- function(input, output) {
 
 
   raw_dat = shiny::reactiveVal({
-    vascr::growth.df %>% dplyr::filter(FALSE) %>% mutate(Excluded = FALSE)
+    vascr::growth.df %>% dplyr::mutate(Excluded = FALSE) %>% dplyr::select(-"Sample", -"SampleID", -"Excluded", -"cells", -"line") %>% dplyr::filter(FALSE)  
+  })
+  
+  platemap = shiny::reactiveVal({
+    vascr_map_template()
   })
 
 
-  uniques = shiny::reactive({
-    uni = list()
-
-    unit = unique(dat()$Sample)
-
-    return(uni)
-    })
+  # uniques = shiny::reactive({
+  #   uni = list()
+  # 
+  #   unit = unique(dat()$Sample)
+  # 
+  #   return(uni)
+  #   })
 
   # Generate floating UI
 
   output$select_unit = shiny::renderUI(shiny::selectInput("unit", "Select unit", choices = unique(dat()$Unit)))
   
   shiny::observeEvent(input$unit, {
-  output$select_frequency = shiny::renderUI(shiny::selectInput("frequency", "Select Frequency", choices = unique((dat() %>% filter(Unit == input$unit))$Frequency)))
+  output$select_frequency = shiny::renderUI(shiny::selectInput("frequency", "Select Frequency", choices = unique((dat() %>% filter(.data$Unit == input$unit))$Frequency)))
   })
   
   
   output$select_sample = shiny::renderUI(shiny::checkboxGroupInput("sample", "Select sample", choices = unique(dat()$Sample), selected = unique(dat()$Sample)))
   output$select_time_single = shiny::renderUI(shiny::selectInput("time_single", "Select time", choices = unique(dat()$Time)))
   output$select_normalise = shiny::renderUI(shiny::selectInput("normalise", "Select time to normalise to", choices = c("none",unique(dat()$Time))))
-  output$select_reference = shiny::renderUI(shiny::selectInput("reference", "Select reference", choices = c("none", unique(dat()$Sample)), selected = unique(dat()$Sample)))
+  output$select_reference = shiny::renderUI(shiny::selectInput("reference", "Select reference", choices = c("none", as.character(unique(dat()$Sample)))))
   output$select_level = shiny::renderUI(shiny::selectInput("level", "Select level", choices = c("summary", "experiments", "wells")))
 
 
@@ -219,7 +258,7 @@ server <- function(input, output) {
 
     if (exp_moving %in% unique(current_data$Experiment))
     {
-      current_data = current_data %>% dplyr::filter(!Experiment == exp_moving)
+      current_data = current_data %>% dplyr::filter(!.data$Experiment == exp_moving)
       shiny::showNotification(glue("Experiment {exp_moving} already imported, overwriting"),
                        type = "warning")
     }
@@ -241,19 +280,39 @@ server <- function(input, output) {
 
   })
 
-
-  shiny::observeEvent(input$load_previous, {
-    req(input$load_previous)
-    load_in = read.csv2(input$load_previous$datapath)
-    print(load_in)
-    all_data(load_in)
-  })
+# TODO Fix this so import works again
+ 
+  # shiny::observeEvent(input$load_previous, {
+  #   req(input$load_previous)
+  #   load_in = read.csv2(input$load_previous$datapath)
+  #   print(load_in)
+  #   all_data(load_in)
+  # })
 
   shiny::observeEvent(input$load_default, {
     
-    raw_dat(growth.df %>% mutate(Excluded = "no") %>% dplyr::filter(!is.na(.data$Value)))
+    raw_dat(vascr::growth.df %>% mutate(Excluded = FALSE) %>% select(-"Sample", -"SampleID", -"Excluded", -"cells", -"line") %>% dplyr::filter(!is.na(.data$Value)))
+    platemap(vascr_regenerate_map(vascr::growth.df%>% mutate(Excluded = "no")))
     vascr_notify("success", "Default data loaded")
 
+  })
+  
+  named_dat = shiny::reactive({
+    raw_dat() %>% vascr_apply_map(platemap())
+  })
+  
+  dat = shiny::reactive({
+    
+    if(is.null(input$resample_n))
+    {
+      npoints = 40
+    } else
+    {
+      npoints = input$resample_n
+    }
+    
+    toreturn = named_dat()  %>% vascr_resample_time(npoints)
+    return(toreturn)
   })
 
   # ///////////// Re-sample time
@@ -265,25 +324,13 @@ server <- function(input, output) {
 
   # output$original_times = shiny::renderText(paste(unique(raw_dat()$Time, collapse = ",")))
 
-  output$resample_graph = shiny::renderPlot(vascr_plot_resample(raw_dat(), newn = input$resample_n))
+  output$resample_graph = shiny::renderPlot(vascr_plot_resample(named_dat() , newn = input$resample_n))
 
-  output$resample_graph_range = shiny::renderPlot(vascr_plot_resample_range(raw_dat()))
+  output$resample_graph_range = shiny::renderPlot(vascr_plot_resample_range(named_dat()))
 
-  dat = shiny::reactive({
+  
 
-  if(is.null(input$resample_n))
-    {
-    npoints = 40
-    } else
-    {
-    npoints = input$resample_n
-    }
-
-
-    raw_dat() %>% vascr_resample_time(npoints)
-  })
-
-
+  
   #////////////////////////// Plate map import
 
   # output$label_active_expt = shiny::renderUI({
@@ -304,119 +351,158 @@ server <- function(input, output) {
   # })
 
 
-  c_platemap = shiny::reactiveVal({
-    tribble(~`Experiment`, ~`Well`, ~`Sample`, ~`SampleID`, ~`Excluded`)
-  })
-
-  shiny::observeEvent(input$nav, {
-
-    if(input$nav == "label")
-    {
-        localmap = platemap()
-        print(localmap)
-        c_platemap(platemap())
-    } else if(nrow(c_platemap())>0)
-    {
-      updatedpm = c_platemap() %>% separate_longer_delim("Well", delim = " ") %>%
-        separate_longer_delim("Experiment", delim = " ")
-
-
-      updateddf = raw_dat() %>% mutate(Sample = NULL, SampleID = NULL, Excluded = NULL) %>%
-        full_join(updatedpm, by = join_by(Well, Experiment)) %>%
-        ungroup()
-
-      raw_dat(updateddf)
-    }
-  })
-
-
-    # Auxiliary function
-  shinyInput <- function(FUN, len, id, ...) {
-    inputs <- character(len)
-    for (i in seq_len(len)) {
-      inputs[i] <- as.character(FUN(paste0(id, i), ...))
-    }
-    inputs
-  }
-
-  output$edit_labels <- DT::renderDT({
-    table_to_print = c_platemap()
-    DT::datatable(table_to_print, editable = TRUE, escape = F, options = list(pageLength = nrow(table_to_print)))
-  })
-
-  # observeEvent(input$add_row, {
-  #   all_dat = raw_dat()
-  #   print(all_dat)
-  #   all_dat[nrow(all_dat) + 1, ] <- NA
-  #   print(all_dat)
-  #   raw_dat(all_dat)
+  # 
+  # shiny::observeEvent(input$nav, {
+  # 
+  #   if(input$nav == "label")
+  #   {
+  #       localmap = platemap()
+  #       print(localmap)
+  #       c_platemap(platemap())
+  #   } else if(nrow(c_platemap())>0)
+  #   {
+  #     updatedpm = c_platemap() %>% separate_longer_delim("Well", delim = " ") %>%
+  #       separate_longer_delim("Experiment", delim = " ")
+  # 
+  # 
+  #     updateddf = raw_dat() %>% mutate(Sample = NULL, SampleID = NULL, Excluded = NULL) %>%
+  #       full_join(updatedpm, by = join_by(Well, Experiment)) %>%
+  #       ungroup()
+  # 
+  #     raw_dat(updateddf)
+  #   }
   # })
 
-  shiny::observeEvent(input$edit_labels_cell_edit, {
+  
+  
+
+  #   # Auxiliary function
+  # shinyInput <- function(FUN, len, id, ...) {
+  #   inputs <- character(len)
+  #   for (i in seq_len(len)) {
+  #     inputs[i] <- as.character(FUN(paste0(id, i), ...))
+  #   }
+  #   inputs
+  # }
+  # 
+  
+
+
+  output$map <- DT::renderDT({
+    platemap(platemap() %>% dplyr::mutate(Experiment = as.character(.data$Experiment), SampleID = as.character(.data$SampleID)))
+      DT::datatable(platemap(), editable = TRUE, escape = F, options = list(pageLength = nrow(platemap()))) %>%
+      DT::formatStyle('Sample', backgroundColor = DT::styleEqual(unique(platemap()$Sample), vascr_gg_color_hue(length(unique(platemap()$Sample)))))%>%
+      DT::formatStyle('Experiment', backgroundColor = DT::styleEqual(unique(platemap()$Experiment), vascr_gg_color_hue(length(unique(platemap()$Experiment %>% as.character())))))
+  }, server = FALSE)
+    
+
+  shiny::observeEvent(input$add_row_btn, {
+    platemap(dplyr::add_row(platemap() %>% ungroup()))
+     
+  })
+  
+  output$add_row = shiny::renderUI({shiny::tagList(shiny::actionButton("add_row_btn", "Add another row"), 
+                                            shiny::actionButton("deleteRows", "Delete Row"), 
+                                            shiny::actionButton("dupRows", "Duplicate Row"))})
+
+  shiny::observeEvent(input$map_cell_edit, {
     #get values
-    info = input$edit_labels_cell_edit
+    info = input$map_cell_edit
     selectedrow = as.numeric(info$row)
     selectedcol = as.numeric(info$col)
-    k = info$value
+    k = info$value %>% as.character()
+    
+    sc_name = colnames(platemap())[selectedcol]
+    
+    if(sc_name == "Experiment"){
+      k = vascr_find_experiment(raw_dat(), k)
+      k = as.character(k)
+      print(k)
+    }
+    
 
     #write values to reactive
 
     updatedpm = platemap()
     updatedpm[selectedrow, selectedcol] = k
 
-    c_platemap(updatedpm)
+    platemap(updatedpm)
 
   })
 
+  
+  shiny::observeEvent(input$deleteRows,{
+    
+    if (!is.null(input$map_rows_selected)) {
+      
+      platemap( platemap()[-as.numeric(input$map_rows_selected),])
+    }
+  })
+  
+  shiny::observeEvent(input$dupRows,{
+    
+    if (!is.null(input$map_rows_selected)) {
+      
+      platemap(rbind(platemap(), platemap()[as.numeric(input$map_rows_selected),]))
+    }
+  })
 
 
   ### QC ################################################################
 
   selected_expt = shiny::reactiveVal(c("testing"))
 
-  output$select_experiment = shiny::renderUI(selectInput("experiment", "Select experiment", choices = unique(dat()$Experiment), selected = selected_expt()))
+  output$select_experiment = shiny::renderUI(shiny::selectInput("experiment", "Select experiment", 
+                                                                choices = unique(raw_dat()$Experiment), 
+                                                                selected = selected_expt()))
 
 
   deviation = shiny::reactive({
     dat() %>%
-      vascr_subset(unit = "R", frequency = 4000) %>%
+      vascr_subset(unit = "R", frequency = 4000, remove_excluded = FALSE) %>%
       vascr_summarise_deviation() %>%
-      group_by(Well, Experiment) %>%
-      summarise(max = max(Median_Deviation, na.rm = TRUE))
+      group_by(.data$Well, .data$Experiment) %>%
+      summarise(max = max(.data$Median_Deviation, na.rm = TRUE))
   })
 
-  
+
+# Generate check boxes when the experiment is selected
 shiny::observeEvent(input$experiment, {
   
-  output$qc_wells = renderUI({
-    already_chosen = (dat() %>% dplyr::filter(Excluded == "yes"))$Well
-
-    devs = (deviation() %>% dplyr::filter(Experiment == input$experiment))
-
-    names = as.list(paste0(
-      devs$Well,
-      ifelse(
-        devs$max > 0.2,
-        "<span style = 'color:red'>   &#9888;</span>",
-        ""
-      )
-    ))
-    names = lapply(names, HTML)
-
-    shiny::checkboxGroupInput(
-      "qc_wells",
-      "Exclude wells",
-      choiceNames = names,
-      choiceValues = devs$Well,
-      selected = already_chosen
-
-    )
-  })
+        output$qc_wells = shiny::renderUI({
+          already_chosen = unique((dat() %>% dplyr::filter(.data$Excluded == "yes"))$Well)
+      
+          print(input$experiment)
+          
+          devs = (deviation() %>% dplyr::filter(.data$Experiment == input$experiment))
+          
+          print("devs")
+          print(devs)
+      
+          names = as.list(paste0(
+            devs$Well,
+            ifelse(
+              devs$max > 0.2,
+              "<span style = 'color:red'>   &#9888;</span>",
+              ""
+            )
+          ))
+          names = lapply(names, shiny::HTML)
+      
+              shiny::checkboxGroupInput(
+                "qc_wells",
+                "Exclude wells",
+                choiceNames = names,
+                choiceValues = devs$Well,
+                selected = already_chosen
+          
+              )
+        })
 })
 
 
   grid_data = shiny::reactive({
-    req(input$experiment)
+    shiny::req(input$experiment)
     
     dat() %>%
       vascr_subset(
@@ -438,9 +524,13 @@ shiny::observeEvent(input$experiment, {
 
 
   shiny::observeEvent(input$qc_wells,{
-    selected_expt(input$experiment)
-    updatedat = raw_dat() %>% mutate(Excluded = ifelse(Well %in% input$qc_wells & Experiment %in% input$experiment, "yes", "no"))
-    raw_dat(updatedat)
+    updatedat = platemap() %>% 
+      separate_longer_delim(.data$Well, delim = " ") %>% 
+      mutate(Excluded = ifelse(.data$Well %in% input$qc_wells & .data$Experiment %in% input$experiment, "yes", "no")) %>%
+      group_by(.data$Experiment, .data$Sample, .data$SampleID, .data$Excluded) %>%
+      summarise(Well = paste(.data$Well, collapse = " "))
+    platemap(updatedat)
+    print(platemap())
   })
 
 
@@ -472,20 +562,20 @@ shiny::observeEvent(input$experiment, {
     }
 
       output$plot_line <- shiny::renderPlot(protect(dat() %>% vascr_subset(unit = input$unit, frequency = input$frequency) %>%
-                                       dplyr::filter(Excluded == "no") %>%
-                                       dplyr::filter(Sample %in% input$sample) %>%
+                                       dplyr::filter(.data$Excluded == "no") %>%
+                                       dplyr::filter(.data$Sample %in% input$sample) %>%
                                        vascr_normalise(normtime) %>%
                                        vascr_summarise(level = input$level) %>%
-                                       vascr_plot_line()))
+                                       vascr_plot_line())) 
 
       # print(.Last.value)
   })
 
 
- plot_ANOVA_generator = reactive({
+ plot_ANOVA_generator = shiny::reactive({
   dat() %>%
-     dplyr::filter(Excluded == "no") %>%
-     dplyr::filter(Sample %in% input$sample) %>%
+     dplyr::filter(.data$Excluded == "no") %>%
+     dplyr::filter(.data$Sample %in% input$sample) %>%
      vascr_plot_anova(unit = input$unit, frequency = input$frequency,
      time = as.numeric(input$time_single),
       reference = input$reference)
@@ -496,10 +586,10 @@ shiny::observeEvent(input$experiment, {
 
 
   output$plot_cc <- shiny::renderPlot(dat() %>%
-                                        dplyr::filter(Excluded == "no") %>%
-                                        dplyr::filter(Sample %in% input$sample) %>%
-                                    vascr_subset(unit = input$unit, frequency = input$frequency) %>%
-                                    vascr_plot_cc_stats(unit = input$unit, frequency = input$frequency)
+                                        dplyr::filter(.data$Excluded == "no") %>%
+                                        dplyr::filter(.data$Sample %in% input$sample) %>%
+                                        vascr_subset(unit = input$unit, frequency = input$frequency) %>%
+                                        vascr_plot_cc_stats(unit = input$unit, frequency = input$frequency, reference = input$reference)
                                   )
 
   # Exporting data
@@ -528,7 +618,7 @@ shiny::observeEvent(input$experiment, {
       paste("vascr_output", format(Sys.time()), '.csv', sep='')
     },
     content = function(con) {
-      write.csv2(dat(), con)
+      utils::write.csv2(dat(), con)
     }
   )
 
@@ -551,12 +641,17 @@ shiny::observeEvent(input$experiment, {
   output$log = shiny::renderText(l())
 
 }
+
+return(server)
+
 }
 
 
 #' Launch the vascr UI
 #'
 #' @returns A shinyApp to work with vascr data
+#' 
+#' @param data.df Data to preload into shiny app
 #' 
 #' @export
 #' 
@@ -567,7 +662,7 @@ shiny::observeEvent(input$experiment, {
 #' vascr_shiny()
 #' }
 #' 
-vascr_shiny = function(data.df = growth.df)
+vascr_shiny = function(data.df)
 {
   # Web packages do not ship with shiny by default, hence offer to install if required
   rlang::check_installed(pkg = c("shiny", "bslib", "DT", "shinyjs"), reason ="to run the web technologies required to render the vascr UI. You must install these packages to continue to the vascr UI")
@@ -576,3 +671,4 @@ vascr_shiny = function(data.df = growth.df)
   shiny::shinyApp(vascr_ui, vascr_serve(data.df))
 }
 
+# runApp(vascr_shiny())

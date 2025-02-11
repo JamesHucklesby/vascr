@@ -3,7 +3,7 @@
     Code
       vascr_subset(growth.df)
     Output
-      # A tibble: 139,230 x 11
+      # A tibble: 139,230 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 Alpha A01    2.69 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
@@ -17,14 +17,14 @@
        9     5 Alpha C03    2.4  25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
       10     5 Alpha D01    1.85 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
       # i 139,220 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, time = 40)
     Output
-      # A tibble: 3,570 x 11
+      # A tibble: 3,570 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1    40 Alpha A01    5.17 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
@@ -38,14 +38,14 @@
        9    40 Alpha C03    4.95 25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
       10    40 Alpha D01    4.51 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
       # i 3,560 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, time = c(40, 60))
     Output
-      # A tibble: 17,850 x 11
+      # A tibble: 17,850 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1    40 Alpha A01    5.17 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
@@ -59,14 +59,14 @@
        9    40 Alpha C03    4.95 25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
       10    40 Alpha D01    4.51 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
       # i 17,840 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, time = NULL)
     Output
-      # A tibble: 139,230 x 11
+      # A tibble: 139,230 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 Alpha A01    2.69 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
@@ -80,14 +80,14 @@
        9     5 Alpha C03    2.4  25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
       10     5 Alpha D01    1.85 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
       # i 139,220 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, unit = "Rb")
     Output
-      # A tibble: 2,574 x 11
+      # A tibble: 2,574 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <fct> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 Rb    A01       0 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
@@ -101,14 +101,14 @@
        9     5 Rb    C03       0 25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
       10     5 Rb    D01       0 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
       # i 2,564 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, unit = "R")
     Output
-      # A tibble: 25,272 x 11
+      # A tibble: 25,272 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <fct> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 R     A01    413. 35,000_c~      1000 1 : Exper~ 35000 HCME~ ECIS      
@@ -122,14 +122,14 @@
        9    45 R     A01    801. 35,000_c~      1000 1 : Exper~ 35000 HCME~ ECIS      
       10    50 R     A01    815. 35,000_c~      1000 1 : Exper~ 35000 HCME~ ECIS      
       # i 25,262 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, well = "A1")
     Output
-      # A tibble: 1,950 x 11
+      # A tibble: 1,950 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 Alpha A01    2.69 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
@@ -143,7 +143,7 @@
        9    10 Rb    A01    0    35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
       10    10 RMSE  A01    0.02 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
       # i 1,940 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
@@ -152,7 +152,7 @@
     Message
       ! [B12] corrected to [B02]. Please check the argeuments for your functions are correctly typed.
     Output
-      # A tibble: 1,950 x 11
+      # A tibble: 1,950 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 Alpha B02    2.69 30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
@@ -166,7 +166,7 @@
        9    10 Rb    B02    0    30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
       10    10 RMSE  B02    0.02 30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
       # i 1,940 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
@@ -176,7 +176,7 @@
       ! Well NA is not a valid well name, please check your input data
       ! [NA] corrected to [A01]. Please check the argeuments for your functions are correctly typed.
     Output
-      # A tibble: 1,950 x 11
+      # A tibble: 1,950 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 Alpha A01    2.69 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
@@ -190,14 +190,14 @@
        9    10 Rb    A01    0    35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
       10    10 RMSE  A01    0.02 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
       # i 1,940 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, well = c("B2", "B03"))
     Output
-      # A tibble: 3,900 x 11
+      # A tibble: 3,900 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 Alpha B02    2.69 30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
@@ -211,14 +211,14 @@
        9     5 RMSE  B02    0.01 30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
       10     5 RMSE  B03    0.01 30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
       # i 3,890 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, well = c("-A01", "-B3"))
     Output
-      # A tibble: 135,330 x 11
+      # A tibble: 135,330 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 Alpha A02    2.89 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
@@ -232,14 +232,14 @@
        9     5 Alpha D02    2.02 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
       10     5 Alpha D03    2.05 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
       # i 135,320 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, frequency = 4000)
     Output
-      # A tibble: 14,040 x 11
+      # A tibble: 14,040 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 C     A01   104.  35,000_c~      4000 1 : Exper~ 35000 HCME~ ECIS      
@@ -253,7 +253,7 @@
        9    45 C     A01    90.0 35,000_c~      4000 1 : Exper~ 35000 HCME~ ECIS      
       10    50 C     A01    92.3 35,000_c~      4000 1 : Exper~ 35000 HCME~ ECIS      
       # i 14,030 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
@@ -261,7 +261,7 @@
       vascr_subset(growth.df %>% mutate(Frequency = as.character(Frequency)),
       frequency = "4000")
     Output
-      # A tibble: 14,040 x 11
+      # A tibble: 14,040 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 C     A01   104.  35,000_c~      4000 1 : Exper~ 35000 HCME~ ECIS      
@@ -275,14 +275,14 @@
        9    45 C     A01    90.0 35,000_c~      4000 1 : Exper~ 35000 HCME~ ECIS      
       10    50 C     A01    92.3 35,000_c~      4000 1 : Exper~ 35000 HCME~ ECIS      
       # i 14,030 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, experiment = 1)
     Output
-      # A tibble: 46,215 x 11
+      # A tibble: 46,215 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 Alpha A01    2.69 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
@@ -296,14 +296,14 @@
        9     5 Alpha C03    2.4  25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
       10     5 Alpha D01    1.85 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
       # i 46,205 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, experiment = 1)
     Output
-      # A tibble: 46,215 x 11
+      # A tibble: 46,215 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 Alpha A01    2.69 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
@@ -317,14 +317,14 @@
        9     5 Alpha C03    2.4  25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
       10     5 Alpha D01    1.85 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
       # i 46,205 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, instrument = "ECIS")
     Output
-      # A tibble: 139,230 x 11
+      # A tibble: 139,230 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 Alpha A01    2.69 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
@@ -338,14 +338,14 @@
        9     5 Alpha C03    2.4  25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
       10     5 Alpha D01    1.85 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
       # i 139,220 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, unit = "Rb", sampleid = c(1:3))
     Output
-      # A tibble: 1,053 x 11
+      # A tibble: 1,053 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <fct> <chr> <dbl> <fct>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 Rb    A01       0 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
@@ -359,14 +359,14 @@
        9     5 Rb    C03       0 25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
       10    10 Rb    A01       0 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
       # i 1,043 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, unit = "Rb", sampleid = c(8))
     Output
-      # A tibble: 117 x 11
+      # A tibble: 117 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <fct> <chr> <dbl> <fct>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 Rb    H07       0 0_cells ~         0 3 : Exper~ 0     HCME~ ECIS      
@@ -380,14 +380,14 @@
        9    15 Rb    H09       0 0_cells ~         0 3 : Exper~ 0     HCME~ ECIS      
       10    20 Rb    H07       0 0_cells ~         0 3 : Exper~ 0     HCME~ ECIS      
       # i 107 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
     Code
       vascr_subset(growth.df, subsample = 100)
     Output
-      # A tibble: 3,570 x 11
+      # A tibble: 3,570 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
          <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
        1     5 Alpha A01    2.69 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
@@ -401,7 +401,7 @@
        9     5 Alpha C03    2.4  25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
       10     5 Alpha D01    1.85 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
       # i 3,560 more rows
-      # i 1 more variable: SampleID <int>
+      # i 2 more variables: SampleID <int>, Excluded <chr>
 
 ---
 
@@ -410,8 +410,8 @@
     Message
       ! No data returned from dataset subset. Check your frequencies, times and units are present in the dataset
     Output
-      # A tibble: 0 x 11
-      # i 11 variables: Time <dbl>, Unit <fct>, Well <chr>, Value <dbl>,
+      # A tibble: 0 x 12
+      # i 12 variables: Time <dbl>, Unit <fct>, Well <chr>, Value <dbl>,
       #   Sample <fct>, Frequency <dbl>, Experiment <fct>, cells <chr>, line <chr>,
-      #   Instrument <chr>, SampleID <int>
+      #   Instrument <chr>, SampleID <int>, Excluded <chr>
 

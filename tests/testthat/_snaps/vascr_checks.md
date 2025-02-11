@@ -51,3 +51,20 @@
     Output
       [1] FALSE
 
+# Checking of resampling works
+
+    Code
+      w16 = system.file("extdata/instruments/ecis_16_testplate.abp", package = "vascr")
+      d16 = vascr_import("ECIS", raw = w16, experiment = "W16")
+    Message
+      i Starting import
+      i Importing raw data
+      v Import complete
+
+---
+
+    Code
+      vascr_check_resampled(d16)
+    Output
+      [1] FALSE
+

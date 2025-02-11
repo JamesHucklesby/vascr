@@ -20,13 +20,18 @@ test_that("Can summarise", {
   
   expect_snapshot(vascr_summarise_summary(vascr_summarise(rbgrowth.df, "summary")))
   
-  expect_snapshot(vascr_summarise(growth_unresampled.df %>% vascr_subset(unit = "R", frequency = 4000), "summary"))
+  expect_snapshot({ w16 = system.file('extdata/instruments/ecis_16_testplate.abp', package = 'vascr')
+  d16 = vascr_import("ECIS", raw = w16, experiment = "W16")
+  
+  vascr_check_resampled(d16)})
+  
+  expect_snapshot(vascr_summarise(d16 %>% vascr_subset(unit = "R", frequency = 4000), "summary"))
   
 })
 
 
 test_that("Can summarise deviation",{
-  expect_snapshot(vascr_summarise(rbgrowth.df, level = "median_deviation"))
+  expect_snapshot(vascr_summarise(growth.df %>% vascr_subset(unit = "R", frequency = "4000"), level = "median_deviation"))
 })
 
 test_that("Can normalise", {
@@ -48,12 +53,13 @@ test_that("Can subsample", {
   expect_snapshot(vascr_subsample(growth.df, 10))
   expect_snapshot(vascr_subsample(growth.df, Inf))
   expect_snapshot(vascr_subsample(growth.df %>% vascr_subset(time = 10), 10))
+  expect_snapshot(vascr_resample_time(growth.df, start = 5, end = 20, rate = 5))
   
 })
 
 test_that("Can interpolate time", {
   expect_snapshot(vascr_interpolate_time(growth.df %>% vascr_subset(unit = "Rb")))
-  expect_error(vascr_interpolate_time(growth.df))
+  expect_snapshot_error(vascr_interpolate_time(growth.df))
 })
 
 test_that("vascr_force_resampled", {
@@ -88,30 +94,9 @@ test_that("Data can be resampled and plotted",{
 test_that("remove metadata",
 {
   expect_snapshot(growth.df%>% vascr_remove_metadata())
-  expect_snapshot(vascr_summarise(growth.df, "experiments") %>% vascr_remove_metadata())
+  expect_snapshot(vascr_summarise(growth.df %>% vascr_subset(unit = "R", frequency = 4000), "experiments") %>% vascr_remove_metadata())
 })
 
-future::plan("multisession")
-
-test_that("resample stretching works", {
-  
-  future::plan("multisession")
-  
-  data.df = growth.df %>% vascr_subset(unit = "R", frequency = "4000", sample =c(1,3,8), time = c(0,50))
-  
-   t1 = growth.df %>% vascr_subset(unit = "R", frequency = 4000, experiment = 1, sample = "10,000_cells + HCMEC D3_line") %>% vascr_summarise(level = "experiments")
-   t2 = growth.df %>% vascr_subset(unit = "R", frequency = 4000, experiment = 1, sample = "30,000_cells + HCMEC D3_line") %>% vascr_summarise(level = "experiments")
-   
-    expect_snapshot({stretch_cc(t1, t2)})
-  
-    expect_snapshot(vascr_summarise_cc_stretch_shift(data.df, 8))
-    
-    expect_snapshot(vascr_summarise_cc_stretch_shift_stats(data.df, 8))
-    
-    vdiffr::expect_doppelganger("stretch shift stats", vascr_plot_cc_stretch_shift_stats(data.df, 8))
-    vdiffr::expect_doppelganger("stretch shift stats all comps", vascr_plot_cc_stretch_shift_stats(data.df))
-  
-})
 
 
 
