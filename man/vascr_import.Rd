@@ -9,19 +9,21 @@ vascr_import(instrument = NULL, raw = NULL, modeled = NULL, experiment = NULL)
 \arguments{
 \item{instrument}{Instrument to import from, either ECIS, xCELLigence or cellZscope}
 
-\item{raw}{Path to raw datafile}
+\item{raw}{Path to raw data file}
 
-\item{modeled}{Path to modeled datafile from manufacturer's software}
+\item{modeled}{Path to modeled data file from manufacturer's software}
 
 \item{experiment}{Name for the experiment being imported}
 }
 \value{
-A vascr dataset for subsequent analyasis
+A vascr dataset for subsequent analysis
 }
 \description{
 Import an impedance datafile to vascr
 }
 \examples{
+\dontrun{
+
 # ECIS
 raw = system.file('extdata/instruments/ecis_TimeResample.abp', package = 'vascr')
 modeled = system.file('extdata/instruments/ecis_TimeResample_RbA.csv', package = 'vascr')
@@ -36,5 +38,5 @@ vascr_import("xCELLigence", raw, experiment = "xCELLigence")
 model = system.file("extdata/instruments/zscopemodel.txt", package = "vascr")
 raw = system.file("extdata/instruments/zscoperaw.txt", package = "vascr")
 vascr_import("cellzscope", raw, model, "cellZscope")
-
+}
 }

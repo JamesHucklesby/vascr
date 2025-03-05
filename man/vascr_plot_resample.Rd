@@ -2,7 +2,7 @@
 % Please edit documentation in R/transformation.R
 \name{vascr_plot_resample}
 \alias{vascr_plot_resample}
-\title{Plot the data resampling process}
+\title{Plot the data re sampling process}
 \usage{
 vascr_plot_resample(
   data.df,
@@ -24,7 +24,7 @@ vascr_plot_resample(
 
 \item{well}{Well to use, defaults to A01 (or first well in plate)}
 
-\item{newn}{New number of timeplots to compare to current}
+\item{newn}{New number of timepoints to compare to current}
 
 \item{plot}{Return a ggplot or the underlying data. Defaults to TRUE, returning the plot.}
 
@@ -36,7 +36,7 @@ vascr_plot_resample(
 A plot showing how well the resampled data conforms to the actual data set
 }
 \description{
-Plot the data resampling process
+Plot the data re sampling process
 }
 \examples{
 vascr_plot_resample(growth.df)
