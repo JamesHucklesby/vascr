@@ -227,12 +227,12 @@ vascr_find_single_time = function(data.df, time)
 
 #' Align times
 #' 
-#' When running analyasis, you can only run stats on a timepoint that exists in the dataset. These are not always logical or easy to remember. This function rounds the number given to the nearest timepoint that is actually in the dataset.
+#' When running analysis, you can only run stats on a timepoint that exists in the dataset. These are not always logical or easy to remember. This function rounds the number given to the nearest timepoint that is actually in the dataset.
 #'
 #' @param data.df A standard ECIS data frame
 #' @param time The time point that needs rounding
 #'
-#' @return A timepoint that exactly aligns with a measured datapoint
+#' @return A timepoint that exactly aligns with a measured data point
 #' 
 #' @noRd
 #'
@@ -325,12 +325,12 @@ vascr_find_well = function(data.df, well)
 
 #' Align frequencies
 #' 
-#' When running analyasis, you can only subset or plot a time that exists in the dataset. These are not always logical or easy to remember. This function rounds the number given to the nearest frequency that is actually in the dataset.
+#' When running analysis, you can only subset or plot a time that exists in the dataset. These are not always logical or easy to remember. This function rounds the number given to the nearest frequency that is actually in the dataset.
 #'
 #' @param data.df A standard ECIS data frame
-#' @param frequency The tfrequency that needs rounding
+#' @param frequency The frequency that needs rounding
 #'
-#' @return A timepoint that exactly aligns with a measured datapoint
+#' @return A timepoint that exactly aligns with a measured data point
 #' 
 #' @noRd
 #'

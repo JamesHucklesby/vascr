@@ -550,13 +550,13 @@ ggplot(boot2) +
 
 
 
-#' Plot the data resampling process
+#' Plot the data re sampling process
 #'
 #' @param data.df Dataset to analyse
 #' @param unit Unit to use, defaults to R
 #' @param frequency Frequency to use, defaults to 4000
 #' @param well Well to use, defaults to A01 (or first well in plate)
-#' @param newn New number of timeplots to compare to current
+#' @param newn New number of timepoints to compare to current
 #' @param plot Return a ggplot or the underlying data. Defaults to TRUE, returning the plot.
 #' @param rug Show rug lot, defaults true
 #' @param points Show points, defaults to false

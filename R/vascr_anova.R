@@ -4,7 +4,7 @@
 
 #' Make a data frame of what is statistically significant
 #' 
-#' @param data.df The dataframe to analyse
+#' @param data.df The data frame to analyse
 #' @param time The time to analyse
 #' @param unit The unit to analyse
 #' @param frequency The frequency to analyse
@@ -199,7 +199,7 @@ vascr_residuals = function(data.df, unit, frequency, time)
 #' @param time Time to plot
 #' @param priority Vascr priority list
 #'
-#' @return A shapiro test of the selected data
+#' @return A Shapiro test of the selected data
 #' @noRd
 #'
 #' @examples
@@ -341,13 +341,13 @@ vascr_plot_normality = function(data.df, unit, frequency, time)
 #'
 #' @param data.df a vascr dataset
 #' @param unit Unit to analyse
-#' @param frequency Frequency to analyase
+#' @param frequency Frequency to analyse
 #' @param time Time to analyse
 #' @param priority A vascr list of priorities. If left blank default will be used.
 #' 
 #' @importFrom ggplot2 ggplot xlab ylab labs stat_smooth geom_hline geom_point
 #'
-#' @return A ggplot of a levene's test and the underlying data analysed
+#' @return A ggplot of a Levene's test and the underlying data analysed
 #' @noRd
 #'
 #' @examples
@@ -453,13 +453,13 @@ vascr_plot_box_replicate = function(data.df, unit, frequency, time)
 
 
 
-#' Generate a tukey analyasis of vascr data
+#' Generate a Tukey analysis of vascr data
 #'
 #' @param data.df The dataset to analyse
 #' @param unit Unit to analyse
 #' @param frequency Frequency to analyse
 #' @param time Time to analyse
-#' @param raw If true, a non-processed form of the tukey results will be returned
+#' @param raw If true, a non-processed form of the Tukey results will be returned
 #' 
 #' @importFrom dplyr arrange
 #'

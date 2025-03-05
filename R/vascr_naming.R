@@ -1,17 +1,19 @@
 #' Import an impedance datafile to vascr
 #'
 #' @param instrument Instrument to import from, either ECIS, xCELLigence or cellZscope
-#' @param raw Path to raw datafile
-#' @param modeled Path to modeled datafile from manufacturer's software
+#' @param raw Path to raw data file
+#' @param modeled Path to modeled data file from manufacturer's software
 #' @param experiment Name for the experiment being imported
 #' 
 #' @importFrom stringr str_to_lower
 #'
-#' @returns A vascr dataset for subsequent analyasis
+#' @returns A vascr dataset for subsequent analysis
 #' 
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' 
 #' # ECIS
 #' raw = system.file('extdata/instruments/ecis_TimeResample.abp', package = 'vascr')
 #' modeled = system.file('extdata/instruments/ecis_TimeResample_RbA.csv', package = 'vascr')
@@ -26,7 +28,7 @@
 #' model = system.file("extdata/instruments/zscopemodel.txt", package = "vascr")
 #' raw = system.file("extdata/instruments/zscoperaw.txt", package = "vascr")
 #' vascr_import("cellzscope", raw, model, "cellZscope")
-#' 
+#' }
 vascr_import = function(instrument = NULL, raw = NULL, modeled = NULL, experiment = NULL){
   
   instrument = str_to_lower(instrument)
