@@ -288,13 +288,8 @@ myf = function(a,b)
   
   to_export = pairedcurves %>% as.data.frame () %>% rowwise() %>% 
     nest(data = c("values.x", "values.y")) %>%
-<<<<<<< HEAD
     mutate(data = future_map(.data$data, function(df) {myf(df$values.x, df$values.y)})) %>%
     unnest("data")
-=======
-    mutate(data = future_map(data, function(df) {myf(df$values.x, df$values.y)})) %>%
-    unnest(data)
->>>>>>> 17f87e43af353d8dc8290c64759e237fb7e084db
 
 }
 
