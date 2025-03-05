@@ -363,9 +363,12 @@ vascr_find_frequency = function(data.df, frequency) {
     
     # freqs <- vector(mode = "numeric", length = length(freq))
     
+<<<<<<< HEAD
     # Define I to keep CMD CHECK happy
     i = 1
     
+=======
+>>>>>>> 17f87e43af353d8dc8290c64759e237fb7e084db
     block = foreach (i = freq) %do%
     {
       vascr_find_frequency(data.df, i)

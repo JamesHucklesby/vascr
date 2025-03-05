@@ -25,8 +25,11 @@ vascr_resample_time(
 
 \item{rate}{Time between timepoints}
 
+<<<<<<< HEAD
 \item{force_timepoint}{Force a specific timepoint to be part of the resample}
 
+=======
+>>>>>>> 17f87e43af353d8dc8290c64759e237fb7e084db
 \item{include_disc}{Add an additional datapoint either side of a discrepancy. Defaults TRUE}
 }
 \value{

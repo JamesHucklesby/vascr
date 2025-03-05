@@ -470,7 +470,11 @@ vascr_plot_cc_stretch_shift_stats = function(data.df, unit= "R", frequency = 400
     ggplot() +
     geom_point(aes(x = .data$mean, y = .data$title, color = .data$name)) +
     geom_errorbar(aes(xmin = mean-sd, xmax = mean+sd, y = .data$title, color = .data$name)) +
+<<<<<<< HEAD
     geom_text_repel(aes(x = .data$mean, y = .data$title, color = .data$name, label = as.character(.data$stars)), direction = "y", seed = 1, nudge_y = 0.2, box.padding = 0, point.padding = 0)
+=======
+    geom_text_repel(aes(x = .data$mean, y = .data$titletitle, color = .data$name, label = as.character(.data$stars)), direction = "y", seed = 1, nudge_y = 0.2, box.padding = 0, point.padding = 0)
+>>>>>>> 17f87e43af353d8dc8290c64759e237fb7e084db
   
   
   

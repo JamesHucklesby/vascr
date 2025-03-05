@@ -417,7 +417,11 @@ vascr_remove_cols = function(data.df, cols){
 #' @param t_start Time to start at
 #' @param t_end Time to end at
 #' @param rate Time between timepoints
+<<<<<<< HEAD
 #' @param force_timepoint Force a specific timepoint to be part of the resample
+=======
+#' @param force_timepoint
+>>>>>>> 17f87e43af353d8dc8290c64759e237fb7e084db
 #' @param include_disc Add an additional datapoint either side of a discrepancy. Defaults TRUE
 #' 
 #' @importFrom foreach foreach `%do%`
