@@ -172,7 +172,7 @@ vascr_apply_map = function(data.df, map){
   print("mapping")
   print(map.df)
   
-  data.df  = data.df %>% vascr_remove_cols(c("Sample", "SampleID", "Excluded"))
+  data.df  = data.df %>% vascr_remove_cols(c("Sample", "SampleID"))
   
   toreturn = data.df %>% left_join(map.df)
   
@@ -322,9 +322,26 @@ return(fulldata)
 }
 
 
-# data.df = growth.df %>% mutate(Sample = paste(Sample, "+ test_pipette"))
-
-
+#' Edit a sample name in a vascr dataframe
+#'
+#' @param data.df The data set to edit
+#' @param to_remove The sample to remove
+#' @param to_add The sample to replace with
+#'
+#' @returns An edited vascr dataset
+#' 
+#' @export
+#'
+#' @examples
+vascr_edit_name = function(data.df, to_remove, to_add = ""){
+  
+  data.df %>% select("Sample") %>% distinct() %>%
+    mutate(Clean_Sample = str_replace_all(.data$Sample, to_remove, to_add)) %>%
+    mutate(Clean_Sample = ifelse(.data$Clean_Sample == "", "Vehicle", .data$Clean_Sample)) %>%
+    right_join(data.df, by = c("Sample" = "Sample")) %>%
+    mutate(Sample = .data$Clean_Sample, Clean_Sample = NULL)
+  
+}
 
 
 

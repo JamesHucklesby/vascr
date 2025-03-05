@@ -1,7 +1,7 @@
-# future::plan("multisession")
-library("progressr")
-library(tidyr)
-library(furrr)
+# # future::plan("multisession")
+# library("progressr")
+# library(tidyr)
+# library(furrr)
 
 test_that("resample stretching works", {
   
@@ -14,9 +14,9 @@ test_that("resample stretching works", {
   
   # expect_snapshot(vascr_summarise_cc_stretch_shift(data.df, 8))
   
-   expect_snapshot(vascr_summarise_cc_stretch_shift_stats(data.df, 8))
+   expect_snapshot(vascr_summarise_cc_stretch_shift_stats(data.df, reference = 3))
   
-  vdiffr::expect_doppelganger("stretch shift stats", vascr_plot_cc_stretch_shift_stats(data.df, 8))
+  vdiffr::expect_doppelganger("stretch shift stats", vascr_plot_cc_stretch_shift_stats(data.df, reference = 8))
   vdiffr::expect_doppelganger("stretch shift stats all comps", vascr_plot_cc_stretch_shift_stats(data.df))
   
 })

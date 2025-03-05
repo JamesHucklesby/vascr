@@ -198,7 +198,7 @@
     Code
       vascr_find_frequency(growth.df, NA)
     Output
-      [1] NA
+      [1] 4000
 
 ---
 

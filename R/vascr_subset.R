@@ -215,9 +215,32 @@ vascr_exclude = function(data.df, well = NULL, experiment = NULL){
   # data.df = data.df %>% filter(!.data$Well %in% well & !.data$Experiment %in% experiment)
   
   well = vascr_find_well(data.df, well)
-  experiment = vascr_find_experiment(data.df, well)
+  experiment = vascr_find_experiment(data.df, experiment)
   
-  data.df = data.df %>% filter(!.data$Well %in% well & !.data$Experiment %in% experiment)
+  data.df = data.df %>% filter(!((.data$Well %in% well) & (.data$Experiment %in% experiment)))
+  
+  return(data.df)
+}
+
+#' Replace a sample name
+#' 
+#' @param data.df the vascr data set to exclude things from
+#' @param well wells to exclude
+#' @param experiment experiments to exclude
+#'
+#' @return A smaller vascr dataset
+#'
+#' @noRd
+#'
+#' @examples
+#' vascr_exclude(growth.df, c("A01", "E01"))
+#' 
+vascr_replace_sample = function(data.df, old, new){
+  # data.df = data.df %>% filter(!.data$Well %in% well & !.data$Experiment %in% experiment)
+
+  data.df = data.df %>% 
+    mutate(Sample = ifelse(is.na(.data$Sample), "NA", as.character(.data$Sample))) %>%
+    mutate(Sample = ifelse(as.character(.data$Sample) == old, new, as.character(.data$Sample)))
   
   return(data.df)
 }

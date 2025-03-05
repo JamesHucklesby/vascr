@@ -1,7 +1,7 @@
 # resample stretching works
 
     Code
-      vascr_summarise_cc_stretch_shift_stats(data.df, 8)
+      vascr_summarise_cc_stretch_shift_stats(data.df, reference = 3)
     Message
       
       Attaching package: 'purrr'
@@ -11,19 +11,13 @@
           is_null
       
     Output
-      # A tibble: 24 x 12
-         name       title     p  mean      sd nsample ncontrol Sample.x Sample.y refs 
-         <chr>      <chr> <dbl> <dbl>   <dbl>   <int>    <int> <chr>    <chr>    <chr>
-       1 cc         35,0~ 1     0.965 0.0250        3        6 35,000_~ 35,000_~ 0.98~
-       2 shift_cc   35,0~ 1     0.965 0.0250        3        6 35,000_~ 35,000_~ 0.98~
-       3 stretch_cc 35,0~ 1     0.997 0.00129       3        6 35,000_~ 35,000_~ 0.99~
-       4 stretch_s~ 35,0~ 1     0.997 0.00129       3        6 35,000_~ 35,000_~ 0.99~
-       5 cc         25,0~ 0.585 0.984 0.00908       3        6 25,000_~ 35,000_~ 0.99~
-       6 shift_cc   25,0~ 0.585 0.984 0.00908       3        6 25,000_~ 35,000_~ 0.99~
-       7 stretch_cc 25,0~ 0.701 0.997 0.00203       3        6 25,000_~ 35,000_~ 0.99~
-       8 stretch_s~ 25,0~ 0.701 0.997 0.00203       3        6 25,000_~ 35,000_~ 0.99~
-       9 cc         25,0~ 1     0.991 0.00473       3        6 25,000_~ 25,000_~ 0.99~
-      10 shift_cc   25,0~ 1     0.991 0.00473       3        6 25,000_~ 25,000_~ 0.99~
-      # i 14 more rows
+      # A tibble: 5 x 12
+        name  title          p   mean      sd nsample ncontrol Sample.x Sample.y refs 
+        <chr> <chr>      <dbl>  <dbl>   <dbl>   <int>    <int> <chr>    <chr>    <chr>
+      1 cc    35,000_~ 2.16e-1  0.967 0.0231        3        3 35,000_~ 35,000_~ 0.99~
+      2 cc    35,000_~ 3.03e-1  0.985 0.00649       3        3 35,000_~ 25,000_~ 0.99~
+      3 cc    25,000_~ 1   e+0  0.991 0.00448       3        3 25,000_~ 25,000_~ 0.99~
+      4 cc    0_cells~ 2.00e-7 -0.988 0.00990       3        3 0_cells~ 25,000_~ 0.99~
+      5 cc    0_cells~ 1.94e-1  0.996 0.00325       3        3 0_cells~ 0_cells~ 0.99~
       # i 2 more variables: padj <dbl>, stars <noquote>
 

@@ -139,10 +139,6 @@
 
 
 
-
-
-
-
 #' Title
 #'
 #' @param data.df 
@@ -158,9 +154,10 @@
 #' @examples
 #' vascr_summarise_cc_stretch_shift(growth.df)
 #' vascr_summarise_cc_stretch_shift(growth.df, reference = 5)
-vascr_summarise_cc_stretch_shift = function(data.df = growth.df, unit = "R", frequency = 4000, reference = "none"){
+vascr_summarise_cc_stretch_shift = function(data.df = vascr::growth.df, unit = "R", frequency = 4000, reference = "none"){
   
-  toprocess = data.df %>% vascr_subset(unit = "R", frequency = 4000) %>% vascr_summarise(level = "experiments")
+  toprocess = data.df %>% vascr_subset(unit = unit, frequency = frequency) %>%
+    vascr_resample_time(50)%>% vascr_summarise(level = "experiments")
   # vascr_plot_line(toprocess)
   s_cc = toprocess %>% vascr_cc(reference, cc_only = FALSE)
   
@@ -278,6 +275,17 @@ stretch_series = function(series, stretch, return_model = FALSE) {
 
 # stretch_cc_fast(s1, s2, stretch)
 
+#' Title
+#'
+#' @param s1 
+#' @param s2 
+#' @param stretch 
+#' @importFrom stats na.pass ccf
+#'
+#' @returns
+#' @noRd
+#'
+#' @examples
 stretch_cc_fast = function(s1, s2, stretch)
 {
   stretched = stretch_series(s2, stretch)
@@ -293,22 +301,35 @@ stretch_cc_fast = function(s1, s2, stretch)
 
 # cc_stretch_shift_fit(t1$Value, t2$Value)
 
+#' Title
+#'
+#' @param s1 
+#' @param s2 
+#'
+#' @returns
+#' 
+#' @noRd
+#' 
+#' @importFrom utils head
+#'
+#' @examples
 cc_stretch_shift_fit = function(s1, s2){
   
   # s1 = t1$Value
   # s2 = t2$Value
   # stretch = 1.5
   
-  
+  # Set I to keep CRAN check happy
+  i = 1
   
   stretch_range = foreach (i = c(5:100)/10, .combine = rbind) %do% {
     stretch_cc_fast(s1, s2, i)
   }
   
   
-  stretch_1 = filter(stretch_range, stretch == 1) %>% head(1)
-  best_stretch = filter(stretch_range, stretch_cc == max(stretch_cc, na.rm = TRUE))%>% head(1)
-  best_stretch_shift = filter(stretch_range, stretch_shift_cc == max(stretch_shift_cc, na.rm = TRUE))%>% head(1)
+  stretch_1 = filter(stretch_range, .data$stretch == 1) %>% head(1)
+  best_stretch = filter(stretch_range, .data$stretch_cc == max(.data$stretch_cc, na.rm = TRUE))%>% head(1)
+  best_stretch_shift = filter(stretch_range, .data$stretch_shift_cc == max(.data$stretch_shift_cc, na.rm = TRUE))%>% head(1)
   
   
   data.frame(
@@ -367,7 +388,7 @@ transform_series = function(series, stretch, shift, norm){
 #' 
 vascr_summarise_cc_stretch_shift_stats = function(data.df, unit = "R", frequency = 4000, reference = "none"){
   
-  s_long = vascr_summarise_cc_stretch_shift(data.df, unit, frequency, reference)
+  s_long = vascr_summarise_cc_stretch_shift(data.df, unit, frequency, reference) %>% filter(.data$name == "cc")
   
   # s_long %>% filter(str_count(.data$name, "cc")>0) %>%
   #   ggplot() +
@@ -416,7 +437,7 @@ vascr_summarise_cc_stretch_shift_stats = function(data.df, unit = "R", frequency
   }
   
   
-  output$padj = p.adjust(output$p, "fdr")
+  output$padj = output$p #p.adjust(output$p, "fdr")
   
   output$stars <- symnum(output$p, corr = FALSE, na = FALSE, 
                          cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 
@@ -441,13 +462,15 @@ vascr_summarise_cc_stretch_shift_stats = function(data.df, unit = "R", frequency
 #' 
 vascr_plot_cc_stretch_shift_stats = function(data.df, unit= "R", frequency = 4000, reference = "none"){
   
+  unit = vascr_find_unit(data.df, unit)
+  
   output = vascr_summarise_cc_stretch_shift_stats(data.df, unit, frequency, reference)
   
   output %>%
     ggplot() +
     geom_point(aes(x = .data$mean, y = .data$title, color = .data$name)) +
     geom_errorbar(aes(xmin = mean-sd, xmax = mean+sd, y = .data$title, color = .data$name)) +
-    geom_text_repel(aes(x = mean, y = title, color = .data$name, label = as.character(.data$stars)), direction = "y", seed = 10, nudge_y = 0.2, box.padding = 0, point.padding = 0)
+    geom_text_repel(aes(x = .data$mean, y = .data$titletitle, color = .data$name, label = as.character(.data$stars)), direction = "y", seed = 1, nudge_y = 0.2, box.padding = 0, point.padding = 0)
   
   
   

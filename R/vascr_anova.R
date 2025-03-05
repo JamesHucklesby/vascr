@@ -642,7 +642,7 @@ vascr_dunnett = function(data.df, unit, frequency, time, reference){
   # summary(glht(mod, linfct = K %*% X))
   
   rl$tw<-interaction(rl$Sample, rl$Time)
-  cell<-gls(Value~ tw- 1,data= rl,  weights = varIdent(form = ~1|Sample*Time))
+  cell<-gls(Value~ tw,  data= rl,  weights = varIdent(form = ~1|Sample*Time))
   summ = summary(glht(cell,linfct = K))
   
   summ
@@ -666,10 +666,11 @@ vascr_dunnett = function(data.df, unit, frequency, time, reference){
  
  toreturn
  
- rawsum = data.df %>% vascr_summarise(level = "summary") 
+ rawsum = data.df %>% vascr_summarise(level = "summary") %>% mutate(Time = round(.data$Time,4))
+ toreturn = toreturn %>% mutate(Time = round(.data$Time,4))
 
  
- tr = left_join(rawsum, toreturn, by = c("Time", "Sample")) %>%
+ tr = right_join(rawsum, toreturn, by = c("Time", "Sample")) %>%
    mutate(Label = ifelse(.data$Sample == sample_text, "+", .data$Label)) %>%
    mutate(P_round = ifelse(.data$Sample == sample_text, "+", .data$P_round)) %>%
    mutate(P = ifelse(.data$Sample == sample_text, "+", .data$P))
@@ -705,7 +706,7 @@ vascr_plot_bar_dunnett = function(data.df, unit, frequency, time, reference, sta
   ggplot(toplot) +
     ggplot2::geom_col(aes(x = .data$Sample, y = .data$Value)) +
     geom_errorbar(aes(x = .data$Sample, ymin = .data$Value - .data$sem, ymax = .data$Value + .data$sem)) +
-    geom_text_repel(aes(x = .data$Sample, label = .data$Label, y = .data$Value + .data$sem), direction = "y", nudge_y = 1)
+    geom_text_repel(aes(x = .data$Sample, label = .data$Label, y = .data$Value + .data$sem), direction = "y", nudge_y = 1, seed = 5)
   }
   else
   {
@@ -771,7 +772,7 @@ vascr_plot_line_dunnett = function(data.df, unit = "R", frequency = 4000, time =
   plot1 = subset.df %>% vascr_plot_line(alpha = 0.2)
   
   
-  plot1 + geom_vline(aes(xintercept = .data$Time), alpha=  0.8, linetype = 4, data = plab) +
+  plot1 + geom_vline(xintercept = unique(plab$Time), alpha=  0.8, linetype = 4) +
     geom_text_repel(aes(x = as.numeric(.data$Time), y = .data$Value, label = .data$Label, group = 1, hjust = 0, color = .data$Sample), alpha = 1, data = plab, show.legend = FALSE, direction = "y", box.padding = 0.01, seed = 1)
   
   

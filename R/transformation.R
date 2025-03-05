@@ -269,12 +269,15 @@ vascr_subsample = function(data.df, nth) {
 
 
 
-#' Interpolate times between two datapoints
+#' Interpolate times between two data points
 #'
 #' @param data.df Takes a vascr dataframe to interpolate, but may only contain one frequency and unit pair
 #' @param npoints Number ofpoints to interpolate, defaults to same as submitted dataset
 #' @param from Time to start interpolation at, default minimum in dataset
 #' @param to Time to end interpolation at, default maximum in dataset
+#' @param force_timepoint Forces a timepoint to be included in the resample
+#' @param rate The rate at which to resample
+#' @param include_disc Add an additional datapoint after a discrepancy
 #' 
 #' @importFrom stats approx
 #' @importFrom dplyr reframe rename ungroup mutate group_by across
@@ -289,13 +292,15 @@ vascr_subsample = function(data.df, nth) {
 #'  vascr_interpolate_time(data.df)
 #'  
 #'  vascr_interpolate_time(data.df, from = 0, to = 50, rate = 5)
-vascr_interpolate_time = function(data.df, npoints = vascr_find_count_timepoints(data.df), from = min(data.df$Time), to = max(data.df$Time), rate = NULL)
+#'  vascr_interpolate_time(data.df, from = 0, to = 50, rate = 5, force_timepoint = 2.222)
+vascr_interpolate_time = function(data.df, npoints = vascr_find_count_timepoints(data.df), from = min(data.df$Time), to = max(data.df$Time), rate = NULL, force_timepoint = NULL, include_disc = TRUE)
 {
   
   if(length(unique(data.df$Frequency))>1 || length(unique(data.df$Unit))>1)
   {
     vascr_notify("error","vascr_interpolate_time only supports one unit and frequency at a time")
   }
+  
   
   
   # originalsample = unique(data.df$Sample)
@@ -318,6 +323,23 @@ vascr_interpolate_time = function(data.df, npoints = vascr_find_count_timepoints
   xout = seq(from = from, to = to, length.out = npoints)
   }
   
+  if(isTRUE(include_disc)){
+    discs = vascr_find_disc(data.df)
+    xout = c(xout, discs$original, discs$lag) %>% sort()
+    
+    for(i in c(0:nrow(discs))){
+      if(i != 0){
+      row = discs[i,]
+      xout = xout[!(row$original>xout & row$lag<xout)]
+      }
+    }
+    
+  }
+  
+  # Add in the forcing factor
+  if(!is.null(force_timepoint)){
+  xout = c(xout, force_timepoint) %>% sort()
+  }
   # approx(data.df$Time, data.df$Value, method = "linear", n = npoints)
   
   processed = data.df %>% group_by(across(c(-"Value", -"Time"))) %>%
@@ -328,6 +350,33 @@ vascr_interpolate_time = function(data.df, npoints = vascr_find_count_timepoints
   return(processed)
 }
 
+
+#' Find discontinuities in the time of acquisition
+#'
+#' @param data.df The dataset to interrogate
+#' @param threshold Threshold of variation to deem a discontinuity, default 0.2
+#'
+#' @returns A table containing the discontinuities
+#' 
+#' @noRd
+#'
+#' @examples
+#' vascr_find_disc(growth.df)
+#' 
+vascr_find_disc = function(data.df, threshold = 0.2) {
+  dat = data.df %>% arrange("Time") %>% 
+    filter(.data$Well == data.df$Well[1], .data$Frequency == data.df$Frequency[1], .data$Unit == data.df$Unit[1]) %>% 
+    vascr_subset(experiment = 1) %>% 
+    ungroup()
+  
+  timechange = data.frame(original = unique(dat$Time), lag = dplyr::lag(dat$Time)) %>%
+    mutate(diff = .data$original-.data$lag) %>%
+    mutate(disc = .data$diff - mean(.data$diff, na.rm = TRUE))
+  
+  # mean(timechange$diff, na.rm = TRUE) + sd(timechange$diff, na.rm = TRUE)
+  
+  timechange %>% filter(.data$disc > threshold)
+}
 
 #' Remove columns in the dataset, if they exist
 #'
@@ -365,9 +414,11 @@ vascr_remove_cols = function(data.df, cols){
 #'
 #' @param data.df The vascr dataset to resample
 #' @param npoints Manually specificity the number of points to resample at, default is the same frequency as the input dataset
-#' @param start Time to start at
-#' @param end Time to end at
+#' @param t_start Time to start at
+#' @param t_end Time to end at
 #' @param rate Time between timepoints
+#' @param force_timepoint
+#' @param include_disc Add an additional datapoint either side of a discrepancy. Defaults TRUE
 #' 
 #' @importFrom foreach foreach `%do%`
 #' @importFrom dplyr group_split group_by
@@ -377,11 +428,15 @@ vascr_remove_cols = function(data.df, cols){
 #' @export
 #'
 #' @examples
+#' vascr_resample_time(growth.df)
+#' 
 #' vascr_resample_time(growth.df, 5, 0, 200)
 #' vascr_resample_time(growth.df, 5)
-#' vascr_resample_time(growth.df, start = 5, end = 20, rate = 5)
+#' vascr_resample_time(growth.df, t_start = 5, t_end = 20, rate = 5)
 #' 
-vascr_resample_time = function(data.df, npoints = vascr_find_count_timepoints(data.df), start = min(data.df$Time), end = max(data.df$Time), rate = NULL)
+#' vascr_resample_time(growth.df, t_start = 5, t_end = 20, force = c(1,2,3))
+#' 
+vascr_resample_time = function(data.df, npoints = vascr_find_count_timepoints(data.df), t_start = min(data.df$Time), t_end = max(data.df$Time), rate = NULL, force_timepoint = NULL, include_disc = TRUE)
 {
   datasplit = data.df %>% vascr_remove_cols(c("sd", "n", "min", "max", "sem")) %>% group_by(.data$Frequency, .data$Unit) %>% group_split() 
   
@@ -391,7 +446,7 @@ vascr_resample_time = function(data.df, npoints = vascr_find_count_timepoints(da
   
   resampled = foreach(i = datasplit, .combine = rbind) %do%
     {
-      vascr_interpolate_time(i, baseline_times, start, end, rate)
+      vascr_interpolate_time(i, baseline_times, t_start, t_end, rate, include_disc = include_disc, force_timepoint=force_timepoint)
     }
   
   resampled = as_tibble(resampled)
@@ -450,9 +505,10 @@ vascr_auc = function(data.df) {
 #' 
 #' vascr_plot_resample_range(data.df = growth.df)
 #' 
-vascr_plot_resample_range = function(data.df, unit = "R", frequency  = 4000, well = "A01", res = 50, plot = TRUE){
+vascr_plot_resample_range = function(data.df, unit = "R", frequency  = 4000, well = "A01", res = 50, plot = TRUE, toll = 0.999){
   
-  data.df = data.df %>% vascr_subset(unit = unit, frequency = frequency, well = well) 
+  data.df = data.df %>% vascr_subset(unit = unit, frequency = frequency, well = well)  %>%
+    arrange("Time")
   
   checktimes = seq(from = vascr_find_count_timepoints(data.df)^0.5, to = 2, length.out = res)^2 %>% round() %>% unique()
   
@@ -462,7 +518,7 @@ vascr_plot_resample_range = function(data.df, unit = "R", frequency  = 4000, wel
     
     p <- progressr::progressor(along = c(1:length(checktimes)))
   
-    boot = foreach (i = checktimes, .combine = rbind) %dofuture% {
+    boot = foreach (i = checktimes, .combine = rbind) %do% {
             p()
             vascr_plot_resample(data.df, plot = FALSE, newn = i)  
     }
@@ -474,9 +530,9 @@ vascr_plot_resample_range = function(data.df, unit = "R", frequency  = 4000, wel
     return(boot)
   }
 
-  min_acc = boot %>% filter(d_auc > 0.999 & r2 > 0.999 & ccf > 0.999)
-  ma  = min(min_acc$n)
-  vascr_notify("info", glue("Recomended resampling rate: {ma}"))
+  min_acc = boot %>% filter(.data$d_auc > toll & .data$r2 > toll & .data$ccf > toll)
+  min_acc
+  vascr_notify("info", glue("Recomended resampling rate: {min(min_acc$n)}"))
 
 boot2 = boot %>%
           pivot_longer(-n, names_to = "variable", values_to = "value") %>%
@@ -485,7 +541,7 @@ boot2 = boot %>%
 ggplot(boot2) +
   geom_line(aes(x = .data$n, y = .data$value, colour = .data$variable)) +
   ylim(c(0.9,1)) +
-  geom_hline(aes(yintercept = 0.999))
+  geom_hline(aes(yintercept = 0.995))
 
 
 }
@@ -502,8 +558,10 @@ ggplot(boot2) +
 #' @param well Well to use, defaults to A01 (or first well in plate)
 #' @param newn New number of timeplots to compare to current
 #' @param plot Return a ggplot or the underlying data. Defaults to TRUE, returning the plot.
+#' @param rug Show rug lot, defaults true
+#' @param points Show points, defaults to false
 #' 
-#' @importFrom ggplot2 geom_rug geom_line ylim aes
+#' @importFrom ggplot2 geom_rug geom_line ylim aes scale_shape_manual
 #' @importFrom stats ccf
 #' @importFrom dplyr filter
 #'
@@ -516,7 +574,7 @@ ggplot(boot2) +
 #' vascr_plot_resample(growth.df, plot = FALSE)
 #' 
 #' 
-vascr_plot_resample = function(data.df, unit = "R", frequency = "4000", well = "A01", newn = 20, plot = TRUE, rug = TRUE)
+vascr_plot_resample = function(data.df, unit = "R", frequency = "4000", well = "A01", newn = 20, plot = TRUE, rug = TRUE, points = FALSE)
       {
           base_data = data.df %>% dplyr::filter(!is.na(.data$Value))
           
@@ -525,15 +583,15 @@ vascr_plot_resample = function(data.df, unit = "R", frequency = "4000", well = "
           to_return["n"] = newn
   
           # Create resampled set
-          original_data = base_data %>% vascr_subset(unit = "R", frequency = 4000, well = "A01") %>% arrange(Time) %>% as.data.frame()
+          original_data = base_data %>% vascr_subset(unit = unit, frequency = frequency, well = well) %>% arrange("Time") %>% as.data.frame()
           oldn = vascr_find_count_timepoints(original_data) 
-          new_data = original_data %>% vascr_resample_time(npoints = newn) %>% arrange(Time) %>% as.data.frame()
-          reverse_processed = new_data %>% vascr_resample_time(npoints = oldn) %>% arrange(Time) %>% as.data.frame()
+          new_data = original_data %>% vascr_resample_time(npoints = newn) %>% arrange("Time") %>% as.data.frame()
+          reverse_processed = new_data %>% vascr_resample_time(npoints = oldn) %>% arrange("Time") %>% as.data.frame()
           
           # Calculate change in ACF
           old_auc = vascr_auc(original_data)
           new_auc = vascr_auc(new_data)
-          d_auc = 1-(old_auc-new_auc)/old_auc
+          d_auc = 1-abs(old_auc-new_auc)/old_auc
           
           to_return["d_auc"] = d_auc
           
@@ -556,14 +614,20 @@ vascr_plot_resample = function(data.df, unit = "R", frequency = "4000", well = "
             return(to_return %>% as.data.frame())
           }
           
-          original_data$source = "original"
-          new_data$source = "resampled"
+          original_data$source = "Original"
+          new_data$source = "Resampled"
           reverse_processed$source = "reverse_processed"
           
           all = rbind(original_data, new_data)
           
           toplot = ggplot(all) +
             geom_line(aes(x = .data$Time, y = .data$Value, colour = .data$source))
+          
+          if(isTRUE(points)) 
+            {
+           toplot = toplot + geom_point(aes(x = .data$Time, y = .data$Value, colour = .data$source, shape = .data$source)) +
+            scale_shape_manual(values = c(1,16))
+          }
           
           if(isTRUE(rug)){
             toplot = toplot + geom_rug(aes(x = .data$Time, colour = .data$source))

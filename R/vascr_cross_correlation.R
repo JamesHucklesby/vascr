@@ -8,7 +8,7 @@
 #' @importFrom ggnewscale new_scale
 #' @importFrom stats t.test
 #'
-#' @returns
+#' @returns A plot of cross-correlations and associated statistics
 #' 
 #' @noRd
 #'
@@ -92,11 +92,18 @@ output = foreach (pair = pairs, .combine = rbind) %do% {
   t2 = rbind( ccf_calc %>% filter(.data$Sample.x == reference, .data$Sample.y ==reference))
   }
   
-  p = t.test(t1$cc, t2$cc, var.equal = FALSE)
+  # print(c(t1$cc,t2$cc))
+   # print(sd(c(t1$cc,t2$cc)))
+  
+  if(sd(c(t1$cc,t2$cc))<0.1){
+    p = data.frame(pvalue = 1)
+  } else{
+    p = t.test(t1$cc, t2$cc, var.equal = FALSE)
+  }
   
   
   return(tribble(~title, ~p, ~cc, ~sd, ~nsample, ~ncontrol,~Sample.x, ~Sample.y, ~refs,
-                 pair$title, p$p.value, mean(t1$cc), sd(t1$cc), length(t1$cc), length(t2$cc), s1, s2, paste(t2$cc, collapse = ",")))
+                 pair$title, as.numeric(p$p.value), mean(t1$cc), sd(t1$cc), length(t1$cc), length(t2$cc), s1, s2, paste(t2$cc, collapse = ",")))
 }
 
 
@@ -107,7 +114,7 @@ output = foreach (pair = pairs, .combine = rbind) %do% {
 
 output$padj = p.adjust(output$p, "fdr")
 
-output$stars <- symnum(output$p, corr = FALSE, na = FALSE, 
+output$stars <- symnum(output$padj, corr = FALSE, na = FALSE, 
                 cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 
                 symbols = c("***", "**", "*", ".", " "))
 
@@ -121,7 +128,7 @@ ungroup_toplot = ccf_calc %>% filter(.data$Sample.x != .data$Sample.y)
 # ungroup_references = ccf_calc %>% filter(Sample.x != Sample.y)
 
 long_ref = output %>% 
-                  select("title", "refs") %>%
+                  select("title", "refs", "Sample.x", "Sample.y") %>%
                   separate_longer_delim("refs", delim = ",") %>%
                   mutate(refs = as.numeric(.data$refs))
 
@@ -142,15 +149,20 @@ if(isTRUE(stars)){
 }
 
 if(isTRUE(pval)){
-  toreturn = toreturn + geom_text(aes(x = .data$cc, y = .data$title, label = round(.data$padj,3)), nudge_y = 0.3) 
+  text2 = toplot %>% filter(!is.na(.data$padj))
+  
+  toreturn = toreturn + geom_text(aes(x = .data$cc, y = .data$title, label = round(.data$padj,3)), nudge_y = 0.3, data = text2) 
 }
 
 if(isTRUE(points))
 {
+  
+  long_ref_noauto = long_ref %>% filter(.data$Sample.x != .data$Sample.y)
+  
 toreturn = toreturn +
   ggnewscale::new_scale("color") +
   geom_point(aes(y = .data$title, x = .data$cc, color = "Correlations"), data = ungroup_toplot) +
-  geom_point(aes(y = .data$title, x = .data$refs, color = "References"), data = long_ref) +
+  geom_point(aes(y = .data$title, x = .data$refs, color = "References"), data = long_ref_noauto) +
   scale_colour_manual(values = c("black", "grey")) +
   labs(colour = NULL)
 
@@ -173,6 +185,8 @@ toreturn
 #' @importFrom cli cli_progress_bar cli_progress_update cli_process_done
 #' @importFrom dplyr bind_cols group_by arrange summarise rename_with inner_join rowwise
 #' @importFrom stats ccf
+#' @importFrom tidyr nest unnest
+#' @importFrom furrr future_map
 #' 
 #' @noRd
 #'
@@ -269,14 +283,14 @@ myf = function(a,b)
 
 }
 
-with_progress({
+
   p = progressor(steps = nrow(pairedcurves))
   
   to_export = pairedcurves %>% as.data.frame () %>% rowwise() %>% 
-    nest(data = c(values.x, values.y)) %>%
+    nest(data = c("values.x", "values.y")) %>%
     mutate(data = future_map(data, function(df) {myf(df$values.x, df$values.y)})) %>%
     unnest(data)
-})
+
 }
 
 return(to_export)
