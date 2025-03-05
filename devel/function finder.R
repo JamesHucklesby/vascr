@@ -43,7 +43,7 @@ i %>% stringr::str_replace(., "\\(", "{.file ") %>%
 
 testdat = spelling::spell_check_package() %>% unnest(found) %>% mutate(found = str_replace(found, '.Rd', ".R"))
 
-testdat
+testdat$word %>% unique()
 
 for(i in c(1:nrow(testdat))){
   cli::cli_text(paste("{.file R/", testdat[i,]$found, "}", sep = ""))
@@ -53,12 +53,13 @@ r_files = list.files("R") %>% paste("R/",. , sep = "")
 
 spells = unique(testdat$word)
 
-for(word in spells)
-{
+for(word in spells){
 
 for(i in r_files){
-  lines = grep("sin", readLines(i))
-  for(j in lines){
+  lines = grep(word, readLines(i))
+  lines2 = grep("^#'", readLines(i))
+  coms = lines[lines %in% lines2]
+  for(j in coms){
   cli::cli_text(glue("{word}   {{.file {i}:{j}}}", sep = ""))
   }
 }

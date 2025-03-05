@@ -214,7 +214,7 @@ vascr_shapiro = function(data.df, unit, frequency, time)
 
 #' Run a Levene's test of normailty on a vascr dataset
 #' 
-#' Runs a test for homogenicity of variance, to ensure that the conditions of an ANOVA are met. Built into anova plotting functions and anova summary.
+#' Runs a test for homogenicity of variance, to ensure that the conditions of an ANOVA are met. Built into anova plotting functions and ANOVA summary.
 #'
 #' @param data.df vascr dataset to analyse
 #' @param unit unit to plot
@@ -863,13 +863,13 @@ vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequen
 
 
 
-#' Make a display with all the anova analysis pre-conducted
+#' Make a display with all the ANOVA analysis pre-conducted
 #'
 #' @param data.df vascr dataset to plot
 #' @param unit unit to plot
-#' @param frequency frequnecy to plot
+#' @param frequency frequency to plot
 #' @param time timepoint to plot at
-#' @param reference Sample to reference post-hoc analyasis to
+#' @param reference Sample to reference post-hoc analysis to
 #'
 #' @return A matrix of different ANOVA tests
 #' 
