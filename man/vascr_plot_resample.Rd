@@ -11,7 +11,8 @@ vascr_plot_resample(
   well = "A01",
   newn = 20,
   plot = TRUE,
-  rug = TRUE
+  rug = TRUE,
+  points = FALSE
 )
 }
 \arguments{
@@ -26,6 +27,10 @@ vascr_plot_resample(
 \item{newn}{New number of timeplots to compare to current}
 
 \item{plot}{Return a ggplot or the underlying data. Defaults to TRUE, returning the plot.}
+
+\item{rug}{Show rug lot, defaults true}
+
+\item{points}{Show points, defaults to false}
 }
 \value{
 A plot showing how well the resampled data conforms to the actual data set

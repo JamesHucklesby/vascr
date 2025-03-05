@@ -136,10 +136,9 @@
     Code
       w16 = system.file("extdata/instruments/ecis_16_testplate.abp", package = "vascr")
       d16 = vascr_import("ECIS", raw = w16, experiment = "W16")
-    Message
-      i Starting import
-      i Importing raw data
-      v Import complete
+
+---
+
     Code
       vascr_check_resampled(d16)
     Output
@@ -149,8 +148,6 @@
 
     Code
       vascr_summarise(d16 %>% vascr_subset(unit = "R", frequency = 4000), "summary")
-    Message
-      ! Data is not resampled, resampling to allow further analytics
     Output
       # A tibble: 2 x 14
            Time Unit  Frequency Sample Instrument    sd totaln     n   min   max Well 
@@ -333,7 +330,7 @@
 ---
 
     Code
-      vascr_resample_time(growth.df, start = 5, end = 20, rate = 5)
+      vascr_resample_time(growth.df, t_start = 5, t_end = 20, rate = 5)
     Output
       # A tibble: 14,280 x 12
          Unit  Well  Sample       Frequency Experiment cells line  Instrument SampleID
@@ -404,20 +401,21 @@
     Message
       ! Data is not resampled, resampling to allow further analytics
     Output
-      # A tibble: 48,600 x 9
-         Unit  Well  Frequency Instrument Experiment Sample SampleID Value  Time
-         <fct> <chr>     <dbl> <chr>      <fct>      <chr>     <dbl> <dbl> <dbl>
-       1 R     A01        1000 ECIS       "1 : "     A01           1  383.  1.00
-       2 R     A01        1000 ECIS       "1 : "     A01           1  383.  1.08
-       3 R     A01        1000 ECIS       "1 : "     A01           1  385.  1.15
-       4 R     A01        1000 ECIS       "1 : "     A01           1  386.  1.22
-       5 R     A01        1000 ECIS       "1 : "     A01           1  387.  1.30
-       6 R     A01        1000 ECIS       "1 : "     A01           1  388.  1.37
-       7 R     A01        1000 ECIS       "1 : "     A01           1  389.  1.44
-       8 R     A01        1000 ECIS       "1 : "     A01           1  389.  1.52
-       9 R     A01        1000 ECIS       "1 : "     A01           1  390.  1.59
-      10 R     A01        1000 ECIS       "1 : "     A01           1  391.  1.66
-      # i 48,590 more rows
+      # A tibble: 5,472 x 10
+         Unit  Well  Frequency Instrument Experiment Sample SampleID Excluded Value
+         <fct> <chr>     <dbl> <chr>      <fct>      <chr>     <dbl> <chr>    <dbl>
+       1 R     A01        1000 ECIS       "1 : "     A01           1 no        383.
+       2 R     A01        1000 ECIS       "1 : "     A01           1 no        383.
+       3 R     A01        1000 ECIS       "1 : "     A01           1 no        385.
+       4 R     A01        1000 ECIS       "1 : "     A01           1 no        386.
+       5 R     A01        1000 ECIS       "1 : "     A01           1 no        387.
+       6 R     A01        1000 ECIS       "1 : "     A01           1 no        388.
+       7 R     A01        1000 ECIS       "1 : "     A01           1 no        389.
+       8 R     A01        1000 ECIS       "1 : "     A01           1 no        389.
+       9 R     A01        1000 ECIS       "1 : "     A01           1 no        390.
+      10 R     A01        1000 ECIS       "1 : "     A01           1 no        391.
+      # i 5,462 more rows
+      # i 1 more variable: Time <dbl>
 
 # vascr time samples counts correctly
 
@@ -433,6 +431,13 @@
         frequency = 4000))
     Output
       [1] 101819.7
+
+# plot of resample degradation works
+
+    Code
+      p1 = vascr_plot_resample_range(data.df = growth.df)
+    Message
+      i Recomended resampling rate: 29
 
 # remove metadata
 

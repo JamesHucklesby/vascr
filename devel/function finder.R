@@ -27,7 +27,7 @@ for(i in issue_files){
 
 
 
-issue_filter = issues %>% filter(issues$active >0)
+issue_filter = issues #%>% filter(issues$active >0)
 
 for (i in issue_filter$issue){
   

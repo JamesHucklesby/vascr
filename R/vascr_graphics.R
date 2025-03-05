@@ -4,6 +4,7 @@
 #' @param errorbars Type of error bars, Inf for ribbons, 0 for no errors and any integer to plot every nth line
 #' @param alpha Transparency of the error ribbon plotted
 #' @param text_labels Show or hide well labels
+#' @param facet_expt Facet out different experiments, defaults to TRUE
 #' 
 #' @importFrom ggplot2 geom_ribbon geom_line geom_text facet_grid vars
 #' @importFrom ggtext element_markdown
@@ -18,13 +19,15 @@
 #' data.df = growth.df %>% vascr_subset(unit = "Rb") %>% vascr_summarise(level = "summary")
 #' vascr_plot_line(data.df, text_labels = FALSE)
 #' 
-vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = TRUE)
+#' vascr_plot_line(data.df = growth.df %>% vascr_subset(unit = "R", frequency = 4000), facet = FALSE)
+#' 
+vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = TRUE, facet_expt = TRUE)
 {
   
   
   data_level = vascr_find_level(data.df)
   
-  data.df = data.df %>% filter(!is.na(.data$Value))
+  # data.df = data.df %>% filter(!is.na(.data$Value))
   
   
   
@@ -40,10 +43,18 @@ vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = 
       final_times = overall_data %>% filter(FALSE)
     }
     
-    gplot = ggplot() +
-      geom_line(aes(x = .data$Time, y = .data$Value, color = .data$Sample, group = .data$Well), data = overall_data) +
-      geom_text(aes(x = .data$Time, y = .data$Value, color = .data$Sample, label = .data$Well), data = final_times, hjust = 0) +
-      facet_grid(vars(row = .data$Experiment))
+
+    
+    if(isTRUE(facet_expt)){
+      gplot = ggplot() +
+        geom_line(aes(x = .data$Time, y = .data$Value, color = .data$Sample, group = paste(.data$Well, .data$Experiment)), data = overall_data) +
+        geom_text(aes(x = .data$Time, y = .data$Value, color = .data$Sample, label = .data$Well), data = final_times, hjust = 0) +
+        facet_grid(vars(row = .data$Experiment))
+    } else{
+      gplot = ggplot() +
+        geom_line(aes(x = .data$Time, y = .data$Value, color = .data$Sample, group = paste(.data$Well, .data$Experiment), linetype = .data$Experiment), data = overall_data) #+
+        #geom_text_repel(aes(x = .data$Time, y = .data$Value, color = .data$Sample, label = .data$Well), data = final_times, hjust = 0, direction = "y")
+    }
     
     errorbars = 0;
   }
@@ -64,7 +75,7 @@ vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = 
   if(errorbars == Inf)
   {
     
-    gplot =  gplot + geom_ribbon(data = data.df %>% filter(!is.na(.data$sem)), 
+    gplot =  gplot + geom_ribbon(data = data.df, 
                                  aes(x = .data$Time, ymax = .data$Value + .data$sem, ymin = .data$Value - .data$sem, fill = .data$Sample, group = paste(.data$Sample, .data$Experiment)), 
                                  alpha = alpha)
     
@@ -279,12 +290,17 @@ vascr_plot_keylines = function(plot, key_events, linetype = "dashed", linesize =
 #' @importFrom stringr str_remove_all
 #'
 #' @examples
-#' data.df = growth.df %>% vascr_subset(unit = "R", frequency = "4000", experiment  = 1)
-#' vascr_plot_grid(data.df)
+#' grid.df = growth.df %>% vascr_subset(unit = "R", frequency = "4000", experiment  = 1)
+#' vascr_plot_grid(grid.df)
+#' 
+#' vascr_plot_grid(growth.df)
 #' 
 vascr_plot_grid = function(data.df, threshold = 0.2)
 {
-  processed = vascr_summarise_deviation(data.df) %>%
+  
+  processed =  data.df %>%
+    vascr_single_param() %>%
+    vascr_summarise_deviation() %>%
     mutate(Title = paste("**",.data$Well,"**", "<br>", .data$Sample, sep = "")) %>%
     mutate(col = str_remove_all(.data$Well, "[A-z]")) %>%
     mutate(row = str_remove_all(.data$Well, "[0-9]")) %>%
@@ -301,10 +317,39 @@ vascr_plot_grid = function(data.df, threshold = 0.2)
     ggnewscale::new_scale_color() +
     geom_line(aes(x = .data$Time, y = .data$Value, color = .data$Sample)) +
     labs(color = "Sample") +
-    facet_grid(.data$row ~ .data$Experiment + .data$col, drop = TRUE) +
+    facet_grid(vars(.data$row), vars(.data$col), drop = TRUE) +
     theme(strip.background = element_rect("white"))
 }
 
+#' Force data to have only a single pair of unit/frequency measurements
+#'
+#'  @param data.df vascr data set to confirm has a single parameter pair
+#'
+#' @returns A data frame with only one parameter, with a warning if additional data was removed
+#' 
+#' @noRd
+#'
+#' @examples
+#' 
+#' vascr_single_param(growth.df)
+#' 
+vascr_single_param = function(data.df){
+  
+  params = data.df %>% select("Frequency", "Unit") %>%
+    distinct()
+  
+  if(nrow(params) >1){
+        vascr_notify("warning", "More than one set of frequenices and units found, correcting")
+      
+        new_unit = vascr_find_unit(data.df, NA)  
+        new_frequency = vascr_find_frequency(data.df, NA)
+        data.df = data.df %>% vascr_subset(unit = new_unit, frequency = new_frequency)
+      
+  }
+  
+  return(data.df %>% as_tibble())
+  
+}
 
 
 

@@ -335,13 +335,15 @@ vascr_find_well = function(data.df, well)
 #' @noRd
 #'
 #' @examples
-#' #vascr_find_frequency(growth.df, 4382)
-#' #vascr_find_frequency(growth.df, 4000)
-#' #vascr_find_frequency(growth.df, NULL)
-#' #vascr_find_frequency(growth.df, NA)
-#' #vascr_find_frequency(growth.df, Inf)
+#' vascr_find_frequency(growth.df, 4382)
+#' vascr_find_frequency(growth.df, 4000)
+#' vascr_find_frequency(growth.df, NULL)
+#' vascr_find_frequency(growth.df, NA)
+#' vascr_find_frequency(growth.df, Inf)
 #' 
-#' #vascr_find_frequency(data.df = growth.df, frequency = c("raw", 0))
+#' vascr_find_frequency(growth.df, "raw")
+#' 
+#' vascr_find_frequency(data.df = growth.df, frequency = c("raw", 0))
 #' 
 #' vascr_find_frequency(growth.df, frequency = c(100,200))
 #' 
@@ -350,29 +352,36 @@ vascr_find_frequency = function(data.df, frequency) {
   freq = frequency
   toreturn = frequency
   
+    if(is.null(frequency))
+    {
+    toreturn = c(toreturn,unique(data.df$Frequency))
+    return(toreturn)
+    }
+  
   if(length(freq)>1)
   {
     
-    freqs <- vector(mode = "numeric", length = length(freq))
+    # freqs <- vector(mode = "numeric", length = length(freq))
     
-    for(i in 1:length(freqs))
+    # Define I to keep CMD CHECK happy
+    i = 1
+    
+    block = foreach (i = freq) %do%
     {
-      freqs[i] = vascr_find_frequency(data.df, freq[[i]])
+      vascr_find_frequency(data.df, i)
     }
+    
+    freqs = unlist(block)
+    
     return(freqs)
     
   }
   
-  
-  if(is.null(frequency))
-  {
-    toreturn = c(toreturn,unique(data.df$Frequency))
-    return(toreturn)
-  }
+
   
   if(is.na(frequency))
   {
-    toreturn = NA
+    toreturn = vascr_find_frequency(data.df, 4000)
     return(toreturn)
   }
   
@@ -409,7 +418,7 @@ vascr_find_frequency = function(data.df, frequency) {
   }
   
   
-  return(unique(toreturn))
+  return(unique(toreturn) %>% as.numeric())
   
 }
 
@@ -609,7 +618,7 @@ vascr_find_unit = function(data.df, unit = NA)
 
   }
   
-  toreturn = unique(toreturn)
+  toreturn = unique(toreturn) %>% as.character()
   return(toreturn)
   
 }

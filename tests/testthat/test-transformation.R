@@ -20,12 +20,15 @@ test_that("Can summarise", {
   
   expect_snapshot(vascr_summarise_summary(vascr_summarise(rbgrowth.df, "summary")))
   
+  rlang::local_options(cli.default_handler = function(msg) invisible(NULL))
+  
+  # Check un-resampled data
   expect_snapshot({ w16 = system.file('extdata/instruments/ecis_16_testplate.abp', package = 'vascr')
-  d16 = vascr_import("ECIS", raw = w16, experiment = "W16")
+  d16 = vascr_import("ECIS", raw = w16, experiment = "W16")})
   
-  vascr_check_resampled(d16)})
+  expect_snapshot({vascr_check_resampled(d16)})
   
-  expect_snapshot(vascr_summarise(d16 %>% vascr_subset(unit = "R", frequency = 4000), "summary"))
+  expect_snapshot({vascr_summarise(d16 %>% vascr_subset(unit = "R", frequency = 4000), "summary")})
   
 })
 
@@ -53,7 +56,7 @@ test_that("Can subsample", {
   expect_snapshot(vascr_subsample(growth.df, 10))
   expect_snapshot(vascr_subsample(growth.df, Inf))
   expect_snapshot(vascr_subsample(growth.df %>% vascr_subset(time = 10), 10))
-  expect_snapshot(vascr_resample_time(growth.df, start = 5, end = 20, rate = 5))
+  expect_snapshot(vascr_resample_time(growth.df, t_start = 5, t_end = 20, rate = 5))
   
 })
 
@@ -64,6 +67,7 @@ test_that("Can interpolate time", {
 
 test_that("vascr_force_resampled", {
   expect_snapshot(vascr_force_resampled(growth.df))
+  growth_unresampled.df$Excluded = "no"
   expect_snapshot(vascr_force_resampled(growth_unresampled.df))
 })
 
@@ -81,7 +85,8 @@ test_that("vascr AUC works",
 # plot resample range
 test_that("plot of resample degradation works", 
   {
-    vdiffr::expect_doppelganger("plot resample accuracy 1", vascr_plot_resample_range(data.df = growth.df))
+    expect_snapshot({p1 = vascr_plot_resample_range(data.df = growth.df)})
+    vdiffr::expect_doppelganger("plot resample accuracy 1", p1)
 })
 
 # plot resample

@@ -7,9 +7,11 @@
 vascr_resample_time(
   data.df,
   npoints = vascr_find_count_timepoints(data.df),
-  start = min(data.df$Time),
-  end = max(data.df$Time),
-  rate = NULL
+  t_start = min(data.df$Time),
+  t_end = max(data.df$Time),
+  rate = NULL,
+  force_timepoint = NULL,
+  include_disc = TRUE
 )
 }
 \arguments{
@@ -17,11 +19,15 @@ vascr_resample_time(
 
 \item{npoints}{Manually specificity the number of points to resample at, default is the same frequency as the input dataset}
 
-\item{start}{Time to start at}
+\item{t_start}{Time to start at}
 
-\item{end}{Time to end at}
+\item{t_end}{Time to end at}
 
 \item{rate}{Time between timepoints}
+
+\item{force_timepoint}{Force a specific timepoint to be part of the resample}
+
+\item{include_disc}{Add an additional datapoint either side of a discrepancy. Defaults TRUE}
 }
 \value{
 An interpolated vascr dataset
@@ -32,8 +38,12 @@ summarising and plotting the data. This function interpolates these data to allo
 these downstream functions to happen.
 }
 \examples{
+vascr_resample_time(growth.df)
+
 vascr_resample_time(growth.df, 5, 0, 200)
 vascr_resample_time(growth.df, 5)
-vascr_resample_time(growth.df, start = 5, end = 20, rate = 5)
+vascr_resample_time(growth.df, t_start = 5, t_end = 20, rate = 5)
+
+vascr_resample_time(growth.df, t_start = 5, t_end = 20, force = c(1,2,3))
 
 }

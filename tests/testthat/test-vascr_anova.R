@@ -95,7 +95,7 @@ test_that("Plot overall ANOVA tabulation", {
   
   
   nines = vascr_combine(growth.df %>% mutate(Experiment = paste(Experiment, "1")), growth.df %>% mutate(Experiment = paste(Experiment, "2")), growth.df %>% mutate(Experiment = paste(Experiment, "3")))
-  vdiffr::expect_doppelganger("Overall anova plot, nine reps", vascr_plot_anova(data.df = nines, unit = "R", frequency = 4000, time = 100))
+  vdiffr::expect_doppelganger("Overall anova plot 2, nine reps", vascr_plot_anova(data.df = nines, unit = "R", frequency = 4000, time = 100))
   
 })
 

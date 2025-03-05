@@ -7,8 +7,9 @@
 #' @examples
 vascr_ui = function(){
   
-  # Bind tags to someting to keep cmd check happy
+  # Bind tags to something to keep cmd check happy
   tags = NULL
+  tags
   
     test_page = function(pages)
     {
@@ -62,11 +63,11 @@ vascr_ui = function(){
         
       shiny::conditionalPanel(
         condition = "$(\'html\').hasClass(\'shiny-busy\')",
-        div(class = "loader"),
-        div(class = "prevent_click")
+        shiny::div(class = "loader"),
+        shiny::div(class = "prevent_click")
       ),
 
-      theme = bs_theme() %>% bs_add_rules("#shiny-notification-success_box {background-color:rgb(103, 194, 58);}
+      theme = bslib::bs_theme() %>% bslib::bs_add_rules("#shiny-notification-success_box {background-color:rgb(103, 194, 58);}
                                           #loadmessage {
             position:fixed; z-index:8; top:50%; left:50%; padding:10px;
             text-align:center; font-weight:bold; color:#000000; background-color:#CCFF66;
@@ -247,7 +248,7 @@ server <- function(input, output) {
     importing = vascr_import(input$import_instrument,
                              input$raw$datapath,
                             input$model$datapath,
-                            input$experiment_name)
+                            input$experiment_name) %>% mutate(Sample = "Not Set")
 
 
     # Merge the datasets
@@ -627,7 +628,7 @@ shiny::observeEvent(input$experiment, {
       paste("vascr_output_prism", format(Sys.time()), '.xlsx', sep='')
     },
     content = function(con) {
-      vascr_export(dat(), con)
+      vascr_export_prism(dat(), con)
     }
   )
 
