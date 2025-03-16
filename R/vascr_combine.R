@@ -2,7 +2,7 @@
 
 #' Combine ECIS data frames end to end
 #' 
-#' This function will combine ECIS data sets end to end. Preferential to use over a simple rbind command as it runs additional checks to ensure that datapoints are correctly generated
+#' This function will combine ECIS data sets end to end. Preferential to use over a simple rbind command as it runs additional checks to ensure that data points are correctly generated
 #'
 #' @param ... List of data frames to be combined
 #' @param resample Automatically try and re sample the data set. Default is FALSE

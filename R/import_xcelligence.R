@@ -1,8 +1,8 @@
-#' Lengthen out an excelligence plate map
+#' Lengthen out an exCELLigence plate map
 #' 
-#' Switches the xcelligence format of having each column as a column and each row as a row, then stacking timepoints to a standardised tidy data format
+#' Switches the xCELLigence format of having each column as a column and each row as a row, then stacking time points to a standardized tidy data format
 #'
-#' @param data The raw xcelligence data set to deal with
+#' @param data The raw xCELLigence data set to deal with
 #' 
 #' @importFrom tidyr pivot_longer starts_with
 #' @importFrom stringr str_remove
@@ -13,7 +13,7 @@
 #' 
 xcelligence_lengthen_platemap = function(data)
 {
-  # Pivot table longer, and merge cols together to give well ID. Standardise
+  # Pivot table longer, and merge cols together to give well ID. Standardize
   lookuptable = pivot_longer(data, cols = starts_with("C"), names_to = "Cols", values_to = "Value")
   lookuptable$Cols = str_remove(lookuptable$Cols, "C")
   lookuptable$Well = paste(lookuptable$Row, lookuptable$Cols, sep = "")

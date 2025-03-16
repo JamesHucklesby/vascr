@@ -763,6 +763,11 @@ vascr_titles= function (unit, frequency = 0, prefix = "")
     frequency = unique(unit.df$Frequency)
   }
   
+  if(length(unit)>1)
+  {
+    unit = unique(unit)[1]
+  }
+  
   # Electrical quantaties
   if(unit == "C") { return(glue("{prefix}Capacitance (nF, {frequency} Hz)"))}
   if(unit == "R") { return(glue("{prefix}Resistance (ohm, {frequency} Hz)"))}
@@ -1026,13 +1031,13 @@ vascr_validate_file = function(file_name, extension)
 
 
 
-#' Standardise well names accross import types
+#' Standardize well names across import types
 #' 
 #' Replaces A1 in strings with A01. Important for importing ABP files which may use either notation. Returns NA if the string could not be normalised, which can be configured to throw a warning in import code.
 #'
-#' @param well The well to be standardised 
+#' @param well The well to be standardized 
 #'
-#' @return Standardised well names
+#' @return Standardized well names
 #' 
 #' @importFrom dplyr if_else
 #' 
@@ -1041,7 +1046,7 @@ vascr_validate_file = function(file_name, extension)
 #' @examples 
 #' #vascr_standardise_wells('A01')
 #' #vascr_standardise_wells('A 1')
-#' #vascr_standardise_wells('tortoise') # Non-standardisable becomes NA
+#' #vascr_standardise_wells('tortoise') # Non-standardize able values become NA
 #' #vascr_standardise_wells(growth.df$Well)
 #' 
 vascr_standardise_wells = function(well) {
@@ -1132,7 +1137,7 @@ vascr_gg_color_hue <- function(n, start = 15, values_needed = c(1:n), l = 65, c 
 #' #' 
 #' vascr_current_frequency = function (data.df)
 #' {
-#'   times = unique (data.df$Time) # Make a list of unique datapoints 
+#'   times = unique (data.df$Time) # Make a list of unique data points 
 #'   times = sort(times) # Sort them
 #'   difftimes = diff(times) # Calculate differences
 #'   

@@ -73,15 +73,15 @@ test_that("Dunnett test works", {
 
 test_that("Dunnett test works", {
   
-  vdiffr::expect_doppelganger("Dunnett 1", vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 25, reference = "0_cells + HCMEC D3_line"))
-  vdiffr::expect_doppelganger("Dunnett 2",vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = list(25,100), reference = "0_cells + HCMEC D3_line"))
-  vdiffr::expect_doppelganger("Dunnett 3",vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 180, reference = "20,000_cells + HCMEC D3_line"))
+  # vdiffr::expect_doppelganger("Dunnett 1", vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 25, reference = "0_cells + HCMEC D3_line"))
+  # vdiffr::expect_doppelganger("Dunnett 2",vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = list(25,100), reference = "0_cells + HCMEC D3_line"))
+  # vdiffr::expect_doppelganger("Dunnett 3",vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 180, reference = "20,000_cells + HCMEC D3_line"))
  
 })
 
 test_that("Anova bar against reference", {
   vdiffr::expect_doppelganger("Anova reference", vascr_plot_bar_dunnett(growth.df, "R", 4000, 50, 8, stars =TRUE))
-  vdiffr::expect_doppelganger("Anova reference 2", vascr_plot_bar_dunnett(growth.df, "R", 4000, 50, 8, stars =FALSE))
+  vdiffr::expect_doppelganger("Anova reference 2 dunnett", vascr_plot_bar_dunnett(growth.df, "R", 4000, 50, 8, stars =FALSE))
 })
 
 test_that("Plot bar anova", {

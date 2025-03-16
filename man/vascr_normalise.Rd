@@ -7,14 +7,14 @@
 vascr_normalise(data.df, normtime, divide = FALSE)
 }
 \arguments{
-\item{data.df}{Standard vascr dataframe}
+\item{data.df}{Standard vascr data frame}
 
-\item{normtime}{Time to normalise the data to}
+\item{normtime}{Time to normalize the data to}
 
-\item{divide}{If set to true, data will be normalized via a division. If set to false (default) data will be normalsed by subtraction. Default is subtraction}
+\item{divide}{If set to true, data will be normalized via a division. If set to false (default) data will be normalized by subtraction. Default is subtraction}
 }
 \value{
-A standard ECIS dataset with each value normalised to the selected point.
+A standard ECIS dataset with each value normalized to the selected point.
 }
 \description{
 This function normalises each unique experiment/well combination to it's value at the specified time. Contains options to do this either by division or subtraction. Can be run twice on the same dataset if both operations are desired.

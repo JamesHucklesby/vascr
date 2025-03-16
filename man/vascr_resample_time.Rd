@@ -27,7 +27,7 @@ vascr_resample_time(
 
 \item{force_timepoint}{Force a specific timepoint to be part of the resample}
 
-\item{include_disc}{Add an additional datapoint either side of a discrepancy. Defaults TRUE}
+\item{include_disc}{Add an additional data point either side of a discrepancy. Defaults TRUE}
 }
 \value{
 An interpolated vascr dataset
@@ -40,8 +40,6 @@ these downstream functions to happen.
 \examples{
 vascr_resample_time(growth.df)
 
-vascr_resample_time(growth.df, 5, 0, 200)
-vascr_resample_time(growth.df, 5)
 vascr_resample_time(growth.df, t_start = 5, t_end = 20, rate = 5)
 
 vascr_resample_time(growth.df, t_start = 5, t_end = 20, force = c(1,2,3))

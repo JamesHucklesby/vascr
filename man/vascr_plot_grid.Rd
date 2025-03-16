@@ -9,7 +9,7 @@ vascr_plot_grid(data.df, threshold = 0.2)
 \arguments{
 \item{data.df}{a vascr formatted data frame of single values}
 
-\item{threshold}{threshold at which a datapoint is determined to be an outlier}
+\item{threshold}{threshold at which a data point is determined to be an outlier}
 }
 \value{
 A plot to be used for QC

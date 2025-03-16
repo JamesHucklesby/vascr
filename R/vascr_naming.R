@@ -161,20 +161,37 @@ vascr_import_map = function(lookup) {
 #'
 #' @return a named vascr dataset
 #' 
-#' @noRd
+#' @export
 #'
 #' @examples
 #' lookup = system.file('extdata/instruments/eciskey.csv', package = 'vascr')
-#' vascr_apply_map(growth.df, lookup)
+#' vascr_apply_map(data.df = growth.df, map = lookup)
+#' 
+#' vascr_apply_map(growth.df %>% vascr_subset(well = c("A1")), lookup)
 #' 
 vascr_apply_map = function(data.df, map){
   
   map.df = vascr_import_map(map)
   
-  print("mapping")
-  print(map.df)
+  # print("mapping")
+  # print(map.df)
   
   data.df  = data.df %>% vascr_remove_cols(c("Sample", "SampleID"))
+  
+  datwells = unique(data.df$Well)
+  mapwells = unique(map.df$Well)
+  
+  if(any(!datwells %in% mapwells))
+  {
+    dw = datwells[!datwells %in% mapwells] %>% paste(collapse = " ")
+    vascr_notify("warning", glue("Wells found in imported data but not map: {dw}"))
+  }
+  
+  if(any(!mapwells %in% datwells))
+  {
+    dw = datwells[!mapwells %in% datwells] %>% paste(collapse = " ")
+    vascr_notify("warning", glue("Wells found in map but not imported data: {dw}"))
+  }
   
   toreturn = data.df %>% left_join(map.df)
   

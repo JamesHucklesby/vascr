@@ -24,7 +24,7 @@ test_that("Can summarise", {
   
   # Check un-resampled data
   expect_snapshot({ w16 = system.file('extdata/instruments/ecis_16_testplate.abp', package = 'vascr')
-  d16 = vascr_import("ECIS", raw = w16, experiment = "W16")})
+                    d16 = vascr_import("ECIS", raw = w16, experiment = "W16")})
   
   expect_snapshot({vascr_check_resampled(d16)})
   
@@ -65,6 +65,12 @@ test_that("Can interpolate time", {
   expect_snapshot_error(vascr_interpolate_time(growth.df))
 })
 
+test_that("Can interpolate time unresampled dataset", {
+  growth_unresampled.df = growth_unresampled.df %>% mutate(Excluded = FALSE)
+  expect_snapshot(vascr_resample_time(growth_unresampled.df %>% vascr_subset(unit = "R", frequency = 4000)))
+})
+
+
 test_that("vascr_force_resampled", {
   expect_snapshot(vascr_force_resampled(growth.df))
   growth_unresampled.df$Excluded = "no"
@@ -93,7 +99,7 @@ test_that("plot of resample degradation works",
 
 test_that("Data can be resampled and plotted",{
             vdiffr::expect_doppelganger("vascr_plot_resample raw data", vascr_plot_resample(growth.df))
-            vdiffr::expect_doppelganger("vascr_plot_resample raw data", vascr_plot_resample(growth.df, plot = TRUE))
+            vdiffr::expect_doppelganger("vascr_plot_resample raw data 2", vascr_plot_resample(growth.df, plot = TRUE))
           })
 
 test_that("remove metadata",

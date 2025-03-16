@@ -2,7 +2,7 @@
 % Please edit documentation in R/vascr_anova.R
 \name{vascr_dunnett}
 \alias{vascr_dunnett}
-\title{Run ANOVA and Dunnett's comparasons on a vascr dataset}
+\title{Run ANOVA and Dunnett's comparisons on a vascr dataset}
 \usage{
 vascr_dunnett(data.df, unit, frequency, time, reference)
 }
@@ -15,13 +15,13 @@ vascr_dunnett(data.df, unit, frequency, time, reference)
 
 \item{time}{The time to plot}
 
-\item{reference}{Reference sample to compare against. If all comparasons are needed use vascr_anova}
+\item{reference}{Reference sample to compare against. If all comparisons are needed use vascr_anova}
 }
 \value{
 A table with the results of the Dunnett's test
 }
 \description{
-Run ANOVA and Dunnett's comparasons on a vascr dataset
+Run ANOVA and Dunnett's comparisons on a vascr dataset
 }
 \examples{
 vascr_dunnett(data.df = growth.df, unit = "R", frequency = 4000, time = 100, reference = 6)

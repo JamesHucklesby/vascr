@@ -1,6 +1,6 @@
-#' Import modeled cellZScope data
+#' Import modeled cellZscope data
 #' 
-#' Imports modeled data previously exported from the cellZscope package. Will not assign names unless a keyfile or raw dataset is provided, as no well naming data is provided in this filetype.
+#' Imports modeled data previously exported from the cellZscope software. Will not assign names unless a keyfile or raw dataset is provided, as no well naming data is provided in this filetype.
 #' 
 #'
 #' @param model The location of modeled data exported from the cellZscope data

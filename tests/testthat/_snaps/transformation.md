@@ -373,6 +373,28 @@
 
     vascr_interpolate_time only supports one unit and frequency at a time
 
+# Can interpolate time unresampled dataset
+
+    Code
+      vascr_resample_time(growth_unresampled.df %>% vascr_subset(unit = "R",
+        frequency = 4000))
+    Output
+      # A tibble: 8,100 x 10
+         Unit  Well  Frequency Instrument Experiment Sample SampleID Excluded Value
+         <fct> <chr>     <dbl> <chr>      <fct>      <chr>     <dbl> <lgl>    <dbl>
+       1 R     A01        4000 ECIS       "1 : "     A01           1 FALSE     276.
+       2 R     A01        4000 ECIS       "1 : "     A01           1 FALSE     276.
+       3 R     A01        4000 ECIS       "1 : "     A01           1 FALSE     277.
+       4 R     A01        4000 ECIS       "1 : "     A01           1 FALSE     278.
+       5 R     A01        4000 ECIS       "1 : "     A01           1 FALSE     279.
+       6 R     A01        4000 ECIS       "1 : "     A01           1 FALSE     280.
+       7 R     A01        4000 ECIS       "1 : "     A01           1 FALSE     281.
+       8 R     A01        4000 ECIS       "1 : "     A01           1 FALSE     281.
+       9 R     A01        4000 ECIS       "1 : "     A01           1 FALSE     282.
+      10 R     A01        4000 ECIS       "1 : "     A01           1 FALSE     283.
+      # i 8,090 more rows
+      # i 1 more variable: Time <dbl>
+
 # vascr_force_resampled
 
     Code
@@ -401,7 +423,7 @@
     Message
       ! Data is not resampled, resampling to allow further analytics
     Output
-      # A tibble: 5,472 x 10
+      # A tibble: 48,600 x 10
          Unit  Well  Frequency Instrument Experiment Sample SampleID Excluded Value
          <fct> <chr>     <dbl> <chr>      <fct>      <chr>     <dbl> <chr>    <dbl>
        1 R     A01        1000 ECIS       "1 : "     A01           1 no        383.
@@ -414,7 +436,7 @@
        8 R     A01        1000 ECIS       "1 : "     A01           1 no        389.
        9 R     A01        1000 ECIS       "1 : "     A01           1 no        390.
       10 R     A01        1000 ECIS       "1 : "     A01           1 no        391.
-      # i 5,462 more rows
+      # i 48,590 more rows
       # i 1 more variable: Time <dbl>
 
 # vascr time samples counts correctly

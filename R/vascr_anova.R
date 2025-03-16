@@ -539,13 +539,13 @@ vascr_plot_anova_grid = function (data.df, unit =  "R", frequency = 4000, time =
 
 
 
-#' Run ANOVA and Dunnett's comparasons on a vascr dataset
+#' Run ANOVA and Dunnett's comparisons on a vascr dataset
 #'
 #' @param data.df A vascr dataset
 #' @param unit  The unit to plot
 #' @param frequency The frequency to plot
 #' @param time  The time to plot
-#' @param reference Reference sample to compare against. If all comparasons are needed use vascr_anova
+#' @param reference Reference sample to compare against. If all comparisons are needed use vascr_anova
 #' 
 #' @importFrom multcomp mcp glht contrMat
 #' @importFrom rstatix add_significance
@@ -773,7 +773,7 @@ vascr_plot_line_dunnett = function(data.df, unit = "R", frequency = 4000, time =
   
   
   plot1 + geom_vline(xintercept = unique(plab$Time), alpha=  0.8, linetype = 4) +
-    geom_text_repel(aes(x = as.numeric(.data$Time), y = .data$Value, label = .data$Label, group = 1, hjust = 0, color = .data$Sample), alpha = 1, data = plab, show.legend = FALSE, direction = "y", box.padding = 0.01, seed = 1)
+    geom_text_repel(aes(x = as.numeric(.data$Time), y = .data$Value, label = .data$Label, group = 1, hjust = 0, color = .data$Sample), alpha = 1, data = plab, show.legend = FALSE, direction = "y", box.padding = 0.01, seed = 10)
   
   
 

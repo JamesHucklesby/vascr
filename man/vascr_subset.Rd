@@ -42,7 +42,7 @@ vascr_subset(
 
 \item{remove_na_value}{Should NA values be removed (default true)}
 
-\item{remove_excluded}{Should excluded values eb removed (default true)}
+\item{remove_excluded}{Should excluded values be removed (default true)}
 }
 \value{
 The subset dataset, based on the values selected

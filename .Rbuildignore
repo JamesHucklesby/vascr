@@ -11,3 +11,4 @@
 ^app\.r$
 ^devel$
 ^vascr_web$
+^CRAN-SUBMISSION$

@@ -159,11 +159,11 @@ vascr_summarise_summary = function(data.df)
 #' 
 #' This function normalises each unique experiment/well combination to it's value at the specified time. Contains options to do this either by division or subtraction. Can be run twice on the same dataset if both operations are desired.
 #'
-#' @param data.df Standard vascr dataframe
-#' @param normtime Time to normalise the data to
-#' @param divide  If set to true, data will be normalized via a division. If set to false (default) data will be normalsed by subtraction. Default is subtraction
+#' @param data.df Standard vascr data frame
+#' @param normtime Time to normalize the data to
+#' @param divide  If set to true, data will be normalized via a division. If set to false (default) data will be normalized by subtraction. Default is subtraction
 #'
-#' @return A standard ECIS dataset with each value normalised to the selected point.
+#' @return A standard ECIS dataset with each value normalized to the selected point.
 #' 
 #' @export
 #' 
@@ -277,7 +277,7 @@ vascr_subsample = function(data.df, nth) {
 #' @param to Time to end interpolation at, default maximum in dataset
 #' @param force_timepoint Forces a timepoint to be included in the resample
 #' @param rate The rate at which to resample
-#' @param include_disc Add an additional datapoint after a discrepancy
+#' @param include_disc Add an additional data point after a discrepancy
 #' 
 #' @importFrom stats approx
 #' @importFrom dplyr reframe rename ungroup mutate group_by across
@@ -363,6 +363,8 @@ vascr_interpolate_time = function(data.df, npoints = vascr_find_count_timepoints
 #' @examples
 #' vascr_find_disc(growth.df)
 #' 
+#' vascr_find_disc(growth_unresampled.df)
+#' 
 vascr_find_disc = function(data.df, threshold = 0.2) {
   dat = data.df %>% arrange("Time") %>% 
     filter(.data$Well == data.df$Well[1], .data$Frequency == data.df$Frequency[1], .data$Unit == data.df$Unit[1]) %>% 
@@ -375,7 +377,7 @@ vascr_find_disc = function(data.df, threshold = 0.2) {
   
   # mean(timechange$diff, na.rm = TRUE) + sd(timechange$diff, na.rm = TRUE)
   
-  timechange %>% filter(.data$disc > threshold)
+  timechange %>% filter(.data$disc > threshold) %>% filter(.data$original<.data$lag)
 }
 
 #' Remove columns in the dataset, if they exist
@@ -418,7 +420,7 @@ vascr_remove_cols = function(data.df, cols){
 #' @param t_end Time to end at
 #' @param rate Time between timepoints
 #' @param force_timepoint Force a specific timepoint to be part of the resample
-#' @param include_disc Add an additional datapoint either side of a discrepancy. Defaults TRUE
+#' @param include_disc Add an additional data point either side of a discrepancy. Defaults TRUE
 #' 
 #' @importFrom foreach foreach `%do%`
 #' @importFrom dplyr group_split group_by
@@ -428,13 +430,11 @@ vascr_remove_cols = function(data.df, cols){
 #' @export
 #'
 #' @examples
+#' # Automatically re sample, mimicking the input data as closely as possible
 #' vascr_resample_time(growth.df)
 #' 
-#' vascr_resample_time(growth.df, 5, 0, 200)
-#' vascr_resample_time(growth.df, 5)
-#' vascr_resample_time(growth.df, t_start = 5, t_end = 20, rate = 5)
-#' 
-#' vascr_resample_time(growth.df, t_start = 5, t_end = 20, force = c(1,2,3))
+#' # Fully controlled resample with advanced options
+#' vascr_resample_time(growth.df, t_start = 5, t_end = 20, rate = 5, force = c(1,2,3))
 #' 
 vascr_resample_time = function(data.df, npoints = vascr_find_count_timepoints(data.df), t_start = min(data.df$Time), t_end = max(data.df$Time), rate = NULL, force_timepoint = NULL, include_disc = TRUE)
 {
@@ -446,8 +446,11 @@ vascr_resample_time = function(data.df, npoints = vascr_find_count_timepoints(da
   
   resampled = foreach(i = datasplit, .combine = rbind) %do%
     {
-      vascr_interpolate_time(i, baseline_times, t_start, t_end, rate, include_disc = include_disc, force_timepoint=force_timepoint)
+      ith = vascr_interpolate_time(i, baseline_times, t_start, t_end, rate, include_disc = include_disc, force_timepoint=force_timepoint)
+      ith
     }
+  
+  # hist(resampled$Time)
   
   resampled = as_tibble(resampled)
   
@@ -675,5 +678,21 @@ vascr_remove_metadata = function(data.df, subset = "all")
 
 
 
-
+#' Set a particular time point as 0 in a vascr dataset
+#' 
+#' Allows the user to change the time designated as zero to allow clearer plotting of treatments
+#'
+#' @param data.df A vascr dataset
+#' @param time The time to be set to 0
+#'
+#' @returns An adjusted vascr dataset
+#' 
+#' @export
+#'
+#' @examples
+#' vascr_zero_time(growth.df, 50)
+#' 
+vascr_zero_time = function(data.df, time = 0){
+  data.df %>% mutate(Time = .data$Time - time)
+}
 

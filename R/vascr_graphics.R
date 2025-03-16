@@ -279,7 +279,7 @@ vascr_plot_keylines = function(plot, key_events, linetype = "dashed", linesize =
 #' Plot out each replicate well in a grid, with QC overlays
 #'
 #' @param data.df a vascr formatted data frame of single values
-#' @param threshold threshold at which a datapoint is determined to be an outlier
+#' @param threshold threshold at which a data point is determined to be an outlier
 #'
 #' @return A plot to be used for QC
 #' 

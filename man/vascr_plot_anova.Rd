@@ -2,7 +2,7 @@
 % Please edit documentation in R/vascr_anova.R
 \name{vascr_plot_anova}
 \alias{vascr_plot_anova}
-\title{Make a display with all the anova analysis pre-conducted}
+\title{Make a display with all the ANOVA analysis pre-conducted}
 \usage{
 vascr_plot_anova(data.df, unit, frequency, time, reference = NULL)
 }
@@ -11,17 +11,17 @@ vascr_plot_anova(data.df, unit, frequency, time, reference = NULL)
 
 \item{unit}{unit to plot}
 
-\item{frequency}{frequnecy to plot}
+\item{frequency}{frequency to plot}
 
 \item{time}{timepoint to plot at}
 
-\item{reference}{Sample to reference post-hoc analyasis to}
+\item{reference}{Sample to reference post-hoc analysis to}
 }
 \value{
 A matrix of different ANOVA tests
 }
 \description{
-Make a display with all the anova analysis pre-conducted
+Make a display with all the ANOVA analysis pre-conducted
 }
 \examples{
 

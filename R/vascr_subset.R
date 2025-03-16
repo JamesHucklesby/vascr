@@ -11,7 +11,7 @@
 #' @param sampleid List of ID's to be used. Sample names will be re-ordered accordingly for display.
 #' @param sample Sample to subset
 #' @param remove_na_value Should NA values be removed (default true)
-#' @param remove_excluded Should excluded values eb removed (default true)
+#' @param remove_excluded Should excluded values be removed (default true)
 #'
 #' @return The subset dataset, based on the values selected
 #' 
@@ -153,7 +153,8 @@ vascr_subset = function(data.df,
   if(!is.null(sample))
   {
     samples = vascr_find_sample(subset.df, sample)
-    subset.df = subset(subset.df, subset.df$Sample %in% samples)
+    subset.df = subset(subset.df, subset.df$Sample %in% samples) %>%
+      mutate(Sample = factor(.data$Sample, samples))
       
   }
   
@@ -233,7 +234,7 @@ vascr_exclude = function(data.df, well = NULL, experiment = NULL){
 #' @noRd
 #'
 #' @examples
-#' vascr_exclude(growth.df, c("A01", "E01"))
+#' 
 #' 
 vascr_replace_sample = function(data.df, old, new){
   # data.df = data.df %>% filter(!.data$Well %in% well & !.data$Experiment %in% experiment)
@@ -244,4 +245,74 @@ vascr_replace_sample = function(data.df, old, new){
   
   return(data.df)
 }
+
+
+
+#' Rename a sample in a vascr dataset
+#' 
+#' Renames samples in a vascr dataset, either replacing the whole sample or parts of the string.
+#'
+#' @param data.df Vascr dataset to update
+#' @param change_list List of vectors containing pairs of search and replacement terms to replace
+#' @param partial TRUE or FALSE, defines if partial matches should be changed
+#'
+#' @returns An updated vascr data frame
+#' 
+#' @importFrom stringr str_escape str_replace_all
+#' @importFrom dplyr select distinct arrange mutate left_join
+#' @importFrom foreach foreach `%do%`
+#' 
+#' @export
+#'
+#' @examples
+#' to_rename = growth.df %>% vascr_subset(sample = c("0 cells","20,000 cells", "10,000 cells"))
+#' 
+#' to_rename$Sample %>% unique()
+#' 
+#' renamed = vascr_sample_rename(to_rename, change_list = list(c("0_cells", "Cell Free")))
+#' print(renamed$Sample %>% unique())
+vascr_sample_rename = function(data.df, change_list, partial = FALSE){
+  
+  mini = data.df %>% select("SampleID", "Sample") %>% 
+         distinct() %>% 
+         arrange(.data$Sample) %>%
+         mutate(Original_Sample = .data$Sample)
+  
+  #create change to keep CRAN happy
+  change = NA
+  
+  foreach (change = change_list) %do% {
+    
+    if(length(change) != 2)
+    {
+      vascr_notify("error", "Vector length for replacement incorrect: {change}")
+    }
+    
+    old = change[[1]]
+    new_val = change[[2]]
+  
+    
+    if(isTRUE(partial)){
+      old = old %>% str_escape()
+      mini = mini %>% mutate(Sample = str_replace_all(.data$Sample, old, new_val))
+      
+    } else{
+      old = vascr_find(data.df, "Sample", old)
+      
+     mini = mini %>%
+         mutate(Sample = ifelse(is.na(.data$Sample), "NA", as.character(.data$Sample))) %>%
+         mutate(Sample = ifelse(as.character(.data$Sample) == old, new_val, as.character(.data$Sample)))
+      }
+  }
+  
+  # mini %>% filter(Sample != Original_Sample)
+  
+  mini  = mini %>% mutate(Sample = factor(.data$Sample, unique(.data$Sample)))
+  
+  
+  return(data.df %>% select(-"Sample") %>% left_join(mini, by = c("SampleID")))
+  
+}
+
+
 
