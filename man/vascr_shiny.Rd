@@ -15,9 +15,3 @@ A shinyApp to work with vascr data
 \description{
 Launch the vascr UI
 }
-\examples{
-\dontrun{
-vascr_shiny()
-}
-
-}

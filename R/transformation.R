@@ -17,7 +17,6 @@
 #' vascr_summarise(rbgrowth.df, level = "summary")
 #' vascr_summarise(rbgrowth.df, level = "experiment")
 #' vascr_summarise(rbgrowth.df, level = "wells")
-#' 
 vascr_summarise = function(data.df, level = "wells")
 {
   level = vascr_match(level, c("summary", "wells", "experiments", "median_deviation"))

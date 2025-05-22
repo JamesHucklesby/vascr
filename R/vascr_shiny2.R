@@ -659,10 +659,9 @@ return(server)
 #' @importFrom rlang check_installed
 #' 
 #' @examples
-#' \dontrun{
+# if(interactive()){
 #' vascr_shiny()
 #' }
-#' 
 vascr_shiny = function(data.df)
 {
   # Web packages do not ship with shiny by default, hence offer to install if required

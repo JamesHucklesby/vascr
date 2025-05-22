@@ -38,10 +38,10 @@ summarising and plotting the data. This function interpolates these data to allo
 these downstream functions to happen.
 }
 \examples{
+# Automatically re sample, mimicking the input data as closely as possible
 vascr_resample_time(growth.df)
 
-vascr_resample_time(growth.df, t_start = 5, t_end = 20, rate = 5)
-
-vascr_resample_time(growth.df, t_start = 5, t_end = 20, force = c(1,2,3))
+# Fully controlled resample with advanced options
+vascr_resample_time(growth.df, t_start = 5, t_end = 20, rate = 5, force = c(1,2,3))
 
 }

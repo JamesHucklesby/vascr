@@ -23,5 +23,4 @@ rbgrowth.df = vascr_subset(growth.df, unit = "Rb")
 vascr_summarise(rbgrowth.df, level = "summary")
 vascr_summarise(rbgrowth.df, level = "experiment")
 vascr_summarise(rbgrowth.df, level = "wells")
-
 }

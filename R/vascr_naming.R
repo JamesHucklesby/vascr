@@ -4,6 +4,7 @@
 #' @param raw Path to raw data file
 #' @param modeled Path to modeled data file from manufacturer's software
 #' @param experiment Name for the experiment being imported
+#' @param shear True or False, is a shear plate used, as these have a different electrode layout. Defaults to False.
 #' 
 #' @importFrom stringr str_to_lower
 #'
@@ -12,7 +13,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' 
 #' # ECIS
 #' raw = system.file('extdata/instruments/ecis_TimeResample.abp', package = 'vascr')
@@ -28,8 +29,13 @@
 #' model = system.file("extdata/instruments/zscopemodel.txt", package = "vascr")
 #' raw = system.file("extdata/instruments/zscoperaw.txt", package = "vascr")
 #' vascr_import("cellzscope", raw, model, "cellZscope")
+#' 
+#' #' # ScioSpec
+#' raw = system.file("extdata/instruments/ScioSpec", package = "vascr")
+#' vascr_import("sciospec", raw, model, "ScioSpec")
+#' 
 #' }
-vascr_import = function(instrument = NULL, raw = NULL, modeled = NULL, experiment = NULL){
+vascr_import = function(instrument = NULL, raw = NULL, modeled = NULL, experiment = NULL, shear = FALSE){
   
   instrument = str_to_lower(instrument)
   
@@ -44,6 +50,9 @@ vascr_import = function(instrument = NULL, raw = NULL, modeled = NULL, experimen
   } else if (instrument == "cellzscope")
   {
     return(cellzscope_import(raw, modeled, experiment))
+  } else if (instrument == "sciospec")
+  {
+    return(import_sciospec(raw, experiment = experiment, shear = shear))
   }
   else{
     vascr_notify("error", "Data didn't import, wrong instument typed")
@@ -102,9 +111,6 @@ vascr_blank_df = function(){
 #'
 #'lookup = system.file('extdata/instruments/eciskey.csv', package = 'vascr')
 #'lookupmap = vascr_import_map(lookup)
-#'
-#'map.df =vascr_import_map(lookup = "ECIS/200722_key.csv")
-#'
 vascr_import_map = function(lookup) {
   
   if(is.character(lookup))
@@ -120,7 +126,11 @@ vascr_import_map = function(lookup) {
   
   # Add a Sample ID automatically if not already set
   if(!"SampleID" %in% colnames(file_content)) {
-    file_content = file_content %>% group_by_all() %>% mutate(SampleID = cur_group_id())
+    if("Well" %in% colnames(file_content)) {
+      file_content = file_content %>% group_by(across(-'Well')) %>% mutate(SampleID = cur_group_id())
+    } else {
+      file_content = file_content %>% group_by(across(c(-'Column', -'Row'))) %>% mutate(SampleID = cur_group_id())
+    }
   } else { # If samples are set, check for duplicate ID rows
     #vascr_check_duplicate(file_content, c("Experiment","SampleID"))
   }

@@ -12,15 +12,13 @@
 #' @export
 #'
 #' @examples
+#' #Make three fake experiments worth of data
+#' experiment1.df = vascr_subset(growth.df, experiment = "1")
+#' experiment2.df = vascr_subset(growth.df, experiment = "2")
+#' experiment3.df = vascr_subset(growth.df, experiment = "3")
 #' 
-#' #Make two fake experiments worth of data
-#' 
-#' #experiment1.df = vascr_subset(growth.df, experiment = "1")
-#' #experiment2.df = vascr_subset(growth.df, experiment = "2")
-#' #experiment3.df = vascr_subset(growth.df, experiment = "3")
-#' 
-#' #data = vascr_combine(experiment1.df, experiment2.df, experiment3.df)
-#' #head(data)
+#' data = vascr_combine(experiment1.df, experiment2.df, experiment3.df)
+#' head(data)
 #' 
 #' 
 vascr_combine = function(..., resample = FALSE) {

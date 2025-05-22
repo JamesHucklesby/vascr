@@ -9,12 +9,12 @@
        1 10 nM Treatment 1 + 1nm water         1 A01  
        2 10 nM Treatment 1 + 1nm water         1 A02  
        3 10 nM Treatment 1 + 1nm water         1 A03  
-       4 100 nM Treatment 1 + 1nm water        2 B01  
-       5 100 nM Treatment 1 + 1nm water        2 B02  
-       6 100 nM Treatment 1 + 1nm water        2 B03  
-       7 10 nM Treatment 2 + 1nm water         3 C04  
-       8 10 nM Treatment 2 + 1nm water         3 C05  
-       9 10 nM Treatment 2 + 1nm water         3 C06  
+       4 100 nM Treatment 1 + 1nm water        3 B01  
+       5 100 nM Treatment 1 + 1nm water        3 B02  
+       6 100 nM Treatment 1 + 1nm water        3 B03  
+       7 10 nM Treatment 2 + 1nm water         2 C04  
+       8 10 nM Treatment 2 + 1nm water         2 C05  
+       9 10 nM Treatment 2 + 1nm water         2 C06  
       10 100 nM Treatment 2 + 1nm water        4 D01  
       11 100 nM Treatment 2 + 1nm water        4 D02  
       12 100 nM Treatment 2 + 1nm water        4 D03  
@@ -30,19 +30,22 @@
        1 A01   10 nM Treatment 1 + 1nm water         1
        2 A02   10 nM Treatment 1 + 1nm water         1
        3 A03   10 nM Treatment 1 + 1nm water         1
-       4 B01   100 nM Treatment 1 + 1nm water        2
-       5 B02   100 nM Treatment 1 + 1nm water        2
-       6 B03   100 nM Treatment 1 + 1nm water        2
-       7 C01   10 nM Treatment 2 + 1nm water         3
-       8 C02   10 nM Treatment 2 + 1nm water         3
-       9 C03   10 nM Treatment 2 + 1nm water         3
+       4 B01   100 nM Treatment 1 + 1nm water        3
+       5 B02   100 nM Treatment 1 + 1nm water        3
+       6 B03   100 nM Treatment 1 + 1nm water        3
+       7 C01   10 nM Treatment 2 + 1nm water         2
+       8 C02   10 nM Treatment 2 + 1nm water         2
+       9 C03   10 nM Treatment 2 + 1nm water         2
       10 C01   100 nM Treatment 2 + 1nm water        4
       11 C02   100 nM Treatment 2 + 1nm water        4
       12 C03   100 nM Treatment 2 + 1nm water        4
 
 ---
 
-    Either `Row` and `Column' or `Well` must be specified in the input file
+    i In argument: `across(c(-"Column", -"Row"))`.
+    Caused by error in `across()`:
+    ! Can't select columns that don't exist.
+    x Column `Column` doesn't exist.
 
 ---
 
@@ -131,6 +134,21 @@
 ---
 
     Code
+      vascr_import_map(map8)
+    Output
+      # A tibble: 6 x 3
+        Well  Sample SampleID
+        <chr> <chr>     <int>
+      1 A01   S             1
+      2 B03   SM            2
+      3 C01   S             1
+      4 D01   SM            2
+      5 E01   S             1
+      6 F01   St            3
+
+---
+
+    Code
       vascr_explode(growth.df)
     Output
       # A tibble: 146,370 x 14
@@ -158,10 +176,10 @@
       # A tibble: 6 x 5
         SampleID Sample                        Well  Vehicle HCMVEC
            <int> <chr>                         <chr> <chr>   <chr> 
-      1        1 Water Vehicle + 80,000 HCMVEC A01   Water   80,000
+      1        2 Water Vehicle + 80,000 HCMVEC A01   Water   80,000
       2        2 Water Vehicle + 80,000 HCMVEC B01   Water   80,000
-      3        3 Water Vehicle + 80,000 HCMVEC C01   Water   80,000
-      4        4 Water Vehicle + 20,000 HCMVEC E02   Water   20,000
-      5        5 Water Vehicle + 20,000 HCMVEC F02   Water   20,000
-      6        6 Water Vehicle + 20,000 HCMVEC G02   Water   20,000
+      3        2 Water Vehicle + 80,000 HCMVEC C01   Water   80,000
+      4        1 Water Vehicle + 20,000 HCMVEC E02   Water   20,000
+      5        1 Water Vehicle + 20,000 HCMVEC F02   Water   20,000
+      6        1 Water Vehicle + 20,000 HCMVEC G02   Water   20,000
 

@@ -915,12 +915,12 @@ vascr_instrument_from_unit = function(unit)
 #'
 #' @return The level of the dataset analysed
 #' 
-#' 
+#' @noRd
 #'
 #' @examples
-#' #vascr_find_level(growth.df)
-#' #vascr_find_level(vascr_summarise(growth.df, level = "experiments"))
-#' #vascr_find_level(vascr_summarise(growth.df, level = "summary"))
+#' vascr_find_level(growth.df)
+#' vascr_find_level(vascr_summarise(growth.df %>% vascr_subset(unit= "Rb"), level = "experiments"))
+#' vascr_find_level(vascr_summarise(growth.df %>% vascr_subset(unit= "Rb"), level = "summary"))
 vascr_find_level = function(data)
 {
   if("totaln" %in% colnames(data))

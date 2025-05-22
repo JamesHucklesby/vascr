@@ -10,7 +10,8 @@ NULL
 #'
 #' @importFrom dplyr %>%
 #' @name %>%
-#' @rdname pipe
+#' @rdname re-exports
+#' @return Various outputs, please see documentation for source package
 #' @export
 NULL
 
@@ -21,7 +22,7 @@ globalVariables(".")
 #'
 #' @importFrom dplyr tribble
 #' @name tribble
-#' @rdname tribble
+#' @rdname re-exports
 #' @export
 NULL
 
@@ -29,7 +30,7 @@ NULL
 #'
 #' @importFrom glue glue
 #' @name glue
-#' @rdname glue
+#' @rdname re-exports
 #' @export
 NULL
 

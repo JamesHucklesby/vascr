@@ -2,14 +2,6 @@
 
     Code
       vascr_summarise_cc_stretch_shift_stats(data.df, reference = 3)
-    Message
-      
-      Attaching package: 'purrr'
-      
-      The following object is masked from 'package:testthat':
-      
-          is_null
-      
     Output
       # A tibble: 5 x 12
         name  title          p   mean      sd nsample ncontrol Sample.x Sample.y refs 

@@ -56,6 +56,16 @@ test_that("Samples work",
             expect_snapshot(vascr_import_map(map_6))
             expect_snapshot(vascr_import_map(map_7))
             
+            map8 = tribble(~Well, ~Sample, 
+                           "A01", "S",
+                           "B03", "SM",
+                           "C01", "S",
+                           "D01", "SM",
+                           "E01", "S",
+                           "F01", "St")
+            
+            expect_snapshot(vascr_import_map(map8))
+            
             
             expect_snapshot(vascr_explode(growth.df))
             

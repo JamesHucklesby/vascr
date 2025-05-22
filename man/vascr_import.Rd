@@ -4,7 +4,13 @@
 \alias{vascr_import}
 \title{Import an impedance datafile to vascr}
 \usage{
-vascr_import(instrument = NULL, raw = NULL, modeled = NULL, experiment = NULL)
+vascr_import(
+  instrument = NULL,
+  raw = NULL,
+  modeled = NULL,
+  experiment = NULL,
+  shear = FALSE
+)
 }
 \arguments{
 \item{instrument}{Instrument to import from, either ECIS, xCELLigence or cellZscope}
@@ -22,7 +28,7 @@ A vascr dataset for subsequent analysis
 Import an impedance datafile to vascr
 }
 \examples{
-\dontrun{
+\donttest{
 
 # ECIS
 raw = system.file('extdata/instruments/ecis_TimeResample.abp', package = 'vascr')
@@ -38,5 +44,10 @@ vascr_import("xCELLigence", raw, experiment = "xCELLigence")
 model = system.file("extdata/instruments/zscopemodel.txt", package = "vascr")
 raw = system.file("extdata/instruments/zscoperaw.txt", package = "vascr")
 vascr_import("cellzscope", raw, model, "cellZscope")
+
+#' # ScioSpec
+raw = system.file("extdata/instruments/ScioSpec", package = "vascr")
+vascr_import("sciospec", raw, model, "ScioSpec")
+
 }
 }
