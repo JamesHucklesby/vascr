@@ -255,6 +255,15 @@ test_that("Find metadata works", {
 
 })
 
+
+test_that("find col works", {
+
+  expect_snapshot(vascr_find_col(growth.df, "HCMEC/D3"))
+  expect_snapshot(vascr_find_col(growth.df, "line"))
+
+})
+
+
 # test_that("", {
 #   
 #   expect_snapshot()

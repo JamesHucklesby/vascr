@@ -58,6 +58,29 @@ vascr_find = function(data.df = vascr::growth.df , paramater, value = NA){
   
 }
 
+#' Match col name to the nearest thing actually in the dataset
+#'
+#' @param data.df The dataset to reference to
+#' @param names Names of the cols to parse
+#'
+#' @returns A vector of columns, guaranteed to be in the dataset
+#' 
+#' @noRd
+#'
+#' @examples
+#' vascr_find_col(growth.df, "HCMEC/D3")
+#' vascr_find_col(growth.df, "line")
+#' 
+vascr_find_col = function(data.df, names){
+  
+ cn = data.df %>% colnames()
+
+ repaired = vascr_match(names, cn)
+ 
+ return(repaired)
+  
+}
+
 
 #' Detect if an ECIS dataset has been normalized
 #'
@@ -1166,26 +1189,45 @@ vascr_gg_color_hue <- function(n, start = 15, values_needed = c(1:n), l = 65, c 
 #' vascr_cols(growth.df, set = "core")
 #' 
 #' 
-vascr_cols  = function(data, set = "core")
+vascr_cols  = function(data = NULL, set = "core")
 {
   if(set == "core")
   {
-    return(c("Time", "Unit", "Value", "Well", "Sample", "Frequency", "Experiment", "Instrument", "SampleID", "Excluded"))
+    options = c("Time", "Unit", "Value", "Well", "Sample", "Frequency", "Experiment", "Instrument", "SampleID", "Excluded")
   }
   
-  else if (set == "exploded")
-  {
+  else if (set == "exploded") {
     # Return the non-core cols
-    return(setdiff(colnames(data), vascr_cols()))
-  }
-  
-  else
-  {
+    options = setdiff(colnames(data), vascr_cols())
+  } else {
     vascr_notify("warning","Inappropriate set selected, please use another")
     return(NULL)
   }
   
+  if(is.data.frame(data)){
+    return(options[options %in% colnames(data)])
+  }
+  else{
+    return(options)
+  }
+  
 }
+
+
+
+#' Title
+#'
+#' @param data.df 
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+vascr_samples = function(data.df){
+  data.df %>% select(c("SampleID", "Sample")) %>%
+    distinct()
+}
+
 
 
 #' Print out the characteristics of the vascr data frame

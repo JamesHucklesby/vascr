@@ -4,10 +4,12 @@
 \alias{vascr_implode}
 \title{Implode individual samples from a vascr dataset}
 \usage{
-vascr_implode(data.df)
+vascr_implode(data.df, cols = NULL)
 }
 \arguments{
 \item{data.df}{A vascr dataset to be imploded}
+
+\item{cols}{The columns to implode}
 }
 \value{
 A vascr dataset with individual wells imploded
@@ -17,5 +19,8 @@ Implode individual samples from a vascr dataset
 }
 \examples{
 vascr_implode(growth.df)
+
+# load(file = "C:\\Users\\James Hucklesby\\Documents\\vascr\\devel\\plasmin_full.Rdata")
+data.df = plasmin_master
 
 }

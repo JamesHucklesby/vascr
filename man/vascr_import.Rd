@@ -20,6 +20,8 @@ vascr_import(
 \item{modeled}{Path to modeled data file from manufacturer's software}
 
 \item{experiment}{Name for the experiment being imported}
+
+\item{shear}{True or False, is a shear plate used, as these have a different electrode layout. Defaults to False.}
 }
 \value{
 A vascr dataset for subsequent analysis
