@@ -75,7 +75,7 @@ import_sciospec_single = memoise({function(cur_file, shear = FALSE){
 #' @param shear 
 #' @param nth 
 #' 
-#' @importFrom dplyr mutate tribble left_join select distinct
+#' @importFrom dplyr mutate tribble left_join select distinct bind_rows
 #' @importFrom tidyr pivot_longer
 #' @importFrom stringr str_replace
 #'
@@ -90,13 +90,19 @@ import_sciospec_single = memoise({function(cur_file, shear = FALSE){
 #' 
 #' data_path = "C:\\Users\\James Hucklesby\\ScioSpec\\250515 Sanity check\\20250516 14.33.47\\Day0Collagentest\\"
 #' 
+#' data_path = "C:\\Users\\jhuc964\\Documents\\vascr\\devel\\CRT ECIS\\SS v2 250428"
+#' data_path = "~/SS v2 250428"
 import_sciospec = function(data_path, shear = FALSE, experiment = NA, nth = 1){
+  
+  # Replace the ~ in the data path with a wd
+  data_path = str_replace(data_path, "~", getwd())
   
   rlang::check_installed(c("purrr", "data.table", "readr"), reason = "is needed to deal with the ScioSpec data format`")
   
   # Create the list of files to import, from the master file list
   
   file_tree = list.files(data_path, recursive = TRUE, full.names = TRUE, pattern = "spec")
+  file_tree
   
   if(length(file_tree) == 0 ){
     vascr_notify("error", "No files found in designated folder, please check link")

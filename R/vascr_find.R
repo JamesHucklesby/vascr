@@ -1110,7 +1110,7 @@ vascr_standardise_wells = function(well) {
 #' @noRd
 #'
 #' @examples
-#' #vascr_96_well_names()
+#' vascr_96_well_names()
 #' 
 vascr_96_well_names = function()
 {
@@ -1120,6 +1120,7 @@ vascr_96_well_names = function()
   wells = as.vector(wells$pasted)
   wells = gsub(" ", "", wells, fixed = TRUE) # Remove spaces
   wells = gsub("(?<![0-9])([0-9])(?![0-9])", "0\\1", wells, perl = TRUE) # Add O's
+  wells = c(wells, "NC")
   return(wells)
 }
 

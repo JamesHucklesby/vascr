@@ -21,9 +21,8 @@
 #' 
 #' vascr_plot_line(data.df = growth.df %>% vascr_subset(unit = "R", frequency = 4000), facet = FALSE)
 #' 
-vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = TRUE, facet_expt = TRUE)
+vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = TRUE, facet_expt = TRUE, show_linetypes = TRUE)
 {
-  
   
   data_level = vascr_find_level(data.df)
   
@@ -61,8 +60,15 @@ vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = 
   
   if(data_level == "experiments")
   {
+    if(isTRUE(show_linetypes))
+    {
       gplot = ggplot() +
         geom_line(data = data.df, aes(x = .data$Time, y = .data$Value, color = .data$Sample, linetype = .data$Experiment))
+    } else {
+      gplot = ggplot() +
+        geom_line(data = data.df, aes(x = .data$Time, y = .data$Value, color = .data$Sample))
+    }
+    
   }
   
   if(data_level == "summary")
@@ -89,6 +95,26 @@ vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = 
   
 }
 
+
+#' Title
+#'
+#' @param plot 
+#' @param times.df 
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+vascr_add_vline = function(plot, times.df){
+  
+  plot + 
+    guides(color = guide_legend("Sample")) +
+    new_scale(c("colour")) +
+    geom_vline(aes(xintercept = time, colour = label), data = times.df) +
+    scale_colour_manual(values = times.df$colour) +
+    labs(colour = NULL)
+  
+}
 
 #' Add a key time range to a plot
 #'
