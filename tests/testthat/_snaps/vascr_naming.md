@@ -165,7 +165,28 @@
 # Vascr_map_template works
 
     Code
-      # 
+      vascr_map_template()
+    Output
+      # A tibble: 0 x 5
+      # i 5 variables: Experiment <???>, Well <???>, Sample <???>, SampleID <???>,
+      #   Excluded <???>
+
+# vascr regenerate map works
+
+    Code
+      vascr_regenerate_map(growth.df %>% mutate(Experiment = 1))
+    Output
+      # A tibble: 8 x 5
+        Experiment Sample                       SampleID Excluded Well                
+             <dbl> <chr>                           <int> <chr>    <chr>               
+      1          1 0_cells + HCMEC D3_line             8 no       H01 H02 H03 H04 H05~
+      2          1 10,000_cells + HCMEC D3_line        6 no       F01 F02 F03 F04 F05~
+      3          1 15,000_cells + HCMEC D3_line        5 no       E01 E02 E03 E04 E05~
+      4          1 20,000_cells + HCMEC D3_line        4 no       D01 D02 D03 D04 D05~
+      5          1 25,000_cells + HCMEC D3_line        3 no       C01 C02 C03 C04 C05~
+      6          1 30,000_cells + HCMEC D3_line        2 no       B01 B02 B03 B04 B05~
+      7          1 35,000_cells + HCMEC D3_line        1 no       A01 A02 A03 A04 A05~
+      8          1 5,000_cells + HCMEC D3_line         7 no       G01 G02 G03 G04 G05~
 
 # Samples work
 

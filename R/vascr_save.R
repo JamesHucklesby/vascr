@@ -6,8 +6,8 @@
 #' @export
 #'
 #' @examples
-#' 
-#' vascr_save(crt_1, path = "crt1")
+#' path = tempfile()
+#' vascr_save(growth.df, path = path)
 #' 
 vascr_save = function(data.df , path){
   dataframe = deparse(substitute(data.df))
@@ -21,8 +21,10 @@ vascr_save = function(data.df , path){
 #' @export
 #'
 #' @examples
+#' 
+#' 
+#' 
 vascr_load = function(path){
   load(path, envir = .GlobalEnv, verbose = TRUE)
   }
 
-# rm(crt_1)
