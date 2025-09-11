@@ -689,3 +689,19 @@
       
       Timepoints
 
+# find col works
+
+    Code
+      vascr_find_col(growth.df, "HCMEC/D3")
+    Message
+      ! [HCMEC/D3] corrected to [SampleID]. Please check the argeuments for your functions are correctly typed.
+    Output
+      [1] "SampleID"
+
+---
+
+    Code
+      vascr_find_col(growth.df, "line")
+    Output
+      [1] "line"
+

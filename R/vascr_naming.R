@@ -155,7 +155,7 @@ vascr_import_map = function(lookup) {
   
   if(!"Sample" %in% colnames(file_map))
   {
-    file_map = vascr_implode(file_map)
+    file_map = vascr_implode(file_map %>% ungroup())
   }
   
   file_map = ungroup(file_map)
@@ -208,6 +208,8 @@ vascr_apply_map = function(data.df, map){
   toreturn = toreturn %>% mutate(Experiment = as.factor(.data$Experiment)) %>%
             mutate(Sample = as.factor(.data$Sample))
   
+  toreturn = as_tibble(toreturn)
+  
   return(toreturn)
 }
 
@@ -239,7 +241,8 @@ vascr_regenerate_map = function(data.df){
   data.df %>% select("Experiment", "Well", "Sample", "SampleID", "Excluded") %>%
     distinct() %>%
     group_by(.data$Experiment, .data$Sample, .data$SampleID, .data$Excluded) %>%
-    summarise(Well = paste(.data$Well, collapse = " "))
+    summarise(Well = paste(.data$Well, collapse = " ")) %>%
+    as_tibble()
   
   
 }
@@ -248,6 +251,7 @@ vascr_regenerate_map = function(data.df){
 #' Implode individual samples from a vascr dataset
 #'
 #' @param data.df A vascr dataset to be imploded
+#' @param cols  The columns to implode
 #'
 #' @return A vascr dataset with individual wells imploded
 #' 
@@ -259,12 +263,20 @@ vascr_regenerate_map = function(data.df){
 #' @examples
 #' vascr_implode(growth.df)
 #' 
-vascr_implode = function(data.df){
+#' # load(file = "C:\\Users\\James Hucklesby\\Documents\\vascr\\devel\\plasmin_full.Rdata")
+#' data.df = plasmin_master
+#' 
+vascr_implode = function(data.df, cols = NULL){
   
-  toimplodetf = !colnames(data.df) %in% c("Time", "Well", "Unit", "Value", "Instrument", "Experiment", "Frequency", "SampleID", "Sample")
-  toimplode = subset(colnames(data.df), toimplodetf)
+  if(is.null(cols)) {
+  toimplode = vascr_cols(data.df, set = "exploded")
+  }else{
+    toimplode = vascr_find_col(data.df, cols)
+  }
   
-  smallframe = data.df %>% select(all_of(toimplode), "SampleID") %>%
+  
+  
+  smallframe = data.df %>% select(all_of(c(toimplode, "SampleID")))  %>%
     distinct()
   
   to_merge = toimplode
@@ -276,12 +288,16 @@ vascr_implode = function(data.df){
   names = foreach(r = c(1:nrow(smallframe))) %do%
     {
       row = smallframe[r,]
+      
         all_cols = foreach (c = to_merge) %do%
         {
-          if(!as.character(row[,c]) %in% c("NA")){
-           paste(row[,c], c)
+          if(as.character(row[,c]) %in% c("NA", "0") || is.na(row[,c])){
+            return()
+          } else {
+            paste(row[,c], c)
           }
         }
+        
         row$Sample = paste(unlist(all_cols), collapse = " + ")
         return(row)
     }
@@ -322,8 +338,9 @@ vascr_explode = function(data.df) {
   vascr_check_col_exists(data.df, "SampleID")
   vascr_check_col_exists(data.df, "Sample")
   
+  # Check what cols exist
   
-  core_data.df = data.df %>% select(vascr_cols()) %>% as_tibble()
+  core_data.df = data.df %>% select(vascr_cols(data.df)) %>% as_tibble()
   
 # Break out the data
   distinct_samples = core_data.df %>%
@@ -356,21 +373,81 @@ return(fulldata)
 #' @param data.df The data set to edit
 #' @param to_remove The sample to remove
 #' @param to_add The sample to replace with
+#' 
+#' @importFrom dplyr mutate left_join
+#' @importFrom tidyr as_tibble 
 #'
 #' @returns An edited vascr dataset
 #' 
 #' @export
 #'
 #' @examples
+#' vascr_edit_name(growth.df,"HCMEC D3", "HCMEC/D3")
 vascr_edit_name = function(data.df, to_remove, to_add = ""){
   
   data.df %>% select("Sample") %>% distinct() %>%
     mutate(Clean_Sample = str_replace_all(.data$Sample, to_remove, to_add)) %>%
     mutate(Clean_Sample = ifelse(.data$Clean_Sample == "", "Vehicle", .data$Clean_Sample)) %>%
     right_join(data.df, by = c("Sample" = "Sample")) %>%
-    mutate(Sample = .data$Clean_Sample, Clean_Sample = NULL)
+    mutate(Sample = .data$Clean_Sample, Clean_Sample = NULL) %>%
+    as_tibble()
   
 }
+
+
+#' Edit a sample name in a vascr dataframe
+#'
+#' @param data.df The data set to edit
+#' @param to_remove The sample to remove
+#' @param to_add The sample to replace with
+#' 
+#' @importFrom dplyr mutate left_join
+#' @importFrom tidyr as_tibble 
+#'
+#' @returns An edited vascr dataset
+#' 
+#' @export
+#'
+#' @examples
+#' changed = vascr_change_name(growth.df, 1 , "Sample One")
+vascr_change_name = function(data.df, sampleid, new_name = ""){
+  
+  data.df %>% select("Sample") %>% distinct() %>%
+    mutate(Clean_Sample = ifelse(.data$SampleID == sampleid, "new_name", .data$Clean_Sample)) %>%
+    right_join(data.df, by = c("Sample" = "Sample")) %>%
+    mutate(Sample = .data$Clean_Sample, Clean_Sample = NULL) %>%
+    as_tibble()
+  
+}
+
+
+
+#' Reassign sample ID's to a dataset
+#'
+#' @param data.df 
+#' 
+#' @noRd
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+#' growth.df %>% vascr_assign_sampleid()
+#' 
+vascr_assign_sampleid = function(data.df, force = FALSE){
+  
+  if(!("SampleID" %in% colnames(data.df)) | isTRUE(force))
+  {
+  
+  data.df = data.df %>% group_by(.data$Sample) %>%
+    mutate(SampleID = cur_group_id()) %>%
+    as_tibble()
+  }
+  
+  return(data.df)
+  
+}
+
 
 
 

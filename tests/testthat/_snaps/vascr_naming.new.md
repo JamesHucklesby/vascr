@@ -165,7 +165,11 @@
 # Vascr_map_template works
 
     Code
-      # 
+      vascr_map_template()
+    Output
+      # A tibble: 0 x 5
+      # i 5 variables: Experiment <???>, Well <???>, Sample <???>, SampleID <???>,
+      #   Excluded <???>
 
 # Samples work
 
