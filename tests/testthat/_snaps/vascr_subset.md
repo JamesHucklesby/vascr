@@ -415,3 +415,88 @@
       #   Sample <fct>, Frequency <dbl>, Experiment <fct>, cells <chr>, line <chr>,
       #   Instrument <chr>, SampleID <int>, Excluded <chr>
 
+---
+
+    Code
+      vascr_exclude(growth.df, c("A01", "E01"))
+    Output
+      # A tibble: 142,270 x 12
+          Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
+         <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
+       1     0 Alpha A02      NA 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
+       2     0 Alpha A03      NA 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
+       3     0 Alpha B01      NA 30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
+       4     0 Alpha B02      NA 30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
+       5     0 Alpha B03      NA 30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
+       6     0 Alpha C01      NA 25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
+       7     0 Alpha C02      NA 25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
+       8     0 Alpha C03      NA 25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
+       9     0 Alpha D01      NA 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
+      10     0 Alpha D02      NA 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
+      # i 142,260 more rows
+      # i 2 more variables: SampleID <int>, Excluded <chr>
+
+---
+
+    Code
+      vascr_exclude(growth.df, c("A01", "E01"), 1)
+    Output
+      # A tibble: 142,270 x 12
+          Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
+         <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
+       1     0 Alpha A02      NA 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
+       2     0 Alpha A03      NA 35,000_c~         0 1 : Exper~ 35000 HCME~ ECIS      
+       3     0 Alpha B01      NA 30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
+       4     0 Alpha B02      NA 30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
+       5     0 Alpha B03      NA 30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
+       6     0 Alpha C01      NA 25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
+       7     0 Alpha C02      NA 25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
+       8     0 Alpha C03      NA 25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
+       9     0 Alpha D01      NA 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
+      10     0 Alpha D02      NA 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
+      # i 142,260 more rows
+      # i 2 more variables: SampleID <int>, Excluded <chr>
+
+---
+
+    Code
+      vascr_replace_sample(growth.df, "35,000_cells + HCMEC D3_line",
+        "35 Thousand Cells")
+    Output
+      # A tibble: 146,370 x 12
+          Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
+         <dbl> <chr> <chr> <dbl> <chr>         <dbl> <fct>      <chr> <chr> <chr>     
+       1     0 Alpha A01      NA 35 Thous~         0 1 : Exper~ 35000 HCME~ ECIS      
+       2     0 Alpha A02      NA 35 Thous~         0 1 : Exper~ 35000 HCME~ ECIS      
+       3     0 Alpha A03      NA 35 Thous~         0 1 : Exper~ 35000 HCME~ ECIS      
+       4     0 Alpha B01      NA 30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
+       5     0 Alpha B02      NA 30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
+       6     0 Alpha B03      NA 30,000_c~         0 1 : Exper~ 30000 HCME~ ECIS      
+       7     0 Alpha C01      NA 25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
+       8     0 Alpha C02      NA 25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
+       9     0 Alpha C03      NA 25,000_c~         0 1 : Exper~ 25000 HCME~ ECIS      
+      10     0 Alpha D01      NA 20,000_c~         0 1 : Exper~ 20000 HCME~ ECIS      
+      # i 146,360 more rows
+      # i 2 more variables: SampleID <int>, Excluded <chr>
+
+---
+
+    Code
+      renamed
+    Output
+      # A tibble: 51,480 x 13
+          Time Unit  Well   Value Frequency Experiment cells line  Instrument SampleID
+         <dbl> <chr> <chr>  <dbl>     <dbl> <fct>      <chr> <chr> <chr>         <int>
+       1     5 Alpha D01     1.85         0 1 : Exper~ 20000 HCME~ ECIS              4
+       2     5 Alpha D02     2.02         0 1 : Exper~ 20000 HCME~ ECIS              4
+       3     5 Alpha D03     2.05         0 1 : Exper~ 20000 HCME~ ECIS              4
+       4     5 Alpha F01     1.34         0 1 : Exper~ 10000 HCME~ ECIS              6
+       5     5 Alpha F02     0            0 1 : Exper~ 10000 HCME~ ECIS              6
+       6     5 Alpha F03     1.49         0 1 : Exper~ 10000 HCME~ ECIS              6
+       7     5 Cm    D01    85.6          0 1 : Exper~ 20000 HCME~ ECIS              4
+       8     5 Cm    D02    86.1          0 1 : Exper~ 20000 HCME~ ECIS              4
+       9     5 Cm    D03    75.0          0 1 : Exper~ 20000 HCME~ ECIS              4
+      10     5 Cm    F01   167.           0 1 : Exper~ 10000 HCME~ ECIS              6
+      # i 51,470 more rows
+      # i 3 more variables: Excluded <chr>, Sample <fct>, Original_Sample <fct>
+

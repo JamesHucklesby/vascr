@@ -46,5 +46,21 @@ test_that("Can subset correctly", {
   # Check ignores warning when there is an issue
   expect_snapshot(vascr_subset(growth.df, unit = "Rb", sampleid = 10))
   
+  # Check exclusion code works
+  expect_snapshot(vascr_exclude(growth.df, c("A01", "E01")))
+  expect_snapshot(vascr_exclude(growth.df, c("A01", "E01"), 1))
+  
+  # Replace sample
+  expect_snapshot(vascr_replace_sample(growth.df, "35,000_cells + HCMEC D3_line", "35 Thousand Cells"))
+  
+  suppressMessages({
+      to_rename = growth.df %>% vascr_subset(sample = c("0 cells","20,000 cells", "10,000 cells"))
 
+       to_rename$Sample %>% unique()
+
+      renamed = vascr_sample_rename(to_rename, change_list = list(c("0_cells", "Cell Free")))
+  })
+
+  expect_snapshot(renamed)
+  
 })

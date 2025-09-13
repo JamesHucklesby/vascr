@@ -220,7 +220,7 @@ vascr_exclude = function(data.df, well = NULL, experiment = NULL){
   
   data.df = data.df %>% filter(!((.data$Well %in% well) & (.data$Experiment %in% experiment)))
   
-  return(data.df)
+  return(data.df %>% as_tibble())
 }
 
 #' Replace a sample name
@@ -243,7 +243,7 @@ vascr_replace_sample = function(data.df, old, new){
     mutate(Sample = ifelse(is.na(.data$Sample), "NA", as.character(.data$Sample))) %>%
     mutate(Sample = ifelse(as.character(.data$Sample) == old, new, as.character(.data$Sample)))
   
-  return(data.df)
+  return(data.df %>% as_tibble())
 }
 
 

@@ -54,12 +54,13 @@
 # Checking of resampling works
 
     Code
-      w16 = system.file("extdata/instruments/ecis_16_testplate.abp", package = "vascr")
-      d16 = vascr_import("ECIS", raw = w16, experiment = "W16")
-    Message
-      i Starting import
-      i Importing raw data
-      v Import complete
+      suppressMessages({
+        w16 = system.file("extdata/instruments/ecis_16_testplate.abp", package = "vascr")
+        d16 = vascr_import("ECIS", raw = w16, experiment = "W16")
+      })
+    Condition
+      Warning:
+      Expected 2 pieces. Additional pieces discarded in 2 rows [1, 2].
 
 ---
 

@@ -33,10 +33,7 @@
 ---
 
     Code
-      import_sciospec(data_path)
-    Message
-      Joining with `by = join_by(channel)`
-      Joining with `by = join_by(time)`
+      suppressMessages(import_sciospec(data_path))
     Output
       # A tibble: 16,160 x 11
          channel      Frequency Unit    Value Well  Instrument  Time Experiment Sample
@@ -57,10 +54,7 @@
 ---
 
     Code
-      import_sciospec(data_path, shear = TRUE)
-    Message
-      Joining with `by = join_by(channel)`
-      Joining with `by = join_by(time)`
+      suppressMessages(import_sciospec(data_path, shear = TRUE))
     Output
       # A tibble: 16,160 x 11
          channel      Frequency Unit    Value Well  Instrument  Time Experiment Sample

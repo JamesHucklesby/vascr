@@ -6,6 +6,7 @@
 #' @returns
 #' 
 #' @importFrom stringr str_count
+#' @importFrom memoise memoise
 #' 
 #' @noRd
 #'
@@ -117,7 +118,7 @@ import_sciospec = function(data_path, shear = FALSE, experiment = NA, nth = 1){
   # Clean up times
   
   times = imp %>% select("time") %>% distinct() %>%
-    mutate (Time = (time %>% 
+    mutate (Time = (.data$time %>% 
                       str_replace("\\.-", "-") %>%
                       sub(":([^:]*)$", ".\\1", .) %>% 
                       str_replace("a.m.", "am") %>% 
@@ -137,7 +138,16 @@ import_sciospec = function(data_path, shear = FALSE, experiment = NA, nth = 1){
                      "Channel: ECISadapter 5", "A01", "NC",
                      "Channel: ECISadapter 6", "B01", "A01",
                      "Channel: ECISadapter 7", "C01", "C01",
-                     "Channel: ECISadapter 8", "D01", "E01"
+                     "Channel: ECISadapter 8", "D01", "E01",
+                     
+                     "Channel: ECISadapter1", "D02", "F01",
+                     "Channel: ECISadapter2", "C02", "D01",
+                     "Channel: ECISadapter3", "B02", "B01",
+                     "Channel: ECISadapter4", "A02", "NC",
+                     "Channel: ECISadapter5", "A01", "NC",
+                     "Channel: ECISadapter6", "B01", "A01",
+                     "Channel: ECISadapter7", "C01", "C01",
+                     "Channel: ECISadapter8", "D01", "E01"
   )
   
   
@@ -148,22 +158,22 @@ import_sciospec = function(data_path, shear = FALSE, experiment = NA, nth = 1){
     scio_map$Well = scio_map$static
   }
   
-  scio_map = scio_map %>% select(channel, Well)
+  scio_map = scio_map %>% select("channel", "Well")
   
   # Misc cleanup to vascr interoperable fomat
   
-  imp2 = imp %>% mutate(R = `Re[Ohm]`, `Re[Ohm]`  = NULL) %>%
-    mutate(I = `Im[Ohm]`, `Im[Ohm]` = NULL) %>%
-    mutate(Frequency = `frequency[Hz]`, `frequency[Hz]` = NULL) %>%
+  imp2 = imp %>% mutate(R = .data$`Re[Ohm]`, `Re[Ohm]`  = NULL) %>%
+    mutate(I = .data$`Im[Ohm]`, `Im[Ohm]` = NULL) %>%
+    mutate(Frequency = .data$`frequency[Hz]`, `frequency[Hz]` = NULL) %>%
     pivot_longer(c("R", "I"), names_to = "Unit", values_to = "Value") %>%
     left_join(scio_map) %>%
     mutate(Instrument = "sciospec") %>%
     left_join(times) %>%
     mutate(Experiment = "TEST", Sample = .data$Well) %>%
-    mutate(Time = Time - min(Time)) %>%
-    mutate(Time = Time/60/60) %>%
+    mutate(Time = .data$Time - min(.data$Time)) %>%
+    mutate(Time = .data$Time/60/60) %>%
     mutate(time = NULL) %>%
-    mutate(Value = as.numeric(Value)) %>%
+    mutate(Value = as.numeric(.data$Value)) %>%
     mutate(SampleID = 5) %>%
     mutate(Excluded = "no") %>%
     mutate(Experiment = experiment)

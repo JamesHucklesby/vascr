@@ -151,7 +151,7 @@
 ---
 
     Code
-      import_xcelligence(rawdata = rawdata)
+      suppressMessages(import_xcelligence(rawdata = rawdata))
     Output
       # A tibble: 6,336 x 10
           Time Unit  Value Well  Sample      Frequency Experiment  Instrument SampleID

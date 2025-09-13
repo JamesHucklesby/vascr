@@ -4,7 +4,7 @@ test_that("Vascr Import Works",
             
             raw = system.file('extdata/instruments/ecis_TimeResample.abp', package = 'vascr')
             modeled = system.file('extdata/instruments/ecis_TimeResample_RbA.csv', package = 'vascr')
-            expect_snapshot(vascr_import("ECIS", raw, modeled, "ECIS_Data"))
+            expect_snapshot(suppressMessages(vascr_import("ECIS", raw, modeled, "ECIS_Data")))
             
             
              # xCELLigence

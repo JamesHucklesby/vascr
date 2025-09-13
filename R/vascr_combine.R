@@ -6,6 +6,8 @@
 #'
 #' @param ... List of data frames to be combined
 #' @param resample Automatically try and re sample the data set. Default is FALSE
+#' 
+#' @importFrom dplyr distinct select left_join
 #'
 #' @return A single data frame containing all the data imported, automatically incremented by experiment
 #' 
@@ -57,11 +59,11 @@ vascr_combine = function(..., resample = FALSE) {
   
   
   sampleids = alldata %>% 
-    select(Sample, SampleID) %>%
+    select("Sample", "SampleID") %>%
     distinct() %>%
     regularise_sampleid()
     
-  alldata = alldata %>% select(-"SampleID") %>% left_join(sampleids)
+  alldata = alldata %>% select(-"SampleID") %>% left_join(sampleids, by = "Sample")
   
   
   if(isTRUE(resample))
@@ -77,24 +79,24 @@ vascr_combine = function(..., resample = FALSE) {
 
 # dataframes = list(...)
 # 
-e1 = tribble(~SampleID, ~Sample,
-        1, "A",
-        2, "B",
-        3, "C",
-        4, "C",
-        3, "D",
-        6, "D",
-        NA, "not set")
-
-e2 = tribble(~SampleID, ~Sample,
-             1, "A",
-             2, "B",
-             3, "D")
-
-e3 = tribble(~SampleID, ~Sample,
-             1, "A",
-             2, "B",
-             4, "D")
+# e1 = tribble(~SampleID, ~Sample,
+#         1, "A",
+#         2, "B",
+#         3, "C",
+#         4, "C",
+#         3, "D",
+#         6, "D",
+#         NA, "not set")
+# 
+# e2 = tribble(~SampleID, ~Sample,
+#              1, "A",
+#              2, "B",
+#              3, "D")
+# 
+# e3 = tribble(~SampleID, ~Sample,
+#              1, "A",
+#              2, "B",
+#              4, "D")
 # 
 # e4 = tribble(~SampleID, ~Sample,
 #              1, "A",
@@ -165,15 +167,13 @@ e3 = tribble(~SampleID, ~Sample,
 
 
 
-#' Title
+#' Regularize the SampleID from merged data sets
 #'
-#' @param ... 
-#'
-#' @returns
-#' @export
+#' @returns a vascr dataset with sample ID corrected for consistency
+#' 
+#' @noRd
 #'
 #' @examples
-#' 
 #' regularise_sampleid(all_data = e1)
 #' 
 regularise_sampleid = function(all_data){
@@ -181,7 +181,7 @@ regularise_sampleid = function(all_data){
 # all_data = bind_rows(...)
 
 d1 = all_data %>%
-  select(SampleID, Sample) %>%
+  select("SampleID", "Sample") %>%
   distinct() %>%
   group_by_all() %>%
   group_split()

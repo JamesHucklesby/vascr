@@ -9,7 +9,8 @@ vascr_plot_line(
   errorbars = Inf,
   alpha = 0.3,
   text_labels = TRUE,
-  facet_expt = TRUE
+  facet_expt = TRUE,
+  show_linetypes = TRUE
 )
 }
 \arguments{

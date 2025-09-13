@@ -1,23 +1,7 @@
 # Vascr Import Works
 
     Code
-      vascr_import("ECIS", raw, modeled, "ECIS_Data")
-    Message
-      i Starting import
-      i Importing raw data
-      i Reading file
-      i Extracting data
-      i Lengthening the dataset
-      i Generating other physical quantaties
-      i Cleaning up
-      i Importing model data
-      i Reading file into R
-      i Extracting useful data
-      i Renaming units
-      i Naming dataset
-      i Creating long dataframe
-      i Finishing up
-      v Import complete
+      suppressMessages(vascr_import("ECIS", raw, modeled, "ECIS_Data"))
     Output
       # A tibble: 14,400 x 9
           Time Well  Frequency Unit  Value Instrument Experiment Excluded Sample

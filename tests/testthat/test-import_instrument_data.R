@@ -37,7 +37,7 @@ test_that("Can import xCELLigence file", {
   rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr')
   
   expect_snapshot(import_xcelligence(rawdata = rawdata,"TEST7"))
-  expect_snapshot(import_xcelligence(rawdata = rawdata))
+  expect_snapshot(suppressMessages(import_xcelligence(rawdata = rawdata)))
   
   tempfile = paste(tempdir(),"/","TEMPMDBFORIMPORT.mdb", sep = "")
   file.copy(from = rawdata, to = tempfile)

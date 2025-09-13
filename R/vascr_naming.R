@@ -429,7 +429,6 @@ vascr_change_name = function(data.df, sampleid, new_name = ""){
 #' @noRd
 #'
 #' @returns
-#' @export
 #'
 #' @examples
 #' growth.df %>% vascr_assign_sampleid()

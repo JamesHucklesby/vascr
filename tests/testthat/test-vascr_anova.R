@@ -81,7 +81,7 @@ test_that("Dunnett test works", {
 
 test_that("Anova bar against reference", {
   vdiffr::expect_doppelganger("Anova reference", vascr_plot_bar_dunnett(growth.df, "R", 4000, 50, 8, stars =TRUE))
-  vdiffr::expect_doppelganger("Anova reference 2 dunnett", vascr_plot_bar_dunnett(growth.df, "R", 4000, 50, 8, stars =FALSE))
+  vdiffr::expect_doppelganger("Anova reference 2 dunnett", vascr_plot_bar_dunnett(growth.df %>% vascr_subset(sampleid = c(2,3,8)), "R", 4000, 50, 8, stars =FALSE))
 })
 
 test_that("Plot bar anova", {

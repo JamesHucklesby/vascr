@@ -104,26 +104,4 @@ NULL
 "rbgrowth.df"
 
 
-#' Memoise a function to allow caching
-#'
-#' @param function_name the function to memoise
-#' @param duration duration for the cache to last, default 10 days
-#' @param omit_args arguments not to include in cache generation
-#'
-#' @importFrom memoise memoise
-#'
-#' @return a cached version fo a vascr function
-#' 
-#' @noRd
-cache_function <- function(function_name, duration = 864000, omit_args = c()) {
-  fn <- get(function_name, envir = rlang::ns_env("vascr"))
-  fn <- memoise::memoise(
-    fn
-  )
-  assign(function_name, fn, envir = rlang::ns_env("vascr"))
-  return(invisible(TRUE))
-}
 
-.onLoad <- function(libname, pkgname) {
-  lapply(c("ecis_import_raw", "ecis_import_model"), cache_function)
-}
