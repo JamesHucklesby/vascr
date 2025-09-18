@@ -5,7 +5,7 @@ This is a re submission. In this version I have:
 
 * Reduced the number of spaces in the description, somehow indents as spaces became baked into the previous version
 
-* Missing return tags encorporated to functions re-exported from other packages
+* Missing return tags incorporated to functions re-exported from other packages
 
 * Examples removed from vascr_find_level RD file
 

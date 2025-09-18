@@ -263,9 +263,6 @@ vascr_regenerate_map = function(data.df){
 #' @examples
 #' vascr_implode(growth.df)
 #' 
-#' # load(file = "C:\\Users\\James Hucklesby\\Documents\\vascr\\devel\\plasmin_full.Rdata")
-#' data.df = plasmin_master
-#' 
 vascr_implode = function(data.df, cols = NULL){
   
   if(is.null(cols)) {
@@ -395,30 +392,32 @@ vascr_edit_name = function(data.df, to_remove, to_add = ""){
 }
 
 
-#' Edit a sample name in a vascr dataframe
-#'
-#' @param data.df The data set to edit
-#' @param to_remove The sample to remove
-#' @param to_add The sample to replace with
-#' 
-#' @importFrom dplyr mutate left_join
-#' @importFrom tidyr as_tibble 
-#'
-#' @returns An edited vascr dataset
-#' 
-#' @export
-#'
-#' @examples
-#' changed = vascr_change_name(growth.df, 1 , "Sample One")
-vascr_change_name = function(data.df, sampleid, new_name = ""){
-  
-  data.df %>% select("Sample") %>% distinct() %>%
-    mutate(Clean_Sample = ifelse(.data$SampleID == sampleid, "new_name", .data$Clean_Sample)) %>%
-    right_join(data.df, by = c("Sample" = "Sample")) %>%
-    mutate(Sample = .data$Clean_Sample, Clean_Sample = NULL) %>%
-    as_tibble()
-  
-}
+#' #' Edit a sample name in a vascr dataframe
+#' #'
+#' #' @param data.df The data set to edit
+#' #' @param to_remove The sample to remove
+#' #' @param to_add The sample to replace with
+#' #' 
+#' #' @importFrom dplyr mutate left_join
+#' #' @importFrom tidyr as_tibble 
+#' #'
+#' #' @returns An edited vascr dataset
+#' #' 
+#' #' @export
+#' #'
+#' #' @examples
+#' #' changed = vascr_change_name(growth.df, 1 , "Sample One")
+#' #' 
+#' #' 
+#' vascr_change_name = function(data.df, sampleid, new_name = ""){
+#'   
+#'   data.df %>% select("Sample", "SampleID") %>% distinct() %>%
+#'     mutate(Clean_Sample = ifelse(.data$SampleID == sampleid, new_name, .data$Clean_Sample)) %>%
+#'     right_join(data.df, by = c("Sample" = "Sample")) %>%
+#'     mutate(Sample = .data$Clean_Sample, Clean_Sample = NULL) %>%
+#'     as_tibble()
+#'   
+#' }
 
 
 

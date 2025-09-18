@@ -974,7 +974,13 @@ vascr_find_level = function(data)
 #' @examples
 #' vascr_find_sampleid(growth.df, 3)
 #' vascr_find_sampleid(growth.df, 300)
-vascr_find_sampleid = function(data.df, sampleid){
+#' vascr_find_sampleid(growth.df)
+vascr_find_sampleid = function(data.df, sampleid = NULL){
+  
+  if(is.null(sampleid))
+  {
+    return(unique(data.df$SampleID))
+  }
   
   if(!sampleid %in% unique(data.df$SampleID))
   {
@@ -1216,16 +1222,26 @@ vascr_cols  = function(data = NULL, set = "core")
 
 
 
-#' Title
+#' List out the samples currently in a vascr data set
 #'
-#' @param data.df 
+#' @param data.df The vascr data set to analyse
 #'
-#' @returns
+#' @returns A printout of the samples, Sample ID's and experiments where they occur
+#' 
 #' @export
 #'
 #' @examples
+#' vascr_samples(growth.df)
+#' 
 vascr_samples = function(data.df){
-  data.df %>% select(c("SampleID", "Sample")) %>%
+  data.df %>% select("SampleID", "Sample", "Experiment", "Well") %>%
+    distinct() %>%
+    group_by(.data$SampleID, .data$Sample, .data$Experiment) %>%
+    reframe(Wells = paste(.data$Well, collapse = " ")) %>%
+    mutate(Experiment = paste(.data$Experiment, .data$Wells)) %>%
+    group_by(.data$SampleID, .data$Sample) %>%
+    reframe(Experiment = paste(.data$Experiment, collapse = " | ")) %>%
+    arrange(.data$Sample) %>%
     distinct()
 }
 

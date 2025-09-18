@@ -2,13 +2,20 @@
 % Please edit documentation in R/vascr_find.R
 \name{vascr_samples}
 \alias{vascr_samples}
-\title{Title}
+\title{List out the samples currently in a vascr data set}
 \usage{
 vascr_samples(data.df)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The vascr data set to analyse}
+}
+\value{
+A printout of the samples, Sample ID's and experiments where they occur
 }
 \description{
-Title
+List out the samples currently in a vascr data set
+}
+\examples{
+vascr_samples(growth.df)
+
 }

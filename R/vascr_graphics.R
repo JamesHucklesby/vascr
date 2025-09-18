@@ -5,6 +5,7 @@
 #' @param alpha Transparency of the error ribbon plotted
 #' @param text_labels Show or hide well labels
 #' @param facet_expt Facet out different experiments, defaults to TRUE
+#' @param show_linetypes Include the line type for each experiment in the key. Default TRUE
 #' 
 #' @importFrom ggplot2 geom_ribbon geom_line geom_text facet_grid vars
 #' @importFrom ggtext element_markdown
@@ -96,21 +97,46 @@ vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = 
 }
 
 
-#' Title
+#' Add a vertical line to a vascr line plot
 #'
-#' @param plot 
-#' @param times.df 
+#' @param plot The vascr plot to receive a vertical line (or lines)
+#' @param times.df A tibble containing "time", "color" and "label" columns to specify the addition of lines
 #'
-#' @returns
+#' @returns A labeled vascr plot
+#' 
+#' @importFrom ggplot2 geom_vline scale_colour_manual
+#' @importFrom ggnewscale new_scale
+#' 
+#' 
 #' @export
 #'
 #' @examples
+#' plot1_data = growth.df %>% vascr_subset(unit = "R", frequency = "4000")
+#' plot1 = plot1_data %>% vascr_summarise("summary") %>% vascr_plot_line()
+#' 
+#' times.df = tribble(~time, ~label, ~colour, 100, "Test Point", "orange")
+#' vascr_add_vline(plot1, times.df)
+#' 
+#' times.df = tribble(~time, ~label, 100, "Test Point", 150, "Test Point 2")
+#' vascr_add_vline(plot1, times.df)
+#' 
 vascr_add_vline = function(plot, times.df){
+  
+  gg_color_hue <- function(n) {
+    hues = seq(15, 375, length = n + 1) + (365/n)
+    hcl(h = hues, l = 65, c = 100)[1:n]
+  }
+  
+  
+  if(!"colour" %in% colnames(times.df))
+  {
+      times.df$colour = gg_color_hue(nrow(times.df))
+  }
   
   plot + 
     guides(color = guide_legend("Sample")) +
     new_scale(c("colour")) +
-    geom_vline(aes(xintercept = time, colour = label), data = times.df) +
+    geom_vline(aes(xintercept = .data$time, colour = .data$label), data = times.df) +
     scale_colour_manual(values = times.df$colour) +
     labs(colour = NULL)
   
@@ -314,12 +340,12 @@ vascr_plot_keylines = function(plot, key_events, linetype = "dashed", linesize =
 #' @importFrom ggplot2 scale_colour_manual facet_grid element_rect theme geom_line geom_point labs
 #' @importFrom ggnewscale new_scale_color
 #' @importFrom stringr str_remove_all
+#' @importFrom ggpubr text_grob as_ggplot get_legend
+#' @importFrom patchwork plot_spacer
 #'
 #' @examples
 #' grid.df = growth.df %>% vascr_subset(unit = "R", frequency = "4000", experiment  = 1)
 #' vascr_plot_grid(grid.df)
-#' 
-#' vascr_plot_grid(growth.df)
 #' 
 vascr_plot_grid = function(data.df, threshold = 0.2)
 {
@@ -332,7 +358,9 @@ vascr_plot_grid = function(data.df, threshold = 0.2)
     mutate(row = str_remove_all(.data$Well, "[0-9]")) %>%
     filter(!is.na(.data$Value))
   
-  processed %>% 
+  title_text = vascr_titles(processed)
+  
+  output = processed %>% 
     ggplot() +
     geom_line(aes(x = .data$Time, y = .data$Median_Value, color = "Median technical replicate well")) +
     geom_point(aes(x = .data$Time, y = .data$Value, size = .data$Median_Deviation, color = "Oultier", group = .data$Title), 
@@ -343,9 +371,37 @@ vascr_plot_grid = function(data.df, threshold = 0.2)
     ggnewscale::new_scale_color() +
     geom_line(aes(x = .data$Time, y = .data$Value, color = .data$Sample)) +
     labs(color = "Sample") +
-    facet_grid(vars(.data$row), vars(.data$col), drop = TRUE) +
+    labs(y = title_text, x = "Time (hours)") +
+    facet_grid(vars(.data$row), vars(.data$col), drop = TRUE, axis.labels = "all") +
     theme(strip.background = element_rect("white"))
+  
+  
+  table_rows_label <- text_grob(
+    label = "Row of plate",
+    hjust = 0.5,
+    vjust = 1,
+    size = 12,
+    rot = 270
+  )
+  
+  table_cols_label <- text_grob(
+    label = "Column of plate",
+    hjust = 0.5,
+    vjust = 1,
+    size = 12,
+    rot = 0
+  )
+  
+   grob =  (as_ggplot(table_cols_label)) +  plot_spacer() + plot_spacer() +
+    (output + theme(legend.position="none")) + table_rows_label + get_legend(output) +
+    plot_layout(widths = c(18,0.5,10), heights = c(1,30))
+   
+   grob
 }
+
+
+
+
 
 #' Force data to have only a single pair of unit/frequency measurements
 #'

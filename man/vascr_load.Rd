@@ -2,10 +2,22 @@
 % Please edit documentation in R/vascr_save.R
 \name{vascr_load}
 \alias{vascr_load}
-\title{Title}
+\title{Load a vascr dataset}
 \usage{
 vascr_load(path)
 }
+\arguments{
+\item{path}{the path to a .vascr file containing the saved dataset}
+}
+\value{
+A vascr dataset
+}
 \description{
-Title
+Load a vascr dataset
+}
+\examples{
+
+path = system.file("extdata/test.vascr", package = "vascr")
+vascr_load(path)
+
 }

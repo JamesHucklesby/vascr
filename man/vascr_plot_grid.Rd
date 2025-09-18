@@ -21,6 +21,4 @@ Plot out each replicate well in a grid, with QC overlays
 grid.df = growth.df \%>\% vascr_subset(unit = "R", frequency = "4000", experiment  = 1)
 vascr_plot_grid(grid.df)
 
-vascr_plot_grid(growth.df)
-
 }

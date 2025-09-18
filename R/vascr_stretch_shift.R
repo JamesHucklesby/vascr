@@ -139,10 +139,10 @@
 
 
 
-#' Title
+#' Summarise the various stretch and shift paramaters when comparing vascr datasets
 #'
-#' @param data.df 
-#' @param reference 
+#' @param data.df The data set to analyse
+#' @param reference Which sample to reference against, or "none" to run all pairings
 #' 
 #' @importFrom dplyr as_tibble
 #' @importFrom progressr progressor
@@ -152,7 +152,8 @@
 #' @noRd
 #'
 #' @examples
-#' vascr_summarise_cc_stretch_shift(growth.df)
+#' fast_growth.df = growth.df %>% vascr_resample_time(20)
+#' vascr_summarise_cc_stretch_shift(fast_growth.df)
 #' vascr_summarise_cc_stretch_shift(growth.df, reference = 5)
 vascr_summarise_cc_stretch_shift = function(data.df = vascr::growth.df, unit = "R", frequency = 4000, reference = "none"){
   
@@ -163,8 +164,8 @@ vascr_summarise_cc_stretch_shift = function(data.df = vascr::growth.df, unit = "
   
   # cli_progress_bar(total = nrow(cc_data))
   
-  # progressr::handlers("cli")
-  # progressr::handlers(global = TRUE)
+  #progressr::handlers("cli")
+  #progressr::handlers(global = TRUE)
   
   # p <- progressr::progressor(along = c(1:nrow(cc_data)))
   # 
@@ -275,17 +276,26 @@ stretch_series = function(series, stretch, return_model = FALSE) {
 
 # stretch_cc_fast(s1, s2, stretch)
 
-#' Title
+#' Calculate the cross correlation of a stretched dataset
 #'
-#' @param s1 
-#' @param s2 
-#' @param stretch 
+#' @param s1 Vector containing a reference sequence
+#' @param s2 Vector containing the sequence for testing
+#' @param stretch The extent by which the stretch should be calculated
+#' 
+#' 
 #' @importFrom stats na.pass ccf
 #'
-#' @returns
+#' @returns A tibble with the stretch number, cross correlation, maximum shift and the shift at the max ccf respectivley
+#' 
 #' @noRd
 #'
 #' @examples
+#' 
+#' t1 = growth.df %>% vascr_subset(unit = "R", frequency = 4000, experiment = 1, sample = "10,000_cells + HCMEC D3_line") %>% vascr_summarise(level = "experiments")
+#  t2 = growth.df %>% vascr_subset(unit = "R", frequency = 4000, experiment = 1, sample = "30,000_cells + HCMEC D3_line") %>% vascr_summarise(level = "experiments")
+#' 
+#' stretch_cc_fast(t1$Value, t2$Value, 5)
+#' 
 stretch_cc_fast = function(s1, s2, stretch)
 {
   stretched = stretch_series(s2, stretch)
@@ -299,14 +309,13 @@ stretch_cc_fast = function(s1, s2, stretch)
     stretch_shift_shift = cc$lag[which.max(cc$acf)])
 }
 
-# cc_stretch_shift_fit(t1$Value, t2$Value)
 
-#' Title
+#' Stretch a value to fit
 #'
-#' @param s1 
-#' @param s2 
+#' @param s1 Series 1 to test
+#' @param s2 Second vector to test against
 #'
-#' @returns
+#' @returns A table with the optimal alignment characteristics
 #' 
 #' @noRd
 #' 
@@ -370,9 +379,9 @@ transform_series = function(series, stretch, shift, norm){
 
 
   
-#' Title
+#' Calculate the statistical differences after stretching and shifting to an optimal cross correlation
 #'
-#' @param data.df 
+#' @param data.df The dataset to reference
 #' @param reference 
 #' 
 #' @importFrom stats t.test p.adjust symnum
@@ -380,7 +389,8 @@ transform_series = function(series, stretch, shift, norm){
 #' @importFrom ggplot2 ggplot geom_point aes
 #' @importFrom foreach foreach %do% 
 #'
-#' @returns
+#' @returns A summary table of the results from the cross corelation
+#' 
 #' @noRd
 #'
 #' @examples
@@ -447,12 +457,13 @@ vascr_summarise_cc_stretch_shift_stats = function(data.df, unit = "R", frequency
 }
 
 
-#' Title
+#' Plot stretched and shifted cross correlation statistics
 #'
-#' @param data.df 
-#' @param reference 
+#' @param data.df The vascr dataset to run
+#' @param reference A reference value to compare against, default "none"
 #'
-#' @returns
+#' @returns A ggplot overlaying the calculated statistics from the cross correlation on the underlying data
+#' 
 #' @noRd
 #'
 #' @examples
@@ -486,14 +497,15 @@ vascr_plot_cc_stretch_shift_stats = function(data.df, unit= "R", frequency = 400
 }
 
 
-#' Title
+#' Setup a progressr and future environment for high performance calculations
 #'
-#' @returns
-#' 
+#' @returns Nothing, just prepping the environment for other things
 #' 
 #' @noRd
 #'
 #' @examples
+#' vascr_setup_paralell()
+#' 
 vascr_setup_paralell = function(){
   future::plan("multisession")
   progressr::handlers(global = TRUE)

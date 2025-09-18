@@ -1,6 +1,7 @@
 #' Save a vascr dataset
 #'
 #' @param data.df The vascr dataset to save
+#' @param path The path to save the file to
 #'
 #' @returns A .vascr file containing a vascr dataset
 #' 

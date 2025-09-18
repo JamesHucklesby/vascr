@@ -2,15 +2,29 @@
 % Please edit documentation in R/vascr_graphics.R
 \name{vascr_add_vline}
 \alias{vascr_add_vline}
-\title{Title}
+\title{Add a vertical line to a vascr line plot}
 \usage{
 vascr_add_vline(plot, times.df)
 }
 \arguments{
-\item{plot}{}
+\item{plot}{The vascr plot to receive a vertical line (or lines)}
 
-\item{times.df}{}
+\item{times.df}{A tibble containing "time", "color" and "label" columns to specify the addition of lines}
+}
+\value{
+A labeled vascr plot
 }
 \description{
-Title
+Add a vertical line to a vascr line plot
+}
+\examples{
+plot1_data = growth.df \%>\% vascr_subset(unit = "R", frequency = "4000")
+plot1 = plot1_data \%>\% vascr_summarise("summary") \%>\% vascr_plot_line()
+
+times.df = tribble(~time, ~label, ~colour, 100, "Test Point", "orange")
+vascr_add_vline(plot1, times.df)
+
+times.df = tribble(~time, ~label, 100, "Test Point", 150, "Test Point 2")
+vascr_add_vline(plot1, times.df)
+
 }

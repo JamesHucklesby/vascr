@@ -23,6 +23,8 @@ vascr_plot_line(
 \item{text_labels}{Show or hide well labels}
 
 \item{facet_expt}{Facet out different experiments, defaults to TRUE}
+
+\item{show_linetypes}{Include the line type for each experiment in the key. Default TRUE}
 }
 \value{
 a ggplot containing the data

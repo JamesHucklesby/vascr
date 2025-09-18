@@ -249,6 +249,12 @@ test_that("vascr_colnames_works", {
   expect_snapshot(vascr_cols(growth.df, set = "not_a_set"))
 })
 
+
+test_that("Printing vascr names works", {
+  expect_snapshot(vascr_samples(growth.df))
+})
+
+
 test_that("Find metadata works", {
 
   expect_snapshot(vascr_find_metadata(growth.df))

@@ -4,7 +4,7 @@
 \alias{vascr_exclude}
 \title{Exclude samples from a vascr dataset}
 \usage{
-vascr_exclude(data.df, well = NULL, experiment = NULL)
+vascr_exclude(data.df, well = NULL, experiment = NULL, sampleid = NULL)
 }
 \arguments{
 \item{data.df}{the vascr data set to exclude things from}
@@ -21,5 +21,7 @@ Exclude samples from a vascr dataset
 }
 \examples{
 vascr_exclude(growth.df, c("A01", "E01"))
+vascr_exclude(growth.df, sampleid = 1)
+
 
 }

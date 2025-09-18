@@ -1,9 +1,9 @@
-#' Title
+#' Import  a single ScioSpec data reading
 #'
-#' @param cur_file 
-#' @param shear 
+#' @param cur_file The file to import
+#' @param shear  Is the chip for shear stress (Defalt FALSE)
 #'
-#' @returns
+#' @returns A vascr dataset containing data from a single sciospec reading
 #' 
 #' @importFrom stringr str_count
 #' @importFrom memoise memoise
@@ -12,7 +12,7 @@
 #'
 #' @examples
 #' 
-#' cur_file = system.file('extdata/instruments/ScioSpec/20250331 22.12.35\\demoexperiment1\\ECISadapter 1\\demoexperiment1_00001.spec', package = 'vascr')
+#' cur_file = system.file('extdata/instruments/ScioSpec/d1\\d1\\ECISadapter 1\\demoexperiment1_00001.spec', package = 'vascr')
 #' 
 #' import_sciospec_single(cur_file)
 #' 

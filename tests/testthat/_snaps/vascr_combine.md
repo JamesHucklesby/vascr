@@ -47,7 +47,6 @@
     Message
       ! Datasets have different non-identical timebases. Please resample one or more of these datasets before running this function again or graphs may not be properly generated.
       ! Datasets have different non-identical timebases. Please resample one or more of these datasets before running this function again or graphs may not be properly generated.
-      Joining with `by = join_by(Sample)`
     Output
       # A tibble: 64,575 x 10
           Time Unit  Value Well  Sample       Frequency Experiment Instrument Excluded
@@ -73,7 +72,6 @@
     Message
       ! Datasets have different non-identical timebases. Please resample one or more of these datasets before running this function again or graphs may not be properly generated.
       ! Datasets have different non-identical timebases. Please resample one or more of these datasets before running this function again or graphs may not be properly generated.
-      Joining with `by = join_by(Sample)`
     Output
       [1] FALSE
 
@@ -81,8 +79,6 @@
 
     Code
       vascr_combine(experiment1r.df, experiment2r.df, experiment3.df, resample = TRUE)
-    Message
-      Joining with `by = join_by(Sample)`
     Output
       # A tibble: 17,850 x 10
          Unit  Well  Sample    Frequency Experiment Instrument Excluded SampleID Value

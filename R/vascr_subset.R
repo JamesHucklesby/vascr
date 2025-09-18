@@ -211,14 +211,17 @@ vascr_subset_sampleid = function (data.df, samplelist){
 #'
 #' @examples
 #' vascr_exclude(growth.df, c("A01", "E01"))
+#' vascr_exclude(growth.df, sampleid = 1)
 #' 
-vascr_exclude = function(data.df, well = NULL, experiment = NULL){
+#' 
+vascr_exclude = function(data.df, well = NULL, experiment = NULL, sampleid = NULL){
   # data.df = data.df %>% filter(!.data$Well %in% well & !.data$Experiment %in% experiment)
   
   well = vascr_find_well(data.df, well)
   experiment = vascr_find_experiment(data.df, experiment)
+  sampleid = vascr_find_sampleid(data.df, sampleid)
   
-  data.df = data.df %>% filter(!((.data$Well %in% well) & (.data$Experiment %in% experiment)))
+  data.df = data.df %>% filter(!((.data$Well %in% well) & (.data$Experiment %in% experiment) & (.data$SampleID %in% sampleid)))
   
   return(data.df %>% as_tibble())
 }

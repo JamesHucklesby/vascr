@@ -2,15 +2,20 @@
 % Please edit documentation in R/vascr_save.R
 \name{vascr_save}
 \alias{vascr_save}
-\title{Title}
+\title{Save a vascr dataset}
 \usage{
 vascr_save(data.df, path)
 }
 \arguments{
-\item{data.df}{}
+\item{data.df}{The vascr dataset to save}
+
+\item{path}{The path to save the file to}
+}
+\value{
+A .vascr file containing a vascr dataset
 }
 \description{
-Title
+Save a vascr dataset
 }
 \examples{
 path = tempfile()

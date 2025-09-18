@@ -623,7 +623,7 @@ vascr_plot_resample = function(data.df, unit = "R", frequency = "4000", well = "
           all = rbind(original_data, new_data)
           
           toplot = ggplot(all) +
-            geom_line(aes(x = .data$Time, y = .data$Value, colour = .data$source))
+            geom_line(aes(x = .data$Time, y = .data$Value, colour = .data$source, linetype = .data$source))
           
           if(isTRUE(points)) 
             {

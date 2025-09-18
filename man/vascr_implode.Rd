@@ -20,7 +20,4 @@ Implode individual samples from a vascr dataset
 \examples{
 vascr_implode(growth.df)
 
-# load(file = "C:\\Users\\James Hucklesby\\Documents\\vascr\\devel\\plasmin_full.Rdata")
-data.df = plasmin_master
-
 }
