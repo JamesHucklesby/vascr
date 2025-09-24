@@ -572,22 +572,23 @@ vascr_plot_anova_grid = function (data.df, unit =  "R", frequency = 4000, time =
   
   rl =  data2.df %>% vascr_summarise(level = "experiments") %>% mutate(Time = as.factor(Time))
  
-   foreach(t = time, .combine = rbind) %do% {
+   all_times = foreach(t = time, .combine = rbind) %do% {
 
-  subset.df = rl %>% mutate(Time = as.numeric(as.character(Time))) %>% vascr_subset(time = t)
+         subset_internal.df = rl %>% mutate(Time = as.numeric(as.character(Time))) %>% vascr_subset(time = t)
 
-  fit <- nlme::gls(Value ~ Sample + Experiment, data=subset.df)
+          fit <- lm(Value ~ Sample + Experiment, data=subset_internal.df)
 
 
-  gmod = multcomp::glht(fit , linfct = multcomp::mcp(Sample = "Dunnett"))
+        gmod = multcomp::glht(fit , linfct = multcomp::mcp(Sample = "Dunnett"))
 
-  summ = summary(gmod, test=adjusted("none"))
+           summ = summary(gmod, test = adjusted("none"))
   
-   tr1 =  tibble(
+       tr1 =  tibble(
      "Time_Sample" = summ$test$sigma %>% names(),
      "P" = summ$test$pvalues %>% as.vector(),
-     Time = unique(subset.df$Time))
+     Time = unique(subset_internal.df$Time))
 
+       return(tr1)
   }
   
  
@@ -611,12 +612,14 @@ vascr_plot_anova_grid = function (data.df, unit =  "R", frequency = 4000, time =
  means = data.df %>% vascr_subset(unit = unit, frequency = frequency) %>% vascr_normalise(normtime) %>% vascr_summarise(level = "summary") %>% mutate(Time = as.factor(Time)) %>% mutate(Time = as.character(Time))
  
  toreturn = toreturn %>% mutate(Time = round(.data$Time,4) %>% as.numeric())
- means = means %>% mutate(Time = round(as.numeric(.data$Time),4) %>% as.numeric())
+ means_small = means %>% mutate(Time = round(as.numeric(.data$Time),4) %>% as.numeric()) %>% vascr_subset(time = time)
  
- tr = right_join(means, toreturn, by = c("Sample", "Time")) %>%
-   mutate(Label = ifelse(.data$Sample == sample_text, "+", .data$Label)) %>%
-   mutate(P_round = ifelse(.data$Sample == sample_text, "+", .data$padj)) %>%
-   mutate(P = ifelse(.data$Sample == sample_text, "+", .data$P))
+ tr = left_join(means_small, toreturn, by = c("Sample", "Time")) %>%
+   mutate(Label = ifelse(.data$Sample == reference, "+", .data$Label)) %>%
+   mutate(P_round = ifelse(.data$Sample == reference, "+", .data$padj)) %>%
+   mutate(P = ifelse(.data$Sample == reference, "+", .data$P))
+ 
+ tr$Label
  
  tr
 
@@ -699,7 +702,7 @@ vascr_plot_line_dunnett = function(data.df, unit = "R", frequency = 4000, time =
   
   subset.df = data.df %>% vascr_subset(unit = unit, frequency = frequency) %>% vascr_normalise(normtime) %>% vascr_summarise(level = "summary") 
   
-
+  # dun.df$Label
   
   # plab = dun.df %>%
   #   dplyr::filter(!.data$Label == "NA") %>%

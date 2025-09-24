@@ -507,7 +507,7 @@ vascr_auc = function(data.df) {
 #' 
 #' vascr_plot_resample_range(data.df = growth.df)
 #' 
-vascr_plot_resample_range = function(data.df, unit = "R", frequency  = 4000, well = "A01", res = 50, plot = TRUE, toll = 0.999){
+vascr_find_resample_frequency = function(data.df, unit = "R", frequency  = 4000, well = "A01", res = 50, plot = TRUE, toll = 0.999){
   
   data.df = data.df %>% vascr_subset(unit = unit, frequency = frequency, well = well)  %>%
     arrange("Time")
