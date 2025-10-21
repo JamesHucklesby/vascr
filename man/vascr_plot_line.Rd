@@ -10,7 +10,8 @@ vascr_plot_line(
   alpha = 0.3,
   text_labels = TRUE,
   facet_expt = TRUE,
-  show_linetypes = TRUE
+  show_linetypes = TRUE,
+  explanatory = FALSE
 )
 }
 \arguments{
@@ -39,5 +40,7 @@ data.df = growth.df \%>\% vascr_subset(unit = "Rb") \%>\% vascr_summarise(level 
 vascr_plot_line(data.df, text_labels = FALSE)
 
 vascr_plot_line(data.df = growth.df \%>\% vascr_subset(unit = "R", frequency = 4000), facet = FALSE)
+
+vascr_plot_line(data.df = growth.df \%>\% vascr_subset(unit = "R", frequency = 4000), explanatory = TRUE)
 
 }

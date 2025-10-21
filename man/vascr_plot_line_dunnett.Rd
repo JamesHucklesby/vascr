@@ -9,7 +9,8 @@ vascr_plot_line_dunnett(
   unit = "R",
   frequency = 4000,
   time = 100,
-  reference = "0_cells + HCMEC D3_Line"
+  reference = "0_cells + HCMEC D3_Line",
+  normtime = 47
 )
 }
 \arguments{
@@ -36,10 +37,8 @@ vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = list(25,
     reference = "0_cells + HCMEC D3_Line")
 vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 180, 
     reference = "20,000_cells + HCMEC D3_Line")
+    
+vascr_plot_line_dunnett(anova, time = 70, reference = "20,000 hCMVEC cells")
+vascr_plot_line_dunnett(anova, time = list(53, 70), reference = "20,000 hCMVEC cells")
 
-data.df = growth.df
-unit = "R"
-frequency = 4000
-time = 50
-reference = "5,000_cells + HCMEC D3_line"
 }

@@ -24,7 +24,7 @@ plot1 = plot1_data \%>\% vascr_summarise("summary") \%>\% vascr_plot_line()
 times.df = tribble(~time, ~label, ~colour, 100, "Test Point", "orange")
 vascr_add_vline(plot1, times.df)
 
-times.df = tribble(~time, ~label, 100, "Test Point", 150, "Test Point 2")
+times.df = tribble(~time, ~label, 100, "ZTest Point", 150, "Test Point 2")
 vascr_add_vline(plot1, times.df)
 
 }

@@ -12,3 +12,6 @@
 ^devel$
 ^vascr_web$
 ^CRAN-SUBMISSION$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

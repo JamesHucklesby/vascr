@@ -650,6 +650,8 @@ vascr_find_unit = function(data.df, unit = NA)
 #'
 #' @return A data frame of units, their content and if they are modeled
 #' 
+#' @importFrom dplyr as_tibble
+#' 
 #' @noRd
 #'
 #' @examples
@@ -667,7 +669,7 @@ vascr_units_table = function()
   
   vascr_unit_table$Instrument = vascr_instrument_from_unit(vascr_unit_table$Unit)
   
-  vascr_unit_table = vascr_unit_table %>% separate_longer_delim("Instrument", delim =" + ")
+  vascr_unit_table = vascr_unit_table %>% separate_longer_delim("Instrument", delim =" + ") %>% as_tibble()
   
   return(vascr_unit_table)
 }
@@ -774,49 +776,94 @@ vascr_find_experiment = function(data.df, experiment)
 #' @examples
 #' vascr_titles("Rb")
 #' vascr_titles("R")
+#' vascr_titles("Rb", explanatory = TRUE)
 #' 
 #' vascr_titles(unit = growth.df %>% vascr_subset(unit = "Rb"))
 #' 
-vascr_titles= function (unit, frequency = 0, prefix = "")
+vascr_titles= function (unit, frequency = 0, prefix = "", explanatory = FALSE, normalised = FALSE)
 {
   
   if(is.data.frame(unit)){
     unit.df = unit
     unit = unique(unit.df$Unit)
     frequency = unique(unit.df$Frequency)
-  }
+    normalised = isFALSE(vascr_find_normalised(unit.df))
+  } 
   
   if(length(unit)>1)
   {
     unit = unique(unit)[1]
   }
+
+  name_table = tribble(~Unit, ~Title, ~Explanatory, ~Normalised,
+          
+          # Electrical quantaties
+          "C", glue("{prefix}Capacitance (nF, {frequency} Hz)"), FALSE, FALSE,
+          "R", glue("{prefix}Resistance (ohm, {frequency} Hz)"),FALSE, FALSE,
+          "P", glue("{prefix}Phase (radians, {frequency} Hz)"),FALSE, FALSE,
+          "X", glue("{prefix}Capacative Reactance (ohm, {frequency} Hz)"),FALSE, FALSE,
+          "Z", glue("{prefix}Impedance (ohm, {frequency} Hz)"), FALSE, FALSE,
+          
+          "C", glue("**Overall capacitance**<br>{prefix}Capacitance (nF, {frequency} Hz)"), TRUE, FALSE,
+          "R", glue("**Overall resistance**<br>{prefix}Resistance (ohm, {frequency} Hz)"),TRUE, FALSE,
+          "P", glue("{prefix}Phase (radians, {frequency} Hz)"),TRUE, FALSE,
+          "X", glue("{prefix}Capacative Reactance (ohm, {frequency} Hz)"),TRUE, FALSE,
+          "Z", glue("{prefix}Impedance (ohm, {frequency} Hz)"), TRUE, FALSE,
+          
+          "C", glue("**Overall capacitance**<br>{prefix}Fold change in capacitance ({frequency} Hz)"), TRUE, TRUE,
+          "R", glue("**Overall resistance**<br>{prefix}Fold change in resistance ({frequency} Hz)"),TRUE, TRUE,
+          "P", glue("**Overall phase**<br>{prefix}Fold change in phase{prefix}Phase (radians, {frequency} Hz)"),TRUE, TRUE,
+          "X", glue("**Overall reactance**<br>{prefix}Fold change in reactance{prefix}Capacative Reactance ({frequency} Hz)"),TRUE, TRUE,
+          "Z", glue("**Overall impedance**<br>{prefix}Fold change in impedance{prefix}Impedance ({frequency} Hz)"), TRUE, TRUE,
   
-  # Electrical quantaties
-  if(unit == "C") { return(glue("{prefix}Capacitance (nF, {frequency} Hz)"))}
-  if(unit == "R") { return(glue("{prefix}Resistance (ohm, {frequency} Hz)"))}
-  if(unit == "P"){ return(glue("{prefix}Phase (radians, {frequency} Hz)"))}
-  if(unit == "X") { return(glue("{prefix}Capacative Reactance (ohm, {frequency} Hz)"))}
-  if(unit == "Z") { return(glue("{prefix}Impedance (ohm, {frequency} Hz)"))}
+          # ECIS parameters
+          
+          "Rb", glue("{prefix}Rb (ohm cm<sup>2</sup>)"),FALSE, FALSE,
+          "Cm", glue("{prefix}Cm (&#956;F/cm<sup>2</sup>)"),FALSE, FALSE,
+          "Alpha", glue("{prefix}ohm<sup>1/2</sup> cm"),FALSE, FALSE,
+          "RMSE", glue("{prefix}Model Fit RMSE"),FALSE, FALSE,
+          "Drift", glue("{prefix}Drift (%)"), FALSE, FALSE,
+          
+          "Rb", glue("**Cell-Cell Adhesion**<br></br>{prefix}Rb (ohm cm<sup>2</sup>)"),TRUE, FALSE,
+          "Cm", glue("**Membrane Capacitance**<br></br>{prefix}Cm (&#956;F/cm<sup>2</sup>)"),TRUE, FALSE,
+          "Alpha", glue("**Basolateral Adhesion**<br></br>{prefix}ohm<sup>1/2</sup> cm"),TRUE, FALSE,
+          "RMSE", glue("**Model Fit Error**<br></br>{prefix}Model Fit RMSE"),TRUE, FALSE,
+          "Drift", glue("**Electrode Drift**<br></br>{prefix}Drift (%)"), TRUE, FALSE,
+          
+          "Rb", glue("**Cell-Cell Adhesion**<br></br>{prefix}Fold change in Rb"),TRUE, TRUE,
+          "Cm", glue("**Membrane Capacitance**<br>{prefix}Fold change in Cm)"),TRUE, TRUE,
+          "Alpha", glue("**Basolateral Adhesion**<br>{prefix}Fold change in alpha"),TRUE, TRUE,
+          "RMSE", glue("**Model Fit Error**<br>{prefix}Model Fit RMSE"),TRUE, TRUE,
+          "Drift", glue("**Electrode Drift**<br>{prefix}Drift (%)"), TRUE, TRUE,
+          
+          # xCELLigence
+          "CI", glue("{prefix}Cell Index") ,FALSE, FALSE,
+          
+          # cellZscope
+          "CPE_A", glue("{prefix}CPE_A (s<sup>n-1</sup>&#956;F/cm<sup>2</sup>)"),FALSE, FALSE,
+          "CPE_n", glue("{prefix}CPE_n"),FALSE, FALSE,
+          "TER", glue("{prefix}TER (&#937; cm<sup>2</sup>)"),FALSE, FALSE,
+          "Ccl", glue("{prefix}Ccl (&#956;F/cm<sup>2</sup>)"),FALSE, FALSE,
+          "Rmed", glue("{prefix}Rmed (ohm)"),FALSE, FALSE)
+
+      
   
-  # ECIS paramaters
-  if (unit == "Rb"){return (glue("{prefix}Rb (ohm cm<sup>2</sup>)"))}
-  if (unit == "Cm"){return (glue("{prefix}Cm (&#956;F/cm<sup>2</sup>)"))}
-  if (unit == "Alpha"){return (glue("{prefix}ohm<sup>1/2</sup> cm"))}
-  if(unit == "RMSE") {return(glue("{prefix}Model Fit RMSE"))}
-  if(unit == "Drift") {return(glue("{prefix}Drift (%)"))}
+  # if(isTRUE(explanatory)){
+  #   
+  # }
   
-  # xCELLigence
-  if(unit == "CI") {return(glue("{prefix}Cell Index"))}
+  toreturn = name_table %>% filter(Unit == unit) %>% 
+    filter(Explanatory == explanatory) %>% 
+    filter(Normalised == normalised)
   
-  # cellZscope
-  if(unit == "CPE_A") {return(glue("{prefix}CPE_A (s<sup>n-1</sup>&#956;F/cm<sup>2</sup>)"))}
-  if(unit == "CPE_n") {return(glue("{prefix}CPE_n"))}
-  if(unit == "TER") {return (glue("{prefix}TER (&#937; cm<sup>2</sup>)"))}
-  if(unit == "Ccl") {return(glue("{prefix}Ccl (&#956;F/cm<sup>2</sup>)"))}
-  if(unit == "Rmed") { return(glue("{prefix}Rmed (ohm)"))}
+  if(nrow(toreturn) != 1){
+    
+    return(unit)
+    
+  }
   
   # If not found, return what was input
-  return(unit)
+  return(toreturn$Title)
   
 }
 
@@ -829,7 +876,7 @@ vascr_titles= function (unit, frequency = 0, prefix = "")
 #' @noRd
 #'
 #' @examples
-#' #vascr_titles_vector(c("Rb", "R", "Cm"))
+#' vascr_titles_vector(c("Rb", "R", "Cm"))
 #' 
 vascr_titles_vector = function(units)
 {
@@ -838,15 +885,7 @@ vascr_titles_vector = function(units)
   for(uni in units)
   {
     
-    if(uni == "Rb"){parsed = "Rb (chm cm squared)"}
-    else if(uni == "Cm"){parsed = "Cm (microfarad / cm squared)"}
-    else if(uni == "Alpha"){parsed = "Alpha (ohm cm squared)"}
-    else if(uni == "C"){parsed = "Capacatance (microfarad)"}
-    else if(uni == "CPE_A"){parsed = "Capacatance (microfarad)"}
-    else if(uni == "TER"){parsed = "TER (ohm cm squared)"}
-    else if(uni == "Ccl"){parsed = "Ccl (microFarad / cm squared)"}
-    
-    else {parsed = vascr_titles(uni)}
+     parsed = vascr_titles(uni)
     
     
     return = c(return, parsed)

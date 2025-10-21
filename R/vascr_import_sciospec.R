@@ -33,34 +33,6 @@ import_sciospec_single = memoise({function(cur_file, shear = FALSE){
   cur_dat$channel = meta[[which(str_count(meta, "Channel") == 1)]]
   cur_dat$time = meta[[which((str_count(meta, "p\\.m\\.$") + str_count(meta, "a\\.m\\.$")) ==1)]]
   
- 
-  
-  
-  # cur_dat = read.csv2(cur_file, header = FALSE)
-  
-  #
-  # meta = cur_dat[1,]
-  # met = cur_dat[1:meta,]
-  #
-  # channel = met[6] %>% str_remove("Channel: ")
-  # time    = met[7]
-  #
-  # first_data = (cur_dat[1,]) %>% as.numeric()
-  # first_data = first_data +1
-  #
-  # body = cur_dat[first_data:nrow(cur_dat),] %>% as.data.frame() %>%
-  #         separate(col = ".", into = c("F", "R", "I"), sep = ",")
-  
-  # t2 = time %>% sub(":([^:]*)$", ".\\1", .) %>% str_replace("a.m.", "am") %>% str_replace("p.m.", "pm")
-  
-  # livetime = strptime(t2, "%d-%B.-%Y %I:%M:%OS %p")
-  
-  # body = cur_dat %>% mutate(R = `Re[Ohm]`, `Re[Ohm]`  = NULL) %>%
-  #   mutate(I = `Im[Ohm]`, `Im[Ohm]` = NULL) %>%
-  #   mutate(Frequency = F, F = NULL) %>%
-  #   pivot_longer(c("R", "I"), names_to = "Unit", values_to = "Value")
-  
-  
   return(cur_dat)
   
 }
@@ -70,7 +42,7 @@ import_sciospec_single = memoise({function(cur_file, shear = FALSE){
 
 
 
-#' Title
+#' Import a ScioSpec folder of files
 #'
 #' @param data_path 
 #' @param shear 
@@ -80,7 +52,7 @@ import_sciospec_single = memoise({function(cur_file, shear = FALSE){
 #' @importFrom tidyr pivot_longer
 #' @importFrom stringr str_replace
 #'
-#' @returns
+#' @return A vascr dataframe
 #' 
 #' @noRd
 #'

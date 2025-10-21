@@ -108,13 +108,14 @@
 <text x='376.10' y='494.14' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='14.68px' lengthAdjust='spacingAndGlyphs'>100</text>
 <text x='538.03' y='494.14' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='14.68px' lengthAdjust='spacingAndGlyphs'>150</text>
 <text x='699.95' y='494.14' text-anchor='middle' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='14.68px' lengthAdjust='spacingAndGlyphs'>200</text>
-<text x='376.10' y='506.28' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='62.35px' lengthAdjust='spacingAndGlyphs'>Time (hours)</text>
+<text x='344.93' y='506.28' style='font-size: 11.00px; font-family: sans;' textLength='24.45px' lengthAdjust='spacingAndGlyphs'>Time</text>
+<text x='372.43' y='506.28' style='font-size: 11.00px; font-family: sans;' textLength='34.85px' lengthAdjust='spacingAndGlyphs'>(hours)</text>
 <text transform='translate(13.05,332.83) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='54.43px' lengthAdjust='spacingAndGlyphs'>Resistance</text>
 <text transform='translate(13.05,275.34) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='28.12px' lengthAdjust='spacingAndGlyphs'>(ohm,</text>
 <text transform='translate(13.05,244.16) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='24.47px' lengthAdjust='spacingAndGlyphs'>1000</text>
 <text transform='translate(13.05,216.63) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='17.11px' lengthAdjust='spacingAndGlyphs'>Hz)</text>
 <rect x='47.46' y='519.52' width='657.28' height='51.00' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
-<text x='52.94' y='548.81' style='font-size: 11.00px; font-family: sans;' textLength='37.30px' lengthAdjust='spacingAndGlyphs'>Sample</text>
+<text x='52.94' y='547.66' style='font-size: 11.00px; font-family: sans;' textLength='37.30px' lengthAdjust='spacingAndGlyphs'>Sample</text>
 <rect x='95.72' y='525.00' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #EBEBEB;' />
 <line x1='97.45' y1='533.64' x2='111.28' y2='533.64' style='stroke-width: 1.07; stroke: #F8766D; stroke-linecap: butt;' />
 <rect x='96.43' y='525.71' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #F8766D; fill-opacity: 0.30;' />
@@ -139,14 +140,42 @@
 <rect x='552.49' y='547.76' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #EBEBEB;' />
 <line x1='554.22' y1='556.40' x2='568.04' y2='556.40' style='stroke-width: 1.07; stroke: #FF61CC; stroke-linecap: butt;' />
 <rect x='553.20' y='548.47' width='15.86' height='15.86' style='stroke-width: 1.07; stroke: none; stroke-linecap: butt; stroke-linejoin: miter; fill: #FF61CC; fill-opacity: 0.30;' />
-<text x='118.48' y='536.67' style='font-size: 8.80px; font-family: sans;' textLength='101.99px' lengthAdjust='spacingAndGlyphs'>0_cells + HCMEC D3_line</text>
-<text x='118.48' y='559.43' style='font-size: 8.80px; font-family: sans;' textLength='124.02px' lengthAdjust='spacingAndGlyphs'>10,000_cells + HCMEC D3_line</text>
-<text x='270.74' y='536.67' style='font-size: 8.80px; font-family: sans;' textLength='124.02px' lengthAdjust='spacingAndGlyphs'>15,000_cells + HCMEC D3_line</text>
-<text x='270.74' y='559.43' style='font-size: 8.80px; font-family: sans;' textLength='124.02px' lengthAdjust='spacingAndGlyphs'>20,000_cells + HCMEC D3_line</text>
-<text x='422.99' y='536.67' style='font-size: 8.80px; font-family: sans;' textLength='124.02px' lengthAdjust='spacingAndGlyphs'>25,000_cells + HCMEC D3_line</text>
-<text x='422.99' y='559.43' style='font-size: 8.80px; font-family: sans;' textLength='124.02px' lengthAdjust='spacingAndGlyphs'>30,000_cells + HCMEC D3_line</text>
-<text x='575.25' y='536.67' style='font-size: 8.80px; font-family: sans;' textLength='124.02px' lengthAdjust='spacingAndGlyphs'>35,000_cells + HCMEC D3_line</text>
-<text x='575.25' y='559.43' style='font-size: 8.80px; font-family: sans;' textLength='119.12px' lengthAdjust='spacingAndGlyphs'>5,000_cells + HCMEC D3_line</text>
-<text x='37.69' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='161.43px' lengthAdjust='spacingAndGlyphs'>labeled key lines with arrow</text>
+<text x='118.48' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='27.40px' lengthAdjust='spacingAndGlyphs'>0_cells</text>
+<text x='148.33' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='5.14px' lengthAdjust='spacingAndGlyphs'>+</text>
+<text x='155.91' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='32.28px' lengthAdjust='spacingAndGlyphs'>HCMEC</text>
+<text x='190.63' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='29.84px' lengthAdjust='spacingAndGlyphs'>D3_line</text>
+<text x='118.48' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='49.42px' lengthAdjust='spacingAndGlyphs'>10,000_cells</text>
+<text x='170.35' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='5.14px' lengthAdjust='spacingAndGlyphs'>+</text>
+<text x='177.94' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='32.28px' lengthAdjust='spacingAndGlyphs'>HCMEC</text>
+<text x='212.66' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='29.84px' lengthAdjust='spacingAndGlyphs'>D3_line</text>
+<text x='270.74' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='49.42px' lengthAdjust='spacingAndGlyphs'>15,000_cells</text>
+<text x='322.60' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='5.14px' lengthAdjust='spacingAndGlyphs'>+</text>
+<text x='330.19' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='32.28px' lengthAdjust='spacingAndGlyphs'>HCMEC</text>
+<text x='364.91' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='29.84px' lengthAdjust='spacingAndGlyphs'>D3_line</text>
+<text x='270.74' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='49.42px' lengthAdjust='spacingAndGlyphs'>20,000_cells</text>
+<text x='322.60' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='5.14px' lengthAdjust='spacingAndGlyphs'>+</text>
+<text x='330.19' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='32.28px' lengthAdjust='spacingAndGlyphs'>HCMEC</text>
+<text x='364.91' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='29.84px' lengthAdjust='spacingAndGlyphs'>D3_line</text>
+<text x='422.99' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='49.42px' lengthAdjust='spacingAndGlyphs'>25,000_cells</text>
+<text x='474.86' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='5.14px' lengthAdjust='spacingAndGlyphs'>+</text>
+<text x='482.45' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='32.28px' lengthAdjust='spacingAndGlyphs'>HCMEC</text>
+<text x='517.17' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='29.84px' lengthAdjust='spacingAndGlyphs'>D3_line</text>
+<text x='422.99' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='49.42px' lengthAdjust='spacingAndGlyphs'>30,000_cells</text>
+<text x='474.86' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='5.14px' lengthAdjust='spacingAndGlyphs'>+</text>
+<text x='482.45' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='32.28px' lengthAdjust='spacingAndGlyphs'>HCMEC</text>
+<text x='517.17' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='29.84px' lengthAdjust='spacingAndGlyphs'>D3_line</text>
+<text x='575.25' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='49.42px' lengthAdjust='spacingAndGlyphs'>35,000_cells</text>
+<text x='627.12' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='5.14px' lengthAdjust='spacingAndGlyphs'>+</text>
+<text x='634.70' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='32.28px' lengthAdjust='spacingAndGlyphs'>HCMEC</text>
+<text x='669.42' y='535.76' style='font-size: 8.80px; font-family: sans;' textLength='29.84px' lengthAdjust='spacingAndGlyphs'>D3_line</text>
+<text x='575.25' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='44.53px' lengthAdjust='spacingAndGlyphs'>5,000_cells</text>
+<text x='622.22' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='5.14px' lengthAdjust='spacingAndGlyphs'>+</text>
+<text x='629.81' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='32.28px' lengthAdjust='spacingAndGlyphs'>HCMEC</text>
+<text x='664.53' y='558.52' style='font-size: 8.80px; font-family: sans;' textLength='29.84px' lengthAdjust='spacingAndGlyphs'>D3_line</text>
+<text x='37.69' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='42.57px' lengthAdjust='spacingAndGlyphs'>labeled</text>
+<text x='83.93' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='20.55px' lengthAdjust='spacingAndGlyphs'>key</text>
+<text x='108.14' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='27.15px' lengthAdjust='spacingAndGlyphs'>lines</text>
+<text x='138.96' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='23.47px' lengthAdjust='spacingAndGlyphs'>with</text>
+<text x='166.10' y='14.56' style='font-size: 13.20px; font-family: sans;' textLength='33.01px' lengthAdjust='spacingAndGlyphs'>arrow</text>
 </g>
 </svg>

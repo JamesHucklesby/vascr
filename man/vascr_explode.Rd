@@ -2,7 +2,7 @@
 % Please edit documentation in R/vascr_naming.R
 \name{vascr_explode}
 \alias{vascr_explode}
-\title{Separate names in a vascr plate map}
+\title{Separate names in a vascr data frame}
 \usage{
 vascr_explode(data.df)
 }
@@ -13,7 +13,7 @@ vascr_explode(data.df)
 a separated vascr dataset, with additional columns for each variable
 }
 \description{
-Separate names in a vascr plate map
+Separate names in a vascr data frame
 }
 \examples{
 vascr_explode(growth.df)

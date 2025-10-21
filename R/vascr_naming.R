@@ -62,13 +62,15 @@ vascr_import = function(instrument = NULL, raw = NULL, modeled = NULL, experimen
 }
 
 
-#' Create a blank vascr dataframe
+#' Create a blank vascr data frame
 #'
-#' @returns A blank vascr dataframe
+#' @returns A blank vascr data frame
 #' 
 #' @noRd
 #'
 #' @examples
+#' vascr_blank_df()
+#' 
 vascr_blank_df = function(){
   vascr::growth.df %>% filter(FALSE) %>% mutate(Excluded = FALSE) %>% vascr_remove_metadata()
 }
@@ -214,9 +216,10 @@ vascr_apply_map = function(data.df, map){
 }
 
 
-#' Title
-#'
-#' @returns
+#' Print out a template of a vascr data frame for mapping
+#' 
+#' @returns A blank dataframe for further use
+#' 
 #' @noRd
 #'
 #' @examples
@@ -225,17 +228,20 @@ vascr_map_template = function(){
 }
 
 
-#' Title
+#' Regenerate a map back from a vascr datafile
 #'
-#' @param data.df 
+#' @param data.df The dataset to regenerate the map used from
 #' 
-#' @importFrom dplyr select distinct group_by summarise
+#' @importFrom dplyr select distinct group_by summarise as_tibble
 #' @importFrom rlang .data
 #'
-#' @returns
+#' @returns A map for a vascr dataset
+#' 
 #' @noRd
 #' 
 #' @examples
+#' vascr_regenerate_map(growth.df)
+#' 
 vascr_regenerate_map = function(data.df){
 
   data.df %>% select("Experiment", "Well", "Sample", "SampleID", "Excluded") %>%
@@ -315,7 +321,7 @@ vascr_implode = function(data.df, cols = NULL){
 }
 
 
-#' Separate names in a vascr plate map
+#' Separate names in a vascr data frame
 #'
 #' @param data.df the dataset to separate
 #'

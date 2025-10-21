@@ -22,7 +22,9 @@
 #' 
 #' vascr_plot_line(data.df = growth.df %>% vascr_subset(unit = "R", frequency = 4000), facet = FALSE)
 #' 
-vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = TRUE, facet_expt = TRUE, show_linetypes = TRUE)
+#' vascr_plot_line(data.df = growth.df %>% vascr_subset(unit = "R", frequency = 4000), explanatory = TRUE)
+#' 
+vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = TRUE, facet_expt = TRUE, show_linetypes = TRUE, explanatory = FALSE)
 {
   
   data_level = vascr_find_level(data.df)
@@ -88,11 +90,19 @@ vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = 
     
   }
   
+
+  gplot2 = gplot + 
+    theme(axis.title.y = element_markdown(),
+          axis.title.x = element_markdown(),
+          plot.title = element_markdown(), # Render title as Markdown
+          plot.subtitle = element_markdown(),   # Render text as Markdown
+          legend.title = element_markdown(),
+          legend.text = element_markdown() ) +
+          labs(y = vascr_titles(data.df, explanatory = explanatory), x = "Time (hours)")
   
-  gplot = gplot + labs(y = vascr_titles(data.df), x = "Time (hours)") +
-    theme(axis.title.y = element_markdown())
+  # gplot2
   
-  return(gplot)
+  return(gplot2)
   
 }
 
@@ -117,7 +127,7 @@ vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = 
 #' times.df = tribble(~time, ~label, ~colour, 100, "Test Point", "orange")
 #' vascr_add_vline(plot1, times.df)
 #' 
-#' times.df = tribble(~time, ~label, 100, "Test Point", 150, "Test Point 2")
+#' times.df = tribble(~time, ~label, 100, "ZTest Point", 150, "Test Point 2")
 #' vascr_add_vline(plot1, times.df)
 #' 
 vascr_add_vline = function(plot, times.df){
@@ -127,6 +137,7 @@ vascr_add_vline = function(plot, times.df){
     hcl(h = hues, l = 65, c = 100)[1:n]
   }
   
+  times.df = times.df %>% mutate(label = factor(label, unique(label)))
   
   if(!"colour" %in% colnames(times.df))
   {
@@ -136,7 +147,7 @@ vascr_add_vline = function(plot, times.df){
   plot + 
     guides(color = guide_legend("Sample")) +
     new_scale(c("colour")) +
-    geom_vline(aes(xintercept = .data$time, colour = .data$label), data = times.df) +
+    geom_vline(aes(xintercept = .data$time, colour = .data$label), data = times.df, linetype = 2) +
     scale_colour_manual(values = times.df$colour) +
     labs(colour = NULL)
   

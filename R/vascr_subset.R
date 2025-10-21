@@ -226,29 +226,6 @@ vascr_exclude = function(data.df, well = NULL, experiment = NULL, sampleid = NUL
   return(data.df %>% as_tibble())
 }
 
-#' Replace a sample name
-#' 
-#' @param data.df the vascr data set to exclude things from
-#' @param well wells to exclude
-#' @param experiment experiments to exclude
-#'
-#' @return A smaller vascr dataset
-#'
-#' @noRd
-#'
-#' @examples
-#' 
-#' 
-vascr_replace_sample = function(data.df, old, new){
-  # data.df = data.df %>% filter(!.data$Well %in% well & !.data$Experiment %in% experiment)
-
-  data.df = data.df %>% 
-    mutate(Sample = ifelse(is.na(.data$Sample), "NA", as.character(.data$Sample))) %>%
-    mutate(Sample = ifelse(as.character(.data$Sample) == old, new, as.character(.data$Sample)))
-  
-  return(data.df %>% as_tibble())
-}
-
 
 
 #' Rename a sample in a vascr dataset
@@ -272,9 +249,9 @@ vascr_replace_sample = function(data.df, old, new){
 #' 
 #' to_rename$Sample %>% unique()
 #' 
-#' renamed = vascr_sample_rename(to_rename, change_list = list(c("0_cells", "Cell Free")))
+#' renamed = vascr_edit_sample(to_rename, change_list = list(c("0_cells", "Cell Free")))
 #' print(renamed$Sample %>% unique())
-vascr_sample_rename = function(data.df, change_list, partial = FALSE){
+vascr_edit_sample = function(data.df, change_list, partial = TRUE, escape = TRUE){
   
   mini = data.df %>% select("SampleID", "Sample") %>% 
          distinct() %>% 
@@ -291,8 +268,10 @@ vascr_sample_rename = function(data.df, change_list, partial = FALSE){
       vascr_notify("error", "Vector length for replacement incorrect: {change}")
     }
     
-    old = change[[1]]
-    new_val = change[[2]]
+    change = unlist(change)
+    
+    old = change[1]
+    new_val = change[2]
   
     
     if(isTRUE(partial)){

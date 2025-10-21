@@ -58,7 +58,7 @@ test_that("Can subset correctly", {
 
        to_rename$Sample %>% unique()
 
-      renamed = vascr_sample_rename(to_rename, change_list = list(c("0_cells", "Cell Free")))
+      renamed = vascr_edit_sample(to_rename, change_list = list(c("0_cells", "Cell Free")))
   })
 
   expect_snapshot(renamed)
