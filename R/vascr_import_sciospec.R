@@ -12,7 +12,7 @@
 #'
 #' @examples
 #' 
-#' cur_file = system.file('extdata/instruments/ScioSpec/d1\\d1\\ECISadapter 1\\demoexperiment1_00001.spec', package = 'vascr')
+#' cur_file = system.file('extdata/instruments/ScioSpec/d1/d1/ECISadapter1/demoexperiment1_00001.spec', package = 'vascr')
 #' 
 #' import_sciospec_single(cur_file)
 #' 
