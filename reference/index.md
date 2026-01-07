@@ -31,6 +31,8 @@
   : Export a vascr dataframe
 - [`vascr_find()`](https://jameshucklesby.github.io/vascr/reference/vascr_find.md)
   : Find vascr variables
+- [`vascr_find_level()`](https://jameshucklesby.github.io/vascr/reference/vascr_find_level.md)
+  : Check the level of a vascr data frame
 - [`vascr_find_metadata()`](https://jameshucklesby.github.io/vascr/reference/vascr_find_metadata.md)
   : Print out the characteristics of the vascr data frame
 - [`vascr_implode()`](https://jameshucklesby.github.io/vascr/reference/vascr_implode.md)
