@@ -877,7 +877,8 @@ vascr_plot_anova = function(data.df, unit, frequency, time, reference = NULL, se
   
   overallplot = vascr_plot_box_replicate(data.df, unit, frequency, time) + labs(y = "Resistance  
                                                                                   (ohm, 4000 Hz)") + 
-    scale_color_manual(values=c("orange", "blue", "green", "purple", "red", "brown", "grey", "turquoise", "violet"))
+  
+  scale_color_manual(values=c("orange", "blue", "green", "purple", "red", "brown", "grey", "turquoise", "violet"))
   
   qqplot = vascr_plot_qq(data.df, unit, frequency, time)
   normaloverlayplot = vascr_plot_normality(data.df, unit, frequency, time)

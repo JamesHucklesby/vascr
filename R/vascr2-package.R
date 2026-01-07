@@ -12,6 +12,7 @@ NULL
 #' @name %>%
 #' @rdname re-exports
 #' @return Various outputs, please see documentation for source package
+#' @return description Used to easily make pipe operator available
 #' @export
 NULL
 
@@ -23,6 +24,7 @@ globalVariables(".")
 #' @importFrom dplyr tribble
 #' @name tribble
 #' @rdname re-exports
+#' @return A tibble, made available for easy data entry manually
 #' @export
 NULL
 
@@ -31,6 +33,7 @@ NULL
 #' @importFrom glue glue
 #' @name glue
 #' @rdname re-exports
+#' @return A string with glue substitution completed
 #' @export
 NULL
 

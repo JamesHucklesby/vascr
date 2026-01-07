@@ -128,7 +128,7 @@ test_that("vascr_find_experiment",{
 
 test_that("vascr_titles render",{
   
-  skip_on_ci()
+  testthat::skip_on_ci()
   
   test_render = function(unit, frequency = 1000)
   {

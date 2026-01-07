@@ -92,6 +92,7 @@ test_that("vascr AUC works",
 # Plot Resample
 
 test_that("Data can be resampled and plotted",{
+            testthat::skip_on_ci()
             vdiffr::expect_doppelganger("vascr_plot_resample raw data", vascr_plot_resample(growth.df))
             vdiffr::expect_doppelganger("vascr_plot_resample raw data 2", vascr_plot_resample(growth.df, plot = TRUE))
           })

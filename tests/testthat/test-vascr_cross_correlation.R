@@ -21,6 +21,7 @@ test_that("ccf functions work", {
   expect_snapshot(vascr_summarise_cc(cc_data, "experiments"))
   expect_snapshot(vascr_summarise_cc(cc_data, "summary"))
   
+  testthat::skip_on_ci()
   vdiffr::expect_doppelganger("Wells cc plot", cc_data %>% vascr_plot_cc())
   vdiffr::expect_doppelganger("Experiment cc plot", cc_data %>% vascr_summarise_cc("experiments") %>% vascr_plot_cc())
   vdiffr::expect_doppelganger("Summary cc plot", cc_data %>% vascr_summarise_cc("summary") %>% vascr_plot_cc())

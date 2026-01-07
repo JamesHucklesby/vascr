@@ -985,7 +985,7 @@ vascr_instrument_from_unit = function(unit)
 #'
 #' @return The level of the dataset analysed
 #' 
-#' @noRd
+#' @export
 #'
 #' @examples
 #' vascr_find_level(growth.df)
