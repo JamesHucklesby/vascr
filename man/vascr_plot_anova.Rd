@@ -24,6 +24,10 @@ vascr_plot_anova(
 \item{time}{timepoint to plot at}
 
 \item{reference}{Sample to reference post-hoc analysis to}
+
+\item{separate}{Value to use when separating comparasons in the output (default x)}
+
+\item{rotate}{degrees of rotation used for labeling the X axis}
 }
 \value{
 A matrix of different ANOVA tests
@@ -33,10 +37,8 @@ Make a display with all the ANOVA analysis pre-conducted
 }
 \examples{
 
-vascr_plot_anova(data.df = growth.df, unit = "R", frequency = 4000, time = 100)
-
 # Run, comparing only to a reference
-vascr_plot_anova(data.df = growth.df, unit = "R", frequency = 4000, time = 100, 
+vascr_plot_anova(data.df = small_growth.df, unit = "R", frequency = 4000, time = 100, 
           reference = "5,000_cells + HCMEC D3_line")
 
 }

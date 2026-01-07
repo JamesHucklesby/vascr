@@ -15,3 +15,8 @@ A shinyApp to work with vascr data
 \description{
 Launch the vascr UI
 }
+\examples{
+ if(interactive()){
+   vascr_shiny()
+ }
+}

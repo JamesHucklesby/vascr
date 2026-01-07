@@ -778,7 +778,7 @@ vascr_find_experiment = function(data.df, experiment)
 #' vascr_titles("R")
 #' vascr_titles("Rb", explanatory = TRUE)
 #' 
-#' vascr_titles(unit = growth.df %>% vascr_subset(unit = "Rb"))
+#' vascr_titles(unit = growth.df %>% vascr_subset(unit = "R", frequency = 4000))
 #' 
 vascr_titles= function (unit, frequency = 0, prefix = "", explanatory = FALSE, normalised = FALSE)
 {
@@ -787,7 +787,7 @@ vascr_titles= function (unit, frequency = 0, prefix = "", explanatory = FALSE, n
     unit.df = unit
     unit = unique(unit.df$Unit)
     frequency = unique(unit.df$Frequency)
-    normalised = isFALSE(vascr_find_normalised(unit.df))
+    normalised = !isFALSE(vascr_find_normalised(unit.df))
   } 
   
   if(length(unit)>1)
@@ -803,6 +803,14 @@ vascr_titles= function (unit, frequency = 0, prefix = "", explanatory = FALSE, n
           "P", glue("{prefix}Phase (radians, {frequency} Hz)"),FALSE, FALSE,
           "X", glue("{prefix}Capacative Reactance (ohm, {frequency} Hz)"),FALSE, FALSE,
           "Z", glue("{prefix}Impedance (ohm, {frequency} Hz)"), FALSE, FALSE,
+          
+          # Electrical quantaties
+          "C", glue("{prefix}Fold change in capacitance (nF, {frequency} Hz)"), FALSE, TRUE,
+          "R", glue("{prefix}Fold change in resistance (ohm, {frequency} Hz)"),FALSE, TRUE,
+          "P", glue("{prefix}Fold change in phase (radians, {frequency} Hz)"),FALSE, TRUE,
+          "X", glue("{prefix}Fold change in capacative Reactance (ohm, {frequency} Hz)"),FALSE, TRUE,
+          "Z", glue("{prefix}Fold change in impedance (ohm, {frequency} Hz)"), FALSE, TRUE,
+          
           
           "C", glue("**Overall capacitance**<br>{prefix}Capacitance (nF, {frequency} Hz)"), TRUE, FALSE,
           "R", glue("**Overall resistance**<br>{prefix}Resistance (ohm, {frequency} Hz)"),TRUE, FALSE,
@@ -852,9 +860,9 @@ vascr_titles= function (unit, frequency = 0, prefix = "", explanatory = FALSE, n
   #   
   # }
   
-  toreturn = name_table %>% filter(Unit == unit) %>% 
-    filter(Explanatory == explanatory) %>% 
-    filter(Normalised == normalised)
+  toreturn = name_table %>% filter(.data$Unit == unit) %>% 
+    filter(.data$Explanatory == explanatory) %>% 
+    filter(.data$Normalised == normalised)
   
   if(nrow(toreturn) != 1){
     

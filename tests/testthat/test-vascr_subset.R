@@ -51,7 +51,7 @@ test_that("Can subset correctly", {
   expect_snapshot(vascr_exclude(growth.df, c("A01", "E01"), 1))
   
   # Replace sample
-  expect_snapshot(vascr_replace_sample(growth.df, "35,000_cells + HCMEC D3_line", "35 Thousand Cells"))
+  expect_snapshot(vascr_edit_sample(growth.df, change_list = list(c("0_cells", "Cell Free"))))
   
   suppressMessages({
       to_rename = growth.df %>% vascr_subset(sample = c("0 cells","20,000 cells", "10,000 cells"))

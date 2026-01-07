@@ -141,7 +141,7 @@
     Code
       vascr_dunnett(growth.df, "R", 4000, 50, 8)
     Output
-      # A tibble: 8 x 17
+      # A tibble: 8 x 20
          Time Unit  Frequency Sample  Instrument     sd totaln     n   min   max Well 
         <dbl> <fct>     <dbl> <chr>   <chr>       <dbl>  <int> <int> <dbl> <dbl> <chr>
       1    50 R          4000 0_cell~ ECIS         2.65      9     3  237.  242. H01,~
@@ -152,15 +152,15 @@
       6    50 R          4000 30,000~ ECIS       108.        9     3  464.  675. B01,~
       7    50 R          4000 35,000~ ECIS        79.0       9     3  574.  721. A01,~
       8    50 R          4000 5,000_~ ECIS        20.4       9     3  281.  318. G01,~
-      # i 6 more variables: Value <dbl>, Experiment <chr>, sem <dbl>, P <chr>,
-      #   Label <chr>, P_round <chr>
+      # i 9 more variables: Value <dbl>, Experiment <chr>, sem <dbl>, Excluded <chr>,
+      #   SampleID <dbl>, P <dbl>, padj <dbl>, Label <chr>, P_round <dbl>
 
 ---
 
     Code
       vascr_dunnett(growth.df, "R", 4000, list(50, 100), 8)
     Output
-      # A tibble: 16 x 17
+      # A tibble: 16 x 20
           Time Unit  Frequency Sample Instrument     sd totaln     n   min   max Well 
          <dbl> <fct>     <dbl> <chr>  <chr>       <dbl>  <int> <int> <dbl> <dbl> <chr>
        1    50 R          4000 0_cel~ ECIS         2.65      9     3  237.  242. H01,~
@@ -179,15 +179,15 @@
       14   100 R          4000 30,00~ ECIS        65.2       9     3  529.  656. B01,~
       15   100 R          4000 35,00~ ECIS        41.6       9     3  523.  602. A01,~
       16   100 R          4000 5,000~ ECIS        54.3       9     3  313.  412. G01,~
-      # i 6 more variables: Value <dbl>, Experiment <chr>, sem <dbl>, P <chr>,
-      #   Label <chr>, P_round <chr>
+      # i 9 more variables: Value <dbl>, Experiment <chr>, sem <dbl>, Excluded <chr>,
+      #   SampleID <dbl>, P <dbl>, padj <dbl>, Label <chr>, P_round <dbl>
 
 ---
 
     Code
       vascr_dunnett(growth.df, "R", 4000, 50, "0_cells + HCMEC D3_line")
     Output
-      # A tibble: 8 x 17
+      # A tibble: 8 x 20
          Time Unit  Frequency Sample  Instrument     sd totaln     n   min   max Well 
         <dbl> <fct>     <dbl> <chr>   <chr>       <dbl>  <int> <int> <dbl> <dbl> <chr>
       1    50 R          4000 0_cell~ ECIS         2.65      9     3  237.  242. H01,~
@@ -198,6 +198,6 @@
       6    50 R          4000 30,000~ ECIS       108.        9     3  464.  675. B01,~
       7    50 R          4000 35,000~ ECIS        79.0       9     3  574.  721. A01,~
       8    50 R          4000 5,000_~ ECIS        20.4       9     3  281.  318. G01,~
-      # i 6 more variables: Value <dbl>, Experiment <chr>, sem <dbl>, P <chr>,
-      #   Label <chr>, P_round <chr>
+      # i 9 more variables: Value <dbl>, Experiment <chr>, sem <dbl>, Excluded <chr>,
+      #   SampleID <dbl>, P <chr>, padj <dbl>, Label <chr>, P_round <chr>
 

@@ -10,7 +10,7 @@ vascr_plot_line_dunnett(
   frequency = 4000,
   time = 100,
   reference = "0_cells + HCMEC D3_Line",
-  normtime = 47
+  normtime = NULL
 )
 }
 \arguments{
@@ -23,6 +23,8 @@ vascr_plot_line_dunnett(
 \item{time}{Time to calculate}
 
 \item{reference}{Sample to reference testing against}
+
+\item{normtime}{Time to normalise the line plot to, note this does not affect underlying statistical test}
 }
 \value{
 A line plot, annotated with the P-values determined by Dunnett's test
@@ -31,14 +33,11 @@ A line plot, annotated with the P-values determined by Dunnett's test
 Create a line plot with Dunnett's statistics
 }
 \examples{
-vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 25, 
+vascr_plot_line_dunnett(small_growth.df, unit = "R", frequency = 4000, time = 25, 
     reference = "0_cells + HCMEC D3_Line")
-vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = list(25,100), 
+vascr_plot_line_dunnett(small_growth.df, unit = "R", frequency = 4000, time = list(25,100), 
     reference = "0_cells + HCMEC D3_Line")
-vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 180, 
+vascr_plot_line_dunnett(small_growth.df, unit = "R", frequency = 4000, time = 180, 
     reference = "20,000_cells + HCMEC D3_Line")
-    
-vascr_plot_line_dunnett(anova, time = 70, reference = "20,000 hCMVEC cells")
-vascr_plot_line_dunnett(anova, time = list(53, 70), reference = "20,000 hCMVEC cells")
 
 }

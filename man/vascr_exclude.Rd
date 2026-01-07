@@ -12,6 +12,8 @@ vascr_exclude(data.df, well = NULL, experiment = NULL, sampleid = NULL)
 \item{well}{wells to exclude}
 
 \item{experiment}{experiments to exclude}
+
+\item{sampleid}{sampleID (or vector or sampleIDs) to exclude from analysis}
 }
 \value{
 A smaller vascr dataset

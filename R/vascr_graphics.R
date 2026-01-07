@@ -6,6 +6,7 @@
 #' @param text_labels Show or hide well labels
 #' @param facet_expt Facet out different experiments, defaults to TRUE
 #' @param show_linetypes Include the line type for each experiment in the key. Default TRUE
+#' @param explanatory Whether to include commentary about unit meaning on y axis (default TRUE)
 #' 
 #' @importFrom ggplot2 geom_ribbon geom_line geom_text facet_grid vars
 #' @importFrom ggtext element_markdown
@@ -20,9 +21,11 @@
 #' data.df = growth.df %>% vascr_subset(unit = "Rb") %>% vascr_summarise(level = "summary")
 #' vascr_plot_line(data.df, text_labels = FALSE)
 #' 
-#' vascr_plot_line(data.df = growth.df %>% vascr_subset(unit = "R", frequency = 4000), facet = FALSE)
+#' growth.df %>% vascr_subset(unit = "R", frequency = 4000)  %>%
+#' vascr_plot_line(facet = FALSE)
 #' 
-#' vascr_plot_line(data.df = growth.df %>% vascr_subset(unit = "R", frequency = 4000), explanatory = TRUE)
+#' growth.df %>% vascr_subset(unit = "R", frequency = 4000)  %>%
+#' vascr_plot_line(explanatory = TRUE)
 #' 
 vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = TRUE, facet_expt = TRUE, show_linetypes = TRUE, explanatory = FALSE)
 {
@@ -137,7 +140,7 @@ vascr_add_vline = function(plot, times.df){
     hcl(h = hues, l = 65, c = 100)[1:n]
   }
   
-  times.df = times.df %>% mutate(label = factor(label, unique(label)))
+  times.df = times.df %>% mutate(label = factor(.data$label, unique(.data$label)))
   
   if(!"colour" %in% colnames(times.df))
   {

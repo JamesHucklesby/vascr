@@ -1,96 +1,96 @@
-#' calc_stretch = function(t1, t2, stretch){
-#'   
-#'   t2b1 = t2 %>% mutate(Time = .data$Time*stretch) %>% 
-#'     dplyr::mutate(Time = .data$Time - min(.data$Time)) %>%
-#'     vascr_subset(time = c(min(t1$Time), max(t1$Time))) 
-#'   
-#'   
-#'   # t2b1 %>% vascr_resample_time(npoints = 10)
-#'   
-#'   # t2b1 %>% vascr_resample_time(npoints = 3)
-#'   
-#'   t2b = t2b1 %>%
-#'     vascr_resample_time(npoints = vascr_find_count_timepoints(t1), start = min(t1$Time), end = max(t1$Time))
-#'   
-#'   # print(t2b$Value)
-#'   # rbind(t1, t2, t2s) %>% vascr_plot_line
-#'   
-#'   # cc = ccf(t1$Value, t2$Value, lag.max = 0, plot = FALSE)$acf[1]
-#'   cc_full = ccf(t1$Value, t2b$Value, plot = FALSE)
-#'   cc.df = data.frame(lag = cc_full$"lag", cc = cc_full$"acf")
-#'   stretch_cc = (cc.df %>% dplyr::filter(.data$lag == 0))$"cc"
-#'   stretch_shift_cc  = (cc.df %>% dplyr::filter(.data$cc == max(.data$cc)))$"cc"
-#'   stretch_shift_shift  = (cc.df %>% dplyr::filter(.data$cc == max(.data$cc)))$"lag"
-#'   
-#'   # print(cc)
-#'   
-#'   # t2b %>% mutate(cc = cc, stretch = stretch)
-#'   
-#'   return(tribble(~"stretch_cc", ~"stretch_factor", ~"stretch_shift_cc", ~"stretch_shift_shift", stretch_cc, stretch, stretch_shift_cc, stretch_shift_shift))
-#' }
-#' 
-#' 
-#' 
-#' 
-#' 
-#' #' Test if stretching a trace will allow it to better fit it's target
-#' #'
-#' #' @param t1 Reference trace
-#' #' @param t2 Trace to be stretched
-#' #'
-#' #' @returns A table of best fit stretch and shift values
-#' #'
-#' #' @noRd
-#' #'
-#' #' @importFrom dplyr mutate filter
-#' #'
-#' #' @examples
-#' #'  t1 = growth.df %>% vascr_subset(unit = "R", frequency = 4000, experiment = 1, sample = "10,000_cells + HCMEC D3_line") %>% vascr_summarise(level = "experiments")
-#' #'  t2 = growth.df %>% vascr_subset(unit = "R", frequency = 4000, experiment = 1, sample = "30,000_cells + HCMEC D3_line") %>% vascr_summarise(level = "experiments")
-#' #'
-#' #'  stretch_cc(t1, t2)
-#' stretch_cc = function(t1, t2)
-#' {
-#' 
-#'   # print(t1)
-#'   # print(t2)
-#' 
-#'   # stretch = 1.5
-#' 
-#'   stretch_series = (c(1:50)/10)
-#' 
-#'   stretching = foreach(stretch = stretch_series, .combine = rbind) %do%{
-#' 
-#' 
-#'     t2b1 = t2 %>% mutate(Time = .data$Time*stretch) %>%
-#'       dplyr::mutate(Time = .data$Time - min(.data$Time)) %>%
-#'       vascr_subset(time = c(min(t1$Time), max(t1$Time)))
-#' 
-#' 
-#'     # t2b1 %>% vascr_resample_time(npoints = 10)
-#' 
-#'     # t2b1 %>% vascr_resample_time(npoints = 3)
-#' 
-#'     t2b = t2b1 %>%
-#'       vascr_resample_time(npoints = vascr_find_count_timepoints(t1), start = min(t1$Time), end = max(t1$Time))
-#' 
-#'     # print(t2b$Value)
-#'     # rbind(t1, t2, t2s) %>% vascr_plot_line
-#' 
-#'     # cc = ccf(t1$Value, t2$Value, lag.max = 0, plot = FALSE)$acf[1]
-#'     cc_full = ccf(t1$Value, t2b$Value, plot = FALSE)
-#'     cc.df = data.frame(lag = cc_full$"lag", cc = cc_full$"acf")
-#'     stretch_cc = (cc.df %>% dplyr::filter(.data$lag == 0))$"cc"
-#'     stretch_shift_cc  = (cc.df %>% dplyr::filter(.data$cc == max(.data$cc)))$"cc"
-#'     stretch_shift_shift  = (cc.df %>% dplyr::filter(.data$cc == max(.data$cc)))$"lag"
-#' 
-#'     # print(cc)
-#' 
-#'     # t2b %>% mutate(cc = cc, stretch = stretch)
-#' 
-#'     return(tribble(~"stretch_cc", ~"stretch_factor", ~"stretch_shift_cc", ~"stretch_shift_shift", stretch_cc, stretch, stretch_shift_cc, stretch_shift_shift))
-#' 
-#'   }
+# calc_stretch = function(t1, t2, stretch){
+#   
+#  t2b1 = t2 %>% mutate(Time = .data$Time*stretch) %>% 
+#    dplyr::mutate(Time = .data$Time - min(.data$Time)) %>%
+#    vascr_subset(time = c(min(t1$Time), max(t1$Time))) 
+#  
+#  
+#  # t2b1 %>% vascr_resample_time(npoints = 10)
+#  
+#  # t2b1 %>% vascr_resample_time(npoints = 3)
+#  
+#  t2b = t2b1 %>%
+#    vascr_resample_time(npoints = vascr_find_count_timepoints(t1), start = min(t1$Time), end = max(t1$Time))
+#  
+#  # print(t2b$Value)
+#  # rbind(t1, t2, t2s) %>% vascr_plot_line
+#  
+#  # cc = ccf(t1$Value, t2$Value, lag.max = 0, plot = FALSE)$acf[1]
+#  cc_full = ccf(t1$Value, t2b$Value, plot = FALSE)
+#  cc.df = data.frame(lag = cc_full$"lag", cc = cc_full$"acf")
+#  stretch_cc = (cc.df %>% dplyr::filter(.data$lag == 0))$"cc"
+#  stretch_shift_cc  = (cc.df %>% dplyr::filter(.data$cc == max(.data$cc)))$"cc"
+#  stretch_shift_shift  = (cc.df %>% dplyr::filter(.data$cc == max(.data$cc)))$"lag"
+#  
+#  # print(cc)
+#  
+#  # t2b %>% mutate(cc = cc, stretch = stretch)
+#  
+#  return(tribble(~"stretch_cc", ~"stretch_factor", ~"stretch_shift_cc", ~"stretch_shift_shift", stretch_cc, stretch, stretch_shift_cc, stretch_shift_shift))
+#}
+#
+#
+#
+#
+#
+##Test if stretching a trace will allow it to better fit it's target
+##'
+##@param t1 Reference trace
+##@param t2 Trace to be stretched
+##'
+##@returns A table of best fit stretch and shift values
+##'
+##@noRd
+##'
+##@importFrom dplyr mutate filter
+##'
+##@examples
+## t1 = growth.df %>% vascr_subset(unit = "R", frequency = 4000, experiment = 1, sample = "10,000_cells + HCMEC D3_line") %>% vascr_summarise(level = "experiments")
+## t2 = growth.df %>% vascr_subset(unit = "R", frequency = 4000, experiment = 1, sample = "30,000_cells + HCMEC D3_line") %>% vascr_summarise(level = "experiments")
+##'
+## stretch_cc(t1, t2)
+#stretch_cc = function(t1, t2)
+#{
+#
+#  # print(t1)
+#  # print(t2)
+#
+#  # stretch = 1.5
+#
+#  stretch_series = (c(1:50)/10)
+#
+#  stretching = foreach(stretch = stretch_series, .combine = rbind) %do%{
+#
+#
+#    t2b1 = t2 %>% mutate(Time = .data$Time*stretch) %>%
+#      dplyr::mutate(Time = .data$Time - min(.data$Time)) %>%
+#      vascr_subset(time = c(min(t1$Time), max(t1$Time)))
+#
+#
+#    # t2b1 %>% vascr_resample_time(npoints = 10)
+#
+#    # t2b1 %>% vascr_resample_time(npoints = 3)
+#
+#    t2b = t2b1 %>%
+#      vascr_resample_time(npoints = vascr_find_count_timepoints(t1), start = min(t1$Time), end = max(t1$Time))
+#
+#    # print(t2b$Value)
+#    # rbind(t1, t2, t2s) %>% vascr_plot_line
+#
+#    # cc = ccf(t1$Value, t2$Value, lag.max = 0, plot = FALSE)$acf[1]
+#    cc_full = ccf(t1$Value, t2b$Value, plot = FALSE)
+#    cc.df = data.frame(lag = cc_full$"lag", cc = cc_full$"acf")
+#    stretch_cc = (cc.df %>% dplyr::filter(.data$lag == 0))$"cc"
+#    stretch_shift_cc  = (cc.df %>% dplyr::filter(.data$cc == max(.data$cc)))$"cc"
+#    stretch_shift_shift  = (cc.df %>% dplyr::filter(.data$cc == max(.data$cc)))$"lag"
+#
+#    # print(cc)
+#
+#    # t2b %>% mutate(cc = cc, stretch = stretch)
+#
+#    return(tribble(~"stretch_cc", ~"stretch_factor", ~"stretch_shift_cc", ~"stretch_shift_shift", stretch_cc, stretch, stretch_shift_cc, stretch_shift_shift))
+#
+#  }
 
   # ad = rbind(t1 %>% vascr_remove_cols(c("n", "sem", "sd", "min", "max")) %>% mutate(cc = 0), stretching) %>%
   #     group_by(Experiment, Sample) %>%
@@ -139,7 +139,7 @@
 
 
 
-#' Summarise the various stretch and shift paramaters when comparing vascr datasets
+#' Summarise the various stretch and shift parameters when comparing vascr datasets
 #'
 #' @param data.df The data set to analyse
 #' @param reference Which sample to reference against, or "none" to run all pairings
@@ -148,7 +148,8 @@
 #' @importFrom progressr progressor
 #' @importFrom doFuture %dofuture%
 #'
-#' @returns
+#' @returns Data frame with various stretch and shift parameters compared
+#' 
 #' @noRd
 #'
 #' @examples
@@ -322,6 +323,8 @@ stretch_cc_fast = function(s1, s2, stretch)
 #' @importFrom utils head
 #'
 #' @examples
+#' cc_stretch_shift_fit((growth.df %>% vascr_subset(unit = "R", frequency = "4000", sampleid = c(1)))$Value, 
+#'           (growth.df %>% vascr_subset(unit = "R", frequency = "4000", sampleid = c(1)))$Value)
 cc_stretch_shift_fit = function(s1, s2){
   
   # s1 = t1$Value
@@ -416,6 +419,7 @@ vascr_summarise_cc_stretch_shift_stats = function(data.df, unit = "R", frequency
   
   # Create global binding to keep checks happy
   pair = 0
+  p = 1
   
   output = foreach (pair = pairs, .combine = rbind) %do% {
     

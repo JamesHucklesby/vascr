@@ -233,29 +233,20 @@
     Code
       vascr_units_table()
     Output
-          Unit                                       Content Modeled  Instrument
-      1  Alpha                          ohm<sup>1/2</sup> cm    TRUE        ECIS
-      2     Cm                   Cm (&#956;F/cm<sup>2</sup>)    TRUE        ECIS
-      3  Drift                                     Drift (%)    TRUE        ECIS
-      4     Rb                       Rb (ohm cm<sup>2</sup>)    TRUE        ECIS
-      5   RMSE                                Model Fit RMSE    TRUE        ECIS
-      6      C                        Capacitance (nF, 0 Hz)   FALSE        ECIS
-      7      C                        Capacitance (nF, 0 Hz)   FALSE  cellZscope
-      8      P                         Phase (radians, 0 Hz)   FALSE        ECIS
-      9      P                         Phase (radians, 0 Hz)   FALSE  cellZscope
-      10     R                        Resistance (ohm, 0 Hz)   FALSE        ECIS
-      11     R                        Resistance (ohm, 0 Hz)   FALSE  cellZscope
-      12     X              Capacative Reactance (ohm, 0 Hz)   FALSE        ECIS
-      13     X              Capacative Reactance (ohm, 0 Hz)   FALSE  cellZscope
-      14     Z                         Impedance (ohm, 0 Hz)   FALSE        ECIS
-      15     Z                         Impedance (ohm, 0 Hz)   FALSE xCELLigence
-      16     Z                         Impedance (ohm, 0 Hz)   FALSE  cellZscope
-      17    CI                                    Cell Index   FALSE xCELLigence
-      18 CPE_A CPE_A (s<sup>n-1</sup>&#956;F/cm<sup>2</sup>)    TRUE  cellZscope
-      19 CPE_n                                         CPE_n    TRUE  cellZscope
-      20   TER                   TER (&#937; cm<sup>2</sup>)    TRUE  cellZscope
-      21   Ccl                  Ccl (&#956;F/cm<sup>2</sup>)    TRUE  cellZscope
-      22  Rmed                                    Rmed (ohm)    TRUE  cellZscope
+      # A tibble: 22 x 4
+         Unit  Content                     Modeled Instrument
+         <chr> <chr>                       <lgl>   <chr>     
+       1 Alpha ohm<sup>1/2</sup> cm        TRUE    ECIS      
+       2 Cm    Cm (&#956;F/cm<sup>2</sup>) TRUE    ECIS      
+       3 Drift Drift (%)                   TRUE    ECIS      
+       4 Rb    Rb (ohm cm<sup>2</sup>)     TRUE    ECIS      
+       5 RMSE  Model Fit RMSE              TRUE    ECIS      
+       6 C     Capacitance (nF, 0 Hz)      FALSE   ECIS      
+       7 C     Capacitance (nF, 0 Hz)      FALSE   cellZscope
+       8 P     Phase (radians, 0 Hz)       FALSE   ECIS      
+       9 P     Phase (radians, 0 Hz)       FALSE   cellZscope
+      10 R     Resistance (ohm, 0 Hz)      FALSE   ECIS      
+      # i 12 more rows
 
 # vascr_find_instrument
 

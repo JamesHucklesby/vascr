@@ -457,13 +457,6 @@
     Output
       [1] 101819.7
 
-# plot of resample degradation works
-
-    Code
-      p1 = vascr_plot_resample_range(data.df = growth.df)
-    Message
-      i Recomended resampling rate: 29
-
 # remove metadata
 
     Code

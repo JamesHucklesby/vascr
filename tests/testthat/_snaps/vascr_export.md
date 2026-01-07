@@ -1,36 +1,6 @@
 # export works
 
     Code
-      filepath = tempfile("test_export", fileext = ".xlsx")
-      vascr_export_prism(small_growth, filepath)
-      re_import = readxl::read_xlsx(filepath, 2)
-    Message
-      New names:
-      * `0_cells + HCMEC D3_line` -> `0_cells + HCMEC D3_line...2`
-      * `0_cells + HCMEC D3_line` -> `0_cells + HCMEC D3_line...3`
-      * `0_cells + HCMEC D3_line` -> `0_cells + HCMEC D3_line...4`
-      * `10 000_cells + HCMEC D3_line` -> `10 000_cells + HCMEC D3_line...5`
-      * `10 000_cells + HCMEC D3_line` -> `10 000_cells + HCMEC D3_line...6`
-      * `10 000_cells + HCMEC D3_line` -> `10 000_cells + HCMEC D3_line...7`
-      * `15 000_cells + HCMEC D3_line` -> `15 000_cells + HCMEC D3_line...8`
-      * `15 000_cells + HCMEC D3_line` -> `15 000_cells + HCMEC D3_line...9`
-      * `15 000_cells + HCMEC D3_line` -> `15 000_cells + HCMEC D3_line...10`
-      * `20 000_cells + HCMEC D3_line` -> `20 000_cells + HCMEC D3_line...11`
-      * `20 000_cells + HCMEC D3_line` -> `20 000_cells + HCMEC D3_line...12`
-      * `20 000_cells + HCMEC D3_line` -> `20 000_cells + HCMEC D3_line...13`
-      * `25 000_cells + HCMEC D3_line` -> `25 000_cells + HCMEC D3_line...14`
-      * `25 000_cells + HCMEC D3_line` -> `25 000_cells + HCMEC D3_line...15`
-      * `25 000_cells + HCMEC D3_line` -> `25 000_cells + HCMEC D3_line...16`
-      * `30 000_cells + HCMEC D3_line` -> `30 000_cells + HCMEC D3_line...17`
-      * `30 000_cells + HCMEC D3_line` -> `30 000_cells + HCMEC D3_line...18`
-      * `30 000_cells + HCMEC D3_line` -> `30 000_cells + HCMEC D3_line...19`
-      * `35 000_cells + HCMEC D3_line` -> `35 000_cells + HCMEC D3_line...20`
-      * `35 000_cells + HCMEC D3_line` -> `35 000_cells + HCMEC D3_line...21`
-      * `35 000_cells + HCMEC D3_line` -> `35 000_cells + HCMEC D3_line...22`
-      * `5 000_cells + HCMEC D3_line` -> `5 000_cells + HCMEC D3_line...23`
-      * `5 000_cells + HCMEC D3_line` -> `5 000_cells + HCMEC D3_line...24`
-      * `5 000_cells + HCMEC D3_line` -> `5 000_cells + HCMEC D3_line...25`
-    Code
       re_import
     Output
       # A tibble: 2 x 25
@@ -61,14 +31,12 @@
       [21] "35 000_cells + HCMEC D3_line...21" "35 000_cells + HCMEC D3_line...22"
       [23] "5 000_cells + HCMEC D3_line...23"  "5 000_cells + HCMEC D3_line...24" 
       [25] "5 000_cells + HCMEC D3_line...25" 
-    Code
-      remove(filepath)
 
 ---
 
     Code
       filepath = tempfile("test_export", fileext = ".xlsx")
-      vascr_export_prism(small_growth, filepath, level = "wells")
+      suppressMessages(vascr_export_prism(small_growth, filepath, level = "wells"))
       re_import = readxl::read_xlsx(filepath, 2)
     Message
       New names:

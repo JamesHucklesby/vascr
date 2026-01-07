@@ -223,6 +223,8 @@ vascr_apply_map = function(data.df, map){
 #' @noRd
 #'
 #' @examples
+#' vascr_map_template()
+#' 
 vascr_map_template = function(){
   tribble(~`Experiment`, ~`Well`, ~`Sample`, ~`SampleID`, ~`Excluded`)
 }
@@ -429,11 +431,11 @@ vascr_edit_name = function(data.df, to_remove, to_add = ""){
 
 #' Reassign sample ID's to a dataset
 #'
-#' @param data.df 
+#' @param data.df The dataset to regenerate IDs for
 #' 
 #' @noRd
 #'
-#' @returns
+#' @returns A dataset with sample ID's reassigned based on sample names
 #'
 #' @examples
 #' growth.df %>% vascr_assign_sampleid()

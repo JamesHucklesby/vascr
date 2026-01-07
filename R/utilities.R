@@ -1,4 +1,3 @@
-
 #' Create a notification
 #' 
 #' Creates a notification, either passed through to shiny or printed with cli

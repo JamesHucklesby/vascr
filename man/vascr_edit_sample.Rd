@@ -12,6 +12,8 @@ vascr_edit_sample(data.df, change_list, partial = TRUE, escape = TRUE)
 \item{change_list}{List of vectors containing pairs of search and replacement terms to replace}
 
 \item{partial}{TRUE or FALSE, defines if partial matches should be changed}
+
+\item{escape}{TRUE or FALSE, whether to escape special characters passed into the function}
 }
 \value{
 An updated vascr data frame

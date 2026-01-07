@@ -4,7 +4,7 @@
 \alias{vascr_dunnett}
 \title{Run ANOVA and Dunnett's comparisons on a vascr dataset}
 \usage{
-vascr_dunnett(data.df, unit, frequency, time, reference, normtime = 47)
+vascr_dunnett(data.df, unit, frequency, time, reference)
 }
 \arguments{
 \item{data.df}{A vascr dataset}

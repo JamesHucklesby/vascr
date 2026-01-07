@@ -88,14 +88,8 @@ test_that("vascr AUC works",
             expect_snapshot(vascr_auc(growth.df %>% vascr_subset(experiment = 1, well = "A01", unit = "R", frequency = 4000)))
           })
 
-# plot resample range
-test_that("plot of resample degradation works", 
-  {
-    expect_snapshot({p1 = vascr_plot_resample_range(data.df = growth.df)})
-    vdiffr::expect_doppelganger("plot resample accuracy 1", p1)
-})
 
-# plot resample
+# Plot Resample
 
 test_that("Data can be resampled and plotted",{
             vdiffr::expect_doppelganger("vascr_plot_resample raw data", vascr_plot_resample(growth.df))

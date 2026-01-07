@@ -327,7 +327,7 @@ server <- function(input, output) {
 
   output$resample_graph = shiny::renderPlot(vascr_plot_resample(named_dat() , newn = input$resample_n))
 
-  output$resample_graph_range = shiny::renderPlot(vascr_plot_resample_range(named_dat()))
+  output$resample_graph_range = shiny::renderPlot(vascr_resample_time(named_dat() %>% vascr_plot_line()))
 
   
 
@@ -659,9 +659,9 @@ return(server)
 #' @importFrom rlang check_installed
 #' 
 #' @examples
-# if(interactive()){
-#' vascr_shiny()
-#' }
+#'  if(interactive()){
+#'    vascr_shiny()
+#'  }
 vascr_shiny = function(data.df)
 {
   # Web packages do not ship with shiny by default, hence offer to install if required

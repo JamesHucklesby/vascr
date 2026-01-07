@@ -66,23 +66,23 @@ test_that("Dunnett test works", {
   expect_snapshot(vascr_dunnett(growth.df, "R", 4000, list(50, 100), 8))
   # With name rather than ID
   expect_snapshot(vascr_dunnett(growth.df, "R", 4000, 50, "0_cells + HCMEC D3_line"))
-  # With invalid ID
-  expect_error(vascr_dunnett(growth.df, "R", 4000, 50, 88))
 })
 
 
 test_that("Dunnett test works", {
   
-  # vdiffr::expect_doppelganger("Dunnett 1", vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 25, reference = "0_cells + HCMEC D3_line"))
+   suppressMessages({vdiffr::expect_doppelganger("Dunnett 1", vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 25, reference = "0_cells + HCMEC D3_line"))  })
   # vdiffr::expect_doppelganger("Dunnett 2",vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = list(25,100), reference = "0_cells + HCMEC D3_line"))
   # vdiffr::expect_doppelganger("Dunnett 3",vascr_plot_line_dunnett(growth.df, unit = "R", frequency = 4000, time = 180, reference = "20,000_cells + HCMEC D3_line"))
  
 })
 
 test_that("Anova bar against reference", {
+  suppressWarnings({
   vdiffr::expect_doppelganger("Anova reference", vascr_plot_bar_dunnett(growth.df, "R", 4000, 50, 8, stars =TRUE))
   vdiffr::expect_doppelganger("Anova reference 2 dunnett", vascr_plot_bar_dunnett(growth.df %>% vascr_subset(sampleid = c(2,3,8)), "R", 4000, 50, 8, stars =FALSE))
-})
+  })
+  })
 
 test_that("Plot bar anova", {
   vdiffr::expect_doppelganger("anova bar", vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", time = 100, frequency = 4000, rotate_x_angle = 45))

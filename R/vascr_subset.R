@@ -204,6 +204,7 @@ vascr_subset_sampleid = function (data.df, samplelist){
 #' @param data.df the vascr data set to exclude things from
 #' @param well wells to exclude
 #' @param experiment experiments to exclude
+#' @param sampleid sampleID (or vector or sampleIDs) to exclude from analysis
 #'
 #' @return A smaller vascr dataset
 #' 
@@ -235,6 +236,7 @@ vascr_exclude = function(data.df, well = NULL, experiment = NULL, sampleid = NUL
 #' @param data.df Vascr dataset to update
 #' @param change_list List of vectors containing pairs of search and replacement terms to replace
 #' @param partial TRUE or FALSE, defines if partial matches should be changed
+#' @param escape TRUE or FALSE, whether to escape special characters passed into the function
 #'
 #' @returns An updated vascr data frame
 #' 

@@ -16,6 +16,8 @@
 #' 
 #' import_sciospec_single(cur_file)
 #' 
+#' cur_file = file_tree[[1]]
+#' 
 import_sciospec_single = memoise({function(cur_file, shear = FALSE){
   
   vascr_validate_file(cur_file, "spec")
@@ -65,6 +67,7 @@ import_sciospec_single = memoise({function(cur_file, shear = FALSE){
 #' 
 #' data_path = "C:\\Users\\jhuc964\\Documents\\vascr\\devel\\CRT ECIS\\SS v2 250428"
 #' data_path = "~/SS v2 250428"
+#' data_path = raw
 import_sciospec = function(data_path, shear = FALSE, experiment = NA, nth = 1){
   
   # Replace the ~ in the data path with a wd

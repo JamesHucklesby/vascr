@@ -26,6 +26,8 @@ vascr_plot_line(
 \item{facet_expt}{Facet out different experiments, defaults to TRUE}
 
 \item{show_linetypes}{Include the line type for each experiment in the key. Default TRUE}
+
+\item{explanatory}{Whether to include commentary about unit meaning on y axis (default TRUE)}
 }
 \value{
 a ggplot containing the data
@@ -39,8 +41,10 @@ vascr_plot_line(growth.df \%>\% vascr_subset(unit = "Rb") \%>\% vascr_summarise(
 data.df = growth.df \%>\% vascr_subset(unit = "Rb") \%>\% vascr_summarise(level = "summary")
 vascr_plot_line(data.df, text_labels = FALSE)
 
-vascr_plot_line(data.df = growth.df \%>\% vascr_subset(unit = "R", frequency = 4000), facet = FALSE)
+growth.df \%>\% vascr_subset(unit = "R", frequency = 4000)  \%>\%
+vascr_plot_line(facet = FALSE)
 
-vascr_plot_line(data.df = growth.df \%>\% vascr_subset(unit = "R", frequency = 4000), explanatory = TRUE)
+growth.df \%>\% vascr_subset(unit = "R", frequency = 4000)  \%>\%
+vascr_plot_line(explanatory = TRUE)
 
 }
