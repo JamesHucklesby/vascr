@@ -39,7 +39,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">vascr_dunnett</span><span class="op">(</span><span class="va">data.df</span>, <span class="va">unit</span>, <span class="va">frequency</span>, <span class="va">time</span>, <span class="va">reference</span>, normtime <span class="op">=</span> <span class="fl">47</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">vascr_dunnett</span><span class="op">(</span><span class="va">data.df</span>, <span class="va">unit</span>, <span class="va">frequency</span>, <span class="va">time</span>, <span class="va">reference</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -74,9 +74,41 @@
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">vascr_dunnett</span><span class="op">(</span>data.df <span class="op">=</span> <span class="va">growth.df</span>, unit <span class="op">=</span> <span class="st">"R"</span>, frequency <span class="op">=</span> <span class="fl">4000</span>, time <span class="op">=</span> <span class="fl">100</span>, reference <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in {    subset_internal.df = rl %&gt;% mutate(Time = as.numeric(as.character(Time))) %&gt;%         vascr_subset(time = t)    fit &lt;- lm(Value ~ Sample + Experiment, data = subset_internal.df)    gmod = multcomp::glht(fit, linfct = multcomp::mcp(Sample = "Dunnett"))    summ = summary(gmod, test = adjusted("none"))    tr1 = tibble(Time_Sample = summ$test$sigma %&gt;% names(), P = summ$test$pvalues %&gt;%         as.vector(), Time = unique(subset_internal.df$Time))    return(tr1)}:</span> task 1 failed - "Variable(s) ‘Sample’ of class ‘character’ is/are not contained as a factor in ‘model’."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 20</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Time Unit  Frequency Sample  Instrument     sd totaln     n   min   max Well </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span>   100 R          <span style="text-decoration: underline;">4</span>000 0_cell… ECIS         2.68      9     3  232.  237. H01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span>   100 R          <span style="text-decoration: underline;">4</span>000 10,000… ECIS       106.        9     3  454.  665. F01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span>   100 R          <span style="text-decoration: underline;">4</span>000 15,000… ECIS        99.5       9     3  516.  710. E01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span>   100 R          <span style="text-decoration: underline;">4</span>000 20,000… ECIS        84.7       9     3  547.  698. D01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span>   100 R          <span style="text-decoration: underline;">4</span>000 25,000… ECIS        75.5       9     3  536.  678. C01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span>   100 R          <span style="text-decoration: underline;">4</span>000 30,000… ECIS        65.2       9     3  529.  656. B01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span>   100 R          <span style="text-decoration: underline;">4</span>000 35,000… ECIS        41.6       9     3  523.  602. A01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span>   100 R          <span style="text-decoration: underline;">4</span>000 5,000_… ECIS        54.3       9     3  313.  412. G01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 9 more variables: Value &lt;dbl&gt;, Experiment &lt;chr&gt;, sem &lt;dbl&gt;, Excluded &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   SampleID &lt;dbl&gt;, P &lt;dbl&gt;, padj &lt;dbl&gt;, Label &lt;chr&gt;, P_round &lt;dbl&gt;</span></span>
 <span class="r-in"><span><span class="fu">vascr_dunnett</span><span class="op">(</span><span class="va">growth.df</span>, <span class="st">"R"</span>, <span class="fl">4000</span>, time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">100</span><span class="op">)</span>, <span class="fl">6</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in {    subset_internal.df = rl %&gt;% mutate(Time = as.numeric(as.character(Time))) %&gt;%         vascr_subset(time = t)    fit &lt;- lm(Value ~ Sample + Experiment, data = subset_internal.df)    gmod = multcomp::glht(fit, linfct = multcomp::mcp(Sample = "Dunnett"))    summ = summary(gmod, test = adjusted("none"))    tr1 = tibble(Time_Sample = summ$test$sigma %&gt;% names(), P = summ$test$pvalues %&gt;%         as.vector(), Time = unique(subset_internal.df$Time))    return(tr1)}:</span> task 1 failed - "Variable(s) ‘Sample’ of class ‘character’ is/are not contained as a factor in ‘model’."</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 16 × 20</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     Time Unit  Frequency Sample Instrument     sd totaln     n   min   max Well </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;fct&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;int&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>    50 R          <span style="text-decoration: underline;">4</span>000 0_cel… ECIS         2.65      9     3  237.  242. H01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>    50 R          <span style="text-decoration: underline;">4</span>000 10,00… ECIS        27.5       9     3  321.  376. F01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>    50 R          <span style="text-decoration: underline;">4</span>000 15,00… ECIS        42.4       9     3  350.  432. E01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>    50 R          <span style="text-decoration: underline;">4</span>000 20,00… ECIS        52.5       9     3  394.  498. D01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>    50 R          <span style="text-decoration: underline;">4</span>000 25,00… ECIS        81.0       9     3  428.  590. C01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>    50 R          <span style="text-decoration: underline;">4</span>000 30,00… ECIS       108.        9     3  464.  675. B01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>    50 R          <span style="text-decoration: underline;">4</span>000 35,00… ECIS        79.0       9     3  574.  721. A01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>    50 R          <span style="text-decoration: underline;">4</span>000 5,000… ECIS        20.4       9     3  281.  318. G01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>   100 R          <span style="text-decoration: underline;">4</span>000 0_cel… ECIS         2.68      9     3  232.  237. H01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>   100 R          <span style="text-decoration: underline;">4</span>000 10,00… ECIS       106.        9     3  454.  665. F01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span>   100 R          <span style="text-decoration: underline;">4</span>000 15,00… ECIS        99.5       9     3  516.  710. E01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span>   100 R          <span style="text-decoration: underline;">4</span>000 20,00… ECIS        84.7       9     3  547.  698. D01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span>   100 R          <span style="text-decoration: underline;">4</span>000 25,00… ECIS        75.5       9     3  536.  678. C01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span>   100 R          <span style="text-decoration: underline;">4</span>000 30,00… ECIS        65.2       9     3  529.  656. B01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span>   100 R          <span style="text-decoration: underline;">4</span>000 35,00… ECIS        41.6       9     3  523.  602. A01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span>   100 R          <span style="text-decoration: underline;">4</span>000 5,000… ECIS        54.3       9     3  313.  412. G01,…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 9 more variables: Value &lt;dbl&gt;, Experiment &lt;chr&gt;, sem &lt;dbl&gt;, Excluded &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   SampleID &lt;dbl&gt;, P &lt;dbl&gt;, padj &lt;dbl&gt;, Label &lt;chr&gt;, P_round &lt;dbl&gt;</span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
@@ -89,7 +121,7 @@
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
