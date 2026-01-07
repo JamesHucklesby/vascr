@@ -84,9 +84,8 @@ vascr_import("ECIS", raw, modeled, "ECIS_Data")
 raw = system.file('extdata/instruments/xcell.plt', package = 'vascr')
 # No modeling for this system
 vascr_import("xCELLigence", raw, experiment = "xCELLigence")
-#> Error in pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE): ! ODBC failed with error 00000 from [unixODBC][Driver Manager].
-#> ✖ Can't open lib 'Microsoft Access Driver (*.mdb, *.accdb)' : file not found
-#> ℹ From nanodbc/nanodbc.cpp:1184.
+#> Connection not found. Returning NULL.
+#> Error: unable to find an inherited method for function ‘dbReadTable’ for signature ‘conn = "NULL", name = "character"’
 
 # cellZscope
 model = system.file("extdata/instruments/zscopemodel.txt", package = "vascr")
