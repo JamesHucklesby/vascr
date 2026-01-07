@@ -30,8 +30,8 @@ test_that("Can import cellZScope file", {
 
 test_that("Can import xCELLigence file", {
 
-  skip_on_ci()
-  skip_on_cran()
+  testthat::skip_on_ci()
+  testthat::skip_on_cran()
   
 # xCELLigence test
   rawdata = system.file('extdata/instruments/xcell.plt', package = 'vascr')

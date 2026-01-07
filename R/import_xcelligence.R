@@ -94,9 +94,13 @@ import_xcelligence = function(rawdata, experimentname = NULL, password = "RTCaDa
   # tables = c("Calibration","ENotes", "ErrLog", "ETimes", "Index1", "Index2", "Index3", "Layout", "Messages", "mIndex1", "Org10K", "Org25K", "Org50K", "ScanPlate", "ScanPlateData", "StepStatus", "TTimes", "WellColor")
   
   
-  connection <- odbc::dbConnect(odbc::odbc(), .connection_string = paste("Driver={Microsoft Access Driver (*.mdb, *.accdb)};
+  connection <- tryCatch({odbc::dbConnect(odbc::odbc(), .connection_string = paste("Driver={Microsoft Access Driver (*.mdb, *.accdb)};
                             DBQ=",tempfile,";
-                            PWD=RTCaDaTa", sep = ""))
+                            PWD=RTCaDaTa", sep = ""))},
+                         error = function(e) {
+                           message("Connection not found. Returning NULL.")
+                           return(NULL)
+                         })
   
   Org10K <- DBI::dbReadTable(connection , "Org10K")
   Org25K <- DBI::dbReadTable(connection , "Org25K")
