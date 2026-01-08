@@ -21,27 +21,6 @@
 ---
 
     Code
-      vascr_import("xCELLigence", raw, experiment = "xCELLigence")
-    Output
-      # A tibble: 6,336 x 10
-          Time Unit  Value Well  Sample      Frequency Experiment  Instrument SampleID
-         <dbl> <chr> <dbl> <chr> <chr>           <dbl> <chr>       <chr>         <int>
-       1  0    CI     1    A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       2  0    CI     1    A02   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       3  0    CI     1    A03   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       4  1.54 CI     3.59 A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       5  1.54 CI     3.56 A02   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       6  1.54 CI     3.72 A03   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       7  3.21 CI     3.51 A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       8  3.21 CI     3.48 A02   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       9  3.21 CI     3.48 A03   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-      10  4.87 CI     3.39 A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-      # i 6,326 more rows
-      # i 1 more variable: Excluded <chr>
-
----
-
-    Code
       vascr_import("cellzscope", raw, model, "cellZscope")
     Output
       # A tibble: 88,288 x 8
@@ -86,6 +65,27 @@
 ---
 
     Data didn't import, wrong instument typed
+
+---
+
+    Code
+      vascr_import("xCELLigence", raw, experiment = "xCELLigence")
+    Output
+      # A tibble: 6,336 x 10
+          Time Unit  Value Well  Sample      Frequency Experiment  Instrument SampleID
+         <dbl> <chr> <dbl> <chr> <chr>           <dbl> <chr>       <chr>         <int>
+       1  0    CI     1    A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       2  0    CI     1    A02   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       3  0    CI     1    A03   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       4  1.54 CI     3.59 A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       5  1.54 CI     3.56 A02   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       6  1.54 CI     3.72 A03   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       7  3.21 CI     3.51 A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       8  3.21 CI     3.48 A02   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       9  3.21 CI     3.48 A03   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+      10  4.87 CI     3.39 A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+      # i 6,326 more rows
+      # i 1 more variable: Excluded <chr>
 
 # Create blank DF
 

@@ -14,7 +14,7 @@
 vascr_save = function(data.df , path){
   dataframe = deparse(substitute(data.df))
   get(dataframe, envir = .GlobalEnv)
-  save(list = dataframe, file = path)
+  save(list = dataframe, file = path, compress = "xz")
 }
   
 #' Load a vascr dataset

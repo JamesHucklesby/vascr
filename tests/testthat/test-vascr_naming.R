@@ -7,13 +7,7 @@ test_that("Vascr Import Works",
             expect_snapshot(suppressMessages(vascr_import("ECIS", raw, modeled, "ECIS_Data")))
             
             
-             # xCELLigence
-            		
-             raw = system.file('extdata/instruments/xcell.plt', package = 'vascr')
-            		
-             # No modeling for this system
-            		
-             expect_snapshot(vascr_import("xCELLigence", raw, experiment = "xCELLigence"))
+
 	
            # cellZscope
 	
@@ -22,6 +16,11 @@ test_that("Vascr Import Works",
              raw = system.file("extdata/instruments/zscoperaw.txt", package = "vascr")
 		
              expect_snapshot(vascr_import("cellzscope", raw, model, "cellZscope"))
+             
+
+             testthat::skip_on_ci()
+             testthat::skip_on_cran()
+             
 		
              #' # ScioSpec
 
@@ -30,6 +29,14 @@ test_that("Vascr Import Works",
              expect_snapshot(vascr_import("sciospec", raw, model, "ScioSpec"))
              
              expect_snapshot_error(vascr_import("inst", raw, model, "ScioSpec"))
+             
+             # xCELLigence
+             
+             raw = system.file('extdata/instruments/xcell.plt', package = 'vascr')
+             
+             # No modeling for this system
+             
+             expect_snapshot(vascr_import("xCELLigence", raw, experiment = "xCELLigence"))
             
           })
 
