@@ -14,8 +14,6 @@ Useful links:
 
 - <https://github.com/JamesHucklesby/vascr>
 
-- <https://jameshucklesby.github.io/vascr/>
-
 - Report bugs at <https://github.com/JamesHucklesby/vascr/issues>
 
 ## Author

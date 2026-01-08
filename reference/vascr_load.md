@@ -24,5 +24,5 @@ A vascr dataset
 path = system.file("extdata/test.vascr", package = "vascr")
 vascr_load(path)
 #> Loading objects:
-#>   growth.df
+#>   small_growth.df
 ```
