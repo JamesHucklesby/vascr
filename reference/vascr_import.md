@@ -85,7 +85,7 @@ raw = system.file('extdata/instruments/xcell.plt', package = 'vascr')
 # No modeling for this system
 vascr_import("xCELLigence", raw, experiment = "xCELLigence")
 #> Connection not found. Returning NULL.
-#> Error: unable to find an inherited method for function ‘dbReadTable’ for signature ‘conn = "NULL", name = "character"’
+#> NULL
 
 # cellZscope
 model = system.file("extdata/instruments/zscopemodel.txt", package = "vascr")
