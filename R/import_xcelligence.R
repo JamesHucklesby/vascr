@@ -102,6 +102,11 @@ import_xcelligence = function(rawdata, experimentname = NULL, password = "RTCaDa
                            return(NULL)
                          })
   
+  if(is.null(connection))
+  {
+    return(NULL)
+  }
+  
   Org10K <- DBI::dbReadTable(connection , "Org10K")
   Org25K <- DBI::dbReadTable(connection , "Org25K")
   Org50K <- DBI::dbReadTable(connection , "Org50K")
