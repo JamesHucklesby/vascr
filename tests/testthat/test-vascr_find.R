@@ -1,7 +1,7 @@
 test_that("Find varous things", {
   
-  standard = growth.df %>% vascr_subset(unit = "R", frequency = 4000, time = c(5,100))
-  normal = vascr_normalise(standard, 100)
+  standard = small_growth.df %>% vascr_subset(unit = "R", frequency = 4000, time = c(5,100))
+  normal = suppressMessages(vascr_normalise(standard, 100))
   
   expect_snapshot(vascr_find_normalised(standard))
   expect_snapshot(vascr_find_normalised(normal))
@@ -20,7 +20,7 @@ expect_snapshot(vascr:::vascr_force_median(c(1,3,5,6), "down"))
 
 test_that("Vascr match", {
   
-  vector = vascr_find_unit(growth.df, "all")
+  vector = vascr_find_unit(small_growth.df, "all")
   
   expect_snapshot(vascr_match("Re", vector))
   expect_snapshot(vascr_match("Rb", vector))
@@ -30,32 +30,32 @@ test_that("Vascr match", {
 
 test_that("vascr_find_single_time", {
 
-  expect_snapshot(vascr_find_single_time(growth.df, NULL)) # Null input error check
-  expect_snapshot(vascr_find_single_time(growth.df, c(1,3))) # Two time points error check
+  expect_snapshot(vascr_find_single_time(small_growth.df, NULL)) # Null input error check
+  expect_snapshot(vascr_find_single_time(small_growth.df, c(1,3))) # Two time points error check
   expect_snapshot(vascr_find_single_time(c(1,2,3), c(1,3))) # No input Df error check
   
-  expect_snapshot(vascr_find_single_time(growth.df, c(4.876))) # Correct a made up time
+  expect_snapshot(vascr_find_single_time(small_growth.df, c(4.876))) # Correct a made up time
   
 
 })
 
 test_that("vascr_find_well", {
 
-  expect_snapshot(vascr_find_well(growth.df, NULL))
-  expect_snapshot(vascr_find_well(growth.df, "A01"))
-  expect_snapshot(vascr_find_well(growth.df, "A1"))
-  expect_snapshot(vascr_find_well(growth.df, "W39"))
+  expect_snapshot(vascr_find_well(small_growth.df, NULL))
+  expect_snapshot(vascr_find_well(small_growth.df, "A01"))
+  expect_snapshot(vascr_find_well(small_growth.df, "A1"))
+  expect_snapshot(vascr_find_well(small_growth.df, "W39"))
 
 })
 
 test_that("vascr_find_time", {
 
-  expect_snapshot(vascr_find_time(growth.df, NULL))
-  expect_snapshot(vascr_find_time(growth.df, list(1,3,5)))
-  expect_snapshot(vascr_find_time(growth.df, Inf))
-  expect_snapshot(vascr_find_time(growth.df, c(10,20)))
-  expect_snapshot(vascr_find_time(growth.df, 5))
-  expect_snapshot(vascr_find_time(growth.df, NA))
+  expect_snapshot(vascr_find_time(small_growth.df, NULL))
+  expect_snapshot(vascr_find_time(small_growth.df, list(1,3,5)))
+  expect_snapshot(vascr_find_time(small_growth.df, Inf))
+  expect_snapshot(vascr_find_time(small_growth.df, c(10,20)))
+  expect_snapshot(vascr_find_time(small_growth.df, 5))
+  expect_snapshot(vascr_find_time(small_growth.df, NA))
   
   expect_error(vascr_find_time(1,5))
   
@@ -64,14 +64,16 @@ test_that("vascr_find_time", {
 
 test_that("vascr_find_frequency", {
 
-  expect_snapshot(vascr_find_frequency(growth.df, 4382))
-  expect_snapshot(vascr_find_frequency(growth.df, 4000))
-  expect_snapshot(vascr_find_frequency(growth.df, NULL))
-  expect_snapshot(vascr_find_frequency(growth.df, NA))
-  expect_snapshot(vascr_find_frequency(growth.df, Inf))
+  expect_snapshot(vascr_find_frequency(small_growth.df, 4382))
+  expect_snapshot(vascr_find_frequency(small_growth.df, 4000))
+  expect_snapshot(vascr_find_frequency(small_growth.df, NULL))
+  expect_snapshot(vascr_find_frequency(small_growth.df, NA))
+  expect_snapshot(vascr_find_frequency(small_growth.df, Inf))
   
-  expect_snapshot(vascr_find_frequency(growth.df, "raw"))
-  expect_snapshot(vascr_find_frequency(growth.df, "model"))
+  expect_snapshot(vascr_find_frequency(small_growth.df, "raw"))
+  expect_snapshot(vascr_find_frequency(small_growth.df, "model"))
+  
+  expect_snapshot(suppressMessages(vascr_find_frequency(small_growth.df, frequency = c(100,200))))
 
 })
 
@@ -90,11 +92,11 @@ test_that("vascr_units_table", {
 
 test_that("vascr_find_instrument", {
   
-  expect_snapshot(vascr_find_instrument(growth.df, "Rb"))
-  expect_snapshot(vascr_find_instrument(growth.df, NULL))
-  expect_snapshot(vascr_find_instrument(growth.df, "cellZscope"))
-  expect_snapshot(vascr_find_instrument(growth.df, c("cellZscope", "ECIS" )))
-  expect_snapshot(vascr_find_instrument(growth.df, c("cellZscope", "xCELLigence")))
+  expect_snapshot(vascr_find_instrument(small_growth.df, "Rb"))
+  expect_snapshot(vascr_find_instrument(small_growth.df, NULL))
+  expect_snapshot(vascr_find_instrument(small_growth.df, "cellZscope"))
+  expect_snapshot(vascr_find_instrument(small_growth.df, c("cellZscope", "ECIS" )))
+  expect_snapshot(vascr_find_instrument(small_growth.df, c("cellZscope", "xCELLigence")))
 
 
 })
@@ -102,26 +104,26 @@ test_that("vascr_find_instrument", {
 
 test_that("vascr_find_unit", {
   
-  expect_snapshot(vascr_find_unit(growth.df, "raw"))
-  expect_snapshot(vascr_find_unit(growth.df, "modeled"))
-  expect_snapshot(vascr_find_unit(growth.df, "all"))
-  expect_snapshot(vascr_find_unit(growth.df, "Cm"))
+  expect_snapshot(vascr_find_unit(small_growth.df, "raw"))
+  expect_snapshot(vascr_find_unit(small_growth.df, "modeled"))
+  expect_snapshot(vascr_find_unit(small_growth.df, "all"))
+  expect_snapshot(vascr_find_unit(small_growth.df, "Cm"))
   
-  expect_snapshot(vascr_find_unit(growth.df, NULL))
-  expect_snapshot(vascr_find_unit(growth.df, unit = c("Ci", "Rb")))
+  expect_snapshot(vascr_find_unit(small_growth.df, NULL))
+  expect_snapshot(vascr_find_unit(small_growth.df, unit = c("Ci", "Rb")))
   
-  expect_snapshot(vascr_find_unit(growth.df, NA))
-  expect_snapshot(vascr_find_unit(growth.df %>% mutate(Instrument = "cellZscope"), NA))
-  expect_snapshot(vascr_find_unit(growth.df %>% mutate(Instrument = "xCELLigence"), NA))
+  expect_snapshot(vascr_find_unit(small_growth.df, NA))
+  expect_snapshot(vascr_find_unit(small_growth.df %>% mutate(Instrument = "cellZscope"), NA))
+  expect_snapshot(vascr_find_unit(small_growth.df %>% mutate(Instrument = "xCELLigence"), NA))
 
 
 })
 
 test_that("vascr_find_experiment",{
 
-  expect_snapshot(vascr_find_experiment(growth.df, 1))
-   expect_snapshot(vascr_find_experiment(growth.df, "1 : Experiment 1"))
-   expect_snapshot(vascr_find_experiment(growth.df, NULL))
+  expect_snapshot(vascr_find_experiment(small_growth.df, 1))
+   expect_snapshot(vascr_find_experiment(small_growth.df, "1 : Experiment 1"))
+   expect_snapshot(vascr_find_experiment(small_growth.df, NULL))
 
 })
 
@@ -129,6 +131,7 @@ test_that("vascr_find_experiment",{
 test_that("vascr_titles render",{
   
   testthat::skip_on_ci()
+  testthat::skip_on_cran()
   
   test_render = function(unit, frequency = 1000)
   {
@@ -199,9 +202,9 @@ test_that("vascr_titles",{
 test_that("test if data is summarised",
 {
   
-expect_snapshot(vascr_find_level(growth.df))
-expect_snapshot(vascr_find_level(vascr_summarise(growth.df, level = "experiments")))
-expect_snapshot(vascr_find_level(vascr_summarise(growth.df, level = "summary")))
+expect_snapshot(vascr_find_level(small_growth.df))
+expect_snapshot(vascr_find_level(vascr_summarise(small_growth.df, level = "experiments")))
+expect_snapshot(vascr_find_level(vascr_summarise(small_growth.df, level = "summary")))
 })
 
 test_that("test vascr file validation", {
@@ -230,7 +233,7 @@ test_that("test well standardisation" , {
   expect_snapshot(vascr_standardise_wells('A 1'))
 
   expect_snapshot(vascr_standardise_wells('tortoise')) # Non-standardize becomes NA
-  expect_snapshot(vascr_standardise_wells(growth.df$Well) %>% head())
+  expect_snapshot(vascr_standardise_wells(small_growth.df$Well) %>% head())
 
 })
 
@@ -244,31 +247,43 @@ test_that("vascr_gg_hue",{
 
 test_that("vascr_colnames_works", {
   expect_snapshot(vascr_cols())
-  expect_snapshot(vascr_cols(growth.df, set = "exploded"))
-  expect_snapshot(vascr_cols(growth.df, set = "core"))
-  expect_snapshot(vascr_cols(growth.df, set = "not_a_set"))
+  expect_snapshot(vascr_cols(small_growth.df, set = "exploded"))
+  expect_snapshot(vascr_cols(small_growth.df, set = "core"))
+  expect_snapshot(vascr_cols(small_growth.df, set = "not_a_set"))
 })
 
 
 test_that("Printing vascr names works", {
-  expect_snapshot(vascr_samples(growth.df))
+  expect_snapshot(vascr_samples(small_growth.df))
 })
 
 
 test_that("Find metadata works", {
 
-  expect_snapshot(vascr_find_metadata(growth.df))
+  expect_snapshot(vascr_find_metadata(small_growth.df))
 
 })
 
 
 test_that("find col works", {
 
-  expect_snapshot(vascr_find_col(growth.df, "HCMEC/D3"))
-  expect_snapshot(vascr_find_col(growth.df, "line"))
+  expect_snapshot(vascr_find_col(small_growth.df, "HCMEC/D3"))
+  expect_snapshot(vascr_find_col(small_growth.df, "line"))
 
 })
 
+
+test_that("SampleID from sample works", {
+
+  expect_snapshot(vascr_find_sampleid_from_sample(small_growth.df, "5,000_cells + HCMEC D3_line"))
+
+})
+
+  test_that("Find sample works", {
+    vascr_find_sample(small_growth.df)
+     expect_snapshot(vascr_find_sample(small_growth.df, NA))
+   
+})
 
 # test_that("", {
 #   

@@ -105,7 +105,10 @@ test_that("remove metadata",
 
 
 
-
+test_that("Find resample frequency",{
+  vdiffr::expect_doppelganger("resample_frequency_plot", suppressMessages(vascr_find_resample_frequency(growth.df)))
+  
+})
 
 
 

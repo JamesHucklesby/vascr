@@ -36,9 +36,9 @@ A matrix of different ANOVA tests
 Make a display with all the ANOVA analysis pre-conducted
 }
 \examples{
-
+\donttest{
 # Run, comparing only to a reference
 vascr_plot_anova(data.df = small_growth.df, unit = "R", frequency = 4000, time = 100, 
           reference = "5,000_cells + HCMEC D3_line")
-
+}
 }

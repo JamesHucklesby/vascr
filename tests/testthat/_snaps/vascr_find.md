@@ -10,7 +10,7 @@
     Code
       vascr_find_normalised(normal)
     Output
-      [1] 100
+      [1] 88.88889
 
 # Force median
 
@@ -52,16 +52,15 @@
 # vascr_find_single_time
 
     Code
-      vascr_find_single_time(growth.df, NULL)
+      vascr_find_single_time(small_growth.df, NULL)
     Output
-       [1]   0   5  10  15  20  25  30  35  40  45  50  55  60  65  70  75  80  85  90
-      [20]  95 100 105 110 115 120 125 130 135 140 145 150 155 160 165 170 175 180 185
-      [39] 190 195 200
+       [1]   0.00000  22.22222  44.44444  66.66667  88.88889 111.11111 133.33333
+       [8] 155.55556 177.77778 200.00000
 
 ---
 
     Code
-      vascr_find_single_time(growth.df, c(1, 3))
+      vascr_find_single_time(small_growth.df, c(1, 3))
     Message
       ! Vascr_find_single_time deals with only one time in one call. Use find times if more parsing is needed.
     Output
@@ -79,42 +78,42 @@
 ---
 
     Code
-      vascr_find_single_time(growth.df, c(4.876))
+      vascr_find_single_time(small_growth.df, c(4.876))
     Message
-      ! [ 4.876 ]  corrected to  [ 5 ]. Please check the variables used.
+      ! [ 4.876 ]  corrected to  [ 0 ]. Please check the variables used.
     Output
-      [1] 5
+      [1] 0
 
 # vascr_find_well
 
     Code
-      vascr_find_well(growth.df, NULL)
+      vascr_find_well(small_growth.df, NULL)
     Output
-       [1] "A01" "A02" "A03" "B01" "B02" "B03" "C01" "C02" "C03" "D01" "D02" "D03"
-      [13] "E01" "E02" "E03" "F01" "F02" "F03" "G01" "G02" "G03" "H01" "H02" "H03"
-      [25] "A04" "A05" "A06" "B04" "B05" "B06" "C04" "C05" "C06" "D04" "D05" "D06"
-      [37] "E04" "E05" "E06" "F04" "F05" "F06" "G04" "G05" "G06" "H04" "H05" "H06"
-      [49] "A07" "A08" "A09" "B07" "B08" "B09" "C07" "C08" "C09" "D07" "D08" "D09"
-      [61] "E07" "E08" "E09" "F07" "F08" "F09" "G07" "G08" "G09" "H07" "H08" "H09"
+       [1] "A01" "A02" "A03" "A04" "A05" "A06" "A07" "A08" "A09" "B01" "B02" "B03"
+      [13] "B04" "B05" "B06" "B07" "B08" "B09" "C01" "C02" "C03" "C04" "C05" "C06"
+      [25] "C07" "C08" "C09" "D01" "D02" "D03" "D04" "D05" "D06" "D07" "D08" "D09"
+      [37] "E01" "E02" "E03" "E04" "E05" "E06" "E07" "E08" "E09" "F01" "F02" "F03"
+      [49] "F04" "F05" "F06" "F07" "F08" "F09" "G01" "G02" "G03" "G04" "G05" "G06"
+      [61] "G07" "G08" "G09" "H07" "H08" "H09" "H01" "H02" "H03" "H04" "H05" "H06"
 
 ---
 
     Code
-      vascr_find_well(growth.df, "A01")
-    Output
-      [1] "A01"
-
----
-
-    Code
-      vascr_find_well(growth.df, "A1")
+      vascr_find_well(small_growth.df, "A01")
     Output
       [1] "A01"
 
 ---
 
     Code
-      vascr_find_well(growth.df, "W39")
+      vascr_find_well(small_growth.df, "A1")
+    Output
+      [1] "A01"
+
+---
+
+    Code
+      vascr_find_well(small_growth.df, "W39")
     Message
       ! Well NA is not a valid well name, please check your input data
       ! [NA] corrected to [A01]. Please check the argeuments for your functions are correctly typed.
@@ -124,56 +123,57 @@
 # vascr_find_time
 
     Code
-      vascr_find_time(growth.df, NULL)
+      vascr_find_time(small_growth.df, NULL)
     Output
-       [1]   0   5  10  15  20  25  30  35  40  45  50  55  60  65  70  75  80  85  90
-      [20]  95 100 105 110 115 120 125 130 135 140 145 150 155 160 165 170 175 180 185
-      [39] 190 195 200
+       [1]   0.00000  22.22222  44.44444  66.66667  88.88889 111.11111 133.33333
+       [8] 155.55556 177.77778 200.00000
 
 ---
 
     Code
-      vascr_find_time(growth.df, list(1, 3, 5))
+      vascr_find_time(small_growth.df, list(1, 3, 5))
     Message
       ! [ 1 ]  corrected to  [ 0 ]. Please check the variables used.
-      ! [ 3 ]  corrected to  [ 5 ]. Please check the variables used.
+      ! [ 3 ]  corrected to  [ 0 ]. Please check the variables used.
+      ! [ 5 ]  corrected to  [ 0 ]. Please check the variables used.
     Output
-      [1] 0 5 5
+      [1] 0 0 0
 
 ---
 
     Code
-      vascr_find_time(growth.df, Inf)
+      vascr_find_time(small_growth.df, Inf)
     Output
-       [1]   0   5  10  15  20  25  30  35  40  45  50  55  60  65  70  75  80  85  90
-      [20]  95 100 105 110 115 120 125 130 135 140 145 150 155 160 165 170 175 180 185
-      [39] 190 195 200
+       [1]   0.00000  22.22222  44.44444  66.66667  88.88889 111.11111 133.33333
+       [8] 155.55556 177.77778 200.00000
 
 ---
 
     Code
-      vascr_find_time(growth.df, c(10, 20))
+      vascr_find_time(small_growth.df, c(10, 20))
     Output
-      [1] 10 15 20
+      numeric(0)
 
 ---
 
     Code
-      vascr_find_time(growth.df, 5)
+      vascr_find_time(small_growth.df, 5)
+    Message
+      ! [ 5 ]  corrected to  [ 0 ]. Please check the variables used.
     Output
-      [1] 5
+      [1] 0
 
 ---
 
     Code
-      vascr_find_time(growth.df, NA)
+      vascr_find_time(small_growth.df, NA)
     Output
-      [1] 100
+      [1] 111.1111
 
 # vascr_find_frequency
 
     Code
-      vascr_find_frequency(growth.df, 4382)
+      vascr_find_frequency(small_growth.df, 4382)
     Message
       ! Frequency corrected from 4382 to 4000
     Output
@@ -182,44 +182,51 @@
 ---
 
     Code
-      vascr_find_frequency(growth.df, 4000)
+      vascr_find_frequency(small_growth.df, 4000)
     Output
       [1] 4000
 
 ---
 
     Code
-      vascr_find_frequency(growth.df, NULL)
+      vascr_find_frequency(small_growth.df, NULL)
     Output
-       [1]     0  1000 16000  2000   250 32000  4000   500 64000  8000
+       [1]     0   250   500  1000  2000  4000  8000 16000 32000 64000
 
 ---
 
     Code
-      vascr_find_frequency(growth.df, NA)
+      vascr_find_frequency(small_growth.df, NA)
     Output
       [1] 4000
 
 ---
 
     Code
-      vascr_find_frequency(growth.df, Inf)
+      vascr_find_frequency(small_growth.df, Inf)
     Output
       [1] Inf
 
 ---
 
     Code
-      vascr_find_frequency(growth.df, "raw")
+      vascr_find_frequency(small_growth.df, "raw")
     Output
-      [1]  1000 16000  2000   250 32000  4000   500 64000  8000
+      [1]   250   500  1000  2000  4000  8000 16000 32000 64000
 
 ---
 
     Code
-      vascr_find_frequency(growth.df, "model")
+      vascr_find_frequency(small_growth.df, "model")
     Output
       [1] 0
+
+---
+
+    Code
+      suppressMessages(vascr_find_frequency(small_growth.df, frequency = c(100, 200)))
+    Output
+      [1]   0 250
 
 # vascr_instrument_list
 
@@ -251,7 +258,7 @@
 # vascr_find_instrument
 
     Code
-      vascr_find_instrument(growth.df, "Rb")
+      vascr_find_instrument(small_growth.df, "Rb")
     Message
       ! [Rb] corrected to [ECIS]. Please check the argeuments for your functions are correctly typed.
     Output
@@ -260,14 +267,14 @@
 ---
 
     Code
-      vascr_find_instrument(growth.df, NULL)
+      vascr_find_instrument(small_growth.df, NULL)
     Output
       [1] "ECIS"
 
 ---
 
     Code
-      vascr_find_instrument(growth.df, "cellZscope")
+      vascr_find_instrument(small_growth.df, "cellZscope")
     Message
       ! cellZscope data is not present in the dataset. Use with care
       ! No selected instruments present in dataset. Use with care.
@@ -277,7 +284,7 @@
 ---
 
     Code
-      vascr_find_instrument(growth.df, c("cellZscope", "ECIS"))
+      vascr_find_instrument(small_growth.df, c("cellZscope", "ECIS"))
     Message
       ! cellZscope data is not present in the dataset. Use with care
     Output
@@ -286,7 +293,7 @@
 ---
 
     Code
-      vascr_find_instrument(growth.df, c("cellZscope", "xCELLigence"))
+      vascr_find_instrument(small_growth.df, c("cellZscope", "xCELLigence"))
     Message
       ! cellZscope data is not present in the dataset. Use with care
       ! xCELLigence data is not present in the dataset. Use with care
@@ -297,21 +304,21 @@
 # vascr_find_unit
 
     Code
-      vascr_find_unit(growth.df, "raw")
+      vascr_find_unit(small_growth.df, "raw")
     Output
       [1] "C" "P" "R" "X" "Z"
 
 ---
 
     Code
-      vascr_find_unit(growth.df, "modeled")
+      vascr_find_unit(small_growth.df, "modeled")
     Output
       [1] "Alpha" "Cm"    "Drift" "Rb"    "RMSE" 
 
 ---
 
     Code
-      vascr_find_unit(growth.df, "all")
+      vascr_find_unit(small_growth.df, "all")
     Output
        [1] "Alpha" "Cm"    "Drift" "Rb"    "RMSE"  "C"     "P"     "R"     "X"    
       [10] "Z"    
@@ -319,22 +326,22 @@
 ---
 
     Code
-      vascr_find_unit(growth.df, "Cm")
+      vascr_find_unit(small_growth.df, "Cm")
     Output
       [1] "Cm"
 
 ---
 
     Code
-      vascr_find_unit(growth.df, NULL)
+      vascr_find_unit(small_growth.df, NULL)
     Output
-       [1] "Alpha" "Cm"    "Drift" "Rb"    "RMSE"  "C"     "P"     "R"     "X"    
+       [1] "Alpha" "Cm"    "Drift" "RMSE"  "Rb"    "C"     "P"     "R"     "X"    
       [10] "Z"    
 
 ---
 
     Code
-      vascr_find_unit(growth.df, unit = c("Ci", "Rb"))
+      vascr_find_unit(small_growth.df, unit = c("Ci", "Rb"))
     Message
       ! [Ci] corrected to [Cm]. Please check the argeuments for your functions are correctly typed.
     Output
@@ -343,42 +350,42 @@
 ---
 
     Code
-      vascr_find_unit(growth.df, NA)
+      vascr_find_unit(small_growth.df, NA)
     Output
       [1] "R"
 
 ---
 
     Code
-      vascr_find_unit(growth.df %>% mutate(Instrument = "cellZscope"), NA)
+      vascr_find_unit(small_growth.df %>% mutate(Instrument = "cellZscope"), NA)
     Output
       [1] "TER"
 
 ---
 
     Code
-      vascr_find_unit(growth.df %>% mutate(Instrument = "xCELLigence"), NA)
+      vascr_find_unit(small_growth.df %>% mutate(Instrument = "xCELLigence"), NA)
     Output
       [1] "CI"
 
 # vascr_find_experiment
 
     Code
-      vascr_find_experiment(growth.df, 1)
+      vascr_find_experiment(small_growth.df, 1)
     Output
       [1] "1 : Experiment 1"
 
 ---
 
     Code
-      vascr_find_experiment(growth.df, "1 : Experiment 1")
+      vascr_find_experiment(small_growth.df, "1 : Experiment 1")
     Output
       [1] "1 : Experiment 1"
 
 ---
 
     Code
-      vascr_find_experiment(growth.df, NULL)
+      vascr_find_experiment(small_growth.df, NULL)
     Output
       [1] 1 : Experiment 1 2 : Experiment2  3 : Experiment3 
       Levels: 1 : Experiment 1 2 : Experiment2 3 : Experiment3
@@ -557,21 +564,21 @@
 # test if data is summarised
 
     Code
-      vascr_find_level(growth.df)
+      vascr_find_level(small_growth.df)
     Output
       [1] "wells"
 
 ---
 
     Code
-      vascr_find_level(vascr_summarise(growth.df, level = "experiments"))
+      vascr_find_level(vascr_summarise(small_growth.df, level = "experiments"))
     Output
       [1] "experiments"
 
 ---
 
     Code
-      vascr_find_level(vascr_summarise(growth.df, level = "summary"))
+      vascr_find_level(vascr_summarise(small_growth.df, level = "summary"))
     Output
       [1] "summary"
 
@@ -615,9 +622,9 @@
 ---
 
     Code
-      vascr_standardise_wells(growth.df$Well) %>% head()
+      vascr_standardise_wells(small_growth.df$Well) %>% head()
     Output
-      [1] "A01" "A02" "A03" "B01" "B02" "B03"
+      [1] "A01" "A01" "A01" "A01" "A01" "A01"
 
 # 96 well names are correct
 
@@ -652,14 +659,14 @@
 ---
 
     Code
-      vascr_cols(growth.df, set = "exploded")
+      vascr_cols(small_growth.df, set = "exploded")
     Output
       [1] "cells" "line" 
 
 ---
 
     Code
-      vascr_cols(growth.df, set = "core")
+      vascr_cols(small_growth.df, set = "core")
     Output
        [1] "Time"       "Unit"       "Value"      "Well"       "Sample"    
        [6] "Frequency"  "Experiment" "Instrument" "SampleID"   "Excluded"  
@@ -667,7 +674,7 @@
 ---
 
     Code
-      vascr_cols(growth.df, set = "not_a_set")
+      vascr_cols(small_growth.df, set = "not_a_set")
     Message
       ! Inappropriate set selected, please use another
     Output
@@ -676,7 +683,7 @@
 # Printing vascr names works
 
     Code
-      vascr_samples(growth.df)
+      vascr_samples(small_growth.df)
     Output
       # A tibble: 8 x 3
         SampleID Sample                       Experiment                              
@@ -693,7 +700,7 @@
 # Find metadata works
 
     Code
-      vascr_find_metadata(growth.df)
+      vascr_find_metadata(small_growth.df)
     Message
       
       Timepoints
@@ -701,7 +708,7 @@
 # find col works
 
     Code
-      vascr_find_col(growth.df, "HCMEC/D3")
+      vascr_find_col(small_growth.df, "HCMEC/D3")
     Message
       ! [HCMEC/D3] corrected to [SampleID]. Please check the argeuments for your functions are correctly typed.
     Output
@@ -710,7 +717,21 @@
 ---
 
     Code
-      vascr_find_col(growth.df, "line")
+      vascr_find_col(small_growth.df, "line")
     Output
       [1] "line"
+
+# SampleID from sample works
+
+    Code
+      vascr_find_sampleid_from_sample(small_growth.df, "5,000_cells + HCMEC D3_line")
+    Output
+      [1] 7
+
+# Find sample works
+
+    Code
+      vascr_find_sample(small_growth.df, NA)
+    Output
+      [1] "35,000_cells + HCMEC D3_line"
 
