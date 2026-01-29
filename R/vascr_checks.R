@@ -118,3 +118,41 @@ vascr_check_col_exists = function(df, col){
   }
 }
 
+
+
+
+#' Confirm if a dataset is complete with replicates accross experiments
+#'
+#' @param growth.df vascr dataset to confirm how replicates are repeated
+#'
+#' @returns true if all square, else a dataframe describing the issues
+#' 
+#' @importFrom dplyr select distinct group_by reframe
+#' @importFrom rlang is_null .data
+#' 
+#' @noRd
+#'
+#' @examples
+#' d1 = growth.df %>% vascr_subset(sampleid = 3, experiment = c(1,2))
+#' d2 = growth.df %>% vascr_subset(sampleid = c(1,2))
+#' data.df = rbind(d1,d2)
+#' 
+#' vascr_check_replicates(growth.df)
+#' 
+vascr_check_replicates = function(data.df) {
+  
+  replication = data.df %>% select("SampleID", "Sample", "Experiment") %>%
+    distinct() %>%
+    group_by(.data$Sample, .data$SampleID) %>%
+    reframe(count = n(), experiments = paste(.data$Experiment, collapse = " | "))
+  
+  if(nrow(replication)>0 ){
+    return (replication)
+  } else {
+    return (TRUE)
+  }
+  
+
+}
+
+

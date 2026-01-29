@@ -15,6 +15,8 @@ This is a re submission. In this version I have:
 
 * Shiny packages wrapped in if(interactive())
 
+* Fixed checks failing in 80 01 2026 build
+
 
 ## R CMD check results
 

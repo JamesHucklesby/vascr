@@ -9,7 +9,7 @@ vascr_summarise(data.df, level = "wells")
 \arguments{
 \item{data.df}{Data set to summarize}
 
-\item{level}{Level to summarise to, either "summary", "experiment" or "wells"}
+\item{level}{Level to summarise to, either "median_deviation", "ANOVA", "summary", "experiment" or "wells"}
 }
 \value{
 The summarized data set

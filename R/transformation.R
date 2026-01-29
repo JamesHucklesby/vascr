@@ -2,7 +2,7 @@
 #' Summarise a vascr data set down to a particular level
 #'
 #' @param data.df Data set to summarize
-#' @param level Level to summarise to, either "summary", "experiment" or "wells"
+#' @param level Level to summarise to, either "median_deviation", "ANOVA", "summary", "experiment" or "wells"
 #'
 #' @return The summarized data set
 #' 
@@ -19,7 +19,7 @@
 #' vascr_summarise(rbgrowth.df, level = "wells")
 vascr_summarise = function(data.df, level = "wells")
 {
-  level = vascr_match(level, c("summary", "wells", "experiments", "median_deviation"))
+  level = vascr_match(level, c("summary", "wells", "experiments", "median_deviation", "ANOVA"))
   
   
     data.df = vascr_force_resampled(data.df)
@@ -37,6 +37,10 @@ vascr_summarise = function(data.df, level = "wells")
     if(level == "median_deviation")
     {
       data.df = vascr_summarise_deviation(data.df)
+    }
+    
+    if(level == "anova"){
+     vascr_make_significance_table(data.df, vascr_find(data.df, "Time")[1], vascr_find(data.df, "Unit")[1], vascr_find(data.df, "Frequency")[1], format = "Tukey_data")
     }
     
   return(data.df)

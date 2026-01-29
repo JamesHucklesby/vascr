@@ -44,3 +44,17 @@ test_that("Checking of resampling works", {
   
   expect_snapshot(vascr_check_resampled(d16))
 })
+
+
+test_that("Replicate consistency checks work", {
+  
+  expect_snapshot(vascr_check_replicates(growth.df))
+  
+   d1 = growth.df %>% vascr_subset(sampleid = 3, experiment = c(1,2))
+   d2 = growth.df %>% vascr_subset(sampleid = c(1,2))
+   data.df = rbind(d1,d2)
+  
+   
+   expect_snapshot(vascr_check_replicates(data.df))
+})
+

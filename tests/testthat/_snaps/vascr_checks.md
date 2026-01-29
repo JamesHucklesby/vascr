@@ -58,9 +58,6 @@
         w16 = system.file("extdata/instruments/ecis_16_testplate.abp", package = "vascr")
         d16 = vascr_import("ECIS", raw = w16, experiment = "W16")
       })
-    Condition
-      Warning:
-      Expected 2 pieces. Additional pieces discarded in 2 rows [1, 2].
 
 ---
 
@@ -68,4 +65,33 @@
       vascr_check_resampled(d16)
     Output
       [1] FALSE
+
+# Replicate consistency checks work
+
+    Code
+      vascr_check_replicates(growth.df)
+    Output
+      # A tibble: 8 x 4
+        Sample                       SampleID count experiments                       
+        <chr>                           <int> <int> <chr>                             
+      1 0_cells + HCMEC D3_line             8     3 1 : Experiment 1 | 2 : Experiment~
+      2 10,000_cells + HCMEC D3_line        6     3 1 : Experiment 1 | 2 : Experiment~
+      3 15,000_cells + HCMEC D3_line        5     3 1 : Experiment 1 | 2 : Experiment~
+      4 20,000_cells + HCMEC D3_line        4     3 1 : Experiment 1 | 2 : Experiment~
+      5 25,000_cells + HCMEC D3_line        3     3 1 : Experiment 1 | 2 : Experiment~
+      6 30,000_cells + HCMEC D3_line        2     3 1 : Experiment 1 | 2 : Experiment~
+      7 35,000_cells + HCMEC D3_line        1     3 1 : Experiment 1 | 2 : Experiment~
+      8 5,000_cells + HCMEC D3_line         7     3 1 : Experiment 1 | 2 : Experiment~
+
+---
+
+    Code
+      vascr_check_replicates(data.df)
+    Output
+      # A tibble: 3 x 4
+        Sample                       SampleID count experiments                       
+        <fct>                           <int> <int> <chr>                             
+      1 25,000_cells + HCMEC D3_line        3     2 1 : Experiment 1 | 2 : Experiment2
+      2 35,000_cells + HCMEC D3_line        1     3 1 : Experiment 1 | 2 : Experiment~
+      3 30,000_cells + HCMEC D3_line        2     3 1 : Experiment 1 | 2 : Experiment~
 

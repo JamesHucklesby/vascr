@@ -862,6 +862,7 @@ vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequen
 #' }
 vascr_plot_anova = function(data.df, unit, frequency, time, reference = NULL, separate = "x", rotate = 45)
 {
+  data.df = vascr_force_resampled(data.df)
   
   unit = vascr_find_unit(data.df, unit)
   frequency = vascr_find_frequency(data.df, frequency)

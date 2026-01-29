@@ -380,7 +380,7 @@ vascr_plot_grid = function(data.df, threshold = 0.2)
     geom_point(aes(x = .data$Time, y = .data$Value, size = .data$Median_Deviation, color = "Oultier", group = .data$Title), 
                data = processed %>% filter(.data$Median_Deviation > threshold), shape = 1)+
     labs(color = "Markup", size = "Median Deviation")+
-    labs(weight = "Other note") +   
+    #labs(weight = "Other note") +   
     scale_colour_manual(values = c("darkgrey", "red")) +
     ggnewscale::new_scale_color() +
     geom_line(aes(x = .data$Time, y = .data$Value, color = .data$Sample)) +

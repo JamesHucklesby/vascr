@@ -42,17 +42,25 @@
 #' vascr_find(growth.df, "all")
 vascr_find = function(data.df = vascr::growth.df , paramater, value = NA){
   
-  if(paramater == "Time"){return(vascr_find_time(data.df, value))}
-  if(paramater == "Unit"){return(vascr_find_unit(data.df, value))}
-  if(paramater == "Well"){return(vascr_find_well(data.df, value))}
-  if(paramater == "Sample"){return(vascr_find_sample(data.df, value))}
-  if(paramater == "Frequency"){return(vascr_find_frequency(data.df, value))}
-  if(paramater == "Experiment"){return(vascr_find_experiment(data.df, value))}
-  if(paramater == "SampleID"){return(vascr_find_sampleid(data.df, value))}
+  param = NULL
   
-  if(paramater == "resampled"){return(vascr_check_resampled(data.df))}
+  if(paramater == "Time"){param = (vascr_find_time(data.df, value))}
+  if(paramater == "Unit"){param = (vascr_find_unit(data.df, value))}
+  if(paramater == "Well"){param = (vascr_find_well(data.df, value))}
+  if(paramater == "Sample"){param = (vascr_find_sample(data.df, value))}
+  if(paramater == "Frequency"){param = (vascr_find_frequency(data.df, value))}
+  if(paramater == "Experiment"){param = (vascr_find_experiment(data.df, value))}
+  if(paramater == "SampleID"){param = (vascr_find_sampleid(data.df, value))}
   
-  if(paramater == "all"){return(vascr_find_metadata(data.df))}
+  if(paramater == "resampled"){param = (vascr_check_resampled(data.df))}
+  
+  if(paramater == "all"){param = (vascr_find_metadata(data.df))}
+  
+  if(!is_null(param)){
+    
+      return(param)
+    
+  }
   
   vascr_notify("error","Paramater not something vascr can search for, please check spelling")
   
@@ -145,7 +153,19 @@ vascr_force_median = function(vector, round = "up")
   return(forced_median)
 }
 
+params = c("time", "unit", "frequency", "cat")
 
+vascr_force_single = function (data.df, params){
+  
+  param_options = c("time", "unit", "frequency")
+  
+  if("time" %in% param_options){
+    
+  }
+
+  
+  
+}
 
 #' Match a string with the closest available option
 #'
