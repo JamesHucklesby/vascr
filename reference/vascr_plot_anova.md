@@ -53,6 +53,7 @@ A matrix of different ANOVA tests
 ## Examples
 
 ``` r
+# \donttest{
 # Run, comparing only to a reference
 vascr_plot_anova(data.df = small_growth.df, unit = "R", frequency = 4000, time = 100, 
           reference = "5,000_cells + HCMEC D3_line")
@@ -66,4 +67,5 @@ vascr_plot_anova(data.df = small_growth.df, unit = "R", frequency = 4000, time =
 #> Warning: Removed 1 row containing missing values or values outside the scale range
 #> (`geom_text_repel()`).
 
+# }
 ```

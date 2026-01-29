@@ -27,9 +27,5 @@ A plot to be used for QC
 ``` r
 grid.df = growth.df %>% vascr_subset(unit = "R", frequency = "4000", experiment  = 1)
 vascr_plot_grid(grid.df)
-#> Ignoring unknown labels:
-#> • weight : "Other note"
-#> Ignoring unknown labels:
-#> • weight : "Other note"
 
 ```

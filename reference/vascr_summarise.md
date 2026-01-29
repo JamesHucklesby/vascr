@@ -16,7 +16,8 @@ vascr_summarise(data.df, level = "wells")
 
 - level:
 
-  Level to summarise to, either "summary", "experiment" or "wells"
+  Level to summarise to, either "median_deviation", "ANOVA", "summary",
+  "experiment" or "wells"
 
 ## Value
 

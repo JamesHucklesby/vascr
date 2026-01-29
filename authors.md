@@ -19,13 +19,13 @@ Source:
 [`DESCRIPTION`](https://github.com/JamesHucklesby/vascr/blob/main/DESCRIPTION)
 
 Hucklesby J, Unsworth C, Graham E, angel C (2026). *vascr: Process
-Biological Impedance Sensing Data*. R package version 0.1.1,
+Biological Impedance Sensing Data*. R package version 0.1.2,
 <https://github.com/JamesHucklesby/vascr>.
 
     @Manual{,
       title = {vascr: Process Biological Impedance Sensing Data},
       author = {James JW Hucklesby and Charles Unsworth and E Scott Graham and Catherine E angel},
       year = {2026},
-      note = {R package version 0.1.1},
+      note = {R package version 0.1.2},
       url = {https://github.com/JamesHucklesby/vascr},
     }
