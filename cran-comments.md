@@ -1,4 +1,9 @@
-## Resubmission
+## Resubmission 0.1.3
+This is a re submission. In this version I have:
+
+* Updated the description to put the specialist pieces of equipment ECIS, xCELLigence and cellZscope in quotes
+
+## Resubmission 0.1.2
 This is a re submission. In this version I have:
 
 * Proofread the DESCRIPTION, thank you for catching this error
