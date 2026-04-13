@@ -197,10 +197,10 @@ for(row in d1[c(2:length(d1))]) {
   } else {
     
         if(sum(row$SampleID %in% repaired$SampleID)>=1 || is.na(row$SampleID)){
-        print (row)
+        # vascr_notify("information", row)
         row$SampleID = nextval
         nextval = nextval +1
-        print("SampleID repeated, reallocating")
+        # print("SampleID repeated, reallocating")
       }
       
       repaired = rbind(repaired, row)

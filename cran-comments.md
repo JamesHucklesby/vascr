@@ -1,4 +1,16 @@
-## Resubmission
+## Resubmission V 0.1.4
+This is a re submission. In this version I have:
+
+* Removed the references to print in vascr_combine
+
+* Removed references to the global environment in vascr_save
+
+## Resubmission V 0.1.3
+This is a re submission. In this version I have:
+
+* Updated the description to put the specialist pieces of equipment ECIS, xCELLigence and cellZscope in quotes
+
+## Resubmission V 0.1.2
 This is a re submission. In this version I have:
 
 * Proofread the DESCRIPTION, thank you for catching this error

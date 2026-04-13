@@ -12,9 +12,9 @@
 #' vascr_save(growth.df, path = path)
 #' 
 vascr_save = function(data.df , path){
-  dataframe = deparse(substitute(data.df))
-  get(dataframe, envir = .GlobalEnv)
-  save(list = dataframe, file = path, compress = "xz")
+  #dataframe = deparse(substitute(data.df))
+  #get(dataframe, envir = .GlobalEnv)
+  save(data.df, file = path, compress = "xz")
 }
   
 #' Load a vascr dataset
@@ -31,6 +31,7 @@ vascr_save = function(data.df , path){
 #' vascr_load(path)
 #' 
 vascr_load = function(path){
-  load(path, envir = .GlobalEnv, verbose = TRUE)
+  data = load(path, verbose = TRUE)
+  return(data)
   }
 
