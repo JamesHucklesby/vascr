@@ -321,6 +321,11 @@ return(to_export)
 vascr_summarise_cc = function(data.df, level = "summary")
 {
   
+  if(!any(colnames(data.df)=="Sample.x"))
+  {
+    data.df = vascr_cc(growth.df)
+  }
+  
   ccf_exp = data.df %>% ungroup() %>% 
     group_by_at(vars("Sample.x", "Sample.y", "SampleID.x", "SampleID.y", "Experiment")) %>%
     summarise(cc = mean(.data$cc), n = n())
@@ -354,14 +359,23 @@ vascr_summarise_cc = function(data.df, level = "summary")
 #'
 #' @examples
 #' data.df = vascr::growth.df %>% 
-#'             vascr_subset(unit = "R", frequency = 4000) %>%
-#'             vascr_cc()
+#'             vascr_subset(unit = "R", frequency = 4000)
 #'
 #' data.df %>% vascr_plot_cc()
 #' data.df %>% vascr_summarise_cc("experiments") %>% vascr_plot_cc()
 #' data.df %>% vascr_summarise_cc("summary") %>% vascr_plot_cc()
 #' 
-vascr_plot_cc = function(data.df){
+vascr_plot_cc = function(data.df, level = NA){
+
+if(!any(colnames(data.df)=="Sample.x"))
+{
+  data.df = vascr_cc(data.df)
+}
+  
+if(!is.na(level))
+{
+  data.df = vascr_summarise_cc(data.df, level)
+}
 
 if(vascr_find_level(data.df) == "wells"){
   toreturn = data.df %>% ggplot() +

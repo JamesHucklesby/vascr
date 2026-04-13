@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## Resubmission V 0.1.4
 This is a re submission. In this version I have:
 
@@ -6,11 +7,18 @@ This is a re submission. In this version I have:
 * Removed references to the global environment in vascr_save
 
 ## Resubmission V 0.1.3
+=======
+## Resubmission 0.1.3
+>>>>>>> dcbee5edfa4d0a7cca58032933147b3dd30c8955
 This is a re submission. In this version I have:
 
 * Updated the description to put the specialist pieces of equipment ECIS, xCELLigence and cellZscope in quotes
 
+<<<<<<< HEAD
 ## Resubmission V 0.1.2
+=======
+## Resubmission 0.1.2
+>>>>>>> dcbee5edfa4d0a7cca58032933147b3dd30c8955
 This is a re submission. In this version I have:
 
 * Proofread the DESCRIPTION, thank you for catching this error
