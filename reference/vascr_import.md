@@ -111,7 +111,7 @@ raw = system.file("extdata/instruments/ScioSpec", package = "vascr")
 vascr_import("sciospec", raw, model, "ScioSpec")
 #> Joining with `by = join_by(channel)`
 #> Joining with `by = join_by(time)`
-#> # A tibble: 16,160 × 11
+#> # A tibble: 9,090 × 11
 #>    channel      Frequency Unit    Value Well  Instrument  Time Experiment Sample
 #>    <chr>            <dbl> <chr>   <dbl> <chr> <chr>      <dbl> <chr>      <chr> 
 #>  1 Channel: EC…      100. R      20261. D02   sciospec       0 ScioSpec   D02   
@@ -124,7 +124,7 @@ vascr_import("sciospec", raw, model, "ScioSpec")
 #>  8 Channel: EC…      132. I     -14845. D02   sciospec       0 ScioSpec   D02   
 #>  9 Channel: EC…      145. R      17380. D02   sciospec       0 ScioSpec   D02   
 #> 10 Channel: EC…      145. I     -13290. D02   sciospec       0 ScioSpec   D02   
-#> # ℹ 16,150 more rows
+#> # ℹ 9,080 more rows
 #> # ℹ 2 more variables: SampleID <dbl>, Excluded <chr>
 
 # }

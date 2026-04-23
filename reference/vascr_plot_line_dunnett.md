@@ -53,9 +53,8 @@ vascr_plot_line_dunnett(small_growth.df, unit = "R", frequency = 4000, time = 25
     reference = "0_cells + HCMEC D3_Line")
 #> ! [ 25 ]  corrected to  [ 22.2222222222222 ]. Please check the variables used.
 #> ! [ 25 ]  corrected to  [ 22.2222222222222 ]. Please check the variables used.
+#> ! [ 25 ]  corrected to  [ 22.2222222222222 ]. Please check the variables used.
 #> ! [ 25 ]  corrected to  [ 22.2222 ]. Please check the variables used.
-#> Warning: Removed 8 rows containing missing values or values outside the scale range
-#> (`geom_text_repel()`).
 
 vascr_plot_line_dunnett(small_growth.df, unit = "R", frequency = 4000, time = list(25,100), 
     reference = "0_cells + HCMEC D3_Line")
@@ -63,17 +62,16 @@ vascr_plot_line_dunnett(small_growth.df, unit = "R", frequency = 4000, time = li
 #> ! [ 100 ]  corrected to  [ 88.8888888888889 ]. Please check the variables used.
 #> ! [ 25 ]  corrected to  [ 22.2222222222222 ]. Please check the variables used.
 #> ! [ 100 ]  corrected to  [ 88.8888888888889 ]. Please check the variables used.
+#> ! [ 25 ]  corrected to  [ 22.2222222222222 ]. Please check the variables used.
+#> ! [ 100 ]  corrected to  [ 88.8888888888889 ]. Please check the variables used.
 #> ! [ 25 ]  corrected to  [ 22.2222 ]. Please check the variables used.
 #> ! [ 100 ]  corrected to  [ 88.8889 ]. Please check the variables used.
-#> Warning: Removed 16 rows containing missing values or values outside the scale range
-#> (`geom_text_repel()`).
 
 vascr_plot_line_dunnett(small_growth.df, unit = "R", frequency = 4000, time = 180, 
     reference = "20,000_cells + HCMEC D3_Line")
 #> ! [ 180 ]  corrected to  [ 177.777777777778 ]. Please check the variables used.
 #> ! [ 180 ]  corrected to  [ 177.777777777778 ]. Please check the variables used.
+#> ! [ 180 ]  corrected to  [ 177.777777777778 ]. Please check the variables used.
 #> ! [ 180 ]  corrected to  [ 177.7778 ]. Please check the variables used.
-#> Warning: Removed 8 rows containing missing values or values outside the scale range
-#> (`geom_text_repel()`).
 
 ```
