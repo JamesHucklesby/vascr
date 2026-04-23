@@ -819,7 +819,7 @@ vascr_titles= function (unit, frequency = 0, prefix = "", explanatory = FALSE, n
           
           # Electrical quantaties
           "C", glue("{prefix}Capacitance (nF, {frequency} Hz)"), FALSE, FALSE,
-          "R", glue("{prefix}Resistance (ohm, {frequency} Hz)"),FALSE, FALSE,
+          "R", glue("{prefix}Resistance<br>(ohm, {frequency} Hz)"),FALSE, FALSE,
           "P", glue("{prefix}Phase (radians, {frequency} Hz)"),FALSE, FALSE,
           "X", glue("{prefix}Capacative Reactance (ohm, {frequency} Hz)"),FALSE, FALSE,
           "Z", glue("{prefix}Impedance (ohm, {frequency} Hz)"), FALSE, FALSE,

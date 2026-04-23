@@ -6,7 +6,7 @@
 #' @importFrom dplyr filter mutate left_join rowwise group_split tribble select
 #' @importFrom ggplot2 ggplot geom_point geom_errorbar labs theme scale_colour_manual
 #' @importFrom ggnewscale new_scale
-#' @importFrom stats t.test
+#' @importFrom stats wilcox.test
 #'
 #' @returns A plot of cross-correlations and associated statistics
 #' 
@@ -23,6 +23,7 @@
 #' vascr_plot_cc_stats(growth.df, points = TRUE)
 #' vascr_plot_cc_stats(growth.df, reference = "0_cells + HCMEC D3_line", points = TRUE)
 #' 
+#' data.df = cc_exp2
 #' 
 vascr_plot_cc_stats = function(data.df, unit = "R", frequency = 4000, reference = "none", points = FALSE, stars = TRUE, pval = FALSE){
   
@@ -34,33 +35,38 @@ vascr_plot_cc_stats = function(data.df, unit = "R", frequency = 4000, reference 
     cc_data = data.df
   } else{
     
-    subdata = data.df %>% vascr_subset(unit = unit, frequency = frequency) %>%
-      vascr_summarise("experiments")
+    subdata = data.df %>% vascr_subset(unit = unit, frequency = frequency)
     
     cc_data = subdata %>%
       vascr_cc(reference = reference)
-    
     
   }
 
   
 ccf_calc =  cc_data %>%
             mutate(title = paste(.data$Sample.x, .data$Sample.y , sep = "x")) %>%
-            mutate(expid = paste(.data$Experiment.x, .data$Experiment.y))
+            mutate(expid = paste(.data$Experiment))
 
 colours = vascr_gg_color_hue(length(unique(c(ccf_calc$`Sample.x`, ccf_calc$`Sample.y`))))
 
-hue = tibble(Sample = unique(c(ccf_calc$`Sample.x`, ccf_calc$`Sample.y`)), colours = colours)
+
+name_vec = unique(c(ccf_calc$`Sample.y`, ccf_calc$`Sample.x`))
+sorted_vector <- name_vec[order(name_vec)]
+
+hue = tibble(Sample = name_vec, colours = colours)
 
 x = NULL
 y = NULL
 
 ccf_calc = ccf_calc %>% left_join(hue, join_by(x$`Sample.x` == y$`Sample`)) %>% 
+  arrange("Sample.x", "Sample.y") %>%
   mutate(hue1 = .data$colours, colours = NULL) %>% 
   left_join(hue, join_by(x$`Sample.y` == y$`Sample`)) %>% 
   mutate(hue2 = colours, colours = NULL) %>%
-  mutate(title = glue("<span style = 'color:{hue1};'>{`Sample.x`}</span><br>
-                       <span style = 'color:{hue2};'>{`Sample.y`}</span>"))
+  mutate(title = glue(" <span style = 'color:{hue2};'>{`Sample.y`}</span>
+                        <span style = 'color:{hue1};'>{`Sample.x`}</span><br>
+                       ")) %>%
+  arrange("Sample.y", "Sample.x")
 
 if(!isTRUE(reference == "none"))
 {
@@ -81,15 +87,15 @@ output = foreach (pair = pairs, .combine = rbind) %do% {
   s1 = pair$"Sample.x"
   s2 = pair$"Sample.y"
   
-  t1 = ccf_calc %>% filter(.data$Sample.x == s1, .data$Sample.y ==s2)
+  t1 = ccf_calc %>% dplyr::filter(.data$Sample.x == s1, .data$Sample.y == s2)
   
   if(isTRUE(reference == "none"))
   {
-  t2 = rbind( ccf_calc %>% filter(.data$Sample.x == s1, .data$Sample.y ==s1),
-              ccf_calc %>% filter(.data$Sample.x == s2, .data$Sample.y ==s2))
+  t2 = rbind( ccf_calc %>% dplyr::filter(.data$Sample.x == s1, .data$Sample.y ==s1),
+              ccf_calc %>% dplyr::filter(.data$Sample.x == s2, .data$Sample.y ==s2))
   } else
   {
-  t2 = rbind( ccf_calc %>% filter(.data$Sample.x == reference, .data$Sample.y ==reference))
+  t2 = rbind( ccf_calc %>% dplyr::filter(.data$Sample.x == reference, .data$Sample.y ==reference))
   }
   
   # print(c(t1$cc,t2$cc))
@@ -98,7 +104,8 @@ output = foreach (pair = pairs, .combine = rbind) %do% {
   if(sd(c(t1$cc,t2$cc))<0.1){
     p = data.frame(pvalue = 1)
   } else{
-    p = t.test(t1$cc, t2$cc, var.equal = FALSE)
+    p = t.test(t1$cc, t2$cc, var.equal = TRUE)
+    p = wilcox.test(t1$cc, t2$cc, , exact = FALSE)
   }
   
   
@@ -118,13 +125,13 @@ output$stars <- symnum(output$padj, corr = FALSE, na = FALSE,
                 cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 
                 symbols = c("***", "**", "*", ".", " "))
 
-toplot = output %>% filter(.data$Sample.x != .data$Sample.y)
+toplot = output %>% dplyr::filter(.data$Sample.x != .data$Sample.y)
 
 toplot = toplot %>% mutate(Sample.x = factor(.data$Sample.x, hue$Sample)) %>% mutate(Sample.y = factor(.data$Sample.y, hue$Sample))
 
 ccf_calc = ccf_calc %>% mutate(Sample.x = factor(.data$Sample.x, hue$Sample)) %>% mutate(Sample.y = factor(.data$Sample.y, hue$Sample))
 
-ungroup_toplot = ccf_calc %>% filter(.data$Sample.x != .data$Sample.y)
+ungroup_toplot = ccf_calc %>% dplyr::filter(.data$Sample.x != .data$Sample.y)
 # ungroup_references = ccf_calc %>% filter(Sample.x != Sample.y)
 
 long_ref = output %>% 
@@ -136,11 +143,11 @@ long_ref = output %>%
 
 toreturn = toplot %>%
   ggplot() +
-  geom_point(aes(y = .data$title, x = .data$cc, color = .data$Sample.y)) +
-  geom_errorbar(aes(y = .data$title, xmin = .data$cc-.data$sd, xmax = .data$cc+.data$sd, colour = .data$Sample.x)) +
+  geom_errorbar(aes(y = .data$title, xmin = .data$cc-.data$sd, xmax = .data$cc+.data$sd, colour = .data$Sample.y)) +
+  geom_point(aes(y = .data$title, x = .data$cc, color = .data$Sample.x)) +
   labs(colour = "Significance") +
   theme(axis.text.y = element_markdown()) +
-  scale_colour_manual(values = hue$colours)
+  scale_colour_manual(values = hue$colours, drop = FALSE)
 
 toreturn
 
@@ -149,7 +156,7 @@ if(isTRUE(stars)){
 }
 
 if(isTRUE(pval)){
-  text2 = toplot %>% filter(!is.na(.data$padj))
+  text2 = toplot %>% dplyr::filter(!is.na(.data$padj))
   
   toreturn = toreturn + geom_text(aes(x = .data$cc, y = .data$title, label = round(.data$padj,3)), nudge_y = 0.3, data = text2) 
 }
@@ -157,7 +164,7 @@ if(isTRUE(pval)){
 if(isTRUE(points))
 {
   
-  long_ref_noauto = long_ref %>% filter(.data$Sample.x != .data$Sample.y)
+  long_ref_noauto = long_ref %>% dplyr::filter(.data$Sample.x != .data$Sample.y)
   
 toreturn = toreturn +
   ggnewscale::new_scale("color") +
@@ -207,7 +214,7 @@ toreturn
 vascr_cc = function(data.df, reference = "none", cc_only = TRUE) {
   
 curves = data.df %>%
-                filter(!is.na(.data$Value)) %>% 
+                dplyr::filter(!is.na(.data$Value)) %>% 
                 group_by(.data$Well, .data$SampleID, .data$Sample, .data$Experiment) %>%
                 arrange(.data$Time, .data$SampleID) %>%
                 mutate(Time = NULL) %>%
@@ -218,7 +225,7 @@ curves = data.df %>%
 if(vascr_find_level(data.df) == "wells")
   {
   pairedcurves = inner_join(curves, curves, by = c("Experiment"), relationship = "many-to-many") %>%
-                  filter(.data$SampleID.x <= .data$SampleID.y)
+                  dplyr::filter(.data$SampleID.x <= .data$SampleID.y)
   } else
   {
     # c1 = curves
@@ -237,14 +244,14 @@ if(vascr_find_level(data.df) == "wells")
     y = NULL
     
     pairedcurves = inner_join(c1, c2, by = join_by(x$expid.x < y$expid.y)) %>%
-      filter(.data$SampleID.x >= .data$SampleID.y) %>%
-      filter(!identical(.data$values.x, .data$values.y))
+      dplyr::filter(.data$SampleID.x >= .data$SampleID.y) %>%
+      dplyr::filter(!identical(.data$values.x, .data$values.y))
 
   }
 
 if(!isTRUE(reference == "none")){
   reference = vascr_find_sample(data.df, reference)
-  pairedcurves = pairedcurves %>% filter(.data$Sample.x %in% reference | 
+  pairedcurves = pairedcurves %>% dplyr::filter(.data$Sample.x %in% reference | 
                                            .data$Sample.y %in% reference |
                                            .data$Sample.y == .data$Sample.x)
   pairedcurves = pairedcurves %>% 
@@ -323,7 +330,7 @@ vascr_summarise_cc = function(data.df, level = "summary")
   
   if(!any(colnames(data.df)=="Sample.x"))
   {
-    data.df = vascr_cc(growth.df)
+    data.df = vascr_cc(data.df)
   }
   
   ccf_exp = data.df %>% ungroup() %>% 
@@ -366,6 +373,8 @@ vascr_summarise_cc = function(data.df, level = "summary")
 #' data.df %>% vascr_summarise_cc("summary") %>% vascr_plot_cc()
 #' 
 vascr_plot_cc = function(data.df, level = NA){
+  
+  data.df = ungroup(data.df)
 
 if(!any(colnames(data.df)=="Sample.x"))
 {
@@ -381,7 +390,8 @@ if(vascr_find_level(data.df) == "wells"){
   toreturn = data.df %>% ggplot() +
     geom_tile(aes(x = paste(.data$`Experiment`, .data$`Well.x`, sep = "\n"), y = paste(.data$`Experiment`, .data$`Well.y`, sep = "\n"), fill = .data$cc)) +
     geom_text(aes(x = paste(.data$`Experiment`, .data$`Well.x`, sep = "\n"), y = paste(.data$`Experiment`, .data$`Well.y`, sep = "\n"), label = round(.data$cc,3))) +
-    facet_wrap(vars(.data$`Sample.x`, .data$`Sample.y`), scales = "free")
+    facet_wrap(vars(.data$`Sample.x`, .data$`Sample.y`), scales = "free") +
+    theme(axis.text.y = element_markdown())
  
    return(toreturn)
 }
@@ -389,7 +399,8 @@ if(vascr_find_level(data.df) == "wells"){
 if(vascr_find_level(data.df) == "experiments"){
   toreturn = data.df %>% ggplot() +
   geom_tile(aes(x = .data$`Experiment`, y = .data$`Experiment`, fill = .data$cc)) +
-  facet_wrap(vars(.data$`Sample.x`, .data$`Sample.y`), scales = "free")
+  facet_wrap(vars(.data$`Sample.x`, .data$`Sample.y`), scales = "free")+
+    theme(axis.text.y = element_markdown())
   
   return(toreturn)
 }
@@ -416,7 +427,8 @@ toplot %>%
   geom_point(aes(y = .data$title, x = .data$cc, color = .data$`Sample.x`)) +
   geom_errorbar(aes(y = .data$title, xmin = .data$cc -  .data$ccsem, xmax = .data$cc + .data$ccsem, color = .data$`Sample.y`)) +
   theme(axis.text.y = element_markdown()) +
-  scale_colour_manual(values = colours)
+  scale_colour_manual(values = colours) +
+  theme(axis.text.y = element_markdown())
 
 }
 

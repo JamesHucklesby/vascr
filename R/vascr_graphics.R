@@ -152,7 +152,8 @@ vascr_add_vline = function(plot, times.df){
     new_scale(c("colour")) +
     geom_vline(aes(xintercept = .data$time, colour = .data$label), data = times.df, linetype = 2) +
     scale_colour_manual(values = times.df$colour) +
-    labs(colour = NULL)
+    labs(colour = NULL) +
+    theme(axis.title.y = element_markdown())
   
 }
 
@@ -387,7 +388,8 @@ vascr_plot_grid = function(data.df, threshold = 0.2)
     labs(color = "Sample") +
     labs(y = title_text, x = "Time (hours)") +
     facet_grid(vars(.data$row), vars(.data$col), drop = TRUE, axis.labels = "all") +
-    theme(strip.background = element_rect("white"))
+    theme(strip.background = element_rect("white")) +
+    theme(axis.title.y = element_markdown())
   
   
   table_rows_label <- text_grob(

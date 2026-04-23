@@ -35,7 +35,7 @@
     Code
       suppressMessages(import_sciospec(data_path))
     Output
-      # A tibble: 16,160 x 11
+      # A tibble: 9,090 x 11
          channel      Frequency Unit    Value Well  Instrument  Time Experiment Sample
          <chr>            <dbl> <chr>   <dbl> <chr> <chr>      <dbl> <lgl>      <chr> 
        1 Channel: EC~      100. R      20261. D02   sciospec       0 NA         D02   
@@ -48,7 +48,7 @@
        8 Channel: EC~      132. I     -14845. D02   sciospec       0 NA         D02   
        9 Channel: EC~      145. R      17380. D02   sciospec       0 NA         D02   
       10 Channel: EC~      145. I     -13290. D02   sciospec       0 NA         D02   
-      # i 16,150 more rows
+      # i 9,080 more rows
       # i 2 more variables: SampleID <dbl>, Excluded <chr>
 
 ---
@@ -56,7 +56,7 @@
     Code
       suppressMessages(import_sciospec(data_path, shear = TRUE))
     Output
-      # A tibble: 16,160 x 11
+      # A tibble: 9,090 x 11
          channel      Frequency Unit    Value Well  Instrument  Time Experiment Sample
          <chr>            <dbl> <chr>   <dbl> <chr> <chr>      <dbl> <lgl>      <chr> 
        1 Channel: EC~      100. R      20261. F01   sciospec       0 NA         F01   
@@ -69,6 +69,6 @@
        8 Channel: EC~      132. I     -14845. F01   sciospec       0 NA         F01   
        9 Channel: EC~      145. R      17380. F01   sciospec       0 NA         F01   
       10 Channel: EC~      145. I     -13290. F01   sciospec       0 NA         F01   
-      # i 16,150 more rows
+      # i 9,080 more rows
       # i 2 more variables: SampleID <dbl>, Excluded <chr>
 

@@ -444,7 +444,8 @@ vascr_plot_box_replicate = function(data.df, unit, frequency, time)
   overallplot <- ggplot(data, aes(x=.data$Sample, y=.data$Value, color = .data$Experiment)) + 
     geom_boxplot() + labs(title = "B) Replicate data") + 
     theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +
-    labs(y = vascr_titles(unique(data$Unit), unique(data$Frequency)))
+    labs(y = vascr_titles(unique(data$Unit), unique(data$Frequency))) +
+    theme(axis.title.y = element_markdown())
   
   overallplot
   
@@ -703,42 +704,47 @@ vascr_plot_bar_dunnett = function(data.df, unit, frequency, time, reference, sta
 #' 
 vascr_plot_line_dunnett = function(data.df, unit = "R", frequency = 4000, time = 100, reference = "0_cells + HCMEC D3_Line", normtime = NULL)
 {
+  time_a = vascr_find_time(data.df, time)
   
   dun.df = vascr_dunnett(data.df, unit = unit, frequency = frequency, time = time, reference = reference) %>%
-    mutate(Time = as.numeric(.data$Time))
+    select(c(vascr_cols(), "Label")) %>%
+    mutate(Time = as.numeric(.data$Time)) %>%
+    mutate(Time = round(Time,3))
   
   subset.df = data.df %>% 
     vascr_subset(unit = unit, frequency = frequency) %>% 
     vascr_normalise(normtime) %>% 
-    vascr_summarise(level = "summary") 
+    vascr_summarise(level = "summary") %>%
+    mutate(Time = round(Time,3))
   
-  dun_norm = dun.df %>% select(-"Value") %>% 
+  unique(subset.df$Time)
+  
+  dun_norm = dun.df %>% select(-"Value") %>%
               left_join(subset.df, by = join_by("Time", "Unit", "Frequency", "Sample", "Instrument", "Well", "Experiment")) %>%
-              select("Time", "Sample", "Value", "Label") %>%
+              #select("Time", "Sample", "Value", "Label") %>%
               mutate(Label = str_replace_na(.data$Label, "+"))
+  
   
   dun_norm
   
   # dun.df$Label
   
-  # plab = dun.df %>%
-  #   dplyr::filter(!.data$Label == "NA") %>%
-  #   dplyr::filter(!.data$Label == "ns") %>%
-  #   mutate(Label = paste(" ", .data$Label)) # %>%
-  #   # mutate(Label = str_replace_all(Label, "\\*", "✱")) #%>%
-  #   #mutate(Label = str_replace_all(Label, "+", "➕")
-  # 
-  # plab
-  # 
+  plab = dun_norm %>%
+    dplyr::filter(!.data$Label == "NA") %>%
+    dplyr::filter(!.data$Label == "ns") #%>%
+    #mutate(Label = paste(" ", .data$Label)) %>%
+   # mutate(Label = str_replace_all(Label, "\\*", "&#x1F7BC;")) %>%
+   #  mutate(Label = str_replace_all(Label, "\\+", "&#x1F7BC;"))
+
+  plab
+
   
-  plot1 = subset.df %>% vascr_plot_line(alpha = 0.2)
+  plot1 = subset.df %>% vascr_plot_line(alpha = 0.1)
   
   plot1
   
   plot2 = plot1 + geom_vline(xintercept = unique(dun_norm$Time), alpha=  0.8, linetype = 4) +
-              geom_text_repel(aes(x = .data$Time, y = .data$Value, label = .data$Label, 
-                        group = 1, hjust = 0, color = .data$Sample), alpha = 1, data = dun_norm, 
-                        show.legend = FALSE, direction = "y", box.padding = 0.01, seed = 10)
+              geom_text(aes(x = .data$Time, y = .data$Value - (.data$sem * 1.1), color = .data$Sample, label = .data$Label), show.legend = FALSE, hjust = - 0.5, data = plab)
   
   plot2
   
@@ -898,9 +904,9 @@ vascr_plot_anova = function(data.df, unit, frequency, time, reference = NULL, se
   }
   
   differences =  anova_results +
-    theme(legend.position = "none") + labs(title = "G) ANOVA results", y = "Resistance   
-                                                    (ohm, 4000 Hz)") +
-    theme(legend.position = "none")
+    theme(legend.position = "none") +
+    labs(title = "G) ANOVA results", y = "Resistance<br>(ohm;, 4000 Hz)") +
+    theme(legend.position = "none", axis.title.y = element_markdown())
   
   
   design <- "
@@ -908,7 +914,9 @@ vascr_plot_anova = function(data.df, unit, frequency, time, reference = NULL, se
   334455
   667777"
   
-  grid = free(timeplot) + free(overallplot)+ free(qqplot) + free(normaloverlayplot) + free(leveneplot) + free(tile) + free(differences) + plot_layout(design = design)
+  grid = (free(timeplot) + free(overallplot)+ 
+          free(qqplot) + free(normaloverlayplot) + free(leveneplot) + 
+          free(tile) + free(differences)) + plot_layout(design = design)
   
   
   return(grid)
