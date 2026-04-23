@@ -108,9 +108,9 @@
 <text x='349.86' y='392.75' style='font-size: 11.00px; font-family: sans;' textLength='24.45px' lengthAdjust='spacingAndGlyphs'>Time</text>
 <text x='377.36' y='392.75' style='font-size: 11.00px; font-family: sans;' textLength='34.85px' lengthAdjust='spacingAndGlyphs'>(hours)</text>
 <text transform='translate(13.05,223.42) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='54.43px' lengthAdjust='spacingAndGlyphs'>Resistance</text>
-<text transform='translate(22.91,227.52) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='14.94px' lengthAdjust='spacingAndGlyphs'>(Ω,</text>
-<text transform='translate(22.91,209.52) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='24.47px' lengthAdjust='spacingAndGlyphs'>1000</text>
-<text transform='translate(22.91,182.00) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='17.11px' lengthAdjust='spacingAndGlyphs'>Hz)</text>
+<text transform='translate(22.91,234.11) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='28.12px' lengthAdjust='spacingAndGlyphs'>(ohm,</text>
+<text transform='translate(22.91,202.93) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='24.47px' lengthAdjust='spacingAndGlyphs'>1000</text>
+<text transform='translate(22.91,175.41) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='17.11px' lengthAdjust='spacingAndGlyphs'>Hz)</text>
 <rect x='256.05' y='405.99' width='157.73' height='164.53' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='261.53' y='419.04' style='font-size: 11.00px; font-family: sans;' textLength='37.30px' lengthAdjust='spacingAndGlyphs'>Sample</text>
 <rect x='261.53' y='426.80' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #EBEBEB;' />

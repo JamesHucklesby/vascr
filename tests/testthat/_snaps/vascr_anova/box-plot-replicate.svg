@@ -179,9 +179,9 @@
 <text transform='translate(575.92,509.25) rotate(-45)' text-anchor='end' style='font-size: 8.80px; fill: #4D4D4D; font-family: sans;' textLength='67.01px' lengthAdjust='spacingAndGlyphs'> HCMEC D3_line</text>
 <text x='326.66' y='568.24' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='37.30px' lengthAdjust='spacingAndGlyphs'>Sample</text>
 <text transform='translate(13.05,285.27) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='54.43px' lengthAdjust='spacingAndGlyphs'>Resistance</text>
-<text transform='translate(22.91,289.37) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='14.94px' lengthAdjust='spacingAndGlyphs'>(Ω,</text>
-<text transform='translate(22.91,271.37) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='24.47px' lengthAdjust='spacingAndGlyphs'>4000</text>
-<text transform='translate(22.91,243.84) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='17.11px' lengthAdjust='spacingAndGlyphs'>Hz)</text>
+<text transform='translate(22.91,295.96) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='28.12px' lengthAdjust='spacingAndGlyphs'>(ohm,</text>
+<text transform='translate(22.91,264.78) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='24.47px' lengthAdjust='spacingAndGlyphs'>4000</text>
+<text transform='translate(22.91,237.25) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='17.11px' lengthAdjust='spacingAndGlyphs'>Hz)</text>
 <rect x='616.72' y='218.99' width='97.80' height='78.13' style='stroke-width: 1.07; stroke: none; fill: #FFFFFF;' />
 <text x='622.20' y='233.18' style='font-size: 11.00px; font-family: sans;' textLength='55.64px' lengthAdjust='spacingAndGlyphs'>Experiment</text>
 <rect x='622.20' y='239.80' width='17.28' height='17.28' style='stroke-width: 1.07; stroke: none; fill: #EBEBEB;' />

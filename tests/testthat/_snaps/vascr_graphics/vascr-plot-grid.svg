@@ -2881,9 +2881,9 @@
 <polyline points='50.29,492.57 53.03,492.57 ' style='stroke-width: 1.07; stroke: #333333; stroke-linecap: butt;' />
 <text x='248.01' y='562.76' text-anchor='middle' style='font-size: 11.00px; font-family: sans;' textLength='62.35px' lengthAdjust='spacingAndGlyphs'>Time (hours)</text>
 <text transform='translate(18.53,332.77) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='54.43px' lengthAdjust='spacingAndGlyphs'>Resistance</text>
-<text transform='translate(28.39,336.88) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='14.94px' lengthAdjust='spacingAndGlyphs'>(Ω,</text>
-<text transform='translate(28.39,318.88) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='24.47px' lengthAdjust='spacingAndGlyphs'>4000</text>
-<text transform='translate(28.39,291.35) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='17.11px' lengthAdjust='spacingAndGlyphs'>Hz)</text>
+<text transform='translate(28.39,343.47) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='28.12px' lengthAdjust='spacingAndGlyphs'>(ohm,</text>
+<text transform='translate(28.39,312.29) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='24.47px' lengthAdjust='spacingAndGlyphs'>4000</text>
+<text transform='translate(28.39,284.76) rotate(-90)' style='font-size: 11.00px; font-family: sans;' textLength='17.11px' lengthAdjust='spacingAndGlyphs'>Hz)</text>
 </g>
 <defs>
   <clipPath id='cpNDcwLjYwfDQ4MS40NHw3MS40OHw1MzkuNjM='>

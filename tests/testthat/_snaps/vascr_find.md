@@ -241,18 +241,18 @@
       vascr_units_table()
     Output
       # A tibble: 22 x 4
-         Unit  Content                       Modeled Instrument
-         <chr> <chr>                         <lgl>   <chr>     
-       1 Alpha ohm<sup>1/2</sup> cm          TRUE    ECIS      
-       2 Cm    Cm (&#956;F/cm<sup>2</sup>)   TRUE    ECIS      
-       3 Drift Drift (%)                     TRUE    ECIS      
-       4 Rb    Rb (ohm cm<sup>2</sup>)       TRUE    ECIS      
-       5 RMSE  Model Fit RMSE                TRUE    ECIS      
-       6 C     Capacitance (nF, 0 Hz)        FALSE   ECIS      
-       7 C     Capacitance (nF, 0 Hz)        FALSE   cellZscope
-       8 P     Phase (radians, 0 Hz)         FALSE   ECIS      
-       9 P     Phase (radians, 0 Hz)         FALSE   cellZscope
-      10 R     Resistance<br>(ohm, 0 Hz) FALSE   ECIS      
+         Unit  Content                     Modeled Instrument
+         <chr> <chr>                       <lgl>   <chr>     
+       1 Alpha ohm<sup>1/2</sup> cm        TRUE    ECIS      
+       2 Cm    Cm (&#956;F/cm<sup>2</sup>) TRUE    ECIS      
+       3 Drift Drift (%)                   TRUE    ECIS      
+       4 Rb    Rb (ohm cm<sup>2</sup>)     TRUE    ECIS      
+       5 RMSE  Model Fit RMSE              TRUE    ECIS      
+       6 C     Capacitance (nF, 0 Hz)      FALSE   ECIS      
+       7 C     Capacitance (nF, 0 Hz)      FALSE   cellZscope
+       8 P     Phase (radians, 0 Hz)       FALSE   ECIS      
+       9 P     Phase (radians, 0 Hz)       FALSE   cellZscope
+      10 R     Resistance<br>(ohm, 0 Hz)   FALSE   ECIS      
       # i 12 more rows
 
 # vascr_find_instrument
@@ -402,7 +402,7 @@
     Code
       vascr_titles(unit, frequency)
     Output
-      Resistance<br>(ohm;, 1000 Hz)
+      Resistance<br>(ohm, 1000 Hz)
 
 ---
 
@@ -514,8 +514,8 @@
     Code
       vascr_titles_vector(c("Rb", "R", "Cm"))
     Output
-      [1] "Rb (ohm cm<sup>2</sup>)"       "Resistance<br>(ohm;, 0 Hz)"
-      [3] "Cm (&#956;F/cm<sup>2</sup>)"  
+      [1] "Rb (ohm cm<sup>2</sup>)"     "Resistance<br>(ohm, 0 Hz)"  
+      [3] "Cm (&#956;F/cm<sup>2</sup>)"
 
 ---
 

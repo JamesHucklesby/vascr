@@ -709,13 +709,13 @@ vascr_plot_line_dunnett = function(data.df, unit = "R", frequency = 4000, time =
   dun.df = vascr_dunnett(data.df, unit = unit, frequency = frequency, time = time, reference = reference) %>%
     select(c(vascr_cols(), "Label")) %>%
     mutate(Time = as.numeric(.data$Time)) %>%
-    mutate(Time = round(Time,3))
+    mutate(Time = round(.data$Time,3))
   
   subset.df = data.df %>% 
     vascr_subset(unit = unit, frequency = frequency) %>% 
     vascr_normalise(normtime) %>% 
     vascr_summarise(level = "summary") %>%
-    mutate(Time = round(Time,3))
+    mutate(Time = round(.data$Time,3))
   
   unique(subset.df$Time)
   
