@@ -567,7 +567,7 @@ vascr_plot_anova_grid = function (data.df, unit =  "R", frequency = 4000, time =
 #' 
 vascr_dunnett = function(data.df, unit, frequency, time, reference){
   
-  # reference = "20,000 hCMVEC cells"
+  original_labels = unique(data.df$Sample) %>% sort()
   
   data2.df = vascr_subset(data.df, time = time, unit = unit, frequency = frequency)
   
@@ -626,7 +626,8 @@ vascr_dunnett = function(data.df, unit, frequency, time, reference){
  tr = left_join(means_small, toreturn, by = c("Sample", "Time")) %>%
    mutate(Label = ifelse(.data$Sample == reference, "+", .data$Label)) %>%
    mutate(P_round = ifelse(.data$Sample == reference, "+", .data$padj)) %>%
-   mutate(P = ifelse(.data$Sample == reference, "+", .data$P))
+   mutate(P = ifelse(.data$Sample == reference, "+", .data$P)) %>%
+   mutate(Sample = factor(.data$Sample, original_labels))
  
  tr$Label
  
@@ -676,6 +677,49 @@ vascr_plot_bar_dunnett = function(data.df, unit, frequency, time, reference, sta
   
 }
 
+
+#' Plot a bar plot with Dunnett's test
+#'
+#' @param data.df a vascr dataframe
+#' @param unit the unit to use
+#' @param frequency the frequency to use
+#' @param time the time to use for the bar plot and ANOVA
+#' @param reference SampleID of the sample to use as the reference for statistical analysis
+#' @param stars Show stars, or rounded P values
+#' 
+#' @importFrom ggplot2 geom_col ggplot geom_text geom_errorbar aes
+#' 
+#' @returns A bar plot of data with Dunnett's comparisons
+#' 
+#' @noRd
+#'
+#' @examples
+#' vascr_plot_bar_dunnett(growth.df, "R", 4000, 50, reference = "0_cells + hCMEC/d3_line")
+#' 
+vascr_plot_bar_dunnett_norm = function(data.df, unit, frequency, time, reference, stars = TRUE, normtime, divide = TRUE)
+{
+  toplot = vascr_dunnett(data.df, unit, frequency, time, reference) %>% 
+          select("Sample", "Label")
+  
+  normed = data.df %>% vascr_subset(unit = unit, frequency = frequency) %>% 
+             vascr_normalise(normtime, divide = divide) %>%
+             vascr_subset(time = time) %>%
+             vascr_summarise(level = "experiments")
+  
+  normed_sum = normed %>% 
+             vascr_summarise(level = "summary") 
+  
+  combined = left_join(normed_sum, toplot, by = "Sample")
+  
+  
+    ggplot(combined) +
+      ggplot2::geom_col(aes(x = .data$Sample, y = .data$Value)) +
+      ggplot2::geom_point(aes(x = .data$Sample, y = .data$Value, color = .data$Sample), data = normed) +
+      geom_errorbar(aes(x = .data$Sample, ymin = .data$Value - .data$sem, ymax = .data$Value + .data$sem)) +
+      geom_text_repel(aes(x = .data$Sample, label = .data$Label, y = .data$Value + .data$sem), direction = "y", seed = 5)
+  
+  
+}
 
 
 #' Create a line plot with Dunnett's statistics
@@ -784,13 +828,16 @@ vascr_plot_line_dunnett = function(data.df, unit = "R", frequency = 4000, time =
 #'vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", 
 #'   time = 100, frequency = 4000, rotate_x_angle = 90)
 #' 
-vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequency, format = "toplot", error = Inf, breaks = "x", rotate_x_angle = 45)
+vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequency, format = "toplot", error = Inf, breaks = "x", rotate_x_angle = 45, normtime = NULL)
 {
   
   data.df$Sample = str_replace_all(data.df$Sample, "[\\+]", "x")
   
   # Gather graph data based on the ...
   datum = vascr_subset(data.df, unit = unit, frequency = frequency, time = time)
+  
+  
+  # datum_norm = vascr_subset(data.df, unit = unit, frequency = frequency)
   
   # if(!length(unique(c(data$Time, data$Unit, data$Frequency, data$Instrument)))==4)
   # {
@@ -837,6 +884,98 @@ vascr_plot_bar_anova = function(data.df , confidence = 0.95, time, unit, frequen
 }
 
 
+#' Plot a bar chart with ANOVA statistics superimposed on it as text
+#'
+#' @param data A vascr dataset
+#' @param confidence The minimum confidence level to display
+#' @param time Time point to plot
+#' @param unit Unit to plot
+#' @param frequency Frequency to plot
+#' @param format Statistics format to return
+#' @param error The style of eror bars to plot
+#' @param rotate_x_angle How far to rotate the x angle
+#'
+#' @return A vascr bar plot with statistics attached to it
+#' 
+#' @noRd
+#' 
+#' @importFrom ggplot2 geom_errorbar aes ggplot geom_text geom_bar geom_label scale_y_discrete
+#' @importFrom dplyr arrange
+#'
+#' @examples
+#' 
+#' ## Needs to be rekeyed
+#' 
+#' vascr_plot_bar(data = growth.df, confidence = 0.95, unit = "R", time = 100, 
+#'   frequency = 4000)
+#' vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", 
+#'   time = 100, frequency = 4000)
+#'
+#'vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", 
+#'   time = 100, frequency = 4000, rotate_x_angle = 45)
+#'   
+#'vascr_plot_bar_anova(data = growth.df, confidence = 0.95, unit = "R", 
+#'   time = 100, frequency = 4000, rotate_x_angle = 90)
+#'   
+#'   data.df = growth.df
+#' 
+vascr_plot_bar_anova_norm = function(data.df , confidence = 0.95, time, unit, frequency, format = "toplot", error = Inf, breaks = "x", rotate_x_angle = 45, normtime = NULL)
+{
+  
+  data.df$Sample = str_replace_all(data.df$Sample, "[\\+]", "x")
+  
+  # Gather graph data based on the ...
+  datum_original = vascr_subset(data.df, unit = unit, frequency = frequency, time = time)
+  
+  
+  datum = vascr_subset(data.df, unit = unit, frequency = frequency) %>%
+    vascr_normalise(normtime) #%>%
+   # vascr_summarise(level = "summary")
+  
+  # if(!length(unique(c(data$Time, data$Unit, data$Frequency, data$Instrument)))==4)
+  # {
+  #   vascr_notify("error","vascr_plot_bar_anova only supports a single time, unit, frequency and instrument at the moment. Please manually create an ANOVA if you need to ask other  statistical questions.")
+  # }
+  
+  # Add structure checks in here
+  
+  
+  summary = datum %>%
+    vascr_subset(time = vascr_find_time(datum, time)) %>%
+    vascr_summarise(level = "summary")
+  
+  datum = arrange(datum, .data$Sample)
+  
+  labeltable = vascr_make_significance_table(data.df = datum_original, time, unit, frequency, confidence, format = "toplot")
+  
+  summary$Sample = as.factor(summary$Sample)
+  labeltable$Sample = as.factor(labeltable$Sample)
+  
+  filtered2.df = left_join(summary, labeltable, by = "Sample") %>%
+    mutate(Sample = str_replace(.data$Sample, " x ", " + <br>")) %>%
+    mutate(Label = str_replace_all(.data$Label, " x ", "\\\n"))
+  
+  # hjust_needed = sin(rotate_x_angle*pi/180)
+  
+  plot = ggplot(filtered2.df, aes(x = .data$Sample, y = .data$Value, label = .data$Label, fill = .data$Sample)) + 
+    geom_bar(stat = "identity") +
+    geom_errorbar(aes(ymax = .data$Value + .data$sem, ymin = .data$Value-.data$sem, x = .data$Sample), width = 0.7) +
+    #geom_label(aes(label=.data$Label, y = min(.data$Value)/2))  +
+    theme(axis.text.x = element_markdown(angle = 0, vjust = 1))
+  
+  
+  plot
+  
+  
+  if(error>0)
+  { 
+    plot = plot + geom_errorbar(aes(ymax = .data$Value + .data$sem, ymin = .data$Value - .data$sem), width = 0.6)
+  }
+  
+  plot
+  
+  return(plot)
+}
 
 
 

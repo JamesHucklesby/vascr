@@ -1,3 +1,9 @@
+## Version V 0.1.4
+In this version I have:
+* Updated the description to remove the duplicate reference to testthat which was cuaing notes in the macos check
+* Removed some example import files to reduce the macos installed size below 5mb
+
+The current build has been tested against macos, windows and linux, current, old and devel using the GitHub builders.
 
 ## Resubmission V 0.1.4
 This is a re submission. In this version I have:

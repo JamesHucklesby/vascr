@@ -143,7 +143,7 @@
     Output
       # A tibble: 8 x 20
          Time Unit  Frequency Sample  Instrument     sd totaln     n   min   max Well 
-        <dbl> <fct>     <dbl> <chr>   <chr>       <dbl>  <int> <int> <dbl> <dbl> <chr>
+        <dbl> <fct>     <dbl> <fct>   <chr>       <dbl>  <int> <int> <dbl> <dbl> <chr>
       1    50 R          4000 0_cell~ ECIS         2.65      9     3  237.  242. H01,~
       2    50 R          4000 10,000~ ECIS        27.5       9     3  321.  376. F01,~
       3    50 R          4000 15,000~ ECIS        42.4       9     3  350.  432. E01,~
@@ -162,7 +162,7 @@
     Output
       # A tibble: 16 x 20
           Time Unit  Frequency Sample Instrument     sd totaln     n   min   max Well 
-         <dbl> <fct>     <dbl> <chr>  <chr>       <dbl>  <int> <int> <dbl> <dbl> <chr>
+         <dbl> <fct>     <dbl> <fct>  <chr>       <dbl>  <int> <int> <dbl> <dbl> <chr>
        1    50 R          4000 0_cel~ ECIS         2.65      9     3  237.  242. H01,~
        2    50 R          4000 10,00~ ECIS        27.5       9     3  321.  376. F01,~
        3    50 R          4000 15,00~ ECIS        42.4       9     3  350.  432. E01,~
@@ -189,7 +189,7 @@
     Output
       # A tibble: 8 x 20
          Time Unit  Frequency Sample  Instrument     sd totaln     n   min   max Well 
-        <dbl> <fct>     <dbl> <chr>   <chr>       <dbl>  <int> <int> <dbl> <dbl> <chr>
+        <dbl> <fct>     <dbl> <fct>   <chr>       <dbl>  <int> <int> <dbl> <dbl> <chr>
       1    50 R          4000 0_cell~ ECIS         2.65      9     3  237.  242. H01,~
       2    50 R          4000 10,000~ ECIS        27.5       9     3  321.  376. F01,~
       3    50 R          4000 15,000~ ECIS        42.4       9     3  350.  432. E01,~
