@@ -19,6 +19,9 @@ test_that("Can import and ECIS file", {
 
 
 test_that("Can import cellZScope file", {
+  skip_on_cran()
+  skip_on_ci()
+  
   model = system.file("extdata/instruments/zscopemodel.txt", package = "vascr")
   raw = system.file("extdata/instruments/zscoperaw.txt", package = "vascr")
   

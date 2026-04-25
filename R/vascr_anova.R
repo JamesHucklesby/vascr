@@ -587,6 +587,7 @@ vascr_dunnett = function(data.df, unit, frequency, time, reference){
 
           gmod = multcomp::glht(fit , linfct = multcomp::mcp(Sample = "Dunnett"))
 
+          # summ = summary(gmod, test = adjusted("none"))
           summ = summary(gmod, test = adjusted("none"))
   
        tr1 =  tibble(
@@ -600,7 +601,9 @@ vascr_dunnett = function(data.df, unit, frequency, time, reference){
  
  all_times
  
- all_times$padj =p.adjust(all_times$P, method = "bonferroni")
+ #all_times$padj =p.adjust(all_times$P, method = "bonferroni")
+ 
+ all_times$padj = all_times$P
  
  all_times
  
@@ -694,12 +697,13 @@ vascr_plot_bar_dunnett = function(data.df, unit, frequency, time, reference, sta
 #' @noRd
 #'
 #' @examples
-#' vascr_plot_bar_dunnett(growth.df, "R", 4000, 50, reference = "0_cells + hCMEC/d3_line")
+#' # vascr_plot_bar_dunnett_norm(growth.df, "R", 4000, 50, reference = "0_cells + hCMEC/d3_line")
 #' 
 vascr_plot_bar_dunnett_norm = function(data.df, unit, frequency, time, reference, stars = TRUE, normtime, divide = TRUE)
 {
   toplot = vascr_dunnett(data.df, unit, frequency, time, reference) %>% 
-          select("Sample", "Label")
+          select("Sample", "Label") %>%
+          filter(.data$Label != "ns")
   
   normed = data.df %>% vascr_subset(unit = unit, frequency = frequency) %>% 
              vascr_normalise(normtime, divide = divide) %>%
@@ -716,7 +720,10 @@ vascr_plot_bar_dunnett_norm = function(data.df, unit, frequency, time, reference
       ggplot2::geom_col(aes(x = .data$Sample, y = .data$Value)) +
       ggplot2::geom_point(aes(x = .data$Sample, y = .data$Value, color = .data$Sample), data = normed) +
       geom_errorbar(aes(x = .data$Sample, ymin = .data$Value - .data$sem, ymax = .data$Value + .data$sem)) +
-      geom_text_repel(aes(x = .data$Sample, label = .data$Label, y = .data$Value + .data$sem), direction = "y", seed = 5)
+      geom_text(aes(x = .data$Sample, label = .data$Label, y = (min(.data$Value - .data$sem))*0.8, color = .data$Sample), show.legend = FALSE) +
+      theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +
+      labs(y = vascr_titles(normed_sum)) +
+      theme(axis.title.y = element_markdown())
   
   
 }
@@ -960,7 +967,7 @@ vascr_plot_bar_anova_norm = function(data.df , confidence = 0.95, time, unit, fr
   plot = ggplot(filtered2.df, aes(x = .data$Sample, y = .data$Value, label = .data$Label, fill = .data$Sample)) + 
     geom_bar(stat = "identity") +
     geom_errorbar(aes(ymax = .data$Value + .data$sem, ymin = .data$Value-.data$sem, x = .data$Sample), width = 0.7) +
-    #geom_label(aes(label=.data$Label, y = min(.data$Value)/2))  +
+    geom_label(aes(label=.data$Label, y = min(.data$Value)/2))  +
     theme(axis.text.x = element_markdown(angle = 0, vjust = 1))
   
   
