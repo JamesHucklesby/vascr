@@ -718,7 +718,7 @@ vascr_plot_bar_dunnett_norm = function(data.df, unit, frequency, time, reference
   
     ggplot(combined) +
       ggplot2::geom_col(aes(x = .data$Sample, y = .data$Value)) +
-      ggplot2::geom_point(aes(x = .data$Sample, y = .data$Value, color = .data$Sample), data = normed) +
+      ggplot2::geom_point(aes(x = .data$Sample, y = .data$Value, color = .data$Sample), show.legend = FALSE, data = normed) +
       geom_errorbar(aes(x = .data$Sample, ymin = .data$Value - .data$sem, ymax = .data$Value + .data$sem)) +
       geom_text(aes(x = .data$Sample, label = .data$Label, y = (min(.data$Value - .data$sem))*0.8, color = .data$Sample), show.legend = FALSE) +
       theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +

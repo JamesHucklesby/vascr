@@ -148,11 +148,11 @@ vascr_add_vline = function(plot, times.df){
   }
   
   plot + 
-    guides(color = guide_legend("Sample")) +
-    new_scale(c("colour")) +
+    #guides(color = guide_legend("Sample")) +
+    new_scale(c("color")) + new_scale(c("fill")) + new_scale(c("linetype")) +
     geom_vline(aes(xintercept = .data$time, colour = .data$label), data = times.df, linetype = 2) +
     scale_colour_manual(values = times.df$colour) +
-    labs(colour = NULL) +
+    labs(colour = "Key Timepoint") +
     theme(axis.title.y = element_markdown())
   
 }
