@@ -39,7 +39,17 @@ xcelligence_lengthen_platemap = function(data)
 xcelligence_import_generate_CI = function(data.df)
 {
   data.df$Excluded = "no"
-  cidata = vascr_normalise(data.df, normtime = 0, divide = TRUE)
+  cidata = vascr_normalise(data.df, normtime = 0, divide = FALSE)
+  
+  ci_normfactor = tribble(~Frequency, ~Zn,
+                          10000, 15,
+                          25000, 12,
+                          50000, 10)
+  
+  cidata = left_join(cidata, ci_normfactor, by = "Frequency") %>%
+    mutate(Value = .data$Value/.data$Zn) %>%
+    select(-"Zn")
+  
   cidata$Unit = "CI"
   
   returndata = rbind(cidata, data.df)
@@ -151,8 +161,7 @@ import_xcelligence = function(rawdata, experimentname = NULL, password = "RTCaDa
   if(is.null(experimentname))
   {
     TimeOrg$Experiment = basename(file)
-  }
-  else
+  }  else
   {
     TimeOrg$Experiment = experimentname
   }
@@ -172,6 +181,7 @@ import_xcelligence = function(rawdata, experimentname = NULL, password = "RTCaDa
     
     labeleddata = data.frame(Sample = unique(labeleddata$Sample), SampleID = c(1:length(unique(labeleddata$Sample)))) %>%
       right_join(labeleddata, by = join_by("Sample"))
+    
     toreturn = xcelligence_import_generate_CI(labeleddata)
     
     toreturn = as_tibble(toreturn)

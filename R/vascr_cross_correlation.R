@@ -104,8 +104,8 @@ output = foreach (pair = pairs, .combine = rbind) %do% {
   if(sd(c(t1$cc,t2$cc))<0.1){
     p = data.frame(pvalue = 1)
   } else{
-    p = t.test(t1$cc, t2$cc, var.equal = TRUE)
-    p = wilcox.test(t1$cc, t2$cc, , exact = FALSE)
+    p = t.test(t1$cc, t2$cc, var.equal = FALSE)
+    p = wilcox.test(t1$cc, t2$cc, exact = TRUE)
   }
   
   
@@ -120,6 +120,8 @@ output = foreach (pair = pairs, .combine = rbind) %do% {
 
 
 output$padj = p.adjust(output$p, "fdr")
+
+output$padj 
 
 output$stars <- symnum(output$padj, corr = FALSE, na = FALSE, 
                 cutpoints = c(0, 0.001, 0.01, 0.05, 0.1, 1), 

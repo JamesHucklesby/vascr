@@ -819,7 +819,7 @@ vascr_titles= function (unit, frequency = 0, prefix = "", explanatory = FALSE, n
           
           # Electrical quantaties
           "C", glue("{prefix}Capacitance (nF, {frequency} Hz)"), FALSE, FALSE,
-          "R", glue("{prefix}Resistance<br>(ohm, {frequency} Hz)"),FALSE, FALSE,
+          "R", glue("{prefix}Resistance<br>(Ω, {frequency} Hz)"),FALSE, FALSE,
           "P", glue("{prefix}Phase (radians, {frequency} Hz)"),FALSE, FALSE,
           "X", glue("{prefix}Capacative Reactance (ohm, {frequency} Hz)"),FALSE, FALSE,
           "Z", glue("{prefix}Impedance (ohm, {frequency} Hz)"), FALSE, FALSE,
@@ -859,7 +859,7 @@ vascr_titles= function (unit, frequency = 0, prefix = "", explanatory = FALSE, n
           "Drift", glue("**Electrode Drift**<br></br>{prefix}Drift (%)"), TRUE, FALSE,
           
           "Rb", glue("**Cell-Cell Adhesion**<br></br>{prefix}Fold change in Rb"),TRUE, TRUE,
-          "Cm", glue("**Membrane Capacitance**<br>{prefix}Fold change in Cm)"),TRUE, TRUE,
+          "Cm", glue("**Membrane Capacitance**<br>{prefix}Fold change in Cm"),TRUE, TRUE,
           "Alpha", glue("**Basolateral Adhesion**<br>{prefix}Fold change in alpha"),TRUE, TRUE,
           "RMSE", glue("**Model Fit Error**<br>{prefix}Model Fit RMSE"),TRUE, TRUE,
           "Drift", glue("**Electrode Drift**<br>{prefix}Drift (%)"), TRUE, TRUE,

@@ -142,7 +142,7 @@ vascr_add_vline = function(plot, times.df){
   
   times.df = times.df %>% mutate(label = factor(.data$label, unique(.data$label)))
   
-  if(!"colour" %in% colnames(times.df))
+  if(!"color" %in% colnames(times.df))
   {
       times.df$colour = gg_color_hue(nrow(times.df))
   }
@@ -150,8 +150,8 @@ vascr_add_vline = function(plot, times.df){
   plot + 
     #guides(color = guide_legend("Sample")) +
     new_scale(c("color")) + new_scale(c("fill")) + new_scale(c("linetype")) +
-    geom_vline(aes(xintercept = .data$time, colour = .data$label), data = times.df, linetype = 2) +
-    scale_colour_manual(values = times.df$colour) +
+    geom_vline(aes(xintercept = .data$time, color = .data$label), data = times.df, linetype = 2) +
+    scale_colour_manual(values = times.df$color) +
     labs(colour = "Key Timepoint") +
     theme(axis.title.y = element_markdown())
   
@@ -362,7 +362,7 @@ vascr_plot_keylines = function(plot, key_events, linetype = "dashed", linesize =
 #' grid.df = growth.df %>% vascr_subset(unit = "R", frequency = "4000", experiment  = 1)
 #' vascr_plot_grid(grid.df)
 #' 
-vascr_plot_grid = function(data.df, threshold = 0.2)
+vascr_plot_grid = function(data.df, threshold = 0.2, treatment_applied = NULL)
 {
   
   processed =  data.df %>%
@@ -380,17 +380,24 @@ vascr_plot_grid = function(data.df, threshold = 0.2)
     geom_line(aes(x = .data$Time, y = .data$Median_Value, color = "Median technical replicate well")) +
     geom_point(aes(x = .data$Time, y = .data$Value, size = .data$Median_Deviation, color = "Oultier", group = .data$Title), 
                data = processed %>% filter(.data$Median_Deviation > threshold), shape = 1)+
-    labs(color = "Markup", size = "Median Deviation")+
+    labs(color = "Markup", size = "Median Deviation") 
+  
+  if(!is.null(treatment_applied)) {
+    output = output + geom_vline(aes(xintercept = treatment_applied, color = "Treatment applied")) 
+    }
+    
+    output = output +
     #labs(weight = "Other note") +   
-    scale_colour_manual(values = c("darkgrey", "red")) +
+    scale_colour_manual(values = c("darkgrey", "red", "chartreuse3")) +
     ggnewscale::new_scale_color() +
     geom_line(aes(x = .data$Time, y = .data$Value, color = .data$Sample)) +
     labs(color = "Sample") +
     labs(y = title_text, x = "Time (hours)") +
     facet_grid(vars(.data$row), vars(.data$col), drop = TRUE, axis.labels = "all") +
     theme(strip.background = element_rect("white")) +
-    theme(axis.title.y = element_markdown())
+    theme(axis.title.y = element_markdown()) 
   
+  output
   
   table_rows_label <- text_grob(
     label = "Row of plate",
