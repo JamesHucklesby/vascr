@@ -22,7 +22,7 @@ A tibble with 346370 rows and 9 variables:
 Hucklesby 2020
 }
 \usage{
-growth.df
+data(growth.df)
 }
 \description{
 A dataset containing the growth curves of hCMEC/D3 cell lines seeded at various densities. 

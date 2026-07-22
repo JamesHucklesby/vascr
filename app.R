@@ -1,2 +1,3 @@
 library(vascr)
-vascr_shiny()
+library(shiny)
+runApp(vascr_shiny(), port = 8383)

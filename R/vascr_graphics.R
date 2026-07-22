@@ -379,7 +379,7 @@ vascr_plot_grid = function(data.df, threshold = 0.2, treatment_applied = NULL)
     ggplot() +
     geom_line(aes(x = .data$Time, y = .data$Median_Value, color = "Median technical replicate well")) +
     geom_point(aes(x = .data$Time, y = .data$Value, size = .data$Median_Deviation, color = "Oultier", group = .data$Title), 
-               data = processed %>% filter(.data$Median_Deviation > threshold), shape = 1)+
+               data = processed %>% filter(.data$Median_Deviation > threshold), shape = 1, alpha = 0.25)+
     labs(color = "Markup", size = "Median Deviation") 
   
   if(!is.null(treatment_applied)) {
