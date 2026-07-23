@@ -2,9 +2,13 @@
 
 Plot out each replicate well in a grid, with QC overlays
 
+Plot out each replicate well in a grid, with QC overlays
+
 ## Usage
 
 ``` r
+vascr_plot_grid(data.df, threshold = 0.2)
+
 vascr_plot_grid(data.df, threshold = 0.2)
 ```
 
@@ -22,9 +26,15 @@ vascr_plot_grid(data.df, threshold = 0.2)
 
 A plot to be used for QC
 
+A plot to be used for QC
+
 ## Examples
 
 ``` r
+grid.df = growth.df %>% vascr_subset(unit = "R", frequency = "4000", experiment  = 1)
+vascr_plot_grid(grid.df)
+
+
 grid.df = growth.df %>% vascr_subset(unit = "R", frequency = "4000", experiment  = 1)
 vascr_plot_grid(grid.df)
 

@@ -23,6 +23,9 @@ Useful links:
 
 Authors:
 
+- James JW Hucklesby <james.hucklesby@auckland.ac.nz>
+  ([ORCID](https://orcid.org/0000-0003-1591-6823)) \[copyright holder\]
+
 - Charles Unsworth <c.unsworth@auckland.ac.nz>
   ([ORCID](https://orcid.org/0000-0002-9153-5232))
 

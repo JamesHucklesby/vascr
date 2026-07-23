@@ -7,7 +7,7 @@ for faster processing.
 ## Usage
 
 ``` r
-rbgrowth.df
+data(rbgrowth.df)
 ```
 
 ## Format

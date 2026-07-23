@@ -5,7 +5,7 @@ Small growth data set for testing
 ## Usage
 
 ``` r
-small_growth.df
+data(small_growth.df)
 ```
 
 ## Format

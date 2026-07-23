@@ -2,9 +2,13 @@
 
 Print out the characteristics of the vascr data frame
 
+Print out the characteristics of the vascr data frame
+
 ## Usage
 
 ``` r
+vascr_find_metadata(data.df)
+
 vascr_find_metadata(data.df)
 ```
 
@@ -18,9 +22,15 @@ vascr_find_metadata(data.df)
 
 prints out the parameters of the dataframe in question
 
+prints out the parameters of the dataframe in question
+
 ## Examples
 
 ``` r
+vascr_find_metadata(growth.df)
+#> 
+#> Timepoints
+
 vascr_find_metadata(growth.df)
 #> 
 #> Timepoints

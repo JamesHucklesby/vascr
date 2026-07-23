@@ -9,6 +9,7 @@ You can install the development version of vascr from
 [GitHub](https://github.com/) with:
 
 ``` r
+
 # install.packages("pak")
 pak::pak("JamesHucklesby/vascr")
 ```
@@ -18,6 +19,7 @@ pak::pak("JamesHucklesby/vascr")
 Vascr can rapidly plot impedance sensing data.
 
 ``` r
+
 library(vascr)
 vascr_plot_line(growth.df %>% vascr_subset(unit = "R", frequency = "4000"))
 ```

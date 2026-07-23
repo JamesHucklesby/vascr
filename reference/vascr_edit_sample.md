@@ -37,9 +37,9 @@ An updated vascr data frame
 
 ``` r
 to_rename = growth.df %>% vascr_subset(sample = c("0 cells","20,000 cells", "10,000 cells"))
-#> ! [0 cells] corrected to [0_cells + HCMEC D3_line]. Please check the argeuments for your functions are correctly typed.
-#> ! [20,000 cells] corrected to [20,000_cells + HCMEC D3_line]. Please check the argeuments for your functions are correctly typed.
-#> ! [10,000 cells] corrected to [10,000_cells + HCMEC D3_line]. Please check the argeuments for your functions are correctly typed.
+#> ! [0 cells] corrected to [0_cells + HCMEC D3_line]. Please check the arguments for your functions are correctly typed.
+#> ! [20,000 cells] corrected to [20,000_cells + HCMEC D3_line]. Please check the arguments for your functions are correctly typed.
+#> ! [10,000 cells] corrected to [10,000_cells + HCMEC D3_line]. Please check the arguments for your functions are correctly typed.
 
 to_rename$Sample %>% unique()
 #> [1] 20,000_cells + HCMEC D3_line 10,000_cells + HCMEC D3_line

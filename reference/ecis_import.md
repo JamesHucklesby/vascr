@@ -29,6 +29,7 @@ A data frame containing all the data APB generated from an experiment
 ## Examples
 
 ``` r
+
 raw = system.file('extdata/instruments/ecis_TimeResample.abp', package = 'vascr')
 modeled = system.file('extdata/instruments/ecis_TimeResample_RbA.csv', package = 'vascr')
 experimentname = "TEST"
