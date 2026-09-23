@@ -96,7 +96,7 @@ vascr_find(growth.df, "resampled")
 vascr_find(growth.df, "all")
 #> 
 #> Timepoints
-#> [1] "cli-213-692"
+#> [1] "cli-207-692"
 
 vascr_find(growth.df, "Time")
 #> [1] 100
@@ -152,5 +152,5 @@ vascr_find(growth.df, "resampled")
 vascr_find(growth.df, "all")
 #> 
 #> Timepoints
-#> [1] "cli-213-702"
+#> [1] "cli-207-702"
 ```
