@@ -109,23 +109,9 @@ vascr_import("cellzscope", raw, model, "cellZscope")
 #' # ScioSpec
 raw = system.file("extdata/instruments/ScioSpec", package = "vascr")
 vascr_import("sciospec", raw, model, "ScioSpec")
-#> Joining with `by = join_by(channel)`
-#> Joining with `by = join_by(time)`
-#> # A tibble: 16,160 × 11
-#>    channel      Frequency Unit    Value Well  Instrument  Time Experiment Sample
-#>    <chr>            <dbl> <chr>   <dbl> <chr> <chr>      <dbl> <chr>      <chr> 
-#>  1 Channel: EC…      100. R      20261. D02   sciospec       0 ScioSpec   D02   
-#>  2 Channel: EC…      100. I     -19551. D02   sciospec       0 ScioSpec   D02   
-#>  3 Channel: EC…      110. R      18171. D02   sciospec       0 ScioSpec   D02   
-#>  4 Channel: EC…      110. I     -15598. D02   sciospec       0 ScioSpec   D02   
-#>  5 Channel: EC…      120. R      17839. D02   sciospec       0 ScioSpec   D02   
-#>  6 Channel: EC…      120. I     -16083. D02   sciospec       0 ScioSpec   D02   
-#>  7 Channel: EC…      132. R      17475. D02   sciospec       0 ScioSpec   D02   
-#>  8 Channel: EC…      132. I     -14845. D02   sciospec       0 ScioSpec   D02   
-#>  9 Channel: EC…      145. R      17380. D02   sciospec       0 ScioSpec   D02   
-#> 10 Channel: EC…      145. I     -13290. D02   sciospec       0 ScioSpec   D02   
-#> # ℹ 16,150 more rows
-#> # ℹ 2 more variables: SampleID <dbl>, Excluded <chr>
+#> Error in mutate(., Time = lubridate::dmy_hms(.data$Time)): ℹ In argument: `Time = lubridate::dmy_hms(.data$Time)`.
+#> Caused by error in `loadNamespace()`:
+#> ! there is no package called ‘lubridate’
 
 # }
 ```
