@@ -101,11 +101,11 @@ import_sciospec = function(data_path, shear = FALSE, experiment = NA, nth = 1){
                       strptime("%d-%B-%Y %I:%M:%OS %p")) %>%
               as.numeric())
   
-  times
+  #times
   
   # Map pins to actual physical locations, depending on the chip type
   
-  scio_map = tribble(~channel, ~static, ~shear, ~`1F`
+  scio_map = tribble(~channel, ~static, ~shear, ~onef,
                      "Channel: ECISadapter 1", "D02", "F01", "H01",
                      "Channel: ECISadapter 2", "C02", "D01", "G01",
                      "Channel: ECISadapter 3", "B02", "B01", "F01",
@@ -131,7 +131,7 @@ import_sciospec = function(data_path, shear = FALSE, experiment = NA, nth = 1){
     scio_map$Well = scio_map$shear
   } else if (shear == "1F") {
     
-    scio_map$Well = scio_map$`1F`
+    scio_map$Well = scio_map$onef
     
   } else {
     scio_map$Well = scio_map$static
