@@ -143,11 +143,25 @@ vascr_import_map = function(lookup) {
       separate_rows("Well", sep = " ") %>%
       mutate(Well = vascr_standardise_wells(.data$Well))
   }else if("Row" %in% colnames(file_content) & "Column" %in% colnames(file_content)){
-    file_map = file_content %>% 
+    
+    
+    file_map_1 = file_content %>% 
       mutate(Row = trimws(.data$Row), Column = trimws(.data$Column)) %>%
       separate_rows("Row", sep = " ") %>%
-      separate_rows("Column", sep = " ") %>%
-      mutate(Well = paste(.data$Row, .data$Column, sep = ""), Well = vascr_standardise_wells(.data$Well)) %>%
+      separate_rows("Column", sep = " ")
+    
+    if(!all(unique(file_map_1$Column) %in% as.numeric(c(1:12))))
+    {
+      vascr_notify("error", "Column names must be numbers between 1 and 12")
+    }
+    
+    if(!all(unique(file_map_1$Row) %in% LETTERS[1:8])){
+      vascr_notify("error", "Row names must be letters between A and H")
+    }
+    
+    file_map = file_map_1 %>%
+      mutate(Well = paste(.data$Row, .data$Column, sep = "")) %>%
+      mutate(Well = vascr_standardise_wells(.data$Well)) %>%
       mutate(Row = NULL, Column = NULL)
   }else {
     vascr_notify("error","Either `Row` and `Column' or `Well` must be specified in the input file")

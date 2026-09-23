@@ -210,7 +210,7 @@ vascr_match = function(match, vector)
       
       matched = match_table[1,1]
       
-      string = paste("[",tomatch, "] corrected to [", matched, "]. Please check the argeuments for your functions are correctly typed.", sep = "")
+      string = paste("[",tomatch, "] corrected to [", matched, "]. Please check the arguments for your functions are correctly typed.", sep = "")
       
       vascr_notify("warning",string)
       
@@ -799,6 +799,7 @@ vascr_find_experiment = function(data.df, experiment)
 #' vascr_titles("Rb", explanatory = TRUE)
 #' 
 #' vascr_titles(unit = growth.df %>% vascr_subset(unit = "R", frequency = 4000))
+#' vascr_titles(unit = growth.df %>% vascr_subset(unit = "Cm"))
 #' 
 vascr_titles= function (unit, frequency = 0, prefix = "", explanatory = FALSE, normalised = FALSE)
 {
@@ -1165,7 +1166,7 @@ vascr_standardise_wells = function(well) {
   
   if(any(uniquewell == "NA"))
   {
-    vascr_notify("warning",paste("Well", uniquewell, "is not a valid well name, please check your input data"))
+    vascr_notify("warning",paste("Well", well, "is not a valid well name, please check your input data"))
   }
   
   exchange = data.frame(well = original_unique, uniquewell)
