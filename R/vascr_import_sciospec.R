@@ -105,30 +105,34 @@ import_sciospec = function(data_path, shear = FALSE, experiment = NA, nth = 1){
   
   # Map pins to actual physical locations, depending on the chip type
   
-  scio_map = tribble(~channel, ~static, ~shear,
-                     "Channel: ECISadapter 1", "D02", "F01",
-                     "Channel: ECISadapter 2", "C02", "D01",
-                     "Channel: ECISadapter 3", "B02", "B01",
-                     "Channel: ECISadapter 4", "A02", "NC",
-                     "Channel: ECISadapter 5", "A01", "NC",
-                     "Channel: ECISadapter 6", "B01", "A01",
-                     "Channel: ECISadapter 7", "C01", "C01",
-                     "Channel: ECISadapter 8", "D01", "E01",
+  scio_map = tribble(~channel, ~static, ~shear, ~`1F`
+                     "Channel: ECISadapter 1", "D02", "F01", "H01",
+                     "Channel: ECISadapter 2", "C02", "D01", "G01",
+                     "Channel: ECISadapter 3", "B02", "B01", "F01",
+                     "Channel: ECISadapter 4", "A02", "NC", "E01",
+                     "Channel: ECISadapter 5", "A01", "NC", "A01",
+                     "Channel: ECISadapter 6", "B01", "A01", "B01",
+                     "Channel: ECISadapter 7", "C01", "C01", "C01",
+                     "Channel: ECISadapter 8", "D01", "E01", "D01",
                      
-                     "Channel: ECISadapter1", "D02", "F01",
-                     "Channel: ECISadapter2", "C02", "D01",
-                     "Channel: ECISadapter3", "B02", "B01",
-                     "Channel: ECISadapter4", "A02", "NC",
-                     "Channel: ECISadapter5", "A01", "NC",
-                     "Channel: ECISadapter6", "B01", "A01",
-                     "Channel: ECISadapter7", "C01", "C01",
-                     "Channel: ECISadapter8", "D01", "E01"
+                     "Channel: ECISadapter1", "D02", "F01", "H01",
+                     "Channel: ECISadapter2", "C02", "D01", "G01",
+                     "Channel: ECISadapter3", "B02", "B01", "F01",
+                     "Channel: ECISadapter4", "A02", "NC", "E01",
+                     "Channel: ECISadapter5", "A01", "NC", "A01",
+                     "Channel: ECISadapter6", "B01", "A01", "B01",
+                     "Channel: ECISadapter7", "C01", "C01", "C01",
+                     "Channel: ECISadapter8", "D01", "E01", "D01",
   )
   
   
-  if(shear)
+  if(shear == TRUE)
   {
     scio_map$Well = scio_map$shear
+  } else if (shear == "1F") {
+    
+    scio_map$Well = scio_map$`1F`
+    
   } else {
     scio_map$Well = scio_map$static
   }
