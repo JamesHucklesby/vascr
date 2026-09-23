@@ -7,7 +7,7 @@ stages of processing.
 ## Usage
 
 ``` r
-data(growth_unresampled.df)
+growth_unresampled.df
 ```
 
 ## Format

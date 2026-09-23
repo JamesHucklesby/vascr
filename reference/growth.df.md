@@ -6,7 +6,7 @@ various densities. The variables are as follows:
 ## Usage
 
 ``` r
-data(growth.df)
+growth.df
 ```
 
 ## Format
