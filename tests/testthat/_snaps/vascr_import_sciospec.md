@@ -35,7 +35,7 @@
     Code
       suppressMessages(import_sciospec(data_path))
     Output
-      # A tibble: 9,090 x 11
+      # A tibble: 16,160 x 11
          channel      Frequency Unit    Value Well  Instrument  Time Experiment Sample
          <chr>            <dbl> <chr>   <dbl> <chr> <chr>      <dbl> <lgl>      <chr> 
        1 Channel: EC~      100. R      20261. D02   sciospec       0 NA         D02   
@@ -48,7 +48,7 @@
        8 Channel: EC~      132. I     -14845. D02   sciospec       0 NA         D02   
        9 Channel: EC~      145. R      17380. D02   sciospec       0 NA         D02   
       10 Channel: EC~      145. I     -13290. D02   sciospec       0 NA         D02   
-      # i 9,080 more rows
+      # i 16,150 more rows
       # i 2 more variables: SampleID <dbl>, Excluded <chr>
 
 ---
@@ -56,7 +56,7 @@
     Code
       suppressMessages(import_sciospec(data_path, shear = TRUE))
     Output
-      # A tibble: 9,090 x 11
+      # A tibble: 16,160 x 11
          channel      Frequency Unit    Value Well  Instrument  Time Experiment Sample
          <chr>            <dbl> <chr>   <dbl> <chr> <chr>      <dbl> <lgl>      <chr> 
        1 Channel: EC~      100. R      20261. F01   sciospec       0 NA         F01   
@@ -69,6 +69,27 @@
        8 Channel: EC~      132. I     -14845. F01   sciospec       0 NA         F01   
        9 Channel: EC~      145. R      17380. F01   sciospec       0 NA         F01   
       10 Channel: EC~      145. I     -13290. F01   sciospec       0 NA         F01   
-      # i 9,080 more rows
+      # i 16,150 more rows
+      # i 2 more variables: SampleID <dbl>, Excluded <chr>
+
+---
+
+    Code
+      suppressMessages(import_sciospec(data_path, shear = "1F"))
+    Output
+      # A tibble: 16,160 x 11
+         channel      Frequency Unit    Value Well  Instrument  Time Experiment Sample
+         <chr>            <dbl> <chr>   <dbl> <chr> <chr>      <dbl> <lgl>      <chr> 
+       1 Channel: EC~      100. R      20261. H01   sciospec       0 NA         H01   
+       2 Channel: EC~      100. I     -19551. H01   sciospec       0 NA         H01   
+       3 Channel: EC~      110. R      18171. H01   sciospec       0 NA         H01   
+       4 Channel: EC~      110. I     -15598. H01   sciospec       0 NA         H01   
+       5 Channel: EC~      120. R      17839. H01   sciospec       0 NA         H01   
+       6 Channel: EC~      120. I     -16083. H01   sciospec       0 NA         H01   
+       7 Channel: EC~      132. R      17475. H01   sciospec       0 NA         H01   
+       8 Channel: EC~      132. I     -14845. H01   sciospec       0 NA         H01   
+       9 Channel: EC~      145. R      17380. H01   sciospec       0 NA         H01   
+      10 Channel: EC~      145. I     -13290. H01   sciospec       0 NA         H01   
+      # i 16,150 more rows
       # i 2 more variables: SampleID <dbl>, Excluded <chr>
 

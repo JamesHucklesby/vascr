@@ -280,7 +280,7 @@ vascr_regenerate_map = function(data.df){
 #' @export
 #' 
 #' @importFrom dplyr bind_rows as_tibble all_of
-#' @importFrom foreach foreach `%do%`
+#' @importFrom foreach foreach %do%
 #'
 #' @examples
 #' vascr_implode(growth.df)

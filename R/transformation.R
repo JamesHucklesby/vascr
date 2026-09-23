@@ -425,7 +425,7 @@ vascr_remove_cols = function(data.df, cols){
 #' @param force_timepoint Force a specific timepoint to be part of the resample
 #' @param include_disc Add an additional data point either side of a discrepancy. Defaults TRUE
 #' 
-#' @importFrom foreach foreach `%do%`
+#' @importFrom foreach foreach %do%
 #' @importFrom dplyr group_split group_by
 #'
 #' @return An interpolated vascr dataset
@@ -497,7 +497,7 @@ vascr_auc = function(data.df) {
 #' @noRd
 #' 
 #' @importFrom cli cli_progress_cleanup cli_progress_update cli_progress_bar
-#' @importFrom foreach foreach `%do%`
+#' @importFrom foreach foreach %do%
 #' @importFrom dplyr filter
 #' @importFrom tidyr pivot_longer
 #' @importFrom ggplot2 geom_line ylim geom_hline aes

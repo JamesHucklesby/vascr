@@ -242,7 +242,7 @@ vascr_exclude = function(data.df, well = NULL, experiment = NULL, sampleid = NUL
 #' 
 #' @importFrom stringr str_escape str_replace_all
 #' @importFrom dplyr select distinct arrange mutate left_join
-#' @importFrom foreach foreach `%do%`
+#' @importFrom foreach foreach %do%
 #' 
 #' @export
 #'

@@ -7,7 +7,10 @@ test_that("Check col exists", {
   
   expect_snapshot(suppressMessages(import_sciospec(data_path)))
   expect_snapshot(suppressMessages(import_sciospec(data_path, shear = TRUE)))
+  expect_snapshot(suppressMessages(import_sciospec(data_path, shear = "1F")))
   
+  #data1 = suppressMessages(import_sciospec(data_path, shear = "1F"))
+  #vascr_plot_line(data1 %>% vascr_subset(unit = "R", frequency = 4000))
   
   
 })

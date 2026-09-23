@@ -22,7 +22,7 @@ A tibble with 346370 rows and 9 variables:
 Hucklesby 2020
 }
 \usage{
-data(small_growth.df)
+small_growth.df
 }
 \description{
 Small growth data set for testing

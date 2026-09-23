@@ -159,7 +159,7 @@ ecis_import_raw =  function(rawdata, cache = hash_file_md5(rawdata)) {
 #' 
 #' @importFrom stringr str_detect
 #' @importFrom tidyr separate gather pivot_longer
-#' @importFrom dplyr '%>%'
+#' @importFrom dplyr %>%
 #' @importFrom utils read.csv
 #' @importFrom cli hash_file_md5
 #' 
