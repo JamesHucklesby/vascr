@@ -68,6 +68,10 @@ import_sciospec_single = memoise({function(cur_file, shear = FALSE){
 #' data_path = "C:\\Users\\jhuc964\\Documents\\vascr\\devel\\CRT ECIS\\SS v2 250428"
 #' data_path = "~/SS v2 250428"
 #' data_path = raw
+#' 
+#' data_path ="C:\\Users\\jhuc964\\packages\\vascr\\devel\\Sciospec\\ECISadapter 1"
+#' import_sciospec(data_path, shear = "1F")
+#' 
 import_sciospec = function(data_path, shear = FALSE, experiment = NA, nth = 1){
   
   # Replace the ~ in the data path with a wd
@@ -93,13 +97,12 @@ import_sciospec = function(data_path, shear = FALSE, experiment = NA, nth = 1){
   # Clean up times
   
   times = imp %>% select("time") %>% distinct() %>%
-    mutate (Time = (.data$time %>% 
-                      str_replace("\\.-", "-") %>%
-                      sub(":([^:]*)$", ".\\1", .) %>% 
-                      str_replace("a.m.", "am") %>% 
-                      str_replace("p.m.", "pm") %>%
-                      strptime("%d-%B-%Y %I:%M:%OS %p")) %>%
-              as.numeric())
+    mutate (Time = (.data$time %>% str_replace("\\.-", "-"))) %>%
+    mutate (Time = sub(":([^:]*)$", ".\\1", .data$Time)) %>% 
+    mutate (Time = sub(":([^:]*)$", ".\\1", .data$Time)) %>% 
+    mutate (Time = str_replace(.data$Time,"a.m.", "am")) %>% 
+    mutate (Time = str_replace(.data$Time,"p.m.", "pm")) %>%
+    mutate (Time = lubridate::dmy_hms(.data$Time))
   
   #times
   
@@ -151,6 +154,7 @@ import_sciospec = function(data_path, shear = FALSE, experiment = NA, nth = 1){
     mutate(Experiment = "TEST", Sample = .data$Well) %>%
     mutate(Time = .data$Time - min(.data$Time)) %>%
     mutate(Time = .data$Time/60/60) %>%
+    mutate(Time = as.numeric(.data$Time)) %>%
     mutate(time = NULL) %>%
     mutate(Value = as.numeric(.data$Value)) %>%
     mutate(SampleID = 5) %>%
