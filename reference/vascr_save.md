@@ -2,13 +2,9 @@
 
 Save a vascr dataset
 
-Save a vascr dataset
-
 ## Usage
 
 ``` r
-vascr_save(data.df, path)
-
 vascr_save(data.df, path)
 ```
 
@@ -26,14 +22,9 @@ vascr_save(data.df, path)
 
 A .vascr file containing a vascr dataset
 
-A .vascr file containing a vascr dataset
-
 ## Examples
 
 ``` r
-path = tempfile()
-vascr_save(growth.df, path = path)
-
 path = tempfile()
 vascr_save(growth.df, path = path)
 ```

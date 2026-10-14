@@ -2,13 +2,9 @@
 
 Load a vascr dataset
 
-Load a vascr dataset
-
 ## Usage
 
 ``` r
-vascr_load(path)
-
 vascr_load(path)
 ```
 
@@ -22,18 +18,9 @@ vascr_load(path)
 
 A vascr dataset
 
-A vascr dataset
-
 ## Examples
 
 ``` r
-
-path = system.file("extdata/test.vascr", package = "vascr")
-vascr_load(path)
-#> Loading objects:
-#>   small_growth.df
-#> [1] "small_growth.df"
-
 
 path = system.file("extdata/test.vascr", package = "vascr")
 vascr_load(path)

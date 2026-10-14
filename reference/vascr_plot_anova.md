@@ -2,21 +2,9 @@
 
 Make a display with all the ANOVA analysis pre-conducted
 
-Make a display with all the ANOVA analysis pre-conducted
-
 ## Usage
 
 ``` r
-vascr_plot_anova(
-  data.df,
-  unit,
-  frequency,
-  time,
-  reference = NULL,
-  separate = "x",
-  rotate = 45
-)
-
 vascr_plot_anova(
   data.df,
   unit,
@@ -62,8 +50,6 @@ vascr_plot_anova(
 
 A matrix of different ANOVA tests
 
-A matrix of different ANOVA tests
-
 ## Examples
 
 ``` r
@@ -75,13 +61,6 @@ vascr_plot_anova(data.df = growth.df, unit = "R", frequency = 4000, time = 100,
 #> ℹ Please use `broom::augment(<lm>)` instead.
 #> ℹ The deprecated feature was likely used in the ggplot2 package.
 #>   Please report the issue at <https://github.com/tidyverse/ggplot2/issues>.
-#> Error in loadNamespace(x): there is no package called ‘emmeans’
-# }
-# \donttest{
-# Run, comparing only to a reference
-vascr_plot_anova(data.df = small_growth.df, unit = "R", frequency = 4000, time = 100, 
-          reference = "5,000_cells + HCMEC D3_line")
-#> ! [ 100 ]  corrected to  [ 88.8888888888889 ]. Please check the variables used.
 #> Error in loadNamespace(x): there is no package called ‘emmeans’
 # }
 ```
