@@ -46,7 +46,7 @@
       Joining with `by = join_by(channel)`
       Joining with `by = join_by(time)`
     Output
-      # A tibble: 9,090 x 11
+      # A tibble: 16,160 x 11
          channel      Frequency Unit    Value Well  Instrument  Time Experiment Sample
          <chr>            <dbl> <chr>   <dbl> <chr> <chr>      <dbl> <chr>      <chr> 
        1 Channel: EC~      100. R      20261. D02   sciospec       0 ScioSpec   D02   
@@ -59,7 +59,7 @@
        8 Channel: EC~      132. I     -14845. D02   sciospec       0 ScioSpec   D02   
        9 Channel: EC~      145. R      17380. D02   sciospec       0 ScioSpec   D02   
       10 Channel: EC~      145. I     -13290. D02   sciospec       0 ScioSpec   D02   
-      # i 9,080 more rows
+      # i 16,150 more rows
       # i 2 more variables: SampleID <dbl>, Excluded <chr>
 
 ---
@@ -74,16 +74,16 @@
       # A tibble: 6,336 x 10
           Time Unit  Value Well  Sample      Frequency Experiment  Instrument SampleID
          <dbl> <chr> <dbl> <chr> <chr>           <dbl> <chr>       <chr>         <int>
-       1  0    CI     1    A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       2  0    CI     1    A02   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       3  0    CI     1    A03   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       4  1.54 CI     3.59 A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       5  1.54 CI     3.56 A02   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       6  1.54 CI     3.72 A03   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       7  3.21 CI     3.51 A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       8  3.21 CI     3.48 A02   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-       9  3.21 CI     3.48 A03   HCMVEC80000     10000 xCELLigence xCELLigen~        1
-      10  4.87 CI     3.39 A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       1  0    CI     0    A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       2  0    CI     0    A02   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       3  0    CI     0    A03   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       4  1.54 CI     8.86 A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       5  1.54 CI     8.81 A02   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       6  1.54 CI     8.95 A03   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       7  3.21 CI     8.61 A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       8  3.21 CI     8.53 A02   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+       9  3.21 CI     8.16 A03   HCMVEC80000     10000 xCELLigence xCELLigen~        1
+      10  4.87 CI     8.20 A01   HCMVEC80000     10000 xCELLigence xCELLigen~        1
       # i 6,326 more rows
       # i 1 more variable: Excluded <chr>
 

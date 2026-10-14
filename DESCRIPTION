@@ -35,6 +35,7 @@ Imports:
     foreach,
     furrr,
     future,
+    ggh4x,
     ggnewscale,
     ggplot2,
     ggpubr,

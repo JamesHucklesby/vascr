@@ -118,7 +118,7 @@ vascr_plot_line = function(data.df, errorbars = Inf, alpha = 0.3, text_labels = 
 #' @returns A labeled vascr plot
 #' 
 #' @importFrom ggplot2 geom_vline scale_colour_manual
-#' @importFrom ggnewscale new_scale
+#' @importFrom ggh4x scale_listed
 #' 
 #' 
 #' @export
@@ -147,12 +147,23 @@ vascr_add_vline = function(plot, times.df){
       times.df$colour = gg_color_hue(nrow(times.df))
   }
   
-  plot + 
-    #guides(color = guide_legend("Sample")) +
-    new_scale(c("color")) + new_scale(c("fill")) + new_scale(c("linetype")) +
-    geom_vline(aes(xintercept = .data$time, color = .data$label), data = times.df, linetype = 2) +
-    scale_colour_manual(values = times.df$color) +
-    labs(colour = "Key Timepoint") +
+ plot +
+    geom_vline(
+      data = times.df,
+      aes(xintercept = time, colour_new = label), 
+      linetype = 2,
+      inherit.aes = FALSE                            
+    ) +
+    scale_listed(
+      scalelist = list(
+        scale_colour_manual(
+          aesthetics = "colour_new", 
+          values = times.df$color,
+          name = "Key Timepoint"                 
+        )
+      ),
+      replaces = "colour"  # 👈 THIS FIXES THE LENGTH PARALLEL ERROR
+    ) + 
     theme(axis.title.y = element_markdown())
   
 }

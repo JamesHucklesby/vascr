@@ -150,7 +150,7 @@
     Code
       vascr_subset(growth.df, well = "B12")
     Message
-      ! [B12] corrected to [B02]. Please check the argeuments for your functions are correctly typed.
+      ! [B12] corrected to [B02]. Please check the arguments for your functions are correctly typed.
     Output
       # A tibble: 1,950 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument
@@ -173,8 +173,8 @@
     Code
       vascr_subset(growth.df, well = "B20")
     Message
-      ! Well NA is not a valid well name, please check your input data
-      ! [NA] corrected to [A01]. Please check the argeuments for your functions are correctly typed.
+      ! Well B20 is not a valid well name, please check your input data
+      ! [NA] corrected to [A01]. Please check the arguments for your functions are correctly typed.
     Output
       # A tibble: 1,950 x 12
           Time Unit  Well  Value Sample    Frequency Experiment cells line  Instrument

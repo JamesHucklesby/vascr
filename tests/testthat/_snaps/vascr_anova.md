@@ -28,8 +28,8 @@
        3 Experiment 2 : Experim~ 3 : E~          0    -67.1   -122.      -12.6 1.59e-2
        4 Sample     0_cells x H~ 10,00~          0    109.     -11.1     229.  8.84e-2
        5 Sample     0_cells x H~ 15,00~          0    158.      37.9     278.  6.78e-3
-       6 Sample     0_cells x H~ 20,00~          0    202.      82.2     322.  7   e-4
-       7 Sample     0_cells x H~ 25,00~          0    268.     148.      388.  3.4 e-5
+       6 Sample     0_cells x H~ 20,00~          0    202.      82.2     322.  7.00e-4
+       7 Sample     0_cells x H~ 25,00~          0    268.     148.      388.  3.40e-5
        8 Sample     0_cells x H~ 30,00~          0    344.     224.      464.  1.76e-6
        9 Sample     0_cells x H~ 35,00~          0    424.     304.      544.  1.25e-7
       10 Sample     0_cells x H~ 5,000~          0     54.9    -65.1     175.  7.35e-1
@@ -109,9 +109,9 @@
        5 Sample     0_cells x H~ 15,00~          0    366.     250.      482.  5.41e-7
        6 Sample     0_cells x H~ 20,00~          0    365.     249.      482.  5.53e-7
        7 Sample     0_cells x H~ 25,00~          0    358.     242.      474.  7.19e-7
-       8 Sample     0_cells x H~ 30,00~          0    349.     233.      465.  9.8 e-7
+       8 Sample     0_cells x H~ 30,00~          0    349.     233.      465.  9.80e-7
        9 Sample     0_cells x H~ 35,00~          0    320.     204.      437.  2.81e-6
-      10 Sample     0_cells x H~ 5,000~          0    141.      24.7     257.  1.3 e-2
+      10 Sample     0_cells x H~ 5,000~          0    141.      24.7     257.  1.30e-2
       # i 21 more rows
       # i 1 more variable: p.adj.signif <chr>
 
@@ -130,9 +130,9 @@
        5 Sample     0_cells x H~ 15,00~          0    366.     250.      482.  5.41e-7
        6 Sample     0_cells x H~ 20,00~          0    365.     249.      482.  5.53e-7
        7 Sample     0_cells x H~ 25,00~          0    358.     242.      474.  7.19e-7
-       8 Sample     0_cells x H~ 30,00~          0    349.     233.      465.  9.8 e-7
+       8 Sample     0_cells x H~ 30,00~          0    349.     233.      465.  9.80e-7
        9 Sample     0_cells x H~ 35,00~          0    320.     204.      437.  2.81e-6
-      10 Sample     0_cells x H~ 5,000~          0    141.      24.7     257.  1.3 e-2
+      10 Sample     0_cells x H~ 5,000~          0    141.      24.7     257.  1.30e-2
       # i 21 more rows
       # i 1 more variable: p.adj.signif <chr>
 
@@ -141,7 +141,7 @@
     Code
       vascr_dunnett(growth.df, "R", 4000, 50, 8)
     Output
-      # A tibble: 8 x 20
+      # A tibble: 8 x 25
          Time Unit  Frequency Sample  Instrument     sd totaln     n   min   max Well 
         <dbl> <fct>     <dbl> <fct>   <chr>       <dbl>  <int> <int> <dbl> <dbl> <chr>
       1    50 R          4000 0_cell~ ECIS         2.65      9     3  237.  242. H01,~
@@ -152,15 +152,16 @@
       6    50 R          4000 30,000~ ECIS       108.        9     3  464.  675. B01,~
       7    50 R          4000 35,000~ ECIS        79.0       9     3  574.  721. A01,~
       8    50 R          4000 5,000_~ ECIS        20.4       9     3  281.  318. G01,~
-      # i 9 more variables: Value <dbl>, Experiment <chr>, sem <dbl>, Excluded <chr>,
-      #   SampleID <dbl>, P <dbl>, padj <dbl>, Label <chr>, P_round <dbl>
+      # i 14 more variables: Value <dbl>, Experiment <chr>, sem <dbl>,
+      #   Excluded <chr>, SampleID <dbl>, contrast <chr>, estimate <dbl>, SE <dbl>,
+      #   df <dbl>, t.ratio <dbl>, p.value <dbl>, Label <chr>, P_round <chr>, P <dbl>
 
 ---
 
     Code
       vascr_dunnett(growth.df, "R", 4000, list(50, 100), 8)
     Output
-      # A tibble: 16 x 20
+      # A tibble: 16 x 25
           Time Unit  Frequency Sample Instrument     sd totaln     n   min   max Well 
          <dbl> <fct>     <dbl> <fct>  <chr>       <dbl>  <int> <int> <dbl> <dbl> <chr>
        1    50 R          4000 0_cel~ ECIS         2.65      9     3  237.  242. H01,~
@@ -179,15 +180,16 @@
       14   100 R          4000 30,00~ ECIS        65.2       9     3  529.  656. B01,~
       15   100 R          4000 35,00~ ECIS        41.6       9     3  523.  602. A01,~
       16   100 R          4000 5,000~ ECIS        54.3       9     3  313.  412. G01,~
-      # i 9 more variables: Value <dbl>, Experiment <chr>, sem <dbl>, Excluded <chr>,
-      #   SampleID <dbl>, P <dbl>, padj <dbl>, Label <chr>, P_round <dbl>
+      # i 14 more variables: Value <dbl>, Experiment <chr>, sem <dbl>,
+      #   Excluded <chr>, SampleID <dbl>, contrast <fct>, estimate <dbl>, SE <dbl>,
+      #   df <dbl>, t.ratio <dbl>, p.value <dbl>, Label <chr>, P_round <chr>, P <dbl>
 
 ---
 
     Code
       vascr_dunnett(growth.df, "R", 4000, 50, "0_cells + HCMEC D3_line")
     Output
-      # A tibble: 8 x 20
+      # A tibble: 8 x 25
          Time Unit  Frequency Sample  Instrument     sd totaln     n   min   max Well 
         <dbl> <fct>     <dbl> <fct>   <chr>       <dbl>  <int> <int> <dbl> <dbl> <chr>
       1    50 R          4000 0_cell~ ECIS         2.65      9     3  237.  242. H01,~
@@ -198,6 +200,7 @@
       6    50 R          4000 30,000~ ECIS       108.        9     3  464.  675. B01,~
       7    50 R          4000 35,000~ ECIS        79.0       9     3  574.  721. A01,~
       8    50 R          4000 5,000_~ ECIS        20.4       9     3  281.  318. G01,~
-      # i 9 more variables: Value <dbl>, Experiment <chr>, sem <dbl>, Excluded <chr>,
-      #   SampleID <dbl>, P <chr>, padj <dbl>, Label <chr>, P_round <chr>
+      # i 14 more variables: Value <dbl>, Experiment <chr>, sem <dbl>,
+      #   Excluded <chr>, SampleID <dbl>, contrast <chr>, estimate <dbl>, SE <dbl>,
+      #   df <dbl>, t.ratio <dbl>, p.value <dbl>, Label <chr>, P_round <chr>, P <chr>
 

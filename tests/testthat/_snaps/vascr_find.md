@@ -31,7 +31,7 @@
     Code
       vascr_match("Re", vector)
     Message
-      ! [Re] corrected to [Rb]. Please check the argeuments for your functions are correctly typed.
+      ! [Re] corrected to [Rb]. Please check the arguments for your functions are correctly typed.
     Output
       [1] "Rb"
 
@@ -115,8 +115,8 @@
     Code
       vascr_find_well(small_growth.df, "W39")
     Message
-      ! Well NA is not a valid well name, please check your input data
-      ! [NA] corrected to [A01]. Please check the argeuments for your functions are correctly typed.
+      ! Well W39 is not a valid well name, please check your input data
+      ! [NA] corrected to [A01]. Please check the arguments for your functions are correctly typed.
     Output
       [1] "A01"
 
@@ -252,7 +252,7 @@
        7 C     Capacitance (nF, 0 Hz)      FALSE   cellZscope
        8 P     Phase (radians, 0 Hz)       FALSE   ECIS      
        9 P     Phase (radians, 0 Hz)       FALSE   cellZscope
-      10 R     Resistance<br>(ohm, 0 Hz)   FALSE   ECIS      
+      10 R     Resistance<br>(Ω, 0 Hz)     FALSE   ECIS      
       # i 12 more rows
 
 # vascr_find_instrument
@@ -260,7 +260,7 @@
     Code
       vascr_find_instrument(small_growth.df, "Rb")
     Message
-      ! [Rb] corrected to [ECIS]. Please check the argeuments for your functions are correctly typed.
+      ! [Rb] corrected to [ECIS]. Please check the arguments for your functions are correctly typed.
     Output
       [1] "ECIS"
 
@@ -343,7 +343,7 @@
     Code
       vascr_find_unit(small_growth.df, unit = c("Ci", "Rb"))
     Message
-      ! [Ci] corrected to [Cm]. Please check the argeuments for your functions are correctly typed.
+      ! [Ci] corrected to [Cm]. Please check the arguments for your functions are correctly typed.
     Output
       [1] "Cm" "Rb"
 
@@ -402,7 +402,7 @@
     Code
       vascr_titles(unit, frequency)
     Output
-      Resistance<br>(ohm, 1000 Hz)
+      Resistance<br>(Ω, 1000 Hz)
 
 ---
 
@@ -514,7 +514,7 @@
     Code
       vascr_titles_vector(c("Rb", "R", "Cm"))
     Output
-      [1] "Rb (ohm cm<sup>2</sup>)"     "Resistance<br>(ohm, 0 Hz)"  
+      [1] "Rb (ohm cm<sup>2</sup>)"     "Resistance<br>(Ω, 0 Hz)"    
       [3] "Cm (&#956;F/cm<sup>2</sup>)"
 
 ---
@@ -615,7 +615,7 @@
     Code
       vascr_standardise_wells("tortoise")
     Message
-      ! Well NA is not a valid well name, please check your input data
+      ! Well tortoise is not a valid well name, please check your input data
     Output
       [1] "NA"
 
@@ -710,7 +710,7 @@
     Code
       vascr_find_col(small_growth.df, "HCMEC/D3")
     Message
-      ! [HCMEC/D3] corrected to [SampleID]. Please check the argeuments for your functions are correctly typed.
+      ! [HCMEC/D3] corrected to [SampleID]. Please check the arguments for your functions are correctly typed.
     Output
       [1] "SampleID"
 
